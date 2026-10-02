@@ -2,20 +2,25 @@ import { useCallback, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
+import { AudioButton } from '@/components/AudioButton';
 import { Button, ChoiceRow } from '@/components/Button';
 import { EmptyState } from '@/components/EmptyState';
+import { HandwritingCanvas } from '@/components/HandwritingCanvas';
 import { HebrewText } from '@/components/HebrewText';
-import { AudioButton } from '@/components/AudioButton';
 import { ProgressBar } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { spacing } from '@/constants/theme';
 import { letters } from '@/lib/data';
-import type { Letter } from '@/lib/types';
+import { glyphs, gradeForVerdict, recognise } from '@/lib/handwriting';
+import type { GlyphTemplate, Stroke, Verdict } from '@/lib/handwriting';
 import { useStore } from '@/lib/store';
+import type { Letter } from '@/lib/types';
 
 const DRILL_LENGTH = 10;
 
-function shuffle<T>(items: T[]): T[] {
+type DrillItem = Letter | GlyphTemplate;
+
+function shuffle<T>(items: readonly T[]): T[] {
   const out = [...items];
   for (let i = out.length - 1; i > 0; i -= 1) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -33,42 +38,57 @@ export default function LetterDrillScreen() {
   const { progress, gradeCard } = useStore();
   const isWriteMode = mode === 'write';
 
-  const pool = useMemo(() => {
+  // В режиме письма идём по глифам, чтобы спрашивать и конечные формы.
+  const glyphPool = useMemo(() => {
+    const seen = glyphs.filter((glyph) => progress.cards[`letter:${glyph.letterId}`]);
+    return seen.length >= 4 ? seen : glyphs;
+  }, [progress.cards]);
+
+  const letterPool = useMemo(() => {
     const seen = letters.filter((l) => progress.cards[`letter:${l.id}`]);
     return seen.length >= 4 ? seen : letters;
   }, [progress.cards]);
 
-  const [queue, setQueue] = useState<Letter[]>(() => shuffle(pool).slice(0, DRILL_LENGTH));
+  const [queue, setQueue] = useState<DrillItem[]>(() =>
+    shuffle<DrillItem>(isWriteMode ? glyphPool : letterPool).slice(0, DRILL_LENGTH)
+  );
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
-  const [revealed, setRevealed] = useState(false);
+  const [verdict, setVerdict] = useState<Verdict | 'idle'>('idle');
+  const [attempts, setAttempts] = useState(0);
   const [score, setScore] = useState({ correct: 0, total: 0 });
 
-  const current = queue[index];
+  const currentItem = queue[index];
+  const currentGlyph = isWriteMode ? (currentItem as GlyphTemplate | undefined) : undefined;
+  const currentLetter = isWriteMode
+    ? letters.find((l) => l.id === currentGlyph?.letterId)
+    : (currentItem as Letter | undefined);
 
   const options = useMemo(() => {
-    if (!current) return [];
-    const distractors = shuffle(letters.filter((l) => l.id !== current.id)).slice(0, 3);
-    return shuffle([current, ...distractors]);
-  }, [current]);
+    if (isWriteMode || !currentLetter) return [];
+    const distractors = shuffle(letters.filter((l) => l.id !== currentLetter.id)).slice(0, 3);
+    return shuffle([currentLetter, ...distractors]);
+  }, [currentLetter, isWriteMode]);
 
   const advance = useCallback(() => {
     setPicked(null);
-    setRevealed(false);
+    setVerdict('idle');
+    setAttempts(0);
     setIndex((value) => value + 1);
   }, []);
 
   const restart = useCallback(() => {
-    setQueue(shuffle(pool).slice(0, DRILL_LENGTH));
+    setQueue(shuffle<DrillItem>(isWriteMode ? glyphPool : letterPool).slice(0, DRILL_LENGTH));
     setIndex(0);
     setPicked(null);
-    setRevealed(false);
+    setVerdict('idle');
+    setAttempts(0);
     setScore({ correct: 0, total: 0 });
-  }, [pool]);
+  }, [glyphPool, isWriteMode, letterPool]);
 
   const register = useCallback(
-    (letter: Letter, correct: boolean) => {
-      gradeCard('letter', letter.id, correct ? 'good' : 'again');
+    (letterId: string, correct: boolean) => {
+      gradeCard('letter', letterId, correct ? 'good' : 'again');
       setScore((value) => ({
         correct: value.correct + (correct ? 1 : 0),
         total: value.total + 1,
@@ -77,7 +97,21 @@ export default function LetterDrillScreen() {
     [gradeCard]
   );
 
-  if (!current) {
+  const onStrokes = useCallback(
+    (strokes: Stroke[]) => {
+      if (!currentGlyph || !currentLetter) return;
+      const result = recognise(strokes, currentGlyph.id);
+      setVerdict(result.verdict);
+      setAttempts((value) => value + 1);
+
+      // Низкая уверенность не оценивается: просим написать заново.
+      const grade = gradeForVerdict(result.verdict);
+      if (grade) register(currentLetter.id, grade !== 'again');
+    },
+    [currentGlyph, currentLetter, register]
+  );
+
+  if (!currentItem || !currentLetter) {
     return (
       <Screen edges={['left', 'right']}>
         <View style={styles.finished}>
@@ -108,84 +142,95 @@ export default function LetterDrillScreen() {
           <ProgressBar value={index} total={queue.length} />
         </View>
 
-        {isWriteMode ? (
-          <Surface style={styles.card}>
-            <AppText variant="caption" muted>
-              Напишите букву от руки
-            </AppText>
-            <AppText variant="title">{current.nameRu}</AppText>
-            <AppText muted>{current.sound}</AppText>
-            {revealed ? (
-              <View style={styles.revealBlock}>
-                <HebrewText size="glyph" align="center">
-                  {current.char}
-                </HebrewText>
-                {current.finalChar ? (
-                  <AppText variant="caption" muted style={styles.centered}>
-                    Конечная форма: {current.finalChar}
-                  </AppText>
-                ) : null}
-                <HebrewText size="inline" align="center" muted>
-                  {current.example.he}
-                </HebrewText>
-              </View>
-            ) : (
-              <View style={styles.placeholder}>
-                <AppText muted style={styles.centered}>
-                  Вспомните начертание, напишите его на бумаге, затем сверьтесь.
+        {isWriteMode && currentGlyph ? (
+          <>
+            <Surface style={styles.card}>
+              <AppText variant="caption" muted>
+                Напишите букву пальцем
+              </AppText>
+              <AppText variant="title">{currentLetter.nameRu}</AppText>
+              <AppText muted style={styles.centered}>
+                {currentLetter.sound}
+              </AppText>
+              {currentGlyph.form === 'final' ? (
+                <AppText variant="label" tone="accent">
+                  конечная форма
                 </AppText>
-              </View>
-            )}
-          </Surface>
+              ) : null}
+            </Surface>
+
+            <HandwritingCanvas
+              resetKey={`${currentGlyph.id}-${attempts}-${verdict}`}
+              disabled={verdict === 'match' || verdict === 'mismatch'}
+              hint="Напишите букву здесь"
+              onChange={onStrokes}
+            />
+
+            {verdict === 'match' || verdict === 'mismatch' ? (
+              <Surface tone="alt" style={styles.sample}>
+                <AppText variant="caption" muted>
+                  Образец
+                </AppText>
+                <HebrewText size="card" align="center">
+                  {currentGlyph.char}
+                </HebrewText>
+              </Surface>
+            ) : null}
+          </>
         ) : (
           <Surface style={styles.card}>
             <AppText variant="caption" muted>
               Какая это буква?
             </AppText>
             <HebrewText size="glyph" align="center">
-              {current.char}
+              {currentLetter.char}
             </HebrewText>
             <View style={styles.centeredRow}>
-              <AudioButton audio={current.audio} label="Название" />
+              <AudioButton audio={currentLetter.audio} label="Название" />
             </View>
           </Surface>
         )}
 
         {isWriteMode ? (
-          <View style={styles.actions}>
-            {revealed ? (
+          <View style={styles.feedback}>
+            {verdict === 'match' ? (
               <>
+                <AppText variant="label" tone="success">
+                  Начертание узнано.
+                </AppText>
+                <Button label="Дальше" size="lg" onPress={advance} />
+              </>
+            ) : null}
+            {verdict === 'mismatch' ? (
+              <>
+                <AppText variant="label" tone="danger">
+                  Это другая буква. Интервал сброшен.
+                </AppText>
+                <Button label="Дальше" size="lg" onPress={advance} />
+              </>
+            ) : null}
+            {verdict === 'unsure' && attempts > 0 ? (
+              <>
+                <AppText variant="label" tone="accent">
+                  Не разобрал начертание. Напишите ещё раз — ошибка не записана.
+                </AppText>
                 <Button
-                  label="Ошибся"
-                  variant="danger"
-                  onPress={() => {
-                    register(current, false);
-                    advance();
-                  }}
-                  style={styles.actionButton}
-                />
-                <Button
-                  label="Написал верно"
-                  onPress={() => {
-                    register(current, true);
-                    advance();
-                  }}
-                  style={styles.actionButton}
+                  label="Стереть и написать заново"
+                  size="lg"
+                  onPress={() => setVerdict('idle')}
                 />
               </>
-            ) : (
-              <Button
-                label="Показать букву"
-                size="lg"
-                onPress={() => setRevealed(true)}
-                style={styles.actionButton}
-              />
-            )}
+            ) : null}
+            {verdict === 'idle' ? (
+              <AppText variant="caption" muted style={styles.centered}>
+                Отпустите палец — приложение сверит букву
+              </AppText>
+            ) : null}
           </View>
         ) : (
           <View style={styles.options}>
             {options.map((option) => {
-              const isAnswer = option.id === current.id;
+              const isAnswer = option.id === currentLetter.id;
               const state =
                 picked === null
                   ? 'idle'
@@ -203,7 +248,7 @@ export default function LetterDrillScreen() {
                   disabled={picked !== null}
                   onPress={() => {
                     setPicked(option.id);
-                    register(current, isAnswer);
+                    register(currentLetter.id, isAnswer);
                   }}
                 >
                   <AppText variant="label">{option.nameRu}</AppText>
@@ -232,10 +277,8 @@ const styles = StyleSheet.create({
   card: { alignItems: 'center', gap: spacing.sm, paddingVertical: spacing.xl },
   centered: { textAlign: 'center' },
   centeredRow: { alignItems: 'center' },
-  revealBlock: { alignItems: 'center', gap: spacing.xs, width: '100%' },
-  placeholder: { paddingHorizontal: spacing.lg, paddingVertical: spacing.xl },
-  actions: { flexDirection: 'row', gap: spacing.md },
-  actionButton: { flex: 1 },
+  sample: { alignItems: 'center', gap: spacing.xs },
+  feedback: { gap: spacing.md },
   options: { gap: spacing.md },
   next: { marginTop: spacing.sm },
 });
