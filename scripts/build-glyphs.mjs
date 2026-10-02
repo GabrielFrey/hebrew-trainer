@@ -46,6 +46,66 @@ function renderGray(char) {
   return readFileSync(out);
 }
 
+/**
+ * Утончение Чжана — Суня. Человек ведёт пальцем одну тонкую линию, а шрифт
+ * даёт залитый глиф в несколько клеток толщиной. Чтобы сравнивать подобное с
+ * подобным, шаблон сводится к осевой линии. Топология при этом сохраняется,
+ * поэтому замкнутые пустоты (ם, ס) остаются замкнутыми.
+ */
+function thin(cells, size) {
+  const at = (grid, x, y) =>
+    x < 0 || y < 0 || x >= size || y >= size ? 0 : grid[y * size + x] ? 1 : 0;
+
+  let grid = [...cells];
+  for (let pass = 0; pass < 100; pass += 1) {
+    let removedAny = false;
+
+    for (const step of [0, 1]) {
+      const doomed = [];
+      for (let y = 0; y < size; y += 1) {
+        for (let x = 0; x < size; x += 1) {
+          if (!at(grid, x, y)) continue;
+          // P2..P9 по часовой стрелке, начиная с севера.
+          const p = [
+            at(grid, x, y - 1),
+            at(grid, x + 1, y - 1),
+            at(grid, x + 1, y),
+            at(grid, x + 1, y + 1),
+            at(grid, x, y + 1),
+            at(grid, x - 1, y + 1),
+            at(grid, x - 1, y),
+            at(grid, x - 1, y - 1),
+          ];
+          const neighbours = p.reduce((sum, value) => sum + value, 0);
+          if (neighbours < 2 || neighbours > 6) continue;
+
+          let transitions = 0;
+          for (let i = 0; i < 8; i += 1) {
+            if (p[i] === 0 && p[(i + 1) % 8] === 1) transitions += 1;
+          }
+          if (transitions !== 1) continue;
+
+          const [n, , e, , s, , w] = p;
+          const first = step === 0 ? n * e * s : n * e * w;
+          const second = step === 0 ? e * s * w : n * s * w;
+          if (first !== 0 || second !== 0) continue;
+
+          doomed.push(y * size + x);
+        }
+      }
+      if (doomed.length > 0) {
+        doomed.forEach((index) => {
+          grid[index] = false;
+        });
+        removedAny = true;
+      }
+    }
+
+    if (!removedAny) break;
+  }
+  return grid;
+}
+
 /** Сжимает изображение в сетку GRID×GRID по рамке самой буквы. */
 function toGrid(gray) {
   const ink = (x, y) => gray[y * CANVAS + x] < INK_THRESHOLD;
@@ -72,9 +132,8 @@ function toGrid(gray) {
   const offsetX = minX - (span - width) / 2;
   const offsetY = minY - (span - height) / 2;
 
-  const rows = [];
+  const filled = new Array(GRID * GRID).fill(false);
   for (let gy = 0; gy < GRID; gy += 1) {
-    let row = '';
     for (let gx = 0; gx < GRID; gx += 1) {
       const x0 = Math.round(offsetX + (gx * span) / GRID);
       const x1 = Math.round(offsetX + ((gx + 1) * span) / GRID);
@@ -88,7 +147,16 @@ function toGrid(gray) {
           if (x >= 0 && y >= 0 && x < CANVAS && y < CANVAS && ink(x, y)) inked += 1;
         }
       }
-      row += total > 0 && inked / total >= 0.28 ? '#' : '.';
+      filled[gy * GRID + gx] = total > 0 && inked / total >= 0.28;
+    }
+  }
+
+  const skeleton = thin(filled, GRID);
+  const rows = [];
+  for (let gy = 0; gy < GRID; gy += 1) {
+    let row = '';
+    for (let gx = 0; gx < GRID; gx += 1) {
+      row += skeleton[gy * GRID + gx] ? '#' : '.';
     }
     rows.push(row);
   }

@@ -33,12 +33,14 @@ export function HandwritingCanvas({
   const [strokes, setStrokes] = useState<Stroke[]>([]);
   const [lastReset, setLastReset] = useState(resetKey);
   const activeStroke = useRef<Stroke>([]);
+  const strokesRef = useRef<Stroke[]>([]);
   const sizeRef = useRef(0);
 
   if (lastReset !== resetKey) {
     setLastReset(resetKey);
     setStrokes([]);
     activeStroke.current = [];
+    strokesRef.current = [];
   }
 
   const onLayout = useCallback((event: LayoutChangeEvent) => {
@@ -63,7 +65,8 @@ export function HandwritingCanvas({
               y: event.nativeEvent.locationY / side,
             },
           ];
-          setStrokes((current) => [...current, activeStroke.current]);
+          strokesRef.current = [...strokesRef.current, activeStroke.current];
+          setStrokes(strokesRef.current);
         },
         onPanResponderMove: (event) => {
           const side = sizeRef.current || 1;
@@ -72,13 +75,13 @@ export function HandwritingCanvas({
             y: event.nativeEvent.locationY / side,
           };
           activeStroke.current = [...activeStroke.current, point];
-          setStrokes((current) => [...current.slice(0, -1), activeStroke.current]);
+          strokesRef.current = [...strokesRef.current.slice(0, -1), activeStroke.current];
+          setStrokes(strokesRef.current);
         },
         onPanResponderRelease: () => {
-          setStrokes((current) => {
-            onChange(current);
-            return current;
-          });
+          // onChange нельзя вызывать внутри обновления состояния: обработчик
+          // родителя тронет его state прямо во время рендера этого компонента.
+          onChange(strokesRef.current);
         },
       }),
     [disabled, onChange]

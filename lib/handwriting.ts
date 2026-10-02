@@ -50,8 +50,34 @@ type Mask = {
   holes: number;
 };
 
-/** Замкнутые области фона — заливка от границы, остаток и есть пустоты. */
-function countHoles(cells: boolean[]): number {
+/** Расширение на одну клетку: закрывает разрывы в один пиксель. */
+function dilate(cells: boolean[]): boolean[] {
+  const out = new Array<boolean>(GRID * GRID).fill(false);
+  for (let y = 0; y < GRID; y += 1) {
+    for (let x = 0; x < GRID; x += 1) {
+      if (!cells[y * GRID + x]) continue;
+      for (let dy = -1; dy <= 1; dy += 1) {
+        for (let dx = -1; dx <= 1; dx += 1) {
+          const nx = x + dx;
+          const ny = y + dy;
+          if (nx < 0 || ny < 0 || nx >= GRID || ny >= GRID) continue;
+          out[ny * GRID + nx] = true;
+        }
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * Замкнутые области фона — заливка от границы, остаток и есть пустоты.
+ *
+ * Считаем по расширенной копии: рисунок и шаблон попадают в сетку немного
+ * по-разному, и разрыв в одну клетку не должен превращать замкнутое ס в
+ * открытое. Широкие просветы (у ח снизу, у ט сверху) расширение переживают.
+ */
+function countHoles(source: boolean[]): number {
+  const cells = dilate(source);
   const outside = new Array<boolean>(GRID * GRID).fill(false);
   const queue: number[] = [];
   const push = (x: number, y: number) => {
@@ -132,18 +158,72 @@ function describeMask(cells: boolean[], aspect: number): Mask {
   };
 }
 
-function maskFromRows(rows: string[], aspect: number): Mask {
+/**
+ * Приводит набор закрашенных клеток к единому кадру: рамка чернил растягивается
+ * до стороны сетки, масштаб единый по осям, остаток центруется. Через это
+ * проходят и шаблон, и рисунок — иначе они сравнивались бы в разных системах
+ * координат и даже идеальная обводка давала бы нулевой балл.
+ */
+function fitToGrid(source: boolean[]): { cells: boolean[]; aspect: number } | null {
+  let minX = GRID;
+  let minY = GRID;
+  let maxX = -1;
+  let maxY = -1;
+  for (let y = 0; y < GRID; y += 1) {
+    for (let x = 0; x < GRID; x += 1) {
+      if (!source[y * GRID + x]) continue;
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+    }
+  }
+  if (maxX < 0) return null;
+
+  const width = maxX - minX + 1;
+  const height = maxY - minY + 1;
+  const span = Math.max(width, height);
+  const offsetX = minX - (span - width) / 2;
+  const offsetY = minY - (span - height) / 2;
+
   const cells = new Array<boolean>(GRID * GRID).fill(false);
+  for (let y = minY; y <= maxY; y += 1) {
+    for (let x = minX; x <= maxX; x += 1) {
+      if (!source[y * GRID + x]) continue;
+      // Клетка источника покрывает прямоугольник в приёмнике — заливаем целиком,
+      // иначе при растяжении в линиях появились бы разрывы.
+      const x0 = Math.floor(((x - offsetX) / span) * GRID);
+      const x1 = Math.ceil(((x + 1 - offsetX) / span) * GRID);
+      const y0 = Math.floor(((y - offsetY) / span) * GRID);
+      const y1 = Math.ceil(((y + 1 - offsetY) / span) * GRID);
+      for (let ty = y0; ty < Math.max(y1, y0 + 1); ty += 1) {
+        for (let tx = x0; tx < Math.max(x1, x0 + 1); tx += 1) {
+          if (tx < 0 || ty < 0 || tx >= GRID || ty >= GRID) continue;
+          cells[ty * GRID + tx] = true;
+        }
+      }
+    }
+  }
+  return { cells, aspect: width / height };
+}
+
+function maskFromRows(rows: string[]): Mask | null {
+  const raw = new Array<boolean>(GRID * GRID).fill(false);
   rows.forEach((row, y) => {
     for (let x = 0; x < GRID; x += 1) {
-      if (row[x] === '#') cells[y * GRID + x] = true;
+      if (row[x] === '#') raw[y * GRID + x] = true;
     }
   });
-  return describeMask(cells, aspect);
+  const fitted = fitToGrid(raw);
+  if (!fitted) return null;
+  return describeMask(fitted.cells, fitted.aspect);
 }
 
 const templateMasks = new Map<string, Mask>(
-  glyphs.map((g) => [g.id, maskFromRows(g.rows, g.aspect)])
+  glyphs.flatMap((g) => {
+    const mask = maskFromRows(g.rows);
+    return mask ? [[g.id, mask] as [string, Mask]] : [];
+  })
 );
 
 export function totalInk(strokes: Stroke[]): number {
@@ -290,8 +370,10 @@ function similarity(drawing: Mask, drawingField: number[], template: Mask): numb
     Math.min(drawing.aspect, template.aspect) / Math.max(drawing.aspect, template.aspect);
   const aspectFactor = 0.8 + 0.2 * Math.max(0, Math.min(1, aspectRatio));
 
-  // Незамкнутый от руки контур не должен обнулять балл, поэтому штраф мягкий.
-  const holeFactor = 0.86 ** Math.abs(drawing.holes - template.holes);
+  // Замкнутость — топологический факт, а не мелкая деталь: ס от ט и ם от ח
+  // отличаются именно ею, поэтому штраф ощутимый. Полностью обнулять балл всё
+  // равно нельзя — от руки контур часто не сходится на одну клетку.
+  const holeFactor = 0.62 ** Math.abs(drawing.holes - template.holes);
 
   return Math.max(0, agreement) ** 0.7 * profile ** 0.3 * aspectFactor * holeFactor;
 }
@@ -314,13 +396,17 @@ export type Recognition = {
 export const MIN_STROKE_LENGTH = 0.35; // в долях стороны холста
 
 /** Ниже этого балла начертание считается слишком непохожим, чтобы зачесть. */
-const MATCH_SCORE = 0.5;
-/** Насколько конкурент может опередить ожидаемую букву и всё ещё «match». */
-const MATCH_TOLERANCE = 0.05;
+const MATCH_SCORE = 0.75;
+/**
+ * Ожидаемая буква должна быть лучшим кандидатом. Крошечный допуск оставлен для
+ * пар, которые отличаются только положением относительно строки (ו и ן): после
+ * приведения к рамке они почти совпадают.
+ */
+const MATCH_TOLERANCE = 0.02;
 /** Чтобы объявить ошибку, другая буква должна быть узнана уверенно... */
-const RIVAL_SCORE = 0.6;
+const RIVAL_SCORE = 0.78;
 /** ...и опередить ожидаемую вот настолько. */
-const MISMATCH_MARGIN = 0.1;
+const MISMATCH_MARGIN = 0.05;
 
 export function rank(strokes: Stroke[]): Candidate[] {
   const drawing = rasterise(strokes);
