@@ -11,7 +11,8 @@ import { ProgressBar, StatTile } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
 import { dayKey, pluralRu } from '@/lib/dates';
-import { letters, words } from '@/lib/data';
+import { getLevel, letters } from '@/lib/data';
+import { teachesLetters, wordsForLevel } from '@/lib/levels';
 import { SESSION_SIZE, summariseToday } from '@/lib/session';
 import { isLearned } from '@/lib/srs';
 import { useStore } from '@/lib/store';
@@ -39,6 +40,9 @@ export default function TodayScreen() {
   const reviewedToday = todayLog.reduce((sum, s) => sum + s.reviewed, 0);
   const streak = progress.streak.current;
   const minutes = progress.settings.minutesPerDay;
+  const level = getLevel(progress.settings.level);
+  const unlockedWords = wordsForLevel(progress.settings.level);
+  const lettersInPlay = teachesLetters(progress.settings.level);
 
   const nothingToDo = summary.queueSize === 0;
 
@@ -47,7 +51,7 @@ export default function TodayScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <ScreenHeader
           title="Сегодня"
-          subtitle={`Короткая тренировка на ${minutes} ${pluralRu(minutes, ['минуту', 'минуты', 'минут'])}`}
+          subtitle={`${level.title} · ${minutes} ${pluralRu(minutes, ['минута', 'минуты', 'минут'])} в день`}
           action={{ icon: 'settings', label: 'Настройки', onPress: () => router.push('/settings') }}
         />
 
@@ -112,15 +116,17 @@ export default function TodayScreen() {
 
         <View style={styles.block}>
           <View style={styles.tiles}>
+            {lettersInPlay ? (
+              <StatTile
+                value={`${learnedLetters}/${letters.length}`}
+                label="Буквы выучены"
+                hint="Интервал 6 дней и больше"
+              />
+            ) : null}
             <StatTile
-              value={`${learnedLetters}/${letters.length}`}
-              label="Буквы выучены"
-              hint="Интервал 6 дней и больше"
-            />
-            <StatTile
-              value={`${learnedWords}/${words.length}`}
+              value={`${learnedWords}/${unlockedWords.length}`}
               label="Слова выучены"
-              hint="Из загруженных колод"
+              hint={`Открыто на уровне «${level.title}»`}
             />
           </View>
         </View>
@@ -158,7 +164,7 @@ export default function TodayScreen() {
                 <View style={styles.warmupText}>
                   <AppText variant="label">Напиши букву</AppText>
                   <AppText variant="caption" muted>
-                    По названию и звуку — с самопроверкой
+                    Начертить пальцем — приложение сверит
                   </AppText>
                 </View>
                 <Button
@@ -170,6 +176,18 @@ export default function TodayScreen() {
             </Surface>
           )}
         </View>
+
+        {progress.settings.reminderAsked && !progress.settings.remindersEnabled ? (
+          <View style={styles.block}>
+            <Surface tone="alt" style={styles.quote}>
+              <AppText variant="label">Напоминания выключены</AppText>
+              <AppText variant="caption" muted>
+                Серия дней растёт только от завершённой сессии. Включить напоминание можно
+                в настройках.
+              </AppText>
+            </Surface>
+          </View>
+        ) : null}
 
         <View style={styles.block}>
           <Surface tone="alt" style={styles.quote}>

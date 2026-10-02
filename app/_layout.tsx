@@ -5,6 +5,7 @@ import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { syncReminder } from '@/lib/notifications';
 import { StoreProvider, useStore } from '@/lib/store';
 import { ThemeProvider, useTheme } from '@/lib/theme';
 
@@ -40,6 +41,13 @@ function RootNavigator() {
       router.replace('/');
     }
   }, [ready, onboarded, segments, router]);
+
+  const { remindersEnabled, reminderHour, minutesPerDay } = progress.settings;
+  useEffect(() => {
+    if (!ready || !onboarded) return;
+    // Переназначаем напоминание при старте: час или длительность могли измениться.
+    void syncReminder({ remindersEnabled, reminderHour, minutesPerDay });
+  }, [ready, onboarded, remindersEnabled, reminderHour, minutesPerDay]);
 
   const navTheme = {
     ...(scheme === 'dark' ? DarkTheme : DefaultTheme),
