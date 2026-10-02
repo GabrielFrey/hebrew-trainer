@@ -1,27 +1,53 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 import { radius, spacing } from '@/constants/theme';
 import { AppText } from '@/components/Themed';
-import { speak } from '@/lib/speech';
+import { hasRecording, playRecording } from '@/lib/audio';
 import { usePalette } from '@/lib/theme';
 
-export function SpeakButton({
-  text,
+/**
+ * Озвучка только голосом носителя. Когда файла нет, кнопка неактивна и прямо
+ * сообщает «нет записи» — синтез речи не подставляется.
+ */
+export function AudioButton({
+  audio,
   label = 'Прослушать',
   compact = false,
 }: {
-  text: string;
+  audio: string | null | undefined;
   label?: string;
   compact?: boolean;
 }) {
   const palette = usePalette();
+  const available = hasRecording(audio);
+
+  if (!available) {
+    return (
+      <View
+        accessibilityLabel="Записи носителя пока нет"
+        style={[
+          styles.base,
+          compact ? styles.compact : styles.full,
+          { backgroundColor: 'transparent', borderColor: palette.border },
+        ]}
+      >
+        <Feather name="mic-off" size={compact ? 15 : 17} color={palette.textMuted} />
+        {compact ? null : (
+          <AppText variant="caption" muted>
+            нет записи
+          </AppText>
+        )}
+      </View>
+    );
+  }
+
   return (
     <Pressable
-      accessibilityLabel={`${label}: ${text}`}
+      accessibilityLabel={label}
       accessibilityRole="button"
       hitSlop={8}
-      onPress={() => speak(text)}
+      onPress={() => playRecording(audio)}
       style={({ pressed }) => [
         styles.base,
         compact ? styles.compact : styles.full,
