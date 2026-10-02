@@ -49,24 +49,23 @@ export default function SessionScreen() {
   const advance = useCallback(
     (card: SessionCard, grade: Grade) => {
       gradeCard(card.kind, card.refId, grade);
-      totals.current.reviewed += 1;
-      if (grade !== 'again') totals.current.correct += 1;
+      const reviewed = totals.current.reviewed + 1;
+      const correct = totals.current.correct + (grade === 'again' ? 0 : 1);
+      totals.current = { reviewed, correct };
 
       // A wrong answer resets the interval and sends the card to the queue tail.
-      const retry = grade === 'again';
-      setQueue((currentQueue) => (retry ? [...currentQueue, { ...card, isNew: false }] : currentQueue));
+      if (grade === 'again') {
+        setQueue((currentQueue) => [...currentQueue, { ...card, isNew: false }]);
+      } else if (position + 1 >= queue.length) {
+        finishSession(reviewed, correct);
+        setDone(true);
+      }
+
       setPicked(null);
       setRevealed(false);
-      setPosition((value) => {
-        const nextIndex = value + 1;
-        if (!retry && nextIndex >= queue.length) {
-          finishSession(totals.current.reviewed, totals.current.correct);
-          setDone(true);
-        }
-        return nextIndex;
-      });
+      setPosition((value) => value + 1);
     },
-    [finishSession, gradeCard, queue.length]
+    [finishSession, gradeCard, position, queue.length]
   );
 
   const closeSession = useCallback(() => {
