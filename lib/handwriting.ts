@@ -1,4 +1,5 @@
 import glyphData from '@/data/glyphs.json';
+import type { Grade } from '@/lib/types';
 
 export type Point = { x: number; y: number };
 export type Stroke = Point[];
@@ -377,4 +378,14 @@ export function recognise(strokes: Stroke[], expectedGlyphId: string): Recogniti
     return { ...result, verdict: 'mismatch' };
   }
   return result;
+}
+
+/**
+ * Во что превращается жест для планировщика. `null` означает «не оценивать»:
+ * при низкой уверенности просим написать заново и ошибку не записываем.
+ */
+export function gradeForVerdict(verdict: Verdict): Grade | null {
+  if (verdict === 'match') return 'good';
+  if (verdict === 'mismatch') return 'again';
+  return null;
 }

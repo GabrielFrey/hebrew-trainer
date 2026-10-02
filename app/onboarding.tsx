@@ -8,25 +8,47 @@ import { HebrewText } from '@/components/HebrewText';
 import { ProgressBar } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
+import { levels } from '@/lib/data';
+import { defaultShowNikud } from '@/lib/levels';
+import { requestPermission, syncReminder } from '@/lib/notifications';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
-import type { Goal, Level } from '@/lib/types';
-
-type Minutes = 5 | 10 | 15;
+import type { Goal, LevelId, MinutesPerDay } from '@/lib/types';
 
 const STEPS = 3;
+const MINUTES: MinutesPerDay[] = [5, 10, 20];
+const REMINDER_HOUR = 20;
 
 export default function OnboardingScreen() {
   const router = useRouter();
   const { updateSettings } = useStore();
   const [step, setStep] = useState(0);
-  const [level, setLevel] = useState<Level>('zero');
+  const [level, setLevel] = useState<LevelId>('elementary');
   const [goal, setGoal] = useState<Goal>('reading');
-  const [minutes, setMinutes] = useState<Minutes>(10);
+  const [minutes, setMinutes] = useState<MinutesPerDay>(10);
 
-  const finish = () => {
-    updateSettings({ level, goal, minutesPerDay: minutes, onboarded: true });
+  const finish = async () => {
+    updateSettings({
+      level,
+      goal,
+      minutesPerDay: minutes,
+      showNikud: defaultShowNikud(level),
+      onboarded: true,
+      reminderHour: REMINDER_HOUR,
+    });
     router.replace('/');
+
+    // Разрешение спрашиваем уже после онбординга, и отказ ничего не блокирует.
+    const outcome = await requestPermission();
+    const granted = outcome === 'granted';
+    updateSettings({ reminderAsked: true, remindersEnabled: granted });
+    if (granted) {
+      await syncReminder({
+        remindersEnabled: true,
+        reminderHour: REMINDER_HOUR,
+        minutesPerDay: minutes,
+      });
+    }
   };
 
   return (
@@ -37,7 +59,7 @@ export default function OnboardingScreen() {
             שָׁלוֹם
           </HebrewText>
           <AppText variant="caption" muted style={styles.centered}>
-            шалом
+            шало́м
           </AppText>
         </View>
 
@@ -50,29 +72,23 @@ export default function OnboardingScreen() {
 
         {step === 0 ? (
           <Step
-            title="С чего начинаем?"
-            description="Это определит, будем ли мы показывать буквы с самого начала."
+            title="Ваш уровень"
+            description="От него зависят колоды, длина фраз и огласовки. Уровень можно поменять в любой момент — выученное не сбросится."
           >
-            <Option
-              selected={level === 'zero'}
-              title="С нуля"
-              description="Алфавит незнаком, огласовки тоже"
-              onPress={() => setLevel('zero')}
-            />
-            <Option
-              selected={level === 'letters'}
-              title="Умею буквы"
-              description="Читаю по слогам, нужен словарь и беглость"
-              onPress={() => setLevel('letters')}
-            />
+            {levels.map((item) => (
+              <Option
+                key={item.id}
+                selected={level === item.id}
+                title={item.title}
+                description={`${item.summary}. ${item.detail}.`}
+                onPress={() => setLevel(item.id)}
+              />
+            ))}
           </Step>
         ) : null}
 
         {step === 1 ? (
-          <Step
-            title="Главная цель"
-            description="Акцент в сессии: разбор текста или живая речь."
-          >
+          <Step title="Главная цель" description="Акцент в сессии: разбор текста или живая речь.">
             <Option
               selected={goal === 'reading'}
               title="Чтение"
@@ -91,9 +107,9 @@ export default function OnboardingScreen() {
         {step === 2 ? (
           <Step
             title="Сколько времени в день?"
-            description="Очередь всегда 15 карточек — время влияет на напоминания и ожидания."
+            description={`Очередь всегда не длиннее 15 карточек. Во столько же будем присылать напоминание — в ${REMINDER_HOUR}:00.`}
           >
-            {([5, 10, 15] as Minutes[]).map((value) => (
+            {MINUTES.map((value) => (
               <Option
                 key={value}
                 selected={minutes === value}
@@ -123,7 +139,7 @@ export default function OnboardingScreen() {
           <Button
             label={step === STEPS - 1 ? 'Начать учиться' : 'Дальше'}
             size="lg"
-            onPress={() => (step === STEPS - 1 ? finish() : setStep((value) => value + 1))}
+            onPress={() => (step === STEPS - 1 ? void finish() : setStep((value) => value + 1))}
             style={styles.actionButton}
           />
         </View>

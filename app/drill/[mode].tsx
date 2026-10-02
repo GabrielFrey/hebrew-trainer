@@ -5,7 +5,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Button, ChoiceRow } from '@/components/Button';
 import { EmptyState } from '@/components/EmptyState';
 import { HebrewText } from '@/components/HebrewText';
-import { SpeakButton } from '@/components/SpeakButton';
+import { AudioButton } from '@/components/AudioButton';
 import { ProgressBar } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { spacing } from '@/constants/theme';
@@ -146,7 +146,7 @@ export default function LetterDrillScreen() {
               {current.char}
             </HebrewText>
             <View style={styles.centeredRow}>
-              <SpeakButton text={current.name} label="Название" />
+              <AudioButton audio={current.audio} label="Название" />
             </View>
           </Surface>
         )}

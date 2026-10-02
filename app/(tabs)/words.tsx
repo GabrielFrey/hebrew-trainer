@@ -8,7 +8,8 @@ import { ScreenHeader } from '@/components/ScreenHeader';
 import { ProgressBar } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
-import { decks, wordsInDeck } from '@/lib/data';
+import { words as allWords, wordsInDeck } from '@/lib/data';
+import { decksForLevel } from '@/lib/levels';
 import { isLearned } from '@/lib/srs';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
@@ -27,9 +28,11 @@ export default function WordsScreen() {
   const palette = usePalette();
   const { progress } = useStore();
 
+  const unlocked = decksForLevel(progress.settings.level);
+
   const rows = useMemo(
     () =>
-      decks.map((deck: Deck) => {
+      unlocked.map((deck: Deck) => {
         const items = wordsInDeck(deck.id);
         const learned = items.filter((w) => {
           const card = progress.cards[`word:${w.id}`];
@@ -37,7 +40,7 @@ export default function WordsScreen() {
         }).length;
         return { deck, total: items.length, learned, preview: items.slice(0, 3) };
       }),
-    [progress.cards]
+    [progress.cards, unlocked]
   );
 
   const totalWords = rows.reduce((sum, row) => sum + row.total, 0);
@@ -48,7 +51,7 @@ export default function WordsScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <ScreenHeader
           title="Слова"
-          subtitle={`${totalWords} слов в приложении · выучено ${totalLearned}`}
+          subtitle={`${totalWords} из ${allWords.length} слов открыто · выучено ${totalLearned}`}
         />
 
         <View style={styles.block}>
@@ -86,13 +89,11 @@ export default function WordsScreen() {
                   <AppText variant="caption" muted>
                     Выучено {learned} из {total}
                   </AppText>
-                  {total < deck.plannedSize ? (
-                    <View style={[styles.badge, { backgroundColor: `${palette.warning}1F` }]}>
-                      <AppText variant="caption" style={{ color: palette.warning }}>
-                        колода пополняется
-                      </AppText>
-                    </View>
-                  ) : null}
+                  <View style={[styles.badge, { backgroundColor: palette.surfaceAlt }]}>
+                    <AppText variant="caption" muted>
+                      {total} слов
+                    </AppText>
+                  </View>
                 </View>
               </Surface>
             </Pressable>
@@ -101,10 +102,11 @@ export default function WordsScreen() {
 
         <View style={styles.block}>
           <Surface tone="alt" style={styles.note}>
-            <AppText variant="label">Откуда берутся слова</AppText>
+            <AppText variant="label">Колоды и уровень</AppText>
             <AppText variant="caption" muted>
-              Все формы с огласовками лежат в data/hebrew.json и выверены вручную. Приложение
-              никогда не генерирует никуд само.
+              Открыты колоды текущего уровня и всех, что ниже. Уровень меняется в настройках, и
+              выученное при этом не сбрасывается. Все формы с огласовками лежат в
+              data/hebrew.json и выверены вручную.
             </AppText>
           </Surface>
         </View>

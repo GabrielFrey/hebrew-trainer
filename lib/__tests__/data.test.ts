@@ -50,11 +50,11 @@ describe('data/hebrew.json', () => {
     words.forEach((word) => {
       expect(NIKUD.test(word.nikud)).toBe(true);
       expect(HEBREW_ONLY.test(word.nikud)).toBe(true);
-      expect(NIKUD.test(word.plain)).toBe(false);
-      expect(isKtivMaleOf(word.nikud, word.plain)).toBe(true);
-      expect(word.translit).not.toHaveLength(0);
-      expect(word.translitRu).not.toHaveLength(0);
+      expect(NIKUD.test(word.hebrew)).toBe(false);
+      expect(isKtivMaleOf(word.nikud, word.hebrew)).toBe(true);
+      expect(word.transcription).not.toHaveLength(0);
       expect(word.ru).not.toHaveLength(0);
+      expect(word.audio).toMatch(/^words\/.+\.m4a$/);
     });
   });
 
@@ -69,15 +69,18 @@ describe('data/hebrew.json', () => {
     decks.forEach((deck) => {
       const size = words.filter((word) => word.deck === deck.id).length;
       expect(size).toBeGreaterThan(0);
-      expect(size).toBeLessThanOrEqual(deck.plannedSize);
+      // Колода и её слова обязаны лежать на одном уровне.
+      words
+        .filter((word) => word.deck === deck.id)
+        .forEach((word) => expect(word.level).toBe(deck.level));
     });
   });
 
   it('у каждой фразы есть вариант без огласовок и три отличных дистрактора', () => {
     phrases.forEach((phrase) => {
       expect(NIKUD.test(phrase.nikud)).toBe(true);
-      expect(NIKUD.test(phrase.plain)).toBe(false);
-      expect(isKtivMaleOf(phrase.nikud, phrase.plain)).toBe(true);
+      expect(NIKUD.test(phrase.hebrew)).toBe(false);
+      expect(isKtivMaleOf(phrase.nikud, phrase.hebrew)).toBe(true);
       expect(phrase.distractors.length).toBeGreaterThanOrEqual(3);
       expect(new Set([phrase.ru, ...phrase.distractors]).size).toBe(phrase.distractors.length + 1);
     });

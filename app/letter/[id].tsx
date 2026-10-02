@@ -3,7 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 
 import { Button } from '@/components/Button';
 import { HebrewText } from '@/components/HebrewText';
-import { SpeakButton } from '@/components/SpeakButton';
+import { AudioButton } from '@/components/AudioButton';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { spacing } from '@/constants/theme';
 import { getLetter } from '@/lib/data';
@@ -45,7 +45,7 @@ export default function LetterScreen() {
             {letter.sound}
           </AppText>
           <View style={styles.speakRow}>
-            <SpeakButton text={letter.name} label="Название" />
+            <AudioButton audio={letter.audio} label="Название" />
           </View>
           <AppText variant="caption" muted style={styles.centered}>
             {status}
@@ -59,7 +59,7 @@ export default function LetterScreen() {
             {letter.example.translitRu} · {letter.example.translit}
           </AppText>
           <AppText>{letter.example.ru}</AppText>
-          <SpeakButton text={letter.example.he} />
+          <AudioButton audio={null} />
         </Surface>
 
         {letter.finalChar && letter.finalExample ? (
@@ -75,13 +75,13 @@ export default function LetterScreen() {
             <AppText variant="label" muted>
               {letter.finalExample.translitRu} — {letter.finalExample.ru}
             </AppText>
-            <SpeakButton text={letter.finalExample.he} />
+            <AudioButton audio={null} />
           </Surface>
         ) : null}
 
         <Button
-          label="Тренировать буквы"
-          onPress={() => router.push('/drill/recognise')}
+          label="Написать от руки"
+          onPress={() => router.push('/drill/write')}
           style={styles.cta}
         />
       </ScrollView>

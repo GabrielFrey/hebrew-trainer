@@ -58,7 +58,7 @@ describe('сборка очереди', () => {
 
   it('не вводит новые буквы, если пользователь уже знает алфавит', () => {
     const progress = onboarded();
-    progress.settings.level = 'letters';
+    progress.settings.level = 'intermediate';
     const queue = buildSession(progress, NOW);
     expect(queue.filter((card) => card.kind === 'letter')).toHaveLength(0);
   });

@@ -4,18 +4,22 @@ import { Feather } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
+import { AudioButton } from '@/components/AudioButton';
 import { Button, ChoiceRow } from '@/components/Button';
 import { EmptyState } from '@/components/EmptyState';
+import { HandwritingCanvas } from '@/components/HandwritingCanvas';
 import { HebrewText } from '@/components/HebrewText';
-import { SpeakButton } from '@/components/SpeakButton';
 import { ProgressBar } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { spacing } from '@/constants/theme';
-import { getLetter, getPhrase, getWord } from '@/lib/data';
+import { getLetter, getPassage, getPhrase, getWord } from '@/lib/data';
+import { getGlyph, gradeForVerdict, recognise } from '@/lib/handwriting';
+import type { Stroke } from '@/lib/handwriting';
+import { hebrewFor, showNikud, showTranscription } from '@/lib/levels';
 import { buildSession } from '@/lib/session';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
-import type { Grade, SessionCard } from '@/lib/types';
+import type { Grade, SessionCard, Settings } from '@/lib/types';
 
 function tap(success: boolean) {
   if (Platform.OS === 'web') return;
@@ -24,11 +28,20 @@ function tap(success: boolean) {
   );
 }
 
+type WriteState = {
+  strokes: Stroke[];
+  verdict: 'idle' | 'match' | 'mismatch' | 'unsure';
+  attempts: number;
+};
+
+const EMPTY_WRITE: WriteState = { strokes: [], verdict: 'idle', attempts: 0 };
+
 export default function SessionScreen() {
   const router = useRouter();
   const palette = usePalette();
   const { ahead } = useLocalSearchParams<{ ahead?: string }>();
   const { progress, gradeCard, finishSession } = useStore();
+  const settings = progress.settings;
 
   const initialQueue = useMemo(
     () => buildSession(progress, Date.now(), { allowAhead: ahead === '1' }),
@@ -40,7 +53,7 @@ export default function SessionScreen() {
   const [queue, setQueue] = useState<SessionCard[]>(initialQueue);
   const [position, setPosition] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
-  const [revealed, setRevealed] = useState(false);
+  const [write, setWrite] = useState<WriteState>(EMPTY_WRITE);
   const totals = useRef({ reviewed: 0, correct: 0 });
   const [done, setDone] = useState(false);
 
@@ -62,10 +75,24 @@ export default function SessionScreen() {
       }
 
       setPicked(null);
-      setRevealed(false);
+      setWrite(EMPTY_WRITE);
       setPosition((value) => value + 1);
     },
     [finishSession, gradeCard, position, queue.length]
+  );
+
+  const checkHandwriting = useCallback(
+    (card: SessionCard, strokes: Stroke[]) => {
+      if (!card.expectedGlyph) return;
+      const result = recognise(strokes, card.expectedGlyph);
+      setWrite((state) => ({
+        strokes,
+        verdict: result.verdict,
+        attempts: state.attempts + 1,
+      }));
+      if (result.verdict !== 'unsure') tap(result.verdict === 'match');
+    },
+    []
   );
 
   const closeSession = useCallback(() => {
@@ -104,7 +131,7 @@ export default function SessionScreen() {
               כָּל הַכָּבוֹד!
             </HebrewText>
             <AppText variant="caption" muted style={styles.centered}>
-              «Молодец» — коль ха-кавод
+              «Молодец» — коль ха-каво́д
             </AppText>
             <AppText variant="title" style={styles.centered}>
               Сессия закончена
@@ -152,9 +179,10 @@ export default function SessionScreen() {
 
         <CardBody
           card={current}
+          settings={settings}
           picked={picked}
-          revealed={revealed}
-          onReveal={() => setRevealed(true)}
+          write={write}
+          onStrokes={(strokes) => checkHandwriting(current, strokes)}
           onPick={(value) => {
             setPicked(value);
             tap(value === current.answer);
@@ -164,8 +192,8 @@ export default function SessionScreen() {
         <Footer
           card={current}
           picked={picked}
-          revealed={revealed}
-          onReveal={() => setRevealed(true)}
+          write={write}
+          onRetry={() => setWrite((state) => ({ ...EMPTY_WRITE, attempts: state.attempts }))}
           onGrade={(grade) => advance(current, grade)}
         />
       </ScrollView>
@@ -178,35 +206,42 @@ function promptFor(card: SessionCard): { title: string; hint?: string } {
     case 'letter-recognise':
       return { title: 'Какая это буква?' };
     case 'letter-write':
-      return { title: 'Напишите букву', hint: 'От руки, затем сверьтесь' };
+      return { title: 'Напишите букву', hint: 'Пальцем по полю — приложение сверит начертание' };
     case 'word-he-ru':
       return { title: 'Что означает слово?' };
     case 'word-ru-he':
       return { title: 'Выберите написание' };
     case 'phrase-translate':
       return { title: 'Выберите перевод фразы' };
+    case 'passage-question':
+      return { title: 'Прочитайте и ответьте на иврите' };
   }
 }
 
 function CardBody({
   card,
+  settings,
   picked,
-  revealed,
-  onReveal,
+  write,
+  onStrokes,
   onPick,
 }: {
   card: SessionCard;
+  settings: Settings;
   picked: string | null;
-  revealed: boolean;
-  onReveal: () => void;
+  write: WriteState;
+  onStrokes: (strokes: Stroke[]) => void;
   onPick: (value: string) => void;
 }) {
   const prompt = promptFor(card);
   const answered = picked !== null;
+  const withTranscription = showTranscription(settings.level);
 
   const letter = card.kind === 'letter' ? getLetter(card.refId) : undefined;
   const word = card.kind === 'word' ? getWord(card.refId) : undefined;
   const phrase = card.kind === 'phrase' ? getPhrase(card.refId) : undefined;
+  const passage = card.kind === 'passage' ? getPassage(card.refId) : undefined;
+  const expected = card.expectedGlyph ? getGlyph(card.expectedGlyph) : undefined;
 
   return (
     <View style={styles.body}>
@@ -219,83 +254,109 @@ function CardBody({
         ) : null}
       </View>
 
-      <Surface style={styles.stage}>
-        {card.exercise === 'letter-recognise' && letter ? (
-          <>
-            <HebrewText size="glyph" align="center">
-              {letter.char}
-            </HebrewText>
-            {card.isNew ? (
-              <AppText variant="label" muted>
-                {letter.nameRu} · {letter.sound}
-              </AppText>
-            ) : null}
-            <SpeakButton text={letter.name} label="Название" />
-          </>
-        ) : null}
-
-        {card.exercise === 'letter-write' && letter ? (
-          <>
+      {card.exercise === 'letter-write' && letter && expected ? (
+        <View style={styles.writeBlock}>
+          <Surface style={styles.writePrompt}>
             <AppText variant="title">{letter.nameRu}</AppText>
             <AppText muted style={styles.centered}>
               {letter.sound}
             </AppText>
-            {revealed ? (
-              <>
-                <HebrewText size="glyph" align="center">
-                  {letter.char}
+            {expected.form === 'final' ? (
+              <AppText variant="label" tone="accent">
+                конечная форма
+              </AppText>
+            ) : null}
+          </Surface>
+
+          <HandwritingCanvas
+            resetKey={`${card.cardId}-${write.attempts}-${write.verdict}`}
+            disabled={write.verdict === 'match' || write.verdict === 'mismatch'}
+            hint="Напишите букву здесь"
+            onChange={onStrokes}
+          />
+
+          {write.verdict === 'mismatch' || write.verdict === 'match' ? (
+            <Surface tone="alt" style={styles.writeAnswer}>
+              <AppText variant="caption" muted>
+                Образец
+              </AppText>
+              <HebrewText size="card" align="center">
+                {expected.char}
+              </HebrewText>
+            </Surface>
+          ) : null}
+        </View>
+      ) : (
+        <Surface style={styles.stage}>
+          {card.exercise === 'letter-recognise' && letter ? (
+            <>
+              <HebrewText size="glyph" align="center">
+                {letter.char}
+              </HebrewText>
+              {card.isNew ? (
+                <AppText variant="label" muted>
+                  {letter.nameRu} · {letter.sound}
+                </AppText>
+              ) : null}
+              <AudioButton audio={letter.audio} label="Название" />
+            </>
+          ) : null}
+
+          {card.exercise === 'word-he-ru' && word ? (
+            <>
+              <HebrewText size="card" align="center">
+                {hebrewFor(word, settings)}
+              </HebrewText>
+              {withTranscription && (card.isNew || answered) ? (
+                <AppText variant="label" muted>
+                  {word.transcription}
+                </AppText>
+              ) : null}
+              <AudioButton audio={word.audio} />
+            </>
+          ) : null}
+
+          {card.exercise === 'word-ru-he' && word ? (
+            <>
+              <AppText variant="title" style={styles.centered}>
+                {word.ru}
+              </AppText>
+              <AppText variant="caption" muted>
+                {word.pos}
+              </AppText>
+            </>
+          ) : null}
+
+          {card.exercise === 'phrase-translate' && phrase ? (
+            <>
+              <HebrewText size="card">{hebrewFor(phrase, settings)}</HebrewText>
+              {withTranscription && answered ? (
+                <AppText variant="caption" muted>
+                  {phrase.transcription}
+                </AppText>
+              ) : null}
+              <AudioButton audio={phrase.audio} />
+            </>
+          ) : null}
+
+          {card.exercise === 'passage-question' && passage ? (
+            <>
+              <HebrewText size={32}>{hebrewFor(passage, settings)}</HebrewText>
+              <AudioButton audio={passage.audio} />
+              <View style={styles.question}>
+                <HebrewText size="inline">
+                  {showNikud(settings) ? passage.question.nikud : passage.question.hebrew}
                 </HebrewText>
-                {letter.finalChar ? (
+                {answered ? (
                   <AppText variant="caption" muted>
-                    Конечная форма: {letter.finalChar}
+                    {passage.question.ru}
                   </AppText>
                 ) : null}
-              </>
-            ) : (
-              <Pressable onPress={onReveal} style={styles.hidden}>
-                <AppText muted>Нажмите, чтобы проверить себя</AppText>
-              </Pressable>
-            )}
-          </>
-        ) : null}
-
-        {card.exercise === 'word-he-ru' && word ? (
-          <>
-            <HebrewText size="card" align="center">
-              {word.nikud}
-            </HebrewText>
-            {card.isNew || answered ? (
-              <AppText variant="label" muted>
-                {word.translitRu} · {word.translit}
-              </AppText>
-            ) : null}
-            <SpeakButton text={word.nikud} />
-          </>
-        ) : null}
-
-        {card.exercise === 'word-ru-he' && word ? (
-          <>
-            <AppText variant="title" style={styles.centered}>
-              {word.ru}
-            </AppText>
-            <AppText variant="caption" muted>
-              {word.pos}
-            </AppText>
-          </>
-        ) : null}
-
-        {card.exercise === 'phrase-translate' && phrase ? (
-          <>
-            <HebrewText size="card">{phrase.nikud}</HebrewText>
-            {answered ? (
-              <AppText variant="caption" muted>
-                {phrase.translit}
-              </AppText>
-            ) : null}
-            <SpeakButton text={phrase.nikud} label="Прослушать" />
-          </>
-        ) : null}
-      </Surface>
+              </View>
+            </>
+          ) : null}
+        </Surface>
+      )}
 
       {card.exercise === 'letter-write' ? null : (
         <View style={styles.options}>
@@ -310,6 +371,8 @@ function CardBody({
                 : isAnswer
                   ? 'revealed'
                   : 'idle';
+            const hebrewOption =
+              card.exercise === 'word-ru-he' || card.exercise === 'passage-question';
             return (
               <ChoiceRow
                 key={option}
@@ -317,7 +380,7 @@ function CardBody({
                 disabled={answered}
                 onPress={() => onPick(option)}
               >
-                {card.exercise === 'word-ru-he' ? (
+                {hebrewOption ? (
                   <HebrewText size="inline" style={styles.optionHebrew}>
                     {option}
                   </HebrewText>
@@ -338,40 +401,73 @@ function CardBody({
 function Footer({
   card,
   picked,
-  revealed,
-  onReveal,
+  write,
+  onRetry,
   onGrade,
 }: {
   card: SessionCard;
   picked: string | null;
-  revealed: boolean;
-  onReveal: () => void;
+  write: WriteState;
+  onRetry: () => void;
   onGrade: (grade: Grade) => void;
 }) {
   const answered = picked !== null;
   const correct = picked === card.answer;
 
   if (card.exercise === 'letter-write') {
-    if (!revealed) {
+    if (write.verdict === 'match') {
       return (
         <View style={styles.footer}>
-          <Button label="Показать букву" size="lg" onPress={onReveal} />
+          <AppText variant="label" tone="success">
+            Начертание узнано. Как далось?
+          </AppText>
+          <View style={styles.footerRow}>
+            <Button
+              label="С трудом"
+              variant="secondary"
+              onPress={() => onGrade('hard')}
+              style={styles.footerButton}
+            />
+            <Button label="Нормально" onPress={() => onGrade('good')} style={styles.footerButton} />
+            <Button
+              label="Легко"
+              variant="secondary"
+              onPress={() => onGrade('easy')}
+              style={styles.footerButton}
+            />
+          </View>
+        </View>
+      );
+    }
+    if (write.verdict === 'mismatch') {
+      return (
+        <View style={styles.footer}>
+          <AppText variant="label" tone="danger">
+            Это другая буква. Карточка вернётся в конец очереди.
+          </AppText>
+          <Button
+            label="Понятно"
+            size="lg"
+            onPress={() => onGrade(gradeForVerdict('mismatch') ?? 'again')}
+          />
+        </View>
+      );
+    }
+    if (write.verdict === 'unsure' && write.attempts > 0) {
+      return (
+        <View style={styles.footer}>
+          <AppText variant="label" tone="accent">
+            Не разобрал начертание. Напишите ещё раз — ошибка не записана.
+          </AppText>
+          <Button label="Стереть и написать заново" size="lg" onPress={onRetry} />
         </View>
       );
     }
     return (
-      <View style={styles.footerRow}>
-        <Button
-          label="Ошибся"
-          variant="danger"
-          onPress={() => onGrade('again')}
-          style={styles.footerButton}
-        />
-        <Button
-          label="Написал верно"
-          onPress={() => onGrade('good')}
-          style={styles.footerButton}
-        />
+      <View style={styles.footer}>
+        <AppText variant="caption" muted style={styles.centered}>
+          Отпустите палец — приложение сверит букву
+        </AppText>
       </View>
     );
   }
@@ -455,7 +551,10 @@ const styles = StyleSheet.create({
   body: { gap: spacing.lg },
   promptBlock: { gap: 2 },
   stage: { alignItems: 'center', gap: spacing.md, paddingVertical: spacing.xl },
-  hidden: { paddingVertical: spacing.xl },
+  writeBlock: { gap: spacing.md },
+  writePrompt: { alignItems: 'center', gap: spacing.xs },
+  writeAnswer: { alignItems: 'center', gap: spacing.xs },
+  question: { alignItems: 'flex-end', gap: spacing.xs, width: '100%' },
   options: { gap: spacing.md },
   optionText: { flex: 1 },
   optionHebrew: { flex: 1 },

@@ -1,20 +1,24 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import type { Progress } from '@/lib/types';
+import type { Progress, Settings } from '@/lib/types';
 
 const STORAGE_KEY = 'hebrew-coach/progress/v1';
 
-export const PROGRESS_VERSION = 1;
+export const PROGRESS_VERSION = 2;
 
 export function emptyProgress(): Progress {
   return {
     version: PROGRESS_VERSION,
     settings: {
       onboarded: false,
-      level: 'zero',
+      level: 'elementary',
       goal: 'reading',
       minutesPerDay: 10,
       theme: 'system',
+      showNikud: true,
+      remindersEnabled: false,
+      reminderHour: 20,
+      reminderAsked: false,
     },
     cards: {},
     sessions: [],
@@ -22,13 +26,42 @@ export function emptyProgress(): Progress {
   };
 }
 
+/** Уровни из первой версии приложения. Прогресс при этом не сбрасывается. */
+const LEGACY_LEVELS: Record<string, Settings['level']> = {
+  zero: 'elementary',
+  letters: 'basic',
+};
+
+const LEGACY_MINUTES: Record<number, Settings['minutesPerDay']> = { 15: 20 };
+
 function migrate(stored: unknown): Progress {
   const base = emptyProgress();
   if (typeof stored !== 'object' || stored === null) return base;
   const candidate = stored as Partial<Progress>;
+  const stored_settings = (candidate.settings ?? {}) as Partial<Settings> & {
+    level?: string;
+    minutesPerDay?: number;
+  };
+
+  const level =
+    stored_settings.level && stored_settings.level in LEGACY_LEVELS
+      ? LEGACY_LEVELS[stored_settings.level]
+      : (stored_settings.level as Settings['level'] | undefined);
+
+  const minutes =
+    stored_settings.minutesPerDay && stored_settings.minutesPerDay in LEGACY_MINUTES
+      ? LEGACY_MINUTES[stored_settings.minutesPerDay]
+      : (stored_settings.minutesPerDay as Settings['minutesPerDay'] | undefined);
+
   return {
     version: PROGRESS_VERSION,
-    settings: { ...base.settings, ...(candidate.settings ?? {}) },
+    settings: {
+      ...base.settings,
+      ...stored_settings,
+      level: level ?? base.settings.level,
+      minutesPerDay: minutes ?? base.settings.minutesPerDay,
+    },
+    // Карточки переносятся как есть: смена схемы уровней ничего не сбрасывает.
     cards: candidate.cards ?? {},
     sessions: candidate.sessions ?? [],
     streak: { ...base.streak, ...(candidate.streak ?? {}) },

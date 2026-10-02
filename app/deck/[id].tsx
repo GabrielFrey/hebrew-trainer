@@ -5,14 +5,14 @@ import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { Button } from '@/components/Button';
 import { EmptyState } from '@/components/EmptyState';
 import { HebrewText } from '@/components/HebrewText';
-import { SpeakButton } from '@/components/SpeakButton';
+import { AudioButton } from '@/components/AudioButton';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
 import { getDeck, wordsInDeck } from '@/lib/data';
 import { isLearned } from '@/lib/srs';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
-import type { DeckId } from '@/lib/types';
+import { hasFeature } from '@/lib/levels';
 
 export default function DeckScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -42,7 +42,8 @@ export default function DeckScreen() {
     );
   }
 
-  const items = wordsInDeck(deck.id as DeckId);
+  const items = wordsInDeck(deck.id);
+  const showRoots = hasFeature(progress.settings.level, 'root');
 
   return (
     <Screen edges={['left', 'right']}>
@@ -74,14 +75,14 @@ export default function DeckScreen() {
                   <View style={styles.hebrewColumn}>
                     <HebrewText size="card">{word.nikud}</HebrewText>
                     <HebrewText size="inline" muted>
-                      {word.plain}
+                      {word.hebrew}
                     </HebrewText>
                   </View>
-                  <SpeakButton text={word.nikud} compact />
+                  <AudioButton audio={word.audio} compact />
                 </View>
 
                 <AppText variant="label" muted>
-                  {word.translitRu} · {word.translit}
+                  {word.transcription}
                 </AppText>
 
                 {showTranslation ? (
@@ -89,6 +90,18 @@ export default function DeckScreen() {
                 ) : (
                   <AppText muted>Перевод скрыт</AppText>
                 )}
+
+                {showRoots && word.root ? (
+                  <AppText variant="caption" muted>
+                    корень {word.root}
+                    {word.synonyms ? ` · синонимы: ${word.synonyms.join(', ')}` : ''}
+                  </AppText>
+                ) : null}
+                {word.literal ? (
+                  <AppText variant="caption" muted>
+                    буквально: {word.literal}
+                  </AppText>
+                ) : null}
 
                 <View style={styles.cardMeta}>
                   <AppText variant="caption" muted>
@@ -121,14 +134,12 @@ export default function DeckScreen() {
           })
         )}
 
-        {items.length < deck.plannedSize ? (
-          <Surface tone="alt" style={styles.note}>
-            <AppText variant="caption" muted>
-              В колоде {items.length} из запланированных {deck.plannedSize} слов. Остальные добавим
-              после проверки форм.
-            </AppText>
-          </Surface>
-        ) : null}
+        <Surface tone="alt" style={styles.note}>
+          <AppText variant="caption" muted>
+            В колоде {items.length} слов. Озвучка — только записями носителей; где записи ещё нет,
+            кнопка так и показывает.
+          </AppText>
+        </Surface>
       </ScrollView>
     </Screen>
   );
