@@ -12,7 +12,7 @@ import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
 import { dayKey, pluralRu } from '@/lib/dates';
 import { letters, words } from '@/lib/data';
-import { summariseToday } from '@/lib/session';
+import { SESSION_SIZE, summariseToday } from '@/lib/session';
 import { isLearned } from '@/lib/srs';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
@@ -92,6 +92,12 @@ export default function TodayScreen() {
                 <AppText muted>
                   {summary.dueCount} на повторение · {summary.newCount} новых
                 </AppText>
+                {summary.dueCount === 0 && summary.queueSize < SESSION_SIZE ? (
+                  <AppText variant="caption" muted>
+                    Повторений пока нет, поэтому очередь короче 15 карточек: за одну сессию
+                    вводим не больше 5 новых слов.
+                  </AppText>
+                ) : null}
                 <ProgressBar value={reviewedToday} total={reviewedToday + summary.queueSize} />
                 <Button
                   label="Начать"
