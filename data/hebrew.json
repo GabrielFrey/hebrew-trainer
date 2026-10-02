@@ -1,0 +1,797 @@
+{
+  "meta": {
+    "speechLanguage": "he-IL",
+    "note": "Все формы с огласовками выверены вручную. Не добавляйте слова без проверки по словарю."
+  },
+  "letters": [
+    {
+      "id": "alef",
+      "order": 1,
+      "char": "א",
+      "finalChar": null,
+      "name": "אָלֶף",
+      "nameRu": "алеф",
+      "nameTranslit": "alef",
+      "sound": "Своего звука нет: буква несёт огласовку",
+      "example": { "he": "אַבָּא", "translit": "aba", "translitRu": "аба", "ru": "папа" }
+    },
+    {
+      "id": "bet",
+      "order": 2,
+      "char": "ב",
+      "finalChar": null,
+      "name": "בֵּית",
+      "nameRu": "бет",
+      "nameTranslit": "bet",
+      "sound": "«б» с дагешем (בּ), «в» без дагеша (ב)",
+      "example": { "he": "בַּיִת", "translit": "bayit", "translitRu": "байит", "ru": "дом" }
+    },
+    {
+      "id": "gimel",
+      "order": 3,
+      "char": "ג",
+      "finalChar": null,
+      "name": "גִּימֶל",
+      "nameRu": "гимель",
+      "nameTranslit": "gimel",
+      "sound": "«г»",
+      "example": { "he": "גָּדוֹל", "translit": "gadol", "translitRu": "гадоль", "ru": "большой" }
+    },
+    {
+      "id": "dalet",
+      "order": 4,
+      "char": "ד",
+      "finalChar": null,
+      "name": "דָּלֶת",
+      "nameRu": "далет",
+      "nameTranslit": "dalet",
+      "sound": "«д»",
+      "example": { "he": "דֶּלֶת", "translit": "delet", "translitRu": "дэлет", "ru": "дверь" }
+    },
+    {
+      "id": "he",
+      "order": 5,
+      "char": "ה",
+      "finalChar": null,
+      "name": "הֵא",
+      "nameRu": "хей",
+      "nameTranslit": "he",
+      "sound": "Лёгкий «х» на выдохе, часто не слышен в конце слова",
+      "example": { "he": "הַר", "translit": "har", "translitRu": "хар", "ru": "гора" }
+    },
+    {
+      "id": "vav",
+      "order": 6,
+      "char": "ו",
+      "finalChar": null,
+      "name": "וָו",
+      "nameRu": "вав",
+      "nameTranslit": "vav",
+      "sound": "«в»; с огласовкой — «о» (וֹ) или «у» (וּ)",
+      "example": { "he": "וֶרֶד", "translit": "vered", "translitRu": "вэрэд", "ru": "роза" }
+    },
+    {
+      "id": "zayin",
+      "order": 7,
+      "char": "ז",
+      "finalChar": null,
+      "name": "זַיִן",
+      "nameRu": "заин",
+      "nameTranslit": "zayin",
+      "sound": "«з»",
+      "example": { "he": "זְמַן", "translit": "zman", "translitRu": "зман", "ru": "время" }
+    },
+    {
+      "id": "het",
+      "order": 8,
+      "char": "ח",
+      "finalChar": null,
+      "name": "חֵית",
+      "nameRu": "хет",
+      "nameTranslit": "het",
+      "sound": "Горловой «х»",
+      "example": { "he": "חַלּוֹן", "translit": "khalon", "translitRu": "халон", "ru": "окно" }
+    },
+    {
+      "id": "tet",
+      "order": 9,
+      "char": "ט",
+      "finalChar": null,
+      "name": "טֵית",
+      "nameRu": "тет",
+      "nameTranslit": "tet",
+      "sound": "«т»",
+      "example": { "he": "טוֹב", "translit": "tov", "translitRu": "тов", "ru": "хороший" }
+    },
+    {
+      "id": "yod",
+      "order": 10,
+      "char": "י",
+      "finalChar": null,
+      "name": "יוֹד",
+      "nameRu": "йуд",
+      "nameTranslit": "yod",
+      "sound": "«й»; в сочетаниях даёт «и»",
+      "example": { "he": "יוֹם", "translit": "yom", "translitRu": "йом", "ru": "день" }
+    },
+    {
+      "id": "kaf",
+      "order": 11,
+      "char": "כ",
+      "finalChar": "ך",
+      "name": "כַּף",
+      "nameRu": "каф",
+      "nameTranslit": "kaf",
+      "sound": "«к» с дагешем (כּ), «х» без дагеша (כ)",
+      "example": { "he": "כֶּלֶב", "translit": "kelev", "translitRu": "кэлев", "ru": "собака" },
+      "finalExample": { "he": "מֶלֶךְ", "translit": "melekh", "translitRu": "мэлех", "ru": "царь" }
+    },
+    {
+      "id": "lamed",
+      "order": 12,
+      "char": "ל",
+      "finalChar": null,
+      "name": "לָמֶד",
+      "nameRu": "ламед",
+      "nameTranslit": "lamed",
+      "sound": "«л»",
+      "example": { "he": "לֶחֶם", "translit": "lekhem", "translitRu": "лэхем", "ru": "хлеб" }
+    },
+    {
+      "id": "mem",
+      "order": 13,
+      "char": "מ",
+      "finalChar": "ם",
+      "name": "מֵם",
+      "nameRu": "мем",
+      "nameTranslit": "mem",
+      "sound": "«м»",
+      "example": { "he": "מַיִם", "translit": "mayim", "translitRu": "майим", "ru": "вода" },
+      "finalExample": { "he": "שָׁלוֹם", "translit": "shalom", "translitRu": "шалом", "ru": "мир; привет" }
+    },
+    {
+      "id": "nun",
+      "order": 14,
+      "char": "נ",
+      "finalChar": "ן",
+      "name": "נוּן",
+      "nameRu": "нун",
+      "nameTranslit": "nun",
+      "sound": "«н»",
+      "example": { "he": "נָכוֹן", "translit": "nakhon", "translitRu": "нахон", "ru": "верно" },
+      "finalExample": { "he": "בֵּן", "translit": "ben", "translitRu": "бэн", "ru": "сын" }
+    },
+    {
+      "id": "samekh",
+      "order": 15,
+      "char": "ס",
+      "finalChar": null,
+      "name": "סָמֶךְ",
+      "nameRu": "самех",
+      "nameTranslit": "samekh",
+      "sound": "«с»",
+      "example": { "he": "סֵפֶר", "translit": "sefer", "translitRu": "сэфер", "ru": "книга" }
+    },
+    {
+      "id": "ayin",
+      "order": 16,
+      "char": "ע",
+      "finalChar": null,
+      "name": "עַיִן",
+      "nameRu": "аин",
+      "nameTranslit": "ayin",
+      "sound": "В современном иврите звука почти нет, как алеф",
+      "example": { "he": "עִיר", "translit": "ir", "translitRu": "ир", "ru": "город" }
+    },
+    {
+      "id": "pe",
+      "order": 17,
+      "char": "פ",
+      "finalChar": "ף",
+      "name": "פֵּא",
+      "nameRu": "пей",
+      "nameTranslit": "pe",
+      "sound": "«п» с дагешем (פּ), «ф» без дагеша (פ)",
+      "example": { "he": "פֶּה", "translit": "pe", "translitRu": "пэ", "ru": "рот" },
+      "finalExample": { "he": "סוֹף", "translit": "sof", "translitRu": "соф", "ru": "конец" }
+    },
+    {
+      "id": "tsadi",
+      "order": 18,
+      "char": "צ",
+      "finalChar": "ץ",
+      "name": "צָדִי",
+      "nameRu": "цади",
+      "nameTranslit": "tsadi",
+      "sound": "«ц»",
+      "example": { "he": "צָהוֹב", "translit": "tsahov", "translitRu": "цаов", "ru": "жёлтый" },
+      "finalExample": { "he": "עֵץ", "translit": "ets", "translitRu": "эц", "ru": "дерево" }
+    },
+    {
+      "id": "qof",
+      "order": 19,
+      "char": "ק",
+      "finalChar": null,
+      "name": "קוֹף",
+      "nameRu": "куф",
+      "nameTranslit": "qof",
+      "sound": "«к»",
+      "example": { "he": "קָטָן", "translit": "katan", "translitRu": "катан", "ru": "маленький" }
+    },
+    {
+      "id": "resh",
+      "order": 20,
+      "char": "ר",
+      "finalChar": null,
+      "name": "רֵישׁ",
+      "nameRu": "реш",
+      "nameTranslit": "resh",
+      "sound": "«р», картавое, ближе к французскому",
+      "example": { "he": "רֹאשׁ", "translit": "rosh", "translitRu": "рош", "ru": "голова" }
+    },
+    {
+      "id": "shin",
+      "order": 21,
+      "char": "ש",
+      "finalChar": null,
+      "name": "שִׁין",
+      "nameRu": "шин",
+      "nameTranslit": "shin",
+      "sound": "«ш» с точкой справа (שׁ), «с» с точкой слева (שׂ)",
+      "example": { "he": "שָׁלוֹם", "translit": "shalom", "translitRu": "шалом", "ru": "мир; привет" }
+    },
+    {
+      "id": "tav",
+      "order": 22,
+      "char": "ת",
+      "finalChar": null,
+      "name": "תָּו",
+      "nameRu": "тав",
+      "nameTranslit": "tav",
+      "sound": "«т»",
+      "example": { "he": "תּוֹדָה", "translit": "toda", "translitRu": "тода", "ru": "спасибо" }
+    }
+  ],
+  "vowels": [
+    { "id": "kamats", "mark": "אָ", "name": "קָמָץ", "nameRu": "камац", "sound": "«а»" },
+    { "id": "patah", "mark": "אַ", "name": "פַּתָּח", "nameRu": "патах", "sound": "«а»" },
+    { "id": "tsere", "mark": "אֵ", "name": "צֵירֵי", "nameRu": "цэрэ", "sound": "«э»" },
+    { "id": "segol", "mark": "אֶ", "name": "סֶגוֹל", "nameRu": "сэголь", "sound": "«э»" },
+    { "id": "hirik", "mark": "אִ", "name": "חִירִיק", "nameRu": "хирик", "sound": "«и»" },
+    { "id": "holam", "mark": "אוֹ", "name": "חוֹלָם", "nameRu": "холам", "sound": "«о»" },
+    { "id": "kubuts", "mark": "אֻ", "name": "קֻבּוּץ", "nameRu": "кубуц", "sound": "«у»" },
+    { "id": "shuruk", "mark": "אוּ", "name": "שׁוּרוּק", "nameRu": "шурук", "sound": "«у»" },
+    { "id": "shva", "mark": "אְ", "name": "שְׁוָא", "nameRu": "шва", "sound": "очень краткий «э» или нулевой звук" }
+  ],
+  "decks": [
+    {
+      "id": "frequent",
+      "title": "Частые слова",
+      "subtitle": "Основа повседневной речи",
+      "plannedSize": 100,
+      "icon": "star"
+    },
+    {
+      "id": "numbers",
+      "title": "Числа",
+      "subtitle": "Счёт от одного до восьми",
+      "plannedSize": 20,
+      "icon": "hash"
+    },
+    {
+      "id": "family",
+      "title": "Семья",
+      "subtitle": "Близкие и родственники",
+      "plannedSize": 20,
+      "icon": "users"
+    },
+    {
+      "id": "food",
+      "title": "Еда",
+      "subtitle": "Продукты и напитки",
+      "plannedSize": 30,
+      "icon": "coffee"
+    },
+    {
+      "id": "verbs",
+      "title": "Глаголы в настоящем",
+      "subtitle": "Мужской род, единственное число",
+      "plannedSize": 30,
+      "icon": "activity"
+    }
+  ],
+  "words": [
+    {
+      "id": "shalom",
+      "deck": "frequent",
+      "nikud": "שָׁלוֹם",
+      "plain": "שלום",
+      "translit": "shalom",
+      "translitRu": "шалом",
+      "ru": "привет; мир",
+      "pos": "существительное"
+    },
+    {
+      "id": "ken",
+      "deck": "frequent",
+      "nikud": "כֵּן",
+      "plain": "כן",
+      "translit": "ken",
+      "translitRu": "кэн",
+      "ru": "да",
+      "pos": "частица"
+    },
+    {
+      "id": "lo",
+      "deck": "frequent",
+      "nikud": "לֹא",
+      "plain": "לא",
+      "translit": "lo",
+      "translitRu": "ло",
+      "ru": "нет; не",
+      "pos": "частица"
+    },
+    {
+      "id": "toda",
+      "deck": "frequent",
+      "nikud": "תּוֹדָה",
+      "plain": "תודה",
+      "translit": "toda",
+      "translitRu": "тода",
+      "ru": "спасибо",
+      "pos": "существительное"
+    },
+    {
+      "id": "bevakasha",
+      "deck": "frequent",
+      "nikud": "בְּבַקָּשָׁה",
+      "plain": "בבקשה",
+      "translit": "bevakasha",
+      "translitRu": "бевакаша",
+      "ru": "пожалуйста",
+      "pos": "выражение"
+    },
+    {
+      "id": "slikha",
+      "deck": "frequent",
+      "nikud": "סְלִיחָה",
+      "plain": "סליחה",
+      "translit": "slikha",
+      "translitRu": "слиха",
+      "ru": "извините",
+      "pos": "существительное"
+    },
+    {
+      "id": "ani",
+      "deck": "frequent",
+      "nikud": "אֲנִי",
+      "plain": "אני",
+      "translit": "ani",
+      "translitRu": "ани",
+      "ru": "я",
+      "pos": "местоимение"
+    },
+    {
+      "id": "ata",
+      "deck": "frequent",
+      "nikud": "אַתָּה",
+      "plain": "אתה",
+      "translit": "ata",
+      "translitRu": "ата",
+      "ru": "ты (мужчине)",
+      "pos": "местоимение"
+    },
+    {
+      "id": "at",
+      "deck": "frequent",
+      "nikud": "אַתְּ",
+      "plain": "את",
+      "translit": "at",
+      "translitRu": "ат",
+      "ru": "ты (женщине)",
+      "pos": "местоимение"
+    },
+    {
+      "id": "bayit",
+      "deck": "frequent",
+      "nikud": "בַּיִת",
+      "plain": "בית",
+      "translit": "bayit",
+      "translitRu": "байит",
+      "ru": "дом",
+      "pos": "существительное"
+    },
+    {
+      "id": "sefer",
+      "deck": "frequent",
+      "nikud": "סֵפֶר",
+      "plain": "ספר",
+      "translit": "sefer",
+      "translitRu": "сэфер",
+      "ru": "книга",
+      "pos": "существительное"
+    },
+    {
+      "id": "yom",
+      "deck": "frequent",
+      "nikud": "יוֹם",
+      "plain": "יום",
+      "translit": "yom",
+      "translitRu": "йом",
+      "ru": "день",
+      "pos": "существительное"
+    },
+    {
+      "id": "akhat",
+      "deck": "numbers",
+      "nikud": "אַחַת",
+      "plain": "אחת",
+      "translit": "akhat",
+      "translitRu": "ахат",
+      "ru": "один (при счёте)",
+      "pos": "числительное"
+    },
+    {
+      "id": "shtayim",
+      "deck": "numbers",
+      "nikud": "שְׁתַּיִם",
+      "plain": "שתיים",
+      "translit": "shtayim",
+      "translitRu": "штайим",
+      "ru": "два (при счёте)",
+      "pos": "числительное"
+    },
+    {
+      "id": "shalosh",
+      "deck": "numbers",
+      "nikud": "שָׁלוֹשׁ",
+      "plain": "שלוש",
+      "translit": "shalosh",
+      "translitRu": "шалош",
+      "ru": "три (при счёте)",
+      "pos": "числительное"
+    },
+    {
+      "id": "arba",
+      "deck": "numbers",
+      "nikud": "אַרְבַּע",
+      "plain": "ארבע",
+      "translit": "arba",
+      "translitRu": "арба",
+      "ru": "четыре (при счёте)",
+      "pos": "числительное"
+    },
+    {
+      "id": "khamesh",
+      "deck": "numbers",
+      "nikud": "חָמֵשׁ",
+      "plain": "חמש",
+      "translit": "khamesh",
+      "translitRu": "хамеш",
+      "ru": "пять (при счёте)",
+      "pos": "числительное"
+    },
+    {
+      "id": "shesh",
+      "deck": "numbers",
+      "nikud": "שֵׁשׁ",
+      "plain": "שש",
+      "translit": "shesh",
+      "translitRu": "шеш",
+      "ru": "шесть (при счёте)",
+      "pos": "числительное"
+    },
+    {
+      "id": "sheva",
+      "deck": "numbers",
+      "nikud": "שֶׁבַע",
+      "plain": "שבע",
+      "translit": "sheva",
+      "translitRu": "шева",
+      "ru": "семь (при счёте)",
+      "pos": "числительное"
+    },
+    {
+      "id": "shmone",
+      "deck": "numbers",
+      "nikud": "שְׁמוֹנֶה",
+      "plain": "שמונה",
+      "translit": "shmone",
+      "translitRu": "шмонэ",
+      "ru": "восемь (при счёте)",
+      "pos": "числительное"
+    },
+    {
+      "id": "aba",
+      "deck": "family",
+      "nikud": "אַבָּא",
+      "plain": "אבא",
+      "translit": "aba",
+      "translitRu": "аба",
+      "ru": "папа",
+      "pos": "существительное"
+    },
+    {
+      "id": "ima",
+      "deck": "family",
+      "nikud": "אִמָּא",
+      "plain": "אמא",
+      "translit": "ima",
+      "translitRu": "има",
+      "ru": "мама",
+      "pos": "существительное"
+    },
+    {
+      "id": "ben",
+      "deck": "family",
+      "nikud": "בֵּן",
+      "plain": "בן",
+      "translit": "ben",
+      "translitRu": "бэн",
+      "ru": "сын",
+      "pos": "существительное"
+    },
+    {
+      "id": "bat",
+      "deck": "family",
+      "nikud": "בַּת",
+      "plain": "בת",
+      "translit": "bat",
+      "translitRu": "бат",
+      "ru": "дочь",
+      "pos": "существительное"
+    },
+    {
+      "id": "akh",
+      "deck": "family",
+      "nikud": "אָח",
+      "plain": "אח",
+      "translit": "akh",
+      "translitRu": "ах",
+      "ru": "брат",
+      "pos": "существительное"
+    },
+    {
+      "id": "akhot",
+      "deck": "family",
+      "nikud": "אָחוֹת",
+      "plain": "אחות",
+      "translit": "akhot",
+      "translitRu": "ахот",
+      "ru": "сестра",
+      "pos": "существительное"
+    },
+    {
+      "id": "mishpakha",
+      "deck": "family",
+      "nikud": "מִשְׁפָּחָה",
+      "plain": "משפחה",
+      "translit": "mishpakha",
+      "translitRu": "мишпаха",
+      "ru": "семья",
+      "pos": "существительное"
+    },
+    {
+      "id": "lekhem",
+      "deck": "food",
+      "nikud": "לֶחֶם",
+      "plain": "לחם",
+      "translit": "lekhem",
+      "translitRu": "лэхем",
+      "ru": "хлеб",
+      "pos": "существительное"
+    },
+    {
+      "id": "mayim",
+      "deck": "food",
+      "nikud": "מַיִם",
+      "plain": "מים",
+      "translit": "mayim",
+      "translitRu": "майим",
+      "ru": "вода",
+      "pos": "существительное"
+    },
+    {
+      "id": "khalav",
+      "deck": "food",
+      "nikud": "חָלָב",
+      "plain": "חלב",
+      "translit": "khalav",
+      "translitRu": "халав",
+      "ru": "молоко",
+      "pos": "существительное"
+    },
+    {
+      "id": "gvina",
+      "deck": "food",
+      "nikud": "גְּבִינָה",
+      "plain": "גבינה",
+      "translit": "gvina",
+      "translitRu": "гвина",
+      "ru": "сыр",
+      "pos": "существительное"
+    },
+    {
+      "id": "tapuakh",
+      "deck": "food",
+      "nikud": "תַּפּוּחַ",
+      "plain": "תפוח",
+      "translit": "tapuakh",
+      "translitRu": "тапуах",
+      "ru": "яблоко",
+      "pos": "существительное"
+    },
+    {
+      "id": "beitsa",
+      "deck": "food",
+      "nikud": "בֵּיצָה",
+      "plain": "ביצה",
+      "translit": "beitsa",
+      "translitRu": "бейца",
+      "ru": "яйцо",
+      "pos": "существительное"
+    },
+    {
+      "id": "okhel",
+      "deck": "food",
+      "nikud": "אֹכֶל",
+      "plain": "אוכל",
+      "translit": "okhel",
+      "translitRu": "охель",
+      "ru": "еда",
+      "pos": "существительное"
+    },
+    {
+      "id": "okhel-verb",
+      "deck": "verbs",
+      "nikud": "אוֹכֵל",
+      "plain": "אוכל",
+      "translit": "okhel",
+      "translitRu": "охель",
+      "ru": "ест (он)",
+      "pos": "глагол"
+    },
+    {
+      "id": "shote",
+      "deck": "verbs",
+      "nikud": "שׁוֹתֶה",
+      "plain": "שותה",
+      "translit": "shote",
+      "translitRu": "шотэ",
+      "ru": "пьёт (он)",
+      "pos": "глагол"
+    },
+    {
+      "id": "holekh",
+      "deck": "verbs",
+      "nikud": "הוֹלֵךְ",
+      "plain": "הולך",
+      "translit": "holekh",
+      "translitRu": "холех",
+      "ru": "идёт (он)",
+      "pos": "глагол"
+    },
+    {
+      "id": "kore",
+      "deck": "verbs",
+      "nikud": "קוֹרֵא",
+      "plain": "קורא",
+      "translit": "kore",
+      "translitRu": "корэ",
+      "ru": "читает (он)",
+      "pos": "глагол"
+    },
+    {
+      "id": "kotev",
+      "deck": "verbs",
+      "nikud": "כּוֹתֵב",
+      "plain": "כותב",
+      "translit": "kotev",
+      "translitRu": "котэв",
+      "ru": "пишет (он)",
+      "pos": "глагол"
+    },
+    {
+      "id": "medaber",
+      "deck": "verbs",
+      "nikud": "מְדַבֵּר",
+      "plain": "מדבר",
+      "translit": "medaber",
+      "translitRu": "медабэр",
+      "ru": "говорит (он)",
+      "pos": "глагол"
+    }
+  ],
+  "phrases": [
+    {
+      "id": "ph-shalom-shem",
+      "level": 2,
+      "nikud": "שָׁלוֹם, מָה הַשֵּׁם שֶׁלְּךָ?",
+      "plain": "שלום, מה השם שלך?",
+      "translit": "shalom, ma ha-shem shelkha?",
+      "ru": "Привет, как тебя зовут?",
+      "distractors": ["Привет, откуда ты?", "Здравствуйте, где вы живёте?", "Привет, сколько тебе лет?"]
+    },
+    {
+      "id": "ph-ani-kore",
+      "level": 1,
+      "nikud": "אֲנִי קוֹרֵא סֵפֶר.",
+      "plain": "אני קורא ספר.",
+      "translit": "ani kore sefer.",
+      "ru": "Я читаю книгу.",
+      "distractors": ["Я пишу письмо.", "Он читает газету.", "Я покупаю книгу."]
+    },
+    {
+      "id": "ph-yesh-li-akh",
+      "level": 2,
+      "nikud": "יֵשׁ לִי אָח וְאָחוֹת.",
+      "plain": "יש לי אח ואחות.",
+      "translit": "yesh li akh ve-akhot.",
+      "ru": "У меня есть брат и сестра.",
+      "distractors": ["У меня есть сын и дочь.", "У него есть брат.", "У меня нет сестры."]
+    },
+    {
+      "id": "ph-yeled-okhel",
+      "level": 1,
+      "nikud": "הַיֶּלֶד אוֹכֵל לֶחֶם.",
+      "plain": "הילד אוכל לחם.",
+      "translit": "ha-yeled okhel lekhem.",
+      "ru": "Мальчик ест хлеб.",
+      "distractors": ["Мальчик пьёт молоко.", "Папа ест яблоко.", "Девочка ест хлеб."]
+    },
+    {
+      "id": "ph-ima-shota",
+      "level": 1,
+      "nikud": "אִמָּא שׁוֹתָה מַיִם.",
+      "plain": "אמא שותה מים.",
+      "translit": "ima shota mayim.",
+      "ru": "Мама пьёт воду.",
+      "distractors": ["Мама пьёт молоко.", "Папа пьёт воду.", "Мама готовит еду."]
+    },
+    {
+      "id": "ph-boker-tov",
+      "level": 2,
+      "nikud": "בֹּקֶר טוֹב, מָה נִשְׁמָע?",
+      "plain": "בוקר טוב, מה נשמע?",
+      "translit": "boker tov, ma nishma?",
+      "ru": "Доброе утро, как дела?",
+      "distractors": ["Добрый вечер, как дела?", "Доброе утро, до свидания!", "Добрый день, как тебя зовут?"]
+    },
+    {
+      "id": "ph-bayit-gadol",
+      "level": 1,
+      "nikud": "הַבַּיִת גָּדוֹל.",
+      "plain": "הבית גדול.",
+      "translit": "ha-bayit gadol.",
+      "ru": "Дом большой.",
+      "distractors": ["Дом маленький.", "Город большой.", "Это дом."]
+    },
+    {
+      "id": "ph-toda-raba",
+      "level": 1,
+      "nikud": "תּוֹדָה רַבָּה!",
+      "plain": "תודה רבה!",
+      "translit": "toda raba!",
+      "ru": "Большое спасибо!",
+      "distractors": ["Пожалуйста!", "Извините!", "Всё хорошо!"]
+    },
+    {
+      "id": "ph-holekh-labayit",
+      "level": 2,
+      "nikud": "אֲנִי הוֹלֵךְ לַבַּיִת.",
+      "plain": "אני הולך לבית.",
+      "translit": "ani holekh la-bayit.",
+      "ru": "Я иду домой.",
+      "distractors": ["Я иду в город.", "Он идёт домой.", "Я дома."]
+    },
+    {
+      "id": "ph-sefer-shulkhan",
+      "level": 3,
+      "nikud": "הַסֵּפֶר עַל הַשֻּׁלְחָן.",
+      "plain": "הספר על השולחן.",
+      "translit": "ha-sefer al ha-shulkhan.",
+      "ru": "Книга на столе.",
+      "distractors": ["Книга в сумке.", "Еда на столе.", "Книга под столом."]
+    }
+  ]
+}
