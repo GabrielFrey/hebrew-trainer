@@ -1,0 +1,182 @@
+[
+  {
+    "id": "aba",
+    "file": "words/aba.m4a",
+    "pointed": "אַבָּא",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%90%D6%B7%D7%91%D6%B8%D6%BC%D7%90.ogg",
+    "author": "Ijon",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "ahava",
+    "file": "words/ahava.m4a",
+    "pointed": "אַהֲבָה",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%90%D6%B7%D7%94%D6%B2%D7%91%D6%B8%D7%94.ogg",
+    "author": "Ijon",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "akh",
+    "file": "words/akh.m4a",
+    "pointed": "אָח",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%90%D6%B8%D7%97.ogg",
+    "author": "Ijon",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "akhat",
+    "file": "words/akhat.m4a",
+    "pointed": "אַחַת",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%90%D6%B7%D7%97%D6%B7%D7%AA.ogg",
+    "author": "dafna3.bot",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "ani",
+    "file": "words/ani.m4a",
+    "pointed": "אֲנִי",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%90%D6%B2%D7%A0%D6%B4%D7%99.ogg",
+    "author": null,
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "beitsa",
+    "file": "words/beitsa.m4a",
+    "pointed": "בֵּיצָה",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%91%D6%B5%D6%BC%D7%99%D7%A6%D6%B8%D7%94.ogg",
+    "author": "dafna3.bot",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "bekhirot",
+    "file": "words/bekhirot.m4a",
+    "pointed": "בְּחִירוֹת",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%91%D6%B0%D6%BC%D7%97%D6%B4%D7%99%D7%A8%D7%95%D6%B9%D7%AA.ogg",
+    "author": "dafna3.bot",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "bet",
+    "file": "letters/bet.m4a",
+    "pointed": "בֵּית",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%91%D6%B5%D6%BC%D7%99%D7%AA.ogg",
+    "author": "Ijon",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "bevakasha",
+    "file": "words/bevakasha.m4a",
+    "pointed": "בְּבַקָּשָׁה",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%91%D6%B0%D6%BC%D7%91%D6%B7%D7%A7%D6%B8%D6%BC%D7%A9%D6%B8%D7%81%D7%94.ogg",
+    "author": "dafna3.bot",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "eifo",
+    "file": "words/eifo.m4a",
+    "pointed": "אֵיפֹה",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%90%D6%B5%D7%99%D7%A4%D6%B9%D7%94.ogg",
+    "author": "Ijon",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "eikh",
+    "file": "words/eikh.m4a",
+    "pointed": "אֵיךְ",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%90%D6%B5%D7%99%D7%9A%D6%B0.ogg",
+    "author": "Ijon",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "emet",
+    "file": "words/emet.m4a",
+    "pointed": "אֱמֶת",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%90%D6%B1%D7%9E%D6%B6%D7%AA.ogg",
+    "author": null,
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "kaf",
+    "file": "letters/kaf.m4a",
+    "pointed": "כַּף",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%9B%D6%B7%D6%BC%D7%A3.ogg",
+    "author": "dafna3.bot",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "kalkala",
+    "file": "words/kalkala.m4a",
+    "pointed": "כַּלְכָּלָה",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%9B%D6%B7%D6%BC%D7%9C%D6%B0%D7%9B%D6%B8%D6%BC%D7%9C%D6%B8%D7%94.ogg",
+    "author": "dafna3.bot",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "kama",
+    "file": "words/kama.m4a",
+    "pointed": "כַּמָּה",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%9B%D6%B7%D6%BC%D7%9E%D6%B8%D6%BC%D7%94.ogg",
+    "author": "dafna3.bot",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "kesef",
+    "file": "words/kesef.m4a",
+    "pointed": "כֶּסֶף",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%9B%D6%B6%D6%BC%D7%A1%D6%B6%D7%A3.ogg",
+    "author": "dafna3.bot",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "kise",
+    "file": "words/kise.m4a",
+    "pointed": "כִּסֵּא",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%9B%D6%B4%D6%BC%D7%A1%D6%B5%D6%BC%D7%90.ogg",
+    "author": "dafna3.bot",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "knesset",
+    "file": "words/knesset.m4a",
+    "pointed": "כְּנֶסֶת",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%9B%D6%B0%D6%BC%D7%A0%D6%B6%D7%A1%D6%B6%D7%AA.ogg",
+    "author": "dafna3.bot",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "ohev",
+    "file": "words/ohev.m4a",
+    "pointed": "אוֹהֵב",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%90%D7%95%D6%B9%D7%94%D6%B5%D7%91.ogg",
+    "author": "Ijon",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  {
+    "id": "tov",
+    "file": "words/tov.m4a",
+    "pointed": "טוֹב",
+    "source": "https://commons.wikimedia.org/wiki/File:He-%D7%98%D7%95%D6%B9%D7%91.ogg",
+    "author": "dafna3.bot",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  }
+]
