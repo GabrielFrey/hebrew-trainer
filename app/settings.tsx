@@ -27,7 +27,6 @@ const GOAL_LABELS: Record<Goal, string> = {
 
 export default function SettingsScreen() {
   const router = useRouter();
-  const palette = usePalette();
   const { scheme } = useTheme();
   const { progress, updateSettings, reset } = useStore();
   const settings = progress.settings;

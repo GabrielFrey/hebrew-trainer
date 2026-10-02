@@ -21,15 +21,16 @@ export default function TodayScreen() {
   const router = useRouter();
   const palette = usePalette();
   const { progress } = useStore();
-  const [tick, setTick] = useState(0);
+  // Re-read the clock on focus so the queue reflects a date rollover.
+  const [now, setNow] = useState(() => Date.now());
 
   useFocusEffect(
     useCallback(() => {
-      setTick((value) => value + 1);
+      setNow(Date.now());
     }, [])
   );
 
-  const summary = useMemo(() => summariseToday(progress), [progress, tick]);
+  const summary = useMemo(() => summariseToday(progress, now), [progress, now]);
   const cards = useMemo(() => Object.values(progress.cards), [progress.cards]);
 
   const learnedLetters = cards.filter((c) => c.kind === 'letter' && isLearned(c)).length;
