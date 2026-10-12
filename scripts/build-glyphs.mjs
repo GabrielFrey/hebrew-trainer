@@ -1,8 +1,8 @@
 // Строит растровые шаблоны букв для распознавания рукописного ввода.
 //
 // Шаблоны получаются из настоящего шрифта (Noto Sans Hebrew), а не рисуются
-// на глаз: ffmpeg рендерит глиф в серое изображение, мы режем его по рамке
-// самой буквы и сжимаем в сетку GRID×GRID.
+// на глаз: ffmpeg рендерит глиф в серое изображение на ОБЩЕЙ базовой линии,
+// мы переносим его в сетку GRID×GRID, сохраняя спуск ниже строки.
 //
 // Запуск: node scripts/build-glyphs.mjs
 import { execFileSync } from 'node:child_process';
@@ -13,7 +13,15 @@ import { join } from 'node:path';
 const FONT = '/usr/share/fonts/truetype/noto/NotoSansHebrew-Bold.ttf';
 const CANVAS = 256;
 const GRID = 20;
-const INK_THRESHOLD = 160; // пиксель темнее — это чернила
+const FONTSIZE = 160;
+/** Пиксель холста, на который ffmpeg ставит фонтовую базовую линию. */
+const BASELINE_PX = 180;
+/**
+ * Строка сетки, куда попадает базовая линия. Над ней — тело буквы (и ламед),
+ * под ней — спуск конечных ך ן ף ץ и куф.
+ */
+const BASELINE_ROW = 14;
+const INK_THRESHOLD = 160;
 
 const DATA = JSON.parse(readFileSync(new URL('../data/hebrew.json', import.meta.url), 'utf8'));
 
@@ -32,7 +40,7 @@ function renderGray(char) {
       '-i',
       `color=white:s=${CANVAS}x${CANVAS}`,
       '-vf',
-      `drawtext=fontfile=${FONT}:text='${char}':fontcolor=black:fontsize=190:x=(w-text_w)/2:y=(h-text_h)/2`,
+      `drawtext=fontfile=${FONT}:text='${char}':fontcolor=black:fontsize=${FONTSIZE}:x=(w-text_w)/2:y=${BASELINE_PX}-ascent`,
       '-frames:v',
       '1',
       '-pix_fmt',
@@ -65,7 +73,6 @@ function thin(cells, size) {
       for (let y = 0; y < size; y += 1) {
         for (let x = 0; x < size; x += 1) {
           if (!at(grid, x, y)) continue;
-          // P2..P9 по часовой стрелке, начиная с севера.
           const p = [
             at(grid, x, y - 1),
             at(grid, x + 1, y - 1),
@@ -106,7 +113,11 @@ function thin(cells, size) {
   return grid;
 }
 
-/** Сжимает изображение в сетку GRID×GRID по рамке самой буквы. */
+/**
+ * Рендер идёт на общей базовой линии, из неё считаем спуск. Сама сетка 20×20
+ * по-прежнему обрезается по рамке чернил: иначе короткая י после утончения
+ * превращается в пять точек с дырами, и сравнение с шаблоном ломается.
+ */
 function toGrid(gray) {
   const ink = (x, y) => gray[y * CANVAS + x] < INK_THRESHOLD;
 
@@ -127,6 +138,9 @@ function toGrid(gray) {
 
   const width = maxX - minX + 1;
   const height = maxY - minY + 1;
+  const ascent = Math.max(BASELINE_PX - minY, 1);
+  const relativeDescent = Number(((maxY - BASELINE_PX) / ascent).toFixed(3));
+
   // Масштаб единый по осям, чтобы узкая вав не превратилась в квадрат.
   const span = Math.max(width, height);
   const offsetX = minX - (span - width) / 2;
@@ -160,7 +174,12 @@ function toGrid(gray) {
     }
     rows.push(row);
   }
-  return { rows, aspect: Number((width / height).toFixed(3)) };
+
+  return {
+    rows,
+    aspect: Number((width / height).toFixed(3)),
+    relativeDescent,
+  };
 }
 
 const glyphs = [];
@@ -173,6 +192,7 @@ DATA.letters.forEach((letter) => {
     form: 'base',
     nameRu: letter.nameRu,
     aspect: base.aspect,
+    relativeDescent: base.relativeDescent,
     rows: base.rows,
   });
   if (letter.finalChar) {
@@ -184,6 +204,7 @@ DATA.letters.forEach((letter) => {
       form: 'final',
       nameRu: `${letter.nameRu} конечная`,
       aspect: final.aspect,
+      relativeDescent: final.relativeDescent,
       rows: final.rows,
     });
   }
@@ -193,8 +214,9 @@ rmSync(work, { recursive: true, force: true });
 
 const payload = {
   meta: {
-    note: 'Создаётся скриптом scripts/build-glyphs.mjs из шрифта Noto Sans Hebrew. Не редактируйте вручную.',
+    note: 'Создаётся скриптом scripts/build-glyphs.mjs из шрифта Noto Sans Hebrew. Не редактируйте вручную. Рендер на общей базовой линии.',
     grid: GRID,
+    baselineRow: BASELINE_ROW,
     font: 'Noto Sans Hebrew Bold',
   },
   glyphs,
@@ -203,7 +225,9 @@ writeFileSync(
   new URL('../data/glyphs.json', import.meta.url),
   `${JSON.stringify(payload, null, 2)}\n`
 );
-process.stderr.write(`готово: ${glyphs.length} шаблонов ${GRID}x${GRID}\n`);
+process.stderr.write(`готово: ${glyphs.length} шаблонов ${GRID}x${GRID}, baselineRow=${BASELINE_ROW}\n`);
 glyphs.forEach((g) => {
-  process.stderr.write(`\n${g.char} (${g.id}) aspect=${g.aspect}\n${g.rows.join('\n')}\n`);
+  process.stderr.write(
+    `\n${g.char} (${g.id}) aspect=${g.aspect} descent=${g.relativeDescent}\n${g.rows.join('\n')}\n`
+  );
 });

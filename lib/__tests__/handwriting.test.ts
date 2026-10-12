@@ -1,40 +1,14 @@
 import {
+  BASELINE_ROW,
   GRID,
   glyphForChar,
   glyphs,
   rank,
   recognise,
   strokeLength,
+  strokesFromGlyph,
 } from '@/lib/handwriting';
 import type { GlyphTemplate, Stroke } from '@/lib/handwriting';
-
-/**
- * «Рисует» букву по её шаблону: точки в центрах закрашенных клеток, при
- * необходимости со сдвигом, имитирующим дрожание руки.
- */
-function drawGlyph(glyph: GlyphTemplate, jitter = 0, seed = 1): Stroke[] {
-  let state = seed;
-  const random = () => {
-    state = (state * 1103515245 + 12345) % 2147483648;
-    return state / 2147483648 - 0.5;
-  };
-  // Каждая горизонтальная полоска шаблона — отдельный штрих. Если отдать все
-  // точки одной ломаной, rasterise соединит их диагоналями и получится клякса.
-  const strokes: Stroke[] = [];
-  glyph.rows.forEach((row, y) => {
-    let run: { x: number; y: number }[] = [];
-    [...row].forEach((cell, x) => {
-      if (cell === '#') {
-        run.push({ x: x + 0.5 + random() * jitter, y: y + 0.5 + random() * jitter });
-      } else if (run.length > 0) {
-        strokes.push(run);
-        run = [];
-      }
-    });
-    if (run.length > 0) strokes.push(run);
-  });
-  return strokes;
-}
 
 describe('шаблоны букв', () => {
   it('покрывают 22 буквы и 5 конечных форм', () => {
@@ -47,6 +21,8 @@ describe('шаблоны букв', () => {
       'ץ',
     ]);
     expect(GRID).toBeGreaterThanOrEqual(12);
+    expect(BASELINE_ROW).toBeGreaterThan(8);
+    expect(BASELINE_ROW).toBeLessThan(GRID);
   });
 
   it('каждая конечная форма отличима по шаблону от базовой', () => {
@@ -58,40 +34,55 @@ describe('шаблоны букв', () => {
         expect(final.rows.join('')).not.toBe(base?.rows.join(''));
       });
   });
+
+  it('у ן и ך спуск ниже базовой линии, у ו и י — нет', () => {
+    const vav = glyphForChar('ו') as GlyphTemplate;
+    const nunFinal = glyphForChar('ן') as GlyphTemplate;
+    const yod = glyphForChar('י') as GlyphTemplate;
+    const kafFinal = glyphForChar('ך') as GlyphTemplate;
+
+    expect(vav.relativeDescent).toBeLessThan(0.08);
+    expect(yod.relativeDescent).toBeLessThan(0.08);
+    expect(nunFinal.relativeDescent).toBeGreaterThan(0.15);
+    expect(kafFinal.relativeDescent).toBeGreaterThan(0.15);
+  });
 });
 
 describe('распознавание рукописного ввода', () => {
   it('узнаёт каждую букву по её собственному начертанию', () => {
     glyphs.forEach((glyph) => {
-      const result = recognise(drawGlyph(glyph), glyph.id);
+      const result = recognise(strokesFromGlyph(glyph), glyph.id);
       expect(result.verdict).toBe('match');
-      // Ожидаемая буква — либо лучший кандидат, либо отстаёт на доли балла.
       expect(result.margin).toBeGreaterThan(-0.02);
     });
   });
 
-  /**
-   * Известное ограничение. ו и ן, как и י и ך, это одна и та же фигура,
-   * отличающаяся только положением относительно строки: ן и ך спускаются ниже
-   * базовой линии. Приведение рисунка к его собственной рамке делает буквы
-   * устойчивыми к тому, где и каким размером пишет человек, но именно эту
-   * разницу стирает. Тест фиксирует поведение, чтобы оно не менялось молча.
-   */
-  it('не различает фигуры, отличающиеся только уровнем строки', () => {
+  it('различает ו/ן и י/ך по положению относительно базовой линии', () => {
     const twins: [string, string][] = [
       ['ו', 'ן'],
       ['י', 'ך'],
     ];
-    twins.forEach(([a, b]) => {
-      const first = glyphForChar(a) as GlyphTemplate;
-      const second = glyphForChar(b) as GlyphTemplate;
-      const scores = rank(drawGlyph(first));
-      const forFirst = scores.find((c) => c.glyphId === first.id)?.score ?? 0;
-      const forSecond = scores.find((c) => c.glyphId === second.id)?.score ?? 0;
-      expect(Math.abs(forFirst - forSecond)).toBeLessThan(0.05);
-      // Ошибкой это не объявляется: пользователь не получит ложного «неверно».
-      expect(recognise(drawGlyph(first), second.id).verdict).not.toBe('mismatch');
+    twins.forEach(([shortChar, longChar]) => {
+      const short = glyphForChar(shortChar) as GlyphTemplate;
+      const long = glyphForChar(longChar) as GlyphTemplate;
+
+      expect(recognise(strokesFromGlyph(short), short.id).verdict).toBe('match');
+      expect(recognise(strokesFromGlyph(long), long.id).verdict).toBe('match');
+      expect(recognise(strokesFromGlyph(short), long.id).verdict).not.toBe('match');
+      expect(recognise(strokesFromGlyph(long), short.id).verdict).not.toBe('match');
+
+      const scores = rank(strokesFromGlyph(short));
+      const forShort = scores.find((c) => c.glyphId === short.id)?.score ?? 0;
+      const forLong = scores.find((c) => c.glyphId === long.id)?.score ?? 0;
+      expect(forShort).toBeGreaterThan(forLong + 0.05);
     });
+  });
+
+  it('при неоднозначном спуске ниже линии отвечает «не уверен»', () => {
+    // Палочка чуть заходит за пунктир: ни ו, ни ן.
+    const stroke: Stroke[] = [[{ x: 0.5, y: 0.22 }, { x: 0.5, y: 0.54 }]];
+    expect(recognise(stroke, 'vav').verdict).toBe('unsure');
+    expect(recognise(stroke, 'nun-final').verdict).toBe('unsure');
   });
 
   it('не засчитывает чужую букву как верную', () => {
@@ -104,7 +95,7 @@ describe('распознавание рукописного ввода', () => {
     ];
     samples.forEach(([expectedId, drawnId]) => {
       const drawn = glyphs.find((g) => g.id === drawnId) as GlyphTemplate;
-      const result = recognise(drawGlyph(drawn), expectedId);
+      const result = recognise(strokesFromGlyph(drawn), expectedId);
       expect(result.verdict).not.toBe('match');
     });
   });
@@ -120,17 +111,14 @@ describe('распознавание рукописного ввода', () => {
     pairs.forEach(([finalChar, baseChar]) => {
       const final = glyphForChar(finalChar) as GlyphTemplate;
       const base = glyphForChar(baseChar) as GlyphTemplate;
-      // Своё начертание зачитывается...
-      expect(recognise(drawGlyph(final), final.id).verdict).toBe('match');
-      expect(recognise(drawGlyph(base), base.id).verdict).toBe('match');
-      // ...а базовая форма вместо конечной — нет.
-      expect(recognise(drawGlyph(base), final.id).verdict).not.toBe('match');
-      expect(recognise(drawGlyph(final), base.id).verdict).not.toBe('match');
+      expect(recognise(strokesFromGlyph(final), final.id).verdict).toBe('match');
+      expect(recognise(strokesFromGlyph(base), base.id).verdict).toBe('match');
+      expect(recognise(strokesFromGlyph(base), final.id).verdict).not.toBe('match');
+      expect(recognise(strokesFromGlyph(final), base.id).verdict).not.toBe('match');
     });
   });
 
   it('узнаёт замкнутые буквы, не путая их с открытыми', () => {
-    // ס замкнута, ט открыта сверху; ם замкнута, ח открыта снизу.
     const closedVsOpen: [string, string][] = [
       ['ס', 'ט'],
       ['ם', 'ח'],
@@ -138,14 +126,14 @@ describe('распознавание рукописного ввода', () => {
     closedVsOpen.forEach(([closed, open]) => {
       const a = glyphForChar(closed) as GlyphTemplate;
       const b = glyphForChar(open) as GlyphTemplate;
-      expect(recognise(drawGlyph(a), a.id).verdict).toBe('match');
-      expect(recognise(drawGlyph(b), a.id).verdict).not.toBe('match');
+      expect(recognise(strokesFromGlyph(a), a.id).verdict).toBe('match');
+      expect(recognise(strokesFromGlyph(b), a.id).verdict).not.toBe('match');
     });
   });
 
   it('терпит дрожание руки примерно в одну клетку', () => {
     const matched = glyphs.filter(
-      (glyph) => recognise(drawGlyph(glyph, 1, 7), glyph.id).verdict === 'match'
+      (glyph) => recognise(strokesFromGlyph(glyph, 1, 7), glyph.id).verdict === 'match'
     );
     expect(matched).toHaveLength(glyphs.length);
   });

@@ -9,10 +9,12 @@ import { AudioButton } from '@/components/AudioButton';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
 import { getDeck, wordsInDeck } from '@/lib/data';
+import { deckSubtitle, deckTitle, posLabel, wordGloss } from '@/lib/i18n';
 import { isLearned } from '@/lib/srs';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
 import { hasFeature } from '@/lib/levels';
+import { useI18n } from '@/lib/use-i18n';
 
 export default function DeckScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -20,22 +22,23 @@ export default function DeckScreen() {
   const navigation = useNavigation();
   const palette = usePalette();
   const { progress } = useStore();
+  const { t, lang } = useI18n();
   const [showTranslation, setShowTranslation] = useState(true);
 
   const deck = getDeck(id ?? '');
 
   useEffect(() => {
-    if (deck) navigation.setOptions({ title: deck.title });
-  }, [deck, navigation]);
+    if (deck) navigation.setOptions({ title: deckTitle(deck, lang) });
+  }, [deck, lang, navigation]);
 
   if (!deck) {
     return (
       <Screen edges={['left', 'right']}>
         <EmptyState
           icon="alert-circle"
-          title="Колода не найдена"
-          description="Возможно, она ещё не добавлена в data/hebrew.json."
-          actionLabel="Назад"
+          title={t('deck.missing')}
+          description={t('deck.missingHint')}
+          actionLabel={t('common.back')}
           onAction={() => router.back()}
         />
       </Screen>
@@ -49,10 +52,10 @@ export default function DeckScreen() {
     <Screen edges={['left', 'right']}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.head}>
-          <AppText muted>{deck.subtitle}</AppText>
+          <AppText muted>{deckSubtitle(deck, lang)}</AppText>
           <View style={styles.headActions}>
             <Button
-              label={showTranslation ? 'Скрыть перевод' : 'Показать перевод'}
+              label={showTranslation ? t('deck.hideTranslation') : t('deck.showTranslation')}
               variant="secondary"
               onPress={() => setShowTranslation((value) => !value)}
             />
@@ -62,8 +65,8 @@ export default function DeckScreen() {
         {items.length === 0 ? (
           <EmptyState
             icon="inbox"
-            title="Колода пока пустая"
-            description="Слова появятся, когда их добавят в data/hebrew.json с проверенным никудом."
+            title={t('deck.empty')}
+            description={t('deck.emptyHint')}
           />
         ) : (
           items.map((word) => {
@@ -86,26 +89,26 @@ export default function DeckScreen() {
                 </AppText>
 
                 {showTranslation ? (
-                  <AppText variant="heading">{word.ru}</AppText>
+                  <AppText variant="heading">{wordGloss(word, lang)}</AppText>
                 ) : (
-                  <AppText muted>Перевод скрыт</AppText>
+                  <AppText muted>{t('deck.hidden')}</AppText>
                 )}
 
                 {showRoots && word.root ? (
                   <AppText variant="caption" muted>
-                    корень {word.root}
-                    {word.synonyms ? ` · синонимы: ${word.synonyms.join(', ')}` : ''}
+                    {t('common.root', { root: word.root })}
+                    {word.synonyms ? ` · ${t('common.synonyms', { list: word.synonyms.join(', ') })}` : ''}
                   </AppText>
                 ) : null}
                 {word.literal ? (
                   <AppText variant="caption" muted>
-                    буквально: {word.literal}
+                    {t('common.literal', { text: word.literal })}
                   </AppText>
                 ) : null}
 
                 <View style={styles.cardMeta}>
                   <AppText variant="caption" muted>
-                    {word.pos}
+                    {posLabel(word.pos, lang)}
                   </AppText>
                   <View
                     style={[
@@ -125,7 +128,7 @@ export default function DeckScreen() {
                         color: learned ? palette.success : card ? palette.accent : palette.textMuted,
                       }}
                     >
-                      {learned ? 'выучено' : card ? 'в работе' : 'новое'}
+                      {learned ? t('deck.learned') : card ? t('deck.learning') : t('deck.new')}
                     </AppText>
                   </View>
                 </View>
@@ -136,8 +139,7 @@ export default function DeckScreen() {
 
         <Surface tone="alt" style={styles.note}>
           <AppText variant="caption" muted>
-            В колоде {items.length} слов. Озвучка — только записями носителей; где записи ещё нет,
-            кнопка так и показывает.
+            {t('deck.note', { count: items.length })}
           </AppText>
         </Surface>
       </ScrollView>

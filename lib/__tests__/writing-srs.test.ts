@@ -1,5 +1,5 @@
-import { glyphForChar, glyphs, gradeForVerdict, recognise } from '@/lib/handwriting';
-import type { GlyphTemplate, Stroke } from '@/lib/handwriting';
+import { glyphForChar, glyphs, gradeForVerdict, recognise, strokesFromGlyph } from '@/lib/handwriting';
+import type { GlyphTemplate } from '@/lib/handwriting';
 import { buildSession } from '@/lib/session';
 import { createCard, isDue, schedule } from '@/lib/srs';
 import { emptyProgress } from '@/lib/storage';
@@ -7,25 +7,9 @@ import type { Progress } from '@/lib/types';
 
 const NOW = Date.UTC(2026, 1, 10, 9, 0, 0);
 
-function drawGlyph(glyph: GlyphTemplate): Stroke[] {
-  const strokes: Stroke[] = [];
-  glyph.rows.forEach((row, y) => {
-    let run: { x: number; y: number }[] = [];
-    [...row].forEach((cell, x) => {
-      if (cell === '#') run.push({ x: x + 0.5, y: y + 0.5 });
-      else if (run.length > 0) {
-        strokes.push(run);
-        run = [];
-      }
-    });
-    if (run.length > 0) strokes.push(run);
-  });
-  return strokes;
-}
-
 /** Путь «нарисовал → распознали → отдали планировщику», как в экране сессии. */
 function writeAnswer(expectedGlyphId: string, drawn: GlyphTemplate, card = createCard('letter', 'alef', NOW)) {
-  const result = recognise(drawGlyph(drawn), expectedGlyphId);
+  const result = recognise(strokesFromGlyph(drawn), expectedGlyphId);
   const grade = gradeForVerdict(result.verdict);
   return { result, grade, next: grade ? schedule(card, grade, NOW) : card };
 }

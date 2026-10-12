@@ -10,18 +10,21 @@ import { ScreenHeader } from '@/components/ScreenHeader';
 import { ProgressBar, StatTile } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
-import { dayKey, pluralRu } from '@/lib/dates';
+import { dayKey } from '@/lib/dates';
 import { getLevel, letters } from '@/lib/data';
+import { levelTitle, pluralUnits } from '@/lib/i18n';
 import { teachesLetters, wordsForLevel } from '@/lib/levels';
 import { SESSION_SIZE, summariseToday } from '@/lib/session';
 import { isLearned } from '@/lib/srs';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
+import { useI18n } from '@/lib/use-i18n';
 
 export default function TodayScreen() {
   const router = useRouter();
   const palette = usePalette();
   const { progress } = useStore();
+  const { t, lang } = useI18n();
   // Re-read the clock on focus so the queue reflects a date rollover.
   const [now, setNow] = useState(() => Date.now());
 
@@ -50,9 +53,13 @@ export default function TodayScreen() {
     <Screen>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <ScreenHeader
-          title="Сегодня"
-          subtitle={`${level.title} · ${minutes} ${pluralRu(minutes, ['минута', 'минуты', 'минут'])} в день`}
-          action={{ icon: 'settings', label: 'Настройки', onPress: () => router.push('/settings') }}
+          title={t('tabs.today')}
+          subtitle={t('today.subtitle', {
+            level: levelTitle(level, lang),
+            minutes,
+            minutesWord: pluralUnits(lang, minutes, 'minute'),
+          })}
+          action={{ icon: 'settings', label: t('common.settings'), onPress: () => router.push('/settings') }}
         />
 
         <View style={styles.block}>
@@ -62,26 +69,23 @@ export default function TodayScreen() {
                 <Feather name="zap" size={16} color={palette.warning} />
                 <AppText variant="label" style={{ color: palette.warning }}>
                   {streak === 0
-                    ? 'Серия ещё не начата'
-                    : `${streak} ${pluralRu(streak, ['день', 'дня', 'дней'])} подряд`}
+                    ? t('today.streakNone')
+                    : t('today.streak', { count: streak, daysWord: pluralUnits(lang, streak, 'day') })}
                 </AppText>
               </View>
               {progress.streak.longest > 0 ? (
                 <AppText variant="caption" muted>
-                  Рекорд: {progress.streak.longest}
+                  {t('today.record', { count: progress.streak.longest })}
                 </AppText>
               ) : null}
             </View>
 
             {nothingToDo ? (
               <View style={styles.doneBlock}>
-                <AppText variant="heading">На сегодня всё повторено</AppText>
-                <AppText muted>
-                  Новые карточки откроются завтра. Если хочется позаниматься ещё, можно пройти
-                  повторения досрочно.
-                </AppText>
+                <AppText variant="heading">{t('today.allDone')}</AppText>
+                <AppText muted>{t('today.allDoneHint')}</AppText>
                 <Button
-                  label="Повторить досрочно"
+                  label={t('today.reviewAhead')}
                   variant="secondary"
                   onPress={() => router.push('/session?ahead=1')}
                   style={styles.cta}
@@ -90,21 +94,22 @@ export default function TodayScreen() {
             ) : (
               <View style={styles.doneBlock}>
                 <AppText variant="heading">
-                  Очередь: {summary.queueSize}{' '}
-                  {pluralRu(summary.queueSize, ['карточка', 'карточки', 'карточек'])}
+                  {t('today.queue', {
+                    count: summary.queueSize,
+                    cardsWord: pluralUnits(lang, summary.queueSize, 'card'),
+                  })}
                 </AppText>
                 <AppText muted>
-                  {summary.dueCount} на повторение · {summary.newCount} новых
+                  {t('today.queueHint', { due: summary.dueCount, fresh: summary.newCount })}
                 </AppText>
                 {summary.dueCount === 0 && summary.queueSize < SESSION_SIZE ? (
                   <AppText variant="caption" muted>
-                    Повторений пока нет, поэтому очередь короче 15 карточек: за одну сессию
-                    вводим не больше 5 новых слов.
+                    {t('today.shortQueue')}
                   </AppText>
                 ) : null}
                 <ProgressBar value={reviewedToday} total={reviewedToday + summary.queueSize} />
                 <Button
-                  label="Начать"
+                  label={t('common.start')}
                   size="lg"
                   onPress={() => router.push('/session')}
                   style={styles.cta}
@@ -119,29 +124,29 @@ export default function TodayScreen() {
             {lettersInPlay ? (
               <StatTile
                 value={`${learnedLetters}/${letters.length}`}
-                label="Буквы выучены"
-                hint="Интервал 6 дней и больше"
+                label={t('today.lettersLearned')}
+                hint={t('today.intervalHint')}
               />
             ) : null}
             <StatTile
               value={`${learnedWords}/${unlockedWords.length}`}
-              label="Слова выучены"
-              hint={`Открыто на уровне «${level.title}»`}
+              label={t('today.wordsLearned')}
+              hint={t('today.unlockedHint', { level: levelTitle(level, lang) })}
             />
           </View>
         </View>
 
         <View style={styles.block}>
           <AppText variant="heading" style={styles.sectionTitle}>
-            Разминка
+            {t('today.warmup')}
           </AppText>
           {cards.length === 0 ? (
             <Surface>
               <EmptyState
                 icon="play-circle"
-                title="Ещё нет истории"
-                description="Пройдите первую сессию — здесь появятся ваши последние буквы и слова."
-                actionLabel="Начать"
+                title={t('today.noHistory')}
+                description={t('today.noHistoryHint')}
+                actionLabel={t('common.start')}
                 onAction={() => router.push('/session')}
               />
             </Surface>
@@ -149,26 +154,26 @@ export default function TodayScreen() {
             <Surface padded={false} style={styles.warmup}>
               <View style={styles.warmupRow}>
                 <View style={styles.warmupText}>
-                  <AppText variant="label">Узнай букву</AppText>
+                  <AppText variant="label">{t('today.recogniseLetter')}</AppText>
                   <AppText variant="caption" muted>
-                    Быстрый проход по открытым буквам
+                    {t('today.recogniseHint')}
                   </AppText>
                 </View>
                 <Button
-                  label="Открыть"
+                  label={t('common.open')}
                   variant="secondary"
                   onPress={() => router.push('/drill/recognise')}
                 />
               </View>
               <View style={[styles.warmupRow, { borderTopColor: palette.border, borderTopWidth: StyleSheet.hairlineWidth }]}>
                 <View style={styles.warmupText}>
-                  <AppText variant="label">Напиши букву</AppText>
+                  <AppText variant="label">{t('today.writeLetter')}</AppText>
                   <AppText variant="caption" muted>
-                    Начертить пальцем — приложение сверит
+                    {t('today.writeHint')}
                   </AppText>
                 </View>
                 <Button
-                  label="Открыть"
+                  label={t('common.open')}
                   variant="secondary"
                   onPress={() => router.push('/drill/write')}
                 />
@@ -180,10 +185,9 @@ export default function TodayScreen() {
         {progress.settings.reminderAsked && !progress.settings.remindersEnabled ? (
           <View style={styles.block}>
             <Surface tone="alt" style={styles.quote}>
-              <AppText variant="label">Напоминания выключены</AppText>
+              <AppText variant="label">{t('today.remindersOff')}</AppText>
               <AppText variant="caption" muted>
-                Серия дней растёт только от завершённой сессии. Включить напоминание можно
-                в настройках.
+                {t('today.remindersOffHint')}
               </AppText>
             </Surface>
           </View>
@@ -193,7 +197,7 @@ export default function TodayScreen() {
           <Surface tone="alt" style={styles.quote}>
             <HebrewText size="inline">יוֹם טוֹב!</HebrewText>
             <AppText variant="caption" muted>
-              «Хорошего дня» — йом тов
+              {t('today.quote')}
             </AppText>
           </Surface>
         </View>

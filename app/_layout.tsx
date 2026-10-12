@@ -8,6 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { syncReminder } from '@/lib/notifications';
 import { StoreProvider, useStore } from '@/lib/store';
 import { ThemeProvider, useTheme } from '@/lib/theme';
+import { useI18n } from '@/lib/use-i18n';
 
 export const unstable_settings = {
   initialRouteName: '(tabs)',
@@ -42,12 +43,13 @@ function RootNavigator() {
     }
   }, [ready, onboarded, segments, router]);
 
-  const { remindersEnabled, reminderHour, minutesPerDay } = progress.settings;
+  const { t } = useI18n();
+  const { remindersEnabled, reminderHour, minutesPerDay, language } = progress.settings;
   useEffect(() => {
     if (!ready || !onboarded) return;
     // Переназначаем напоминание при старте: час или длительность могли измениться.
-    void syncReminder({ remindersEnabled, reminderHour, minutesPerDay });
-  }, [ready, onboarded, remindersEnabled, reminderHour, minutesPerDay]);
+    void syncReminder({ remindersEnabled, reminderHour, minutesPerDay, language });
+  }, [ready, onboarded, remindersEnabled, reminderHour, minutesPerDay, language]);
 
   const navTheme = {
     ...(scheme === 'dark' ? DarkTheme : DefaultTheme),
@@ -84,12 +86,12 @@ function RootNavigator() {
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
         <Stack.Screen
           name="session"
-          options={{ title: 'Тренировка', presentation: 'fullScreenModal', headerShown: false }}
+          options={{ title: t('nav.session'), presentation: 'fullScreenModal', headerShown: false }}
         />
-        <Stack.Screen name="settings" options={{ title: 'Настройки' }} />
-        <Stack.Screen name="letter/[id]" options={{ title: 'Буква' }} />
-        <Stack.Screen name="deck/[id]" options={{ title: 'Колода' }} />
-        <Stack.Screen name="drill/[mode]" options={{ title: 'Тренажёр букв' }} />
+        <Stack.Screen name="settings" options={{ title: t('nav.settings') }} />
+        <Stack.Screen name="letter/[id]" options={{ title: t('nav.letter') }} />
+        <Stack.Screen name="deck/[id]" options={{ title: t('nav.deck') }} />
+        <Stack.Screen name="drill/[mode]" options={{ title: t('nav.drill') }} />
       </Stack>
     </NavThemeProvider>
   );

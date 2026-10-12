@@ -5,6 +5,7 @@ import { radius, spacing } from '@/constants/theme';
 import { AppText } from '@/components/Themed';
 import { hasRecording, playRecording } from '@/lib/audio';
 import { usePalette } from '@/lib/theme';
+import { useI18n } from '@/lib/use-i18n';
 
 /**
  * Озвучка только голосом носителя. Когда файла нет, кнопка неактивна и прямо
@@ -12,7 +13,7 @@ import { usePalette } from '@/lib/theme';
  */
 export function AudioButton({
   audio,
-  label = 'Прослушать',
+  label,
   compact = false,
 }: {
   audio: string | null | undefined;
@@ -20,12 +21,14 @@ export function AudioButton({
   compact?: boolean;
 }) {
   const palette = usePalette();
+  const { t } = useI18n();
+  const listenLabel = label ?? t('common.listen');
   const available = hasRecording(audio);
 
   if (!available) {
     return (
       <View
-        accessibilityLabel="Записи носителя пока нет"
+        accessibilityLabel={t('common.recordMissingA11y')}
         style={[
           styles.base,
           compact ? styles.compact : styles.full,
@@ -35,7 +38,7 @@ export function AudioButton({
         <Feather name="mic-off" size={compact ? 15 : 17} color={palette.textMuted} />
         {compact ? null : (
           <AppText variant="caption" muted>
-            нет записи
+            {t('common.recordMissing')}
           </AppText>
         )}
       </View>
@@ -44,7 +47,7 @@ export function AudioButton({
 
   return (
     <Pressable
-      accessibilityLabel={label}
+      accessibilityLabel={listenLabel}
       accessibilityRole="button"
       hitSlop={8}
       onPress={() => playRecording(audio)}
@@ -61,7 +64,7 @@ export function AudioButton({
       <Feather name="volume-2" size={compact ? 16 : 18} color={palette.accent} />
       {compact ? null : (
         <AppText variant="label" tone="accent">
-          {label}
+          {listenLabel}
         </AppText>
       )}
     </Pressable>

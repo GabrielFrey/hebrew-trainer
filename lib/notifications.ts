@@ -1,8 +1,11 @@
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 
+import { resolveLanguage, translate } from '@/lib/i18n';
+import type { LanguagePreference } from '@/lib/types';
+
 /**
- * Локальное напоминание о тренировке. Текст только на русском, без иврита и
+ * Локальное напоминание о тренировке. Текст на языке интерфейса, без иврита и
  * без звука произношения: уведомление не учит, а просто напоминает зайти.
  *
  * Само уведомление не влияет на серию дней — серия растёт только когда
@@ -41,10 +44,11 @@ export async function hasPermission(): Promise<boolean> {
   }
 }
 
-function reminderBody(minutesPerDay: number): string {
-  if (minutesPerDay <= 5) return 'Пять минут — и серия дней останется цела.';
-  if (minutesPerDay <= 10) return 'Десять минут на буквы и слова. Очередь уже собрана.';
-  return 'Двадцать минут — и сегодняшние повторения закрыты.';
+function reminderBody(minutesPerDay: number, language: LanguagePreference | undefined): string {
+  const lang = resolveLanguage(language);
+  if (minutesPerDay <= 5) return translate(lang, 'notify.5');
+  if (minutesPerDay <= 10) return translate(lang, 'notify.10');
+  return translate(lang, 'notify.20');
 }
 
 export async function cancelReminder(): Promise<void> {
@@ -60,14 +64,19 @@ export async function cancelReminder(): Promise<void> {
  * Переназначает ежедневное напоминание на выбранный час. Возвращает false,
  * если разрешения нет: отказ не должен мешать пользоваться приложением.
  */
-export async function scheduleReminder(hour: number, minutesPerDay: number): Promise<boolean> {
+export async function scheduleReminder(
+  hour: number,
+  minutesPerDay: number,
+  language?: LanguagePreference
+): Promise<boolean> {
   if (!supported()) return false;
   if (!(await hasPermission())) return false;
 
+  const lang = resolveLanguage(language);
   try {
     if (Platform.OS === 'android') {
       await Notifications.setNotificationChannelAsync(CHANNEL_ID, {
-        name: 'Ежедневная тренировка',
+        name: translate(lang, 'notify.channel'),
         importance: Notifications.AndroidImportance.DEFAULT,
       });
     }
@@ -75,8 +84,8 @@ export async function scheduleReminder(hour: number, minutesPerDay: number): Pro
     await Notifications.scheduleNotificationAsync({
       identifier: IDENTIFIER,
       content: {
-        title: 'Пора потренироваться',
-        body: reminderBody(minutesPerDay),
+        title: translate(lang, 'notify.title'),
+        body: reminderBody(minutesPerDay, language),
         sound: false,
       },
       trigger: {
@@ -96,10 +105,11 @@ export async function syncReminder(settings: {
   remindersEnabled: boolean;
   reminderHour: number;
   minutesPerDay: number;
+  language?: LanguagePreference;
 }): Promise<boolean> {
   if (!settings.remindersEnabled) {
     await cancelReminder();
     return false;
   }
-  return scheduleReminder(settings.reminderHour, settings.minutesPerDay);
+  return scheduleReminder(settings.reminderHour, settings.minutesPerDay, settings.language);
 }

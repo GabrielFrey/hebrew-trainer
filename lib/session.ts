@@ -2,6 +2,14 @@ import { endOfToday } from '@/lib/dates';
 import { cardId, getLetter, getPassage, getPhrase, getWord, letters } from '@/lib/data';
 import { glyphsForLetter } from '@/lib/handwriting';
 import {
+  letterName,
+  letterSound,
+  phraseDistractors,
+  phraseGloss,
+  resolveLanguage,
+  wordGloss,
+} from '@/lib/i18n';
+import {
   hasFeature,
   passagesForLevel,
   phrasesForLevel,
@@ -78,6 +86,8 @@ function buildCard(
   progress: Progress,
   seed: number
 ): BuiltCard {
+  const lang = resolveLanguage(progress.settings.language);
+
   if (candidate.kind === 'letter') {
     const letter = getLetter(candidate.refId);
     if (!letter) return { options: [], answer: '' };
@@ -89,11 +99,13 @@ function buildCard(
       const final = forms.find((form) => form.form === 'final');
       const base = forms.find((form) => form.form === 'base');
       const target = final && reps >= 4 && seed % 2 === 0 ? final : base;
-      return { options: [], answer: letter.nameRu, expectedGlyph: target?.id };
+      return { options: [], answer: letterName(letter, lang), expectedGlyph: target?.id };
     }
 
-    const answer = `${letter.nameRu} — ${letter.sound.split(',')[0] ?? letter.sound}`;
-    const pool = letters.map((l) => `${l.nameRu} — ${l.sound.split(',')[0] ?? l.sound}`);
+    const label = (item: typeof letter) =>
+      `${letterName(item, lang)} — ${letterSound(item, lang).split(',')[0] ?? letterSound(item, lang)}`;
+    const answer = label(letter);
+    const pool = letters.map((l) => label(l));
     return { options: shuffle([answer, ...pickDistractors(pool, answer, 3, seed)], seed + 7), answer };
   }
 
@@ -112,9 +124,9 @@ function buildCard(
       );
       return { options, answer };
     }
-    const answer = word.ru;
+    const answer = wordGloss(word, lang);
     const options = shuffle(
-      [answer, ...pickDistractors(pool.map((w) => w.ru), answer, 3, seed)],
+      [answer, ...pickDistractors(pool.map((w) => wordGloss(w, lang)), answer, 3, seed)],
       seed + 13
     );
     return { options, answer };
@@ -128,9 +140,10 @@ function buildCard(
 
   const phrase = getPhrase(candidate.refId);
   if (!phrase) return { options: [], answer: '' };
+  const gloss = phraseGloss(phrase, lang);
   return {
-    options: shuffle([phrase.ru, ...phrase.distractors.slice(0, 3)], seed + 17),
-    answer: phrase.ru,
+    options: shuffle([gloss, ...phraseDistractors(phrase, lang).slice(0, 3)], seed + 17),
+    answer: gloss,
   };
 }
 

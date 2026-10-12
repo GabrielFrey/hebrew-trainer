@@ -7,6 +7,7 @@ import { radius, spacing } from '@/constants/theme';
 import { AppText } from '@/components/Themed';
 import type { Stroke } from '@/lib/handwriting';
 import { usePalette } from '@/lib/theme';
+import { useI18n } from '@/lib/use-i18n';
 
 export type HandwritingCanvasHandle = {
   clear: () => void;
@@ -29,6 +30,7 @@ export function HandwritingCanvas({
   resetKey: string;
 }) {
   const palette = usePalette();
+  const { t } = useI18n();
   const [size, setSize] = useState(0);
   const [strokes, setStrokes] = useState<Stroke[]>([]);
   const [lastReset, setLastReset] = useState(resetKey);
@@ -103,7 +105,7 @@ export function HandwritingCanvas({
 
   return (
     <View
-      accessibilityLabel="Поле для письма"
+      accessibilityLabel={t('canvas.a11y')}
       onLayout={onLayout}
       style={[
         styles.canvas,

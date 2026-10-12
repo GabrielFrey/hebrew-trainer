@@ -9,13 +9,16 @@ import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
 import { letters, vowels } from '@/lib/data';
 import { isLearned } from '@/lib/srs';
+import { letterName, vowelName, vowelSound } from '@/lib/i18n';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
+import { useI18n } from '@/lib/use-i18n';
 
 export default function AlphabetScreen() {
   const router = useRouter();
   const palette = usePalette();
   const { progress } = useStore();
+  const { t, lang } = useI18n();
 
   const statusById = useMemo(() => {
     const map = new Map<string, 'new' | 'learning' | 'learned'>();
@@ -33,19 +36,19 @@ export default function AlphabetScreen() {
     <Screen>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <ScreenHeader
-          title="Алфавит"
-          subtitle={`22 буквы · выучено ${learnedCount}`}
+          title={t('tabs.alphabet')}
+          subtitle={t('alphabet.subtitle', { count: learnedCount })}
         />
 
         <View style={styles.block}>
           <View style={styles.modes}>
             <Button
-              label="Узнай букву"
+              label={t('today.recogniseLetter')}
               onPress={() => router.push('/drill/recognise')}
               style={styles.modeButton}
             />
             <Button
-              label="Напиши букву"
+              label={t('today.writeLetter')}
               variant="secondary"
               onPress={() => router.push('/drill/write')}
               style={styles.modeButton}
@@ -55,7 +58,7 @@ export default function AlphabetScreen() {
 
         <View style={styles.block}>
           <AppText variant="heading" style={styles.sectionTitle}>
-            Буквы
+            {t('alphabet.letters')}
           </AppText>
           <View style={styles.grid}>
             {letters.map((letter) => {
@@ -70,7 +73,7 @@ export default function AlphabetScreen() {
                 <Pressable
                   key={letter.id}
                   accessibilityRole="button"
-                  accessibilityLabel={`Буква ${letter.nameRu}`}
+                  accessibilityLabel={t('alphabet.letterA11y', { name: letterName(letter, lang) })}
                   onPress={() => router.push(`/letter/${letter.id}`)}
                   style={({ pressed }) => [
                     styles.cell,
@@ -85,12 +88,12 @@ export default function AlphabetScreen() {
                     {letter.char}
                   </HebrewText>
                   <AppText variant="caption" muted>
-                    {letter.nameRu}
+                    {letterName(letter, lang)}
                   </AppText>
                   {letter.finalChar ? (
                     <View style={[styles.finalTag, { backgroundColor: palette.surfaceAlt }]}>
                       <AppText variant="caption" muted>
-                        конечная {letter.finalChar}
+                        {t('alphabet.finalTag', { char: letter.finalChar })}
                       </AppText>
                     </View>
                   ) : null}
@@ -102,21 +105,21 @@ export default function AlphabetScreen() {
 
         <View style={styles.block}>
           <AppText variant="heading" style={styles.sectionTitle}>
-            Конечные формы
+            {t('alphabet.finals')}
           </AppText>
           <Surface tone="alt" style={styles.finals}>
             <HebrewText size="card" align="center">
               ך ם ן ף ץ
             </HebrewText>
             <AppText muted>
-              Каф, мем, нун, пей и цади меняют начертание в конце слова. Звук при этом не меняется.
+              {t('alphabet.finalsHint')}
             </AppText>
           </Surface>
         </View>
 
         <View style={styles.block}>
           <AppText variant="heading" style={styles.sectionTitle}>
-            Огласовки (никуд)
+            {t('alphabet.vowels')}
           </AppText>
           <Surface padded={false}>
             {vowels.map((vowel, index) => (
@@ -133,9 +136,9 @@ export default function AlphabetScreen() {
                   {vowel.mark}
                 </HebrewText>
                 <View style={styles.vowelText}>
-                  <AppText variant="label">{vowel.nameRu}</AppText>
+                  <AppText variant="label">{vowelName(vowel, lang)}</AppText>
                   <AppText variant="caption" muted>
-                    {vowel.sound}
+                    {vowelSound(vowel, lang)}
                   </AppText>
                 </View>
               </View>

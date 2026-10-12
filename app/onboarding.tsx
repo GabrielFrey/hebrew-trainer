@@ -10,10 +10,12 @@ import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
 import { levels } from '@/lib/data';
 import { defaultShowNikud } from '@/lib/levels';
+import { levelDetail, levelSummary, levelTitle } from '@/lib/i18n';
 import { requestPermission, syncReminder } from '@/lib/notifications';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
 import type { Goal, LevelId, MinutesPerDay } from '@/lib/types';
+import { useI18n } from '@/lib/use-i18n';
 
 const STEPS = 3;
 const MINUTES: MinutesPerDay[] = [5, 10, 20];
@@ -21,7 +23,8 @@ const REMINDER_HOUR = 20;
 
 export default function OnboardingScreen() {
   const router = useRouter();
-  const { updateSettings } = useStore();
+  const { updateSettings, progress } = useStore();
+  const { t, lang } = useI18n();
   const [step, setStep] = useState(0);
   const [level, setLevel] = useState<LevelId>('elementary');
   const [goal, setGoal] = useState<Goal>('reading');
@@ -47,6 +50,7 @@ export default function OnboardingScreen() {
         remindersEnabled: true,
         reminderHour: REMINDER_HOUR,
         minutesPerDay: minutes,
+        language: progress.settings.language,
       });
     }
   };
@@ -66,21 +70,18 @@ export default function OnboardingScreen() {
         <View style={styles.progress}>
           <ProgressBar value={step + 1} total={STEPS} />
           <AppText variant="caption" muted>
-            Шаг {step + 1} из {STEPS}
+            {t('onboarding.step', { n: step + 1, total: STEPS })}
           </AppText>
         </View>
 
         {step === 0 ? (
-          <Step
-            title="Ваш уровень"
-            description="От него зависят колоды, длина фраз и огласовки. Уровень можно поменять в любой момент — выученное не сбросится."
-          >
+          <Step title={t('onboarding.levelTitle')} description={t('onboarding.levelHint')}>
             {levels.map((item) => (
               <Option
                 key={item.id}
                 selected={level === item.id}
-                title={item.title}
-                description={`${item.summary}. ${item.detail}.`}
+                title={levelTitle(item, lang)}
+                description={`${levelSummary(item, lang)}. ${levelDetail(item, lang)}.`}
                 onPress={() => setLevel(item.id)}
               />
             ))}
@@ -88,17 +89,17 @@ export default function OnboardingScreen() {
         ) : null}
 
         {step === 1 ? (
-          <Step title="Главная цель" description="Акцент в сессии: разбор текста или живая речь.">
+          <Step title={t('onboarding.goalTitle')} description={t('onboarding.goalHint')}>
             <Option
               selected={goal === 'reading'}
-              title="Чтение"
-              description="Уверенно читать вслух, в том числе без огласовок"
+              title={t('settings.goal.reading')}
+              description={t('onboarding.goal.readingHint')}
               onPress={() => setGoal('reading')}
             />
             <Option
               selected={goal === 'speaking'}
-              title="Разговор"
-              description="Базовый словарь и простые фразы на слух"
+              title={t('settings.goal.speaking')}
+              description={t('onboarding.goal.speakingHint')}
               onPress={() => setGoal('speaking')}
             />
           </Step>
@@ -106,21 +107,15 @@ export default function OnboardingScreen() {
 
         {step === 2 ? (
           <Step
-            title="Сколько времени в день?"
-            description={`Очередь всегда не длиннее 15 карточек. Во столько же будем присылать напоминание — в ${REMINDER_HOUR}:00.`}
+            title={t('onboarding.minutesTitle')}
+            description={t('onboarding.minutesHint', { hour: REMINDER_HOUR })}
           >
             {MINUTES.map((value) => (
               <Option
                 key={value}
                 selected={minutes === value}
-                title={`${value} минут`}
-                description={
-                  value === 5
-                    ? 'Минимум, чтобы не терять серию'
-                    : value === 10
-                      ? 'Комфортный ритм на каждый день'
-                      : 'Быстрый прогресс, если есть силы'
-                }
+                title={t('settings.minutesValue', { n: value })}
+                description={t(value === 5 ? 'onboarding.min5' : value === 10 ? 'onboarding.min10' : 'onboarding.min20')}
                 onPress={() => setMinutes(value)}
               />
             ))}
@@ -130,14 +125,14 @@ export default function OnboardingScreen() {
         <View style={styles.actions}>
           {step > 0 ? (
             <Button
-              label="Назад"
+              label={t('common.back')}
               variant="ghost"
               onPress={() => setStep((value) => value - 1)}
               style={styles.actionButton}
             />
           ) : null}
           <Button
-            label={step === STEPS - 1 ? 'Начать учиться' : 'Дальше'}
+            label={step === STEPS - 1 ? t('onboarding.start') : t('common.next')}
             size="lg"
             onPress={() => (step === STEPS - 1 ? void finish() : setStep((value) => value + 1))}
             style={styles.actionButton}
@@ -145,7 +140,7 @@ export default function OnboardingScreen() {
         </View>
 
         <AppText variant="caption" muted style={styles.centered}>
-          Прогресс хранится только на устройстве. Аккаунт не нужен.
+          {t('onboarding.privacy')}
         </AppText>
       </ScrollView>
     </Screen>

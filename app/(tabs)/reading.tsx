@@ -12,6 +12,11 @@ import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
 import { getLevel } from '@/lib/data';
 import {
+  levelTitle,
+  phraseDistractors,
+  phraseGloss,
+} from '@/lib/i18n';
+import {
   canToggleNikud,
   passagesForLevel,
   phrasesForLevel,
@@ -20,10 +25,12 @@ import {
 import { isLearned } from '@/lib/srs';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
+import { useI18n } from '@/lib/use-i18n';
 
 export default function ReadingScreen() {
   const palette = usePalette();
   const { progress, gradeCard, updateSettings } = useStore();
+  const { t, lang } = useI18n();
   const settings = progress.settings;
   const level = getLevel(settings.level);
 
@@ -47,10 +54,10 @@ export default function ReadingScreen() {
 
   const options = useMemo(() => {
     if (!current) return [];
-    return [current.ru, ...current.distractors.slice(0, 3)].sort((a, b) =>
-      a.localeCompare(b, 'ru')
+    return [phraseGloss(current, lang), ...phraseDistractors(current, lang).slice(0, 3)].sort(
+      (a, b) => a.localeCompare(b, lang)
     );
-  }, [current]);
+  }, [current, lang]);
 
   const next = useCallback(() => {
     setPicked(null);
@@ -61,18 +68,18 @@ export default function ReadingScreen() {
   if (!current) {
     return (
       <Screen>
-        <ScreenHeader title="Чтение" />
+        <ScreenHeader title={t('tabs.reading')} />
         <EmptyState
           icon="align-right"
-          title="Фраз для этого уровня нет"
-          description="Добавьте фразы с никудом в data/hebrew.json или выберите другой уровень в настройках."
+          title={t('reading.empty')}
+          description={t('reading.emptyHint')}
         />
       </Screen>
     );
   }
 
   const answered = picked !== null;
-  const correct = picked === current.ru;
+  const correct = picked === phraseGloss(current, lang);
   const withNikud = settings.showNikud;
   const canToggle = canToggleNikud(settings.level);
 
@@ -80,8 +87,12 @@ export default function ReadingScreen() {
     <Screen>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <ScreenHeader
-          title="Чтение"
-          subtitle={`${level.title} · ${items.length} фраз · уверенно читаете ${learnedPhrases}`}
+          title={t('tabs.reading')}
+          subtitle={t('reading.subtitle', {
+            level: levelTitle(level, lang),
+            count: items.length,
+            learned: learnedPhrases,
+          })}
         />
 
         <View style={styles.block}>
@@ -89,30 +100,27 @@ export default function ReadingScreen() {
             <>
               <View style={[styles.switcher, { backgroundColor: palette.surfaceAlt }]}>
                 <Button
-                  label="С огласовками"
+                  label={t('reading.withNikud')}
                   variant={withNikud ? 'primary' : 'ghost'}
                   onPress={() => updateSettings({ showNikud: true })}
                   style={styles.switchButton}
                 />
                 <Button
-                  label="Без огласовок"
+                  label={t('reading.withoutNikud')}
                   variant={withNikud ? 'ghost' : 'primary'}
                   onPress={() => updateSettings({ showNikud: false })}
                   style={styles.switchButton}
                 />
               </View>
               <AppText variant="caption" muted style={styles.hint}>
-                {withNikud
-                  ? 'Огласовки подсказывают гласные.'
-                  : 'Так пишут в книгах и на вывесках. Гласные нужно угадывать по знакомым словам.'}
+                {withNikud ? t('reading.nikudOn') : t('reading.nikudOff')}
               </AppText>
             </>
           ) : (
             <Surface tone="alt" style={styles.lockNote}>
-              <AppText variant="label">Всегда с огласовками</AppText>
+              <AppText variant="label">{t('reading.alwaysNikud')}</AppText>
               <AppText variant="caption" muted>
-                На уровне «{level.title}» никуд показывается всегда. Переключатель появится на
-                среднем уровне.
+                {t('reading.alwaysNikudHint', { level: levelTitle(level, lang) })}
               </AppText>
             </Surface>
           )}
@@ -122,7 +130,12 @@ export default function ReadingScreen() {
           <Surface style={styles.card}>
             <View style={styles.cardHead}>
               <AppText variant="caption" muted>
-                Фраза {index + 1} из {items.length} · {current.level === settings.level ? 'ваш уровень' : 'пройденный уровень'}
+                {t('reading.phraseMeta', {
+                  n: index + 1,
+                  total: items.length,
+                  levelTag:
+                    current.level === settings.level ? t('reading.yourLevel') : t('reading.pastLevel'),
+                })}
               </AppText>
               <ProgressBar value={index + 1} total={items.length} />
             </View>
@@ -132,7 +145,7 @@ export default function ReadingScreen() {
             <View style={styles.cardActions}>
               <AudioButton audio={current.audio} />
               <Button
-                label={readAloud ? 'Прочитано вслух' : 'Прочитать вслух'}
+                label={readAloud ? t('reading.readAloudDone') : t('reading.readAloud')}
                 variant={readAloud ? 'ghost' : 'secondary'}
                 onPress={() => setReadAloud(true)}
               />
@@ -142,13 +155,13 @@ export default function ReadingScreen() {
                 <Feather name="check" size={14} color={palette.success} />
                 <AppText variant="caption" tone="success">
                   {showTranscription(settings.level)
-                    ? `Отлично. Транскрипция: ${current.transcription}`
-                    : 'Отлично.'}
+                    ? t('reading.greatWith', { text: current.transcription })
+                    : t('reading.great')}
                 </AppText>
               </View>
             ) : (
               <AppText variant="caption" muted>
-                Прочитайте вслух, потом выберите перевод.
+                {t('reading.readHint')}
               </AppText>
             )}
           </Surface>
@@ -156,11 +169,11 @@ export default function ReadingScreen() {
 
         <View style={styles.block}>
           <AppText variant="heading" style={styles.sectionTitle}>
-            Выберите перевод
+            {t('reading.choose')}
           </AppText>
           <View style={styles.options}>
             {options.map((option) => {
-              const isAnswer = option === current.ru;
+              const isAnswer = option === phraseGloss(current, lang);
               const state = !answered
                 ? 'idle'
                 : option === picked
@@ -177,7 +190,11 @@ export default function ReadingScreen() {
                   disabled={answered}
                   onPress={() => {
                     setPicked(option);
-                    gradeCard('phrase', current.id, option === current.ru ? 'good' : 'again');
+                    gradeCard(
+                      'phrase',
+                      current.id,
+                      option === phraseGloss(current, lang) ? 'good' : 'again'
+                    );
                   }}
                 >
                   <AppText variant="label" style={styles.optionText}>
@@ -191,14 +208,14 @@ export default function ReadingScreen() {
           {answered ? (
             <Surface tone="alt" style={styles.feedback}>
               <AppText variant="label" tone={correct ? 'success' : 'danger'}>
-                {correct ? 'Верно' : `Правильный перевод: ${current.ru}`}
+                {correct ? t('common.correct') : t('reading.rightAnswer', { text: phraseGloss(current, lang) })}
               </AppText>
               {showTranscription(settings.level) ? (
                 <AppText variant="caption" muted>
                   {current.transcription}
                 </AppText>
               ) : null}
-              <Button label="Следующая фраза" onPress={next} style={styles.next} />
+              <Button label={t('reading.nextPhrase')} onPress={next} style={styles.next} />
             </Surface>
           ) : null}
         </View>
@@ -206,17 +223,17 @@ export default function ReadingScreen() {
         {passages.length > 0 ? (
           <View style={styles.block}>
             <AppText variant="heading" style={styles.sectionTitle}>
-              Тексты на абзац
+              {t('reading.passages')}
             </AppText>
             {passages.map((passage) => (
               <Surface key={passage.id} style={styles.passage}>
-                <AppText variant="label">{passage.title}</AppText>
+                <AppText variant="label">{lang === 'en' ? passage.titleEn : passage.title}</AppText>
                 <HebrewText size={32}>{withNikud ? passage.nikud : passage.hebrew}</HebrewText>
                 <HebrewText size="inline">
                   {withNikud ? passage.question.nikud : passage.question.hebrew}
                 </HebrewText>
                 <AppText variant="caption" muted>
-                  Вопрос и ответ на иврите разбираются в тренировке.
+                  {t('reading.passageHint')}
                 </AppText>
                 <AudioButton audio={passage.audio} />
               </Surface>

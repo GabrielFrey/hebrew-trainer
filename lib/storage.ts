@@ -15,6 +15,7 @@ export function emptyProgress(): Progress {
       goal: 'reading',
       minutesPerDay: 10,
       theme: 'system',
+      language: 'system',
       showNikud: true,
       remindersEnabled: false,
       reminderHour: 20,

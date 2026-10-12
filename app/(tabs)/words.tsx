@@ -11,9 +11,11 @@ import { radius, spacing } from '@/constants/theme';
 import { words as allWords, wordsInDeck } from '@/lib/data';
 import { decksForLevel } from '@/lib/levels';
 import { isLearned } from '@/lib/srs';
+import { deckSubtitle, deckTitle } from '@/lib/i18n';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
 import type { Deck } from '@/lib/types';
+import { useI18n } from '@/lib/use-i18n';
 
 const deckIcon: Record<string, keyof typeof Feather.glyphMap> = {
   star: 'star',
@@ -27,6 +29,7 @@ export default function WordsScreen() {
   const router = useRouter();
   const palette = usePalette();
   const { progress } = useStore();
+  const { t, lang } = useI18n();
 
   const unlocked = decksForLevel(progress.settings.level);
 
@@ -50,8 +53,12 @@ export default function WordsScreen() {
     <Screen>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <ScreenHeader
-          title="Слова"
-          subtitle={`${totalWords} из ${allWords.length} слов открыто · выучено ${totalLearned}`}
+          title={t('tabs.words')}
+          subtitle={t('words.subtitle', {
+            open: totalWords,
+            total: allWords.length,
+            learned: totalLearned,
+          })}
         />
 
         <View style={styles.block}>
@@ -72,9 +79,9 @@ export default function WordsScreen() {
                     />
                   </View>
                   <View style={styles.deckTitles}>
-                    <AppText variant="heading">{deck.title}</AppText>
+                    <AppText variant="heading">{deckTitle(deck, lang)}</AppText>
                     <AppText variant="caption" muted>
-                      {deck.subtitle}
+                      {deckSubtitle(deck, lang)}
                     </AppText>
                   </View>
                   <Feather name="chevron-right" size={20} color={palette.textMuted} />
@@ -87,11 +94,11 @@ export default function WordsScreen() {
                 <ProgressBar value={learned} total={total} tone="success" />
                 <View style={styles.deckMeta}>
                   <AppText variant="caption" muted>
-                    Выучено {learned} из {total}
+                    {t('words.learnedOf', { learned, total })}
                   </AppText>
                   <View style={[styles.badge, { backgroundColor: palette.surfaceAlt }]}>
                     <AppText variant="caption" muted>
-                      {total} слов
+                      {t('words.count', { count: total })}
                     </AppText>
                   </View>
                 </View>
@@ -102,11 +109,9 @@ export default function WordsScreen() {
 
         <View style={styles.block}>
           <Surface tone="alt" style={styles.note}>
-            <AppText variant="label">Колоды и уровень</AppText>
+            <AppText variant="label">{t('words.noteTitle')}</AppText>
             <AppText variant="caption" muted>
-              Открыты колоды текущего уровня и всех, что ниже. Уровень меняется в настройках, и
-              выученное при этом не сбрасывается. Все формы с огласовками лежат в
-              data/hebrew.json и выверены вручную.
+              {t('words.noteBody')}
             </AppText>
           </Surface>
         </View>

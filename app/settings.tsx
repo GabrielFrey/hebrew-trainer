@@ -10,20 +10,11 @@ import { recordingCount } from '@/lib/audio';
 import { levels, words } from '@/lib/data';
 import { canToggleNikud, decksForLevel, defaultShowNikud, wordsForLevel } from '@/lib/levels';
 import { hasPermission, requestPermission, syncReminder } from '@/lib/notifications';
+import { levelDetail, levelSummary, levelTitle } from '@/lib/i18n';
 import { useStore } from '@/lib/store';
 import { usePalette, useTheme } from '@/lib/theme';
-import type { Goal, LevelId, MinutesPerDay, ThemePreference } from '@/lib/types';
-
-const THEME_LABELS: Record<ThemePreference, string> = {
-  system: 'Как в системе',
-  light: 'Светлая',
-  dark: 'Тёмная',
-};
-
-const GOAL_LABELS: Record<Goal, string> = {
-  reading: 'Чтение',
-  speaking: 'Разговор',
-};
+import type { Goal, LanguagePreference, LevelId, MinutesPerDay, ThemePreference } from '@/lib/types';
+import { useI18n } from '@/lib/use-i18n';
 
 const MINUTES: MinutesPerDay[] = [5, 10, 20];
 const HOURS = [8, 12, 18, 20, 21];
@@ -32,6 +23,7 @@ export default function SettingsScreen() {
   const router = useRouter();
   const { scheme } = useTheme();
   const { progress, updateSettings, reset } = useStore();
+  const { t, lang } = useI18n();
   const settings = progress.settings;
   const [permission, setPermission] = useState<boolean | null>(null);
 
@@ -46,6 +38,7 @@ export default function SettingsScreen() {
         remindersEnabled: next.remindersEnabled,
         reminderHour: next.reminderHour,
         minutesPerDay: next.minutesPerDay,
+        language: next.language,
       });
     },
     [settings]
@@ -77,14 +70,10 @@ export default function SettingsScreen() {
       run();
       return;
     }
-    Alert.alert(
-      'Сбросить прогресс?',
-      'Все выученные буквы, слова и серия дней будут удалены с устройства.',
-      [
-        { text: 'Отмена', style: 'cancel' },
-        { text: 'Сбросить', style: 'destructive', onPress: run },
-      ]
-    );
+    Alert.alert(t('settings.resetTitle'), t('settings.resetBody'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      { text: t('settings.reset'), style: 'destructive', onPress: run },
+    ]);
   };
 
   const unlockedDecks = decksForLevel(settings.level).length;
@@ -94,14 +83,18 @@ export default function SettingsScreen() {
     <Screen edges={['left', 'right']}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Section
-          title="Уровень"
-          hint={`Открыто ${unlockedDecks} колод и ${unlockedWords} слов из ${words.length}`}
+          title={t('settings.level')}
+          hint={t('settings.levelHint', {
+            decks: unlockedDecks,
+            words: unlockedWords,
+            total: words.length,
+          })}
         >
           {levels.map((level) => (
             <Row
               key={level.id}
-              label={level.title}
-              detail={level.summary}
+              label={levelTitle(level, lang)}
+              detail={`${levelSummary(level, lang)}. ${levelDetail(level, lang)}`}
               selected={settings.level === level.id}
               onPress={() => changeLevel(level.id)}
             />
@@ -109,43 +102,43 @@ export default function SettingsScreen() {
         </Section>
 
         {canToggleNikud(settings.level) ? (
-          <Section title="Огласовки" hint="На этом уровне можно читать и с никудом, и без">
+          <Section title={t('settings.nikud')} hint={t('settings.nikudHint')}>
             <Row
-              label="С огласовками"
+              label={t('settings.nikudOn')}
               selected={settings.showNikud}
               onPress={() => updateSettings({ showNikud: true })}
             />
             <Row
-              label="Без огласовок"
+              label={t('settings.nikudOff')}
               selected={!settings.showNikud}
               onPress={() => updateSettings({ showNikud: false })}
             />
           </Section>
         ) : (
           <Surface tone="alt" style={styles.about}>
-            <AppText variant="label">Огласовки</AppText>
+            <AppText variant="label">{t('settings.nikud')}</AppText>
             <AppText variant="caption" muted>
-              На элементарном и базовом уровне огласовки показываются всегда — переключателя нет.
+              {t('settings.nikudLocked')}
             </AppText>
           </Surface>
         )}
 
-        <Section title="Цель">
+        <Section title={t('settings.goal')}>
           {(['reading', 'speaking'] as Goal[]).map((value) => (
             <Row
               key={value}
-              label={GOAL_LABELS[value]}
+              label={t(`settings.goal.${value}`)}
               selected={settings.goal === value}
               onPress={() => updateSettings({ goal: value })}
             />
           ))}
         </Section>
 
-        <Section title="Время в день">
+        <Section title={t('settings.minutes')}>
           {MINUTES.map((value) => (
             <Row
               key={value}
-              label={`${value} минут`}
+              label={t('settings.minutesValue', { n: value })}
               selected={settings.minutesPerDay === value}
               onPress={() => {
                 updateSettings({ minutesPerDay: value });
@@ -156,15 +149,15 @@ export default function SettingsScreen() {
         </Section>
 
         <Section
-          title="Напоминание"
+          title={t('settings.reminder')}
           hint={
             permission === false && !settings.remindersEnabled
-              ? 'Разрешение на уведомления не выдано. Приложение работает и без него.'
-              : 'Одно локальное уведомление в день, текст на русском'
+              ? t('settings.reminderDenied')
+              : t('settings.reminderHint')
           }
         >
           <Row
-            label={settings.remindersEnabled ? 'Включено' : 'Выключено'}
+            label={settings.remindersEnabled ? t('settings.reminderOn') : t('settings.reminderOff')}
             selected={settings.remindersEnabled}
             onPress={() => void toggleReminders()}
           />
@@ -172,7 +165,7 @@ export default function SettingsScreen() {
             ? HOURS.map((hour) => (
                 <Row
                   key={hour}
-                  label={`В ${hour}:00`}
+                  label={t('settings.reminderAt', { hour })}
                   selected={settings.reminderHour === hour}
                   onPress={() => {
                     updateSettings({ reminderHour: hour });
@@ -183,11 +176,38 @@ export default function SettingsScreen() {
             : null}
         </Section>
 
-        <Section title="Тема" hint={`Сейчас используется ${scheme === 'dark' ? 'тёмная' : 'светлая'}`}>
+        <Section
+          title={t('settings.language')}
+          hint={t('settings.languageHint')}
+        >
+          {(['system', 'ru', 'en'] as LanguagePreference[]).map((value) => (
+            <Row
+              key={value}
+              label={t(`settings.language.${value}`)}
+              selected={settings.language === value}
+              onPress={() => {
+                updateSettings({ language: value });
+                void syncReminder({
+                  remindersEnabled: settings.remindersEnabled,
+                  reminderHour: settings.reminderHour,
+                  minutesPerDay: settings.minutesPerDay,
+                  language: value,
+                });
+              }}
+            />
+          ))}
+        </Section>
+
+        <Section
+          title={t('settings.theme')}
+          hint={t('settings.themeHint', {
+            scheme: scheme === 'dark' ? t('settings.theme.darkName') : t('settings.theme.lightName'),
+          })}
+        >
           {(['system', 'light', 'dark'] as ThemePreference[]).map((value) => (
             <Row
               key={value}
-              label={THEME_LABELS[value]}
+              label={t(`settings.theme.${value}`)}
               selected={settings.theme === value}
               onPress={() => updateSettings({ theme: value })}
             />
@@ -195,19 +215,16 @@ export default function SettingsScreen() {
         </Section>
 
         <Surface tone="alt" style={styles.about}>
-          <AppText variant="label">О данных и звуке</AppText>
+          <AppText variant="label">{t('settings.about')}</AppText>
           <AppText variant="caption" muted>
-            Прогресс хранится локально через AsyncStorage, синхронизации и аккаунта нет. Слова и
-            огласовки берутся из data/hebrew.json. Озвучка — только записи носителей языка
-            ({recordingCount()} шт.); там, где записи нет, кнопка так и говорит, а синтез речи не
-            подставляется.
+            {t('settings.aboutBody', { count: recordingCount() })}
           </AppText>
         </Surface>
 
-        <Button label="Сбросить прогресс" variant="danger" onPress={confirmReset} />
+        <Button label={t('settings.reset')} variant="danger" onPress={confirmReset} />
 
         <AppText variant="caption" muted style={styles.version}>
-          Иврит с нуля · локальная сборка
+          {t('settings.version')}
         </AppText>
       </ScrollView>
     </Screen>

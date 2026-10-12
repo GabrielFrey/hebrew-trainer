@@ -11,17 +11,23 @@ export type GlyphTemplate = {
   form: 'base' | 'final';
   nameRu: string;
   aspect: number;
+  /** (низ чернил − базовая линия) / высота над линией. Отрицательно у י. */
+  relativeDescent: number;
   rows: string[];
 };
 
 type GlyphFile = {
-  meta: { grid: number; font: string; note: string };
+  meta: { grid: number; baselineRow: number; font: string; note: string };
   glyphs: GlyphTemplate[];
 };
 
 const file = glyphData as unknown as GlyphFile;
 
 export const GRID = file.meta.grid;
+/** Ряд сетки, куда шаблоны кладут фонтовую базовую линию. */
+export const BASELINE_ROW = file.meta.baselineRow;
+/** Направляющая на холсте — та же базовая линия, в долях стороны. */
+export const CANVAS_BASELINE = 0.5;
 export const glyphs: GlyphTemplate[] = file.glyphs;
 
 const glyphById = new Map(glyphs.map((g) => [g.id, g]));
@@ -48,6 +54,16 @@ type Mask = {
   colProfile: number[];
   /** Число замкнутых пустот: отличает ם от מ и ס от כ. */
   holes: number;
+  /** Вертикальная протяжённость ниже базовой линии относительно высоты над ней. */
+  relativeDescent: number;
+};
+
+/** Пары, которые после обрезки по рамке выглядят одинаково и различаются спуском. */
+const DESCENDER_TWINS: Record<string, string> = {
+  vav: 'nun-final',
+  'nun-final': 'vav',
+  yod: 'kaf-final',
+  'kaf-final': 'yod',
 };
 
 /** Расширение на одну клетку: закрывает разрывы в один пиксель. */
@@ -132,7 +148,7 @@ function countHoles(source: boolean[]): number {
   return holes;
 }
 
-function describeMask(cells: boolean[], aspect: number): Mask {
+function describeMask(cells: boolean[], aspect: number, relativeDescent: number): Mask {
   const rows = new Array<number>(GRID).fill(0);
   const cols = new Array<number>(GRID).fill(0);
   let inkCount = 0;
@@ -155,6 +171,7 @@ function describeMask(cells: boolean[], aspect: number): Mask {
     rowProfile: normalise(rows),
     colProfile: normalise(cols),
     holes: countHoles(cells),
+    relativeDescent,
   };
 }
 
@@ -163,6 +180,9 @@ function describeMask(cells: boolean[], aspect: number): Mask {
  * до стороны сетки, масштаб единый по осям, остаток центруется. Через это
  * проходят и шаблон, и рисунок — иначе они сравнивались бы в разных системах
  * координат и даже идеальная обводка давала бы нулевой балл.
+ *
+ * Спуск ниже строки при этом стирается, поэтому его отдельно несёт
+ * `relativeDescent` относительно общей базовой линии.
  */
 function fitToGrid(source: boolean[]): { cells: boolean[]; aspect: number } | null {
   let minX = GRID;
@@ -190,8 +210,6 @@ function fitToGrid(source: boolean[]): { cells: boolean[]; aspect: number } | nu
   for (let y = minY; y <= maxY; y += 1) {
     for (let x = minX; x <= maxX; x += 1) {
       if (!source[y * GRID + x]) continue;
-      // Клетка источника покрывает прямоугольник в приёмнике — заливаем целиком,
-      // иначе при растяжении в линиях появились бы разрывы.
       const x0 = Math.floor(((x - offsetX) / span) * GRID);
       const x1 = Math.ceil(((x + 1 - offsetX) / span) * GRID);
       const y0 = Math.floor(((y - offsetY) / span) * GRID);
@@ -207,7 +225,7 @@ function fitToGrid(source: boolean[]): { cells: boolean[]; aspect: number } | nu
   return { cells, aspect: width / height };
 }
 
-function maskFromRows(rows: string[]): Mask | null {
+function maskFromRows(rows: string[], relativeDescent: number): Mask | null {
   const raw = new Array<boolean>(GRID * GRID).fill(false);
   rows.forEach((row, y) => {
     for (let x = 0; x < GRID; x += 1) {
@@ -216,12 +234,12 @@ function maskFromRows(rows: string[]): Mask | null {
   });
   const fitted = fitToGrid(raw);
   if (!fitted) return null;
-  return describeMask(fitted.cells, fitted.aspect);
+  return describeMask(fitted.cells, fitted.aspect, relativeDescent);
 }
 
 const templateMasks = new Map<string, Mask>(
   glyphs.flatMap((g) => {
-    const mask = maskFromRows(g.rows);
+    const mask = maskFromRows(g.rows, g.relativeDescent);
     return mask ? [[g.id, mask] as [string, Mask]] : [];
   })
 );
@@ -243,9 +261,98 @@ export function strokeLength(strokes: Stroke[]): number {
   return length;
 }
 
+/** Диагональ рамки чернил: у ו каждая строка скелета — отдельный короткий штрих. */
+export function inkExtent(strokes: Stroke[]): number {
+  const points = strokes.flat();
+  if (points.length === 0) return 0;
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  points.forEach((point) => {
+    minX = Math.min(minX, point.x);
+    minY = Math.min(minY, point.y);
+    maxX = Math.max(maxX, point.x);
+    maxY = Math.max(maxY, point.y);
+  });
+  return Math.hypot(maxX - minX, maxY - minY);
+}
+
+/** Спуск рисунка ниже пунктира холста, нормированный на высоту над ним. */
+export function canvasRelativeDescent(strokes: Stroke[]): number | null {
+  const points = strokes.flat();
+  if (points.length === 0) return null;
+  let minY = Infinity;
+  let maxY = -Infinity;
+  points.forEach((point) => {
+    minY = Math.min(minY, point.y);
+    maxY = Math.max(maxY, point.y);
+  });
+  const ascent = Math.max(CANVAS_BASELINE - minY, 1e-4);
+  return (maxY - CANVAS_BASELINE) / ascent;
+}
+
+/**
+ * Переносит клетки шаблона в координаты холста так, чтобы спуск относительно
+ * пунктира (y = 0.5) совпал с метрикой шрифта. Иначе утончённый скелет не
+ * достаёт до линии, и ו снова совпадает с ן.
+ */
+export function strokesFromGlyph(glyph: GlyphTemplate, jitter = 0, seed = 1): Stroke[] {
+  let state = seed;
+  const random = () => {
+    state = (state * 1103515245 + 12345) % 2147483648;
+    return state / 2147483648 - 0.5;
+  };
+
+  let minX = GRID;
+  let minY = GRID;
+  let maxX = -1;
+  let maxY = -1;
+  glyph.rows.forEach((row, y) => {
+    [...row].forEach((mark, x) => {
+      if (mark !== '#') return;
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+    });
+  });
+  if (maxX < 0) return [];
+
+  const gridH = maxY - minY + 1;
+  const ascent = 0.38;
+  const targetMinY = CANVAS_BASELINE - ascent;
+  const targetMaxY = CANVAS_BASELINE + glyph.relativeDescent * ascent;
+  const targetHeight = Math.max(targetMaxY - targetMinY, 1e-3);
+  const scale = targetHeight / gridH;
+  const gridW = maxX - minX + 1;
+  const targetWidth = gridW * scale;
+  const targetMinX = 0.5 - targetWidth / 2;
+
+  const strokes: Stroke[] = [];
+  glyph.rows.forEach((row, y) => {
+    let run: Point[] = [];
+    [...row].forEach((mark, x) => {
+      if (mark === '#') {
+        run.push({
+          x: targetMinX + (x + 0.5 - minX) * scale + random() * jitter * scale,
+          y: targetMinY + (y + 0.5 - minY) * scale + random() * jitter * scale,
+        });
+      } else if (run.length > 0) {
+        strokes.push(run);
+        run = [];
+      }
+    });
+    if (run.length > 0) strokes.push(run);
+  });
+  return strokes;
+}
+
 /**
  * Переносит рисунок в сетку GRID×GRID. Масштаб единый по осям, чтобы узкие
- * буквы (ו, ן) не растягивались в квадрат и оставались отличимыми.
+ * буквы (ו, ן) не растягивались в квадрат и оставались отличимыми по фигуре.
+ * Спуск относительно пунктира холста сохраняется отдельно: рамка чернил его
+ * стирает.
  */
 export function rasterise(strokes: Stroke[]): Mask | null {
   const points = strokes.flat();
@@ -267,6 +374,7 @@ export function rasterise(strokes: Stroke[]): Mask | null {
   const span = Math.max(width, height);
   const offsetX = minX - (span - width) / 2;
   const offsetY = minY - (span - height) / 2;
+  const relativeDescent = (maxY - CANVAS_BASELINE) / Math.max(CANVAS_BASELINE - minY, 1e-4);
 
   const cells = new Array<boolean>(GRID * GRID).fill(false);
   const put = (x: number, y: number) => {
@@ -296,7 +404,7 @@ export function rasterise(strokes: Stroke[]): Mask | null {
   });
 
   if (!cells.some(Boolean)) return null;
-  return describeMask(cells, width / height);
+  return describeMask(cells, width / height, relativeDescent);
 }
 
 /** Расстояние Чебышёва до ближайшей закрашенной клетки, волновым обходом. */
@@ -343,13 +451,25 @@ function profileSimilarity(a: number[], b: number[]): number {
 }
 
 /**
- * Балл похожести складывается из трёх частей:
+ * Штраф за разный спуск ниже строки. Небольшая разница (буква чуть не дошла
+ * до пунктира) прощается; ן против ו — уже нет.
+ */
+function descentFactor(drawing: number, template: number): number {
+  const diff = Math.abs(drawing - template);
+  const excess = Math.max(0, diff - 0.1);
+  return Math.exp(-7 * excess);
+}
+
+/**
+ * Балл похожести складывается из четырёх частей:
  * 1) согласие чернил — доля клеток, которые есть в рисунке, но не у шаблона,
  *    и наоборот. Штрафуются и лишние штрихи, и недописанные: иначе широкая
  *    ש притягивала бы к себе любой рисунок;
  * 2) профили строк и столбцов — где именно проходят перекладины и просветы,
  *    это и отличает ה от פ;
- * 3) число замкнутых пустот — отличает ם от מ и ס от כ.
+ * 3) число замкнутых пустот — отличает ם от מ и ס от כ;
+ * 4) вертикальная протяжённость относительно общей базовой линии — отличает
+ *    ו от ן и י от ך: конечные формы уходят ниже строки.
  */
 function similarity(drawing: Mask, drawingField: number[], template: Mask): number {
   const templateField = distanceField(template);
@@ -370,12 +490,15 @@ function similarity(drawing: Mask, drawingField: number[], template: Mask): numb
     Math.min(drawing.aspect, template.aspect) / Math.max(drawing.aspect, template.aspect);
   const aspectFactor = 0.8 + 0.2 * Math.max(0, Math.min(1, aspectRatio));
 
-  // Замкнутость — топологический факт, а не мелкая деталь: ס от ט и ם от ח
-  // отличаются именно ею, поэтому штраф ощутимый. Полностью обнулять балл всё
-  // равно нельзя — от руки контур часто не сходится на одну клетку.
   const holeFactor = 0.62 ** Math.abs(drawing.holes - template.holes);
 
-  return Math.max(0, agreement) ** 0.7 * profile ** 0.3 * aspectFactor * holeFactor;
+  return (
+    Math.max(0, agreement) ** 0.7 *
+    profile ** 0.3 *
+    aspectFactor *
+    holeFactor *
+    descentFactor(drawing.relativeDescent, template.relativeDescent)
+  );
 }
 
 export type Candidate = { glyphId: string; char: string; score: number };
@@ -393,20 +516,22 @@ export type Recognition = {
   ranked: Candidate[];
 };
 
-export const MIN_STROKE_LENGTH = 0.35; // в долях стороны холста
+export const MIN_STROKE_LENGTH = 0.18; // в долях стороны холста
 
 /** Ниже этого балла начертание считается слишком непохожим, чтобы зачесть. */
 const MATCH_SCORE = 0.75;
-/**
- * Ожидаемая буква должна быть лучшим кандидатом. Крошечный допуск оставлен для
- * пар, которые отличаются только положением относительно строки (ו и ן): после
- * приведения к рамке они почти совпадают.
- */
+/** Ожидаемая буква должна быть лучшим кандидатом, крошечный допуск на шум. */
 const MATCH_TOLERANCE = 0.02;
 /** Чтобы объявить ошибку, другая буква должна быть узнана уверенно... */
 const RIVAL_SCORE = 0.78;
 /** ...и опередить ожидаемую вот настолько. */
 const MISMATCH_MARGIN = 0.05;
+/**
+ * Спуск ниже линии в этой полосе не относит фигуру ни к «сидящей на строке»,
+ * ни к конечной с хвостиком — просим написать ещё раз.
+ */
+const DESCENT_AMBIGUOUS_LOW = 0.08;
+const DESCENT_AMBIGUOUS_HIGH = 0.2;
 
 export function rank(strokes: Stroke[]): Candidate[] {
   const drawing = rasterise(strokes);
@@ -430,8 +555,8 @@ export function rank(strokes: Stroke[]): Candidate[] {
  *
  * `match` — начертание похоже на ожидаемое и никакая другая буква не похожа
  * заметно больше. `mismatch` — уверенно узнана другая буква. `unsure` —
- * слишком мало чернил или слишком близкие варианты: в этом случае просим
- * написать ещё раз и не записываем ошибку.
+ * слишком мало чернил, неоднозначный спуск относительно строки или слишком
+ * близкие варианты: в этом случае просим написать ещё раз и не записываем ошибку.
  */
 export function recognise(strokes: Stroke[], expectedGlyphId: string): Recognition {
   const empty: Recognition = {
@@ -443,7 +568,9 @@ export function recognise(strokes: Stroke[], expectedGlyphId: string): Recogniti
   };
 
   if (!templateMasks.has(expectedGlyphId)) return empty;
-  if (strokeLength(strokes) < MIN_STROKE_LENGTH) return empty;
+  // Берём максимум длины ломаной и диагонали рамки: скелет ו — это пачка
+  // коротких горизонтальных штрихов, но буква на холсте высокая.
+  if (Math.max(strokeLength(strokes), inkExtent(strokes)) < MIN_STROKE_LENGTH) return empty;
 
   const ranked = rank(strokes);
   if (ranked.length === 0) return empty;
@@ -456,6 +583,15 @@ export function recognise(strokes: Stroke[], expectedGlyphId: string): Recogniti
   const margin = expectedScore - (rival?.score ?? 0);
 
   const result: Recognition = { verdict: 'unsure', expectedScore, best, margin, ranked };
+
+  const twinId = DESCENDER_TWINS[expectedGlyphId];
+  const descent = canvasRelativeDescent(strokes);
+  if (twinId && descent !== null && descent > DESCENT_AMBIGUOUS_LOW && descent < DESCENT_AMBIGUOUS_HIGH) {
+    const twin = ranked.find((candidate) => candidate.glyphId === twinId);
+    if (twin && Math.abs(expectedScore - twin.score) < 0.18) {
+      return result;
+    }
+  }
 
   if (expectedScore >= MATCH_SCORE && margin >= -MATCH_TOLERANCE) {
     return { ...result, verdict: 'match' };

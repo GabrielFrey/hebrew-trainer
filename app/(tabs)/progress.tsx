@@ -9,30 +9,33 @@ import { ScreenHeader } from '@/components/ScreenHeader';
 import { ProgressBar, StatTile } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
-import { dayKey, endOfToday, pluralRu } from '@/lib/dates';
+import { dayKey, endOfToday } from '@/lib/dates';
 import { getLetter, getPhrase, getWord, letters, phrases, words } from '@/lib/data';
+import { letterName, phraseGloss, pluralUnits, wordGloss } from '@/lib/i18n';
 import { accuracy, isLearned } from '@/lib/srs';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
-import type { CardState } from '@/lib/types';
+import type { CardState, UiLanguage } from '@/lib/types';
+import { useI18n } from '@/lib/use-i18n';
 
-function cardLabel(card: CardState): { hebrew: string; ru: string } | null {
+function cardLabel(card: CardState, lang: UiLanguage): { hebrew: string; gloss: string } | null {
   if (card.kind === 'letter') {
     const letter = getLetter(card.refId);
-    return letter ? { hebrew: letter.char, ru: letter.nameRu } : null;
+    return letter ? { hebrew: letter.char, gloss: letterName(letter, lang) } : null;
   }
   if (card.kind === 'word') {
     const word = getWord(card.refId);
-    return word ? { hebrew: word.nikud, ru: word.ru } : null;
+    return word ? { hebrew: word.nikud, gloss: wordGloss(word, lang) } : null;
   }
   const phrase = getPhrase(card.refId);
-  return phrase ? { hebrew: phrase.nikud, ru: phrase.ru } : null;
+  return phrase ? { hebrew: phrase.nikud, gloss: phraseGloss(phrase, lang) } : null;
 }
 
 export default function ProgressScreen() {
   const router = useRouter();
   const palette = usePalette();
   const { progress } = useStore();
+  const { t, lang } = useI18n();
 
   const cards = useMemo(() => Object.values(progress.cards), [progress.cards]);
 
@@ -79,12 +82,12 @@ export default function ProgressScreen() {
   if (cards.length === 0) {
     return (
       <Screen>
-        <ScreenHeader title="Прогресс" />
+        <ScreenHeader title={t('tabs.progress')} />
         <EmptyState
           icon="bar-chart-2"
-          title="Статистики пока нет"
-          description="Пройдите первую сессию: после неё здесь появятся выученные буквы, слова и точность ответов."
-          actionLabel="Начать тренировку"
+          title={t('progress.empty')}
+          description={t('progress.emptyHint')}
+          actionLabel={t('progress.start')}
           onAction={() => router.push('/session')}
         />
       </Screen>
@@ -95,40 +98,43 @@ export default function ProgressScreen() {
     <Screen>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <ScreenHeader
-          title="Прогресс"
+          title={t('tabs.progress')}
           subtitle={
             progress.streak.current > 0
-              ? `${progress.streak.current} ${pluralRu(progress.streak.current, ['день', 'дня', 'дней'])} подряд`
-              : 'Серия прервана — начните заново сегодня'
+              ? t('progress.subtitleStreak', {
+                  count: progress.streak.current,
+                  daysWord: pluralUnits(lang, progress.streak.current, 'day'),
+                })
+              : t('progress.subtitleBroken')
           }
-          action={{ icon: 'settings', label: 'Настройки', onPress: () => router.push('/settings') }}
+          action={{ icon: 'settings', label: t('common.settings'), onPress: () => router.push('/settings') }}
         />
 
         <View style={styles.block}>
           <View style={styles.tiles}>
-            <StatTile value={`${learnedLetters}/${letters.length}`} label="Буквы" />
-            <StatTile value={`${learnedWords}/${words.length}`} label="Слова" />
-            <StatTile value={`${learnedPhrases}/${phrases.length}`} label="Фразы" />
+            <StatTile value={`${learnedLetters}/${letters.length}`} label={t('progress.letters')} />
+            <StatTile value={`${learnedWords}/${words.length}`} label={t('progress.words')} />
+            <StatTile value={`${learnedPhrases}/${phrases.length}`} label={t('progress.phrases')} />
             <StatTile
               value={overallAccuracy === null ? '—' : `${Math.round(overallAccuracy * 100)}%`}
-              label="Точность"
-              hint="По всем ответам"
+              label={t('progress.accuracy')}
+              hint={t('progress.accuracyHint')}
             />
           </View>
         </View>
 
         <View style={styles.block}>
           <AppText variant="heading" style={styles.sectionTitle}>
-            Повторить сегодня
+            {t('progress.dueToday')}
           </AppText>
           {dueToday.length === 0 ? (
             <Surface tone="alt">
-              <AppText>Всё повторено. Ближайшие карточки вернутся в другой день.</AppText>
+              <AppText>{t('progress.dueEmpty')}</AppText>
             </Surface>
           ) : (
             <Surface padded={false}>
               {dueToday.map((card, index) => {
-                const label = cardLabel(card);
+                const label = cardLabel(card, lang);
                 if (!label) return null;
                 return (
                   <View
@@ -141,12 +147,16 @@ export default function ProgressScreen() {
                     ]}
                   >
                     <View style={styles.rowText}>
-                      <AppText variant="label">{label.ru}</AppText>
+                      <AppText variant="label">{label.gloss}</AppText>
                       <AppText variant="caption" muted>
-                        {card.kind === 'letter' ? 'буква' : card.kind === 'word' ? 'слово' : 'фраза'}
+                        {card.kind === 'letter'
+                          ? t('progress.kindLetter')
+                          : card.kind === 'word'
+                            ? t('progress.kindWord')
+                            : t('progress.kindPhrase')}
                         {card.lapses > 0
-                          ? ` · ошибок: ${card.lapses}`
-                          : ` · интервал ${card.intervalDays} дн.`}
+                          ? ` · ${t('progress.lapses', { count: card.lapses })}`
+                          : ` · ${t('progress.interval', { days: card.intervalDays })}`}
                       </AppText>
                     </View>
                     <HebrewText size="inline" style={styles.rowHebrew} numberOfLines={1}>
@@ -161,7 +171,7 @@ export default function ProgressScreen() {
 
         <View style={styles.block}>
           <AppText variant="heading" style={styles.sectionTitle}>
-            Последние 7 дней
+            {t('progress.last7')}
           </AppText>
           <Surface style={styles.chart}>
             <View style={styles.bars}>
@@ -185,7 +195,7 @@ export default function ProgressScreen() {
               ))}
             </View>
             <AppText variant="caption" muted>
-              Высота столбика — число отвеченных карточек за день.
+              {t('progress.chartHint')}
             </AppText>
           </Surface>
         </View>
@@ -193,19 +203,19 @@ export default function ProgressScreen() {
         {weakest.length > 0 ? (
           <View style={styles.block}>
             <AppText variant="heading" style={styles.sectionTitle}>
-              Слабые места
+              {t('progress.weak')}
             </AppText>
             <Surface style={styles.weakList}>
               {weakest.map((card) => {
-                const label = cardLabel(card);
+                const label = cardLabel(card, lang);
                 if (!label) return null;
                 return (
                   <View key={card.id} style={styles.weakRow}>
                     <View style={styles.rowText}>
-                      <AppText variant="label">{label.ru}</AppText>
+                      <AppText variant="label">{label.gloss}</AppText>
                       <ProgressBar value={card.correct} total={card.total} />
                       <AppText variant="caption" muted>
-                        {card.correct} из {card.total} верно
+                        {t('progress.correctOf', { correct: card.correct, total: card.total })}
                       </AppText>
                     </View>
                     <HebrewText size="inline" style={styles.rowHebrew} numberOfLines={1}>
@@ -219,7 +229,7 @@ export default function ProgressScreen() {
         ) : null}
 
         <View style={styles.block}>
-          <Button label="Тренироваться" onPress={() => router.push('/session')} />
+          <Button label={t('progress.practice')} onPress={() => router.push('/session')} />
         </View>
       </ScrollView>
     </Screen>

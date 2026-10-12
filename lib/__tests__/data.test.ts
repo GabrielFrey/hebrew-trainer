@@ -39,9 +39,12 @@ describe('data/hebrew.json', () => {
     letters.forEach((letter) => {
       expect(NIKUD.test(letter.name)).toBe(true);
       expect(letter.nameRu).not.toHaveLength(0);
+      expect(letter.nameEn).not.toHaveLength(0);
       expect(letter.sound).not.toHaveLength(0);
+      expect(letter.soundEn).not.toHaveLength(0);
       expect(NIKUD.test(letter.example.he)).toBe(true);
       expect(letter.example.ru).not.toHaveLength(0);
+      expect(letter.example.en).not.toHaveLength(0);
       if (letter.finalChar) expect(letter.finalExample).toBeDefined();
     });
   });
@@ -54,6 +57,7 @@ describe('data/hebrew.json', () => {
       expect(isKtivMaleOf(word.nikud, word.hebrew)).toBe(true);
       expect(word.transcription).not.toHaveLength(0);
       expect(word.ru).not.toHaveLength(0);
+      expect(word.en).not.toHaveLength(0);
       expect(word.audio).toMatch(/^words\/.+\.m4a$/);
     });
   });
@@ -82,7 +86,12 @@ describe('data/hebrew.json', () => {
       expect(NIKUD.test(phrase.hebrew)).toBe(false);
       expect(isKtivMaleOf(phrase.nikud, phrase.hebrew)).toBe(true);
       expect(phrase.distractors.length).toBeGreaterThanOrEqual(3);
+      expect(phrase.en).not.toHaveLength(0);
+      expect(phrase.distractorsEn.length).toBeGreaterThanOrEqual(3);
       expect(new Set([phrase.ru, ...phrase.distractors]).size).toBe(phrase.distractors.length + 1);
+      expect(new Set([phrase.en, ...phrase.distractorsEn]).size).toBe(
+        phrase.distractorsEn.length + 1
+      );
     });
   });
 });

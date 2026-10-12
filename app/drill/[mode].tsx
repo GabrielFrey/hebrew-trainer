@@ -13,8 +13,10 @@ import { spacing } from '@/constants/theme';
 import { letters } from '@/lib/data';
 import { glyphs, gradeForVerdict, recognise } from '@/lib/handwriting';
 import type { GlyphTemplate, Stroke, Verdict } from '@/lib/handwriting';
+import { letterName, letterSound } from '@/lib/i18n';
 import { useStore } from '@/lib/store';
 import type { Letter } from '@/lib/types';
+import { useI18n } from '@/lib/use-i18n';
 
 const DRILL_LENGTH = 10;
 
@@ -33,25 +35,36 @@ function shuffle<T>(items: readonly T[]): T[] {
 }
 
 export default function LetterDrillScreen() {
-  const { mode } = useLocalSearchParams<{ mode: string }>();
+  const { mode, ids } = useLocalSearchParams<{ mode: string; ids?: string }>();
   const router = useRouter();
   const { progress, gradeCard } = useStore();
+  const { t, lang } = useI18n();
   const isWriteMode = mode === 'write';
+  const requestedIds = (typeof ids === 'string' ? ids : '').split(',').map((id) => id.trim()).filter(Boolean);
 
   // В режиме письма идём по глифам, чтобы спрашивать и конечные формы.
   const glyphPool = useMemo(() => {
+    if (requestedIds.length > 0) {
+      return requestedIds
+        .map((id) => glyphs.find((glyph) => glyph.id === id))
+        .filter((glyph): glyph is GlyphTemplate => Boolean(glyph));
+    }
     const seen = glyphs.filter((glyph) => progress.cards[`letter:${glyph.letterId}`]);
     return seen.length >= 4 ? seen : glyphs;
-  }, [progress.cards]);
+  }, [progress.cards, requestedIds.join(',')]);
 
   const letterPool = useMemo(() => {
     const seen = letters.filter((l) => progress.cards[`letter:${l.id}`]);
     return seen.length >= 4 ? seen : letters;
   }, [progress.cards]);
 
-  const [queue, setQueue] = useState<DrillItem[]>(() =>
-    shuffle<DrillItem>(isWriteMode ? glyphPool : letterPool).slice(0, DRILL_LENGTH)
-  );
+  const buildQueue = useCallback(() => {
+    const pool = isWriteMode ? glyphPool : letterPool;
+    if (requestedIds.length > 0 && isWriteMode) return [...pool];
+    return shuffle<DrillItem>(pool).slice(0, DRILL_LENGTH);
+  }, [glyphPool, isWriteMode, letterPool, requestedIds.length]);
+
+  const [queue, setQueue] = useState<DrillItem[]>(() => buildQueue());
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
   const [verdict, setVerdict] = useState<Verdict | 'idle'>('idle');
@@ -78,13 +91,13 @@ export default function LetterDrillScreen() {
   }, []);
 
   const restart = useCallback(() => {
-    setQueue(shuffle<DrillItem>(isWriteMode ? glyphPool : letterPool).slice(0, DRILL_LENGTH));
+    setQueue(buildQueue());
     setIndex(0);
     setPicked(null);
     setVerdict('idle');
     setAttempts(0);
     setScore({ correct: 0, total: 0 });
-  }, [glyphPool, isWriteMode, letterPool]);
+  }, [buildQueue]);
 
   const register = useCallback(
     (letterId: string, correct: boolean) => {
@@ -117,16 +130,16 @@ export default function LetterDrillScreen() {
         <View style={styles.finished}>
           <EmptyState
             icon="check-circle"
-            title="Разминка закончена"
+            title={t('drill.finished')}
             description={
               score.total === 0
-                ? 'Карточек не нашлось. Пройдите сессию на вкладке «Сегодня».'
-                : `Правильно ${score.correct} из ${score.total}.`
+                ? t('drill.finishedEmpty')
+                : t('drill.finishedScore', { correct: score.correct, total: score.total })
             }
-            actionLabel="Ещё раз"
+            actionLabel={t('drill.again')}
             onAction={restart}
           />
-          <Button label="Готово" variant="ghost" onPress={() => router.back()} />
+          <Button label={t('common.done')} variant="ghost" onPress={() => router.back()} />
         </View>
       </Screen>
     );
@@ -137,7 +150,7 @@ export default function LetterDrillScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.progress}>
           <AppText variant="caption" muted>
-            {index + 1} из {queue.length}
+            {t('drill.of', { n: index + 1, total: queue.length })}
           </AppText>
           <ProgressBar value={index} total={queue.length} />
         </View>
@@ -146,15 +159,15 @@ export default function LetterDrillScreen() {
           <>
             <Surface style={styles.card}>
               <AppText variant="caption" muted>
-                Напишите букву пальцем
+                {t('drill.writePrompt')}
               </AppText>
-              <AppText variant="title">{currentLetter.nameRu}</AppText>
+              <AppText variant="title">{letterName(currentLetter, lang)}</AppText>
               <AppText muted style={styles.centered}>
-                {currentLetter.sound}
+                {letterSound(currentLetter, lang)}
               </AppText>
               {currentGlyph.form === 'final' ? (
                 <AppText variant="label" tone="accent">
-                  конечная форма
+                  {t('session.finalForm')}
                 </AppText>
               ) : null}
             </Surface>
@@ -162,14 +175,14 @@ export default function LetterDrillScreen() {
             <HandwritingCanvas
               resetKey={`${currentGlyph.id}-${attempts}-${verdict}`}
               disabled={verdict === 'match' || verdict === 'mismatch'}
-              hint="Напишите букву здесь"
+              hint={t('session.writeHere')}
               onChange={onStrokes}
             />
 
             {verdict === 'match' || verdict === 'mismatch' ? (
               <Surface tone="alt" style={styles.sample}>
                 <AppText variant="caption" muted>
-                  Образец
+                  {t('session.sample')}
                 </AppText>
                 <HebrewText size="card" align="center">
                   {currentGlyph.char}
@@ -180,13 +193,13 @@ export default function LetterDrillScreen() {
         ) : (
           <Surface style={styles.card}>
             <AppText variant="caption" muted>
-              Какая это буква?
+              {t('drill.which')}
             </AppText>
             <HebrewText size="glyph" align="center">
               {currentLetter.char}
             </HebrewText>
             <View style={styles.centeredRow}>
-              <AudioButton audio={currentLetter.audio} label="Название" />
+              <AudioButton audio={currentLetter.audio} label={t('common.letterName')} />
             </View>
           </Surface>
         )}
@@ -196,26 +209,26 @@ export default function LetterDrillScreen() {
             {verdict === 'match' ? (
               <>
                 <AppText variant="label" tone="success">
-                  Начертание узнано.
+                  {t('drill.recognised')}
                 </AppText>
-                <Button label="Дальше" size="lg" onPress={advance} />
+                <Button label={t('common.next')} size="lg" onPress={advance} />
               </>
             ) : null}
             {verdict === 'mismatch' ? (
               <>
                 <AppText variant="label" tone="danger">
-                  Это другая буква. Интервал сброшен.
+                  {t('drill.mismatch')}
                 </AppText>
-                <Button label="Дальше" size="lg" onPress={advance} />
+                <Button label={t('common.next')} size="lg" onPress={advance} />
               </>
             ) : null}
             {verdict === 'unsure' && attempts > 0 ? (
               <>
                 <AppText variant="label" tone="accent">
-                  Не разобрал начертание. Напишите ещё раз — ошибка не записана.
+                  {t('session.unsure')}
                 </AppText>
                 <Button
-                  label="Стереть и написать заново"
+                  label={t('session.retry')}
                   size="lg"
                   onPress={() => setVerdict('idle')}
                 />
@@ -223,7 +236,7 @@ export default function LetterDrillScreen() {
             ) : null}
             {verdict === 'idle' ? (
               <AppText variant="caption" muted style={styles.centered}>
-                Отпустите палец — приложение сверит букву
+                {t('session.release')}
               </AppText>
             ) : null}
           </View>
@@ -251,20 +264,20 @@ export default function LetterDrillScreen() {
                     register(currentLetter.id, isAnswer);
                   }}
                 >
-                  <AppText variant="label">{option.nameRu}</AppText>
+                  <AppText variant="label">{letterName(option, lang)}</AppText>
                   <AppText variant="caption" muted>
-                    {option.sound.split(',')[0]}
+                    {letterSound(option, lang).split(',')[0]}
                   </AppText>
                 </ChoiceRow>
               );
             })}
             {picked !== null ? (
-              <Button label="Дальше" size="lg" onPress={advance} style={styles.next} />
+              <Button label={t('common.next')} size="lg" onPress={advance} style={styles.next} />
             ) : null}
           </View>
         )}
 
-        <Button label="Выйти" variant="ghost" onPress={() => router.back()} />
+        <Button label={t('common.exit')} variant="ghost" onPress={() => router.back()} />
       </ScrollView>
     </Screen>
   );

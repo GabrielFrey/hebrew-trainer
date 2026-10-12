@@ -3,6 +3,7 @@ export type LetterExample = {
   translit: string;
   translitRu: string;
   ru: string;
+  en: string;
 };
 
 export type Letter = {
@@ -12,8 +13,10 @@ export type Letter = {
   finalChar: string | null;
   name: string;
   nameRu: string;
+  nameEn: string;
   nameTranslit: string;
   sound: string;
+  soundEn: string;
   audio: string | null;
   example: LetterExample;
   finalExample?: LetterExample;
@@ -24,7 +27,9 @@ export type Vowel = {
   mark: string;
   name: string;
   nameRu: string;
+  nameEn: string;
   sound: string;
+  soundEn: string;
 };
 
 export type LevelId = 'elementary' | 'basic' | 'intermediate' | 'advanced' | 'expert';
@@ -38,8 +43,11 @@ export type Level = {
   id: LevelId;
   order: number;
   title: string;
+  titleEn: string;
   summary: string;
+  summaryEn: string;
   detail: string;
+  detailEn: string;
   decks: string[];
   nikud: NikudPolicy;
   transcription: boolean;
@@ -52,7 +60,9 @@ export type Deck = {
   id: string;
   level: LevelId;
   title: string;
+  titleEn: string;
   subtitle: string;
+  subtitleEn: string;
   icon: string;
 };
 
@@ -64,6 +74,7 @@ export type Word = {
   nikud: string;
   transcription: string;
   ru: string;
+  en: string;
   pos: string;
   audio: string | null;
   root?: string;
@@ -78,23 +89,28 @@ export type Phrase = {
   nikud: string;
   transcription: string;
   ru: string;
+  en: string;
   audio: string | null;
   distractors: string[];
+  distractorsEn: string[];
 };
 
 export type PassageQuestion = {
   hebrew: string;
   nikud: string;
   ru: string;
+  en: string;
 };
 
 export type Passage = {
   id: string;
   level: LevelId;
   title: string;
+  titleEn: string;
   hebrew: string;
   nikud: string;
   ru: string;
+  en: string;
   audio: string | null;
   question: PassageQuestion;
   answer: string;
@@ -134,6 +150,8 @@ export type CardState = {
 
 export type Goal = 'reading' | 'speaking';
 export type ThemePreference = 'system' | 'light' | 'dark';
+export type UiLanguage = 'ru' | 'en';
+export type LanguagePreference = 'system' | UiLanguage;
 export type MinutesPerDay = 5 | 10 | 20;
 
 export type Settings = {
@@ -142,6 +160,8 @@ export type Settings = {
   goal: Goal;
   minutesPerDay: MinutesPerDay;
   theme: ThemePreference;
+  /** Интерфейс: система, русский или английский. */
+  language: LanguagePreference;
   /** Показывать огласовки, когда уровень допускает переключение. */
   showNikud: boolean;
   remindersEnabled: boolean;

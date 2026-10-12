@@ -3,9 +3,11 @@ import { Tabs } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
 import { usePalette } from '@/lib/theme';
+import { useI18n } from '@/lib/use-i18n';
 
 export default function TabsLayout() {
   const palette = usePalette();
+  const { t } = useI18n();
 
   return (
     <Tabs
@@ -27,7 +29,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Сегодня',
+          title: t('tabs.today'),
           headerShown: false,
           tabBarIcon: ({ color, size }) => <Feather name="sun" color={color} size={size} />,
         }}
@@ -35,7 +37,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="alphabet"
         options={{
-          title: 'Алфавит',
+          title: t('tabs.alphabet'),
           headerShown: false,
           tabBarIcon: ({ color, size }) => <Feather name="type" color={color} size={size} />,
         }}
@@ -43,7 +45,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="words"
         options={{
-          title: 'Слова',
+          title: t('tabs.words'),
           headerShown: false,
           tabBarIcon: ({ color, size }) => <Feather name="book-open" color={color} size={size} />,
         }}
@@ -51,7 +53,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="reading"
         options={{
-          title: 'Чтение',
+          title: t('tabs.reading'),
           headerShown: false,
           tabBarIcon: ({ color, size }) => <Feather name="align-right" color={color} size={size} />,
         }}
@@ -59,7 +61,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="progress"
         options={{
-          title: 'Прогресс',
+          title: t('tabs.progress'),
           headerShown: false,
           tabBarIcon: ({ color, size }) => <Feather name="bar-chart-2" color={color} size={size} />,
         }}

@@ -15,11 +15,13 @@ import { spacing } from '@/constants/theme';
 import { getLetter, getPassage, getPhrase, getWord } from '@/lib/data';
 import { getGlyph, gradeForVerdict, recognise } from '@/lib/handwriting';
 import type { Stroke } from '@/lib/handwriting';
+import { letterName, letterSound, posLabel, wordGloss } from '@/lib/i18n';
 import { hebrewFor, showNikud, showTranscription } from '@/lib/levels';
 import { buildSession } from '@/lib/session';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
 import type { Grade, SessionCard, Settings } from '@/lib/types';
+import { useI18n } from '@/lib/use-i18n';
 
 function tap(success: boolean) {
   if (Platform.OS === 'web') return;
@@ -41,6 +43,7 @@ export default function SessionScreen() {
   const palette = usePalette();
   const { ahead } = useLocalSearchParams<{ ahead?: string }>();
   const { progress, gradeCard, finishSession } = useStore();
+  const { t } = useI18n();
   const settings = progress.settings;
 
   const initialQueue = useMemo(
@@ -108,9 +111,9 @@ export default function SessionScreen() {
         <View style={styles.center}>
           <EmptyState
             icon="coffee"
-            title="Очередь пуста"
-            description="Все карточки повторены. Возвращайтесь завтра — или пройдите повторения досрочно с экрана «Сегодня»."
-            actionLabel="Закрыть"
+            title={t('session.empty')}
+            description={t('session.emptyHint')}
+            actionLabel={t('common.close')}
             onAction={() => router.back()}
           />
         </View>
@@ -131,16 +134,19 @@ export default function SessionScreen() {
               כָּל הַכָּבוֹד!
             </HebrewText>
             <AppText variant="caption" muted style={styles.centered}>
-              «Молодец» — коль ха-каво́д
+              {t('session.bravo')}
             </AppText>
             <AppText variant="title" style={styles.centered}>
-              Сессия закончена
+              {t('session.finished')}
             </AppText>
             <AppText muted style={styles.centered}>
-              Ответов: {totals.current.reviewed} · точность {accuracyPct}% · серия{' '}
-              {progress.streak.current}
+              {t('session.summary', {
+                reviewed: totals.current.reviewed,
+                pct: accuracyPct,
+                streak: progress.streak.current,
+              })}
             </AppText>
-            <Button label="Готово" size="lg" onPress={() => router.back()} style={styles.cta} />
+            <Button label={t('common.done')} size="lg" onPress={() => router.back()} style={styles.cta} />
           </Surface>
         </View>
       </Screen>
@@ -151,7 +157,7 @@ export default function SessionScreen() {
     <Screen>
       <View style={styles.topBar}>
         <Pressable
-          accessibilityLabel="Закрыть тренировку"
+          accessibilityLabel={t('session.closeA11y')}
           accessibilityRole="button"
           hitSlop={10}
           onPress={closeSession}
@@ -172,7 +178,7 @@ export default function SessionScreen() {
           <View style={[styles.newBadge, { backgroundColor: `${palette.accent}1F` }]}>
             <Feather name="plus-circle" size={13} color={palette.accent} />
             <AppText variant="caption" tone="accent">
-              Новая карточка
+              {t('session.newCard')}
             </AppText>
           </View>
         ) : null}
@@ -201,20 +207,23 @@ export default function SessionScreen() {
   );
 }
 
-function promptFor(card: SessionCard): { title: string; hint?: string } {
+function promptFor(
+  card: SessionCard,
+  t: (key: string) => string
+): { title: string; hint?: string } {
   switch (card.exercise) {
     case 'letter-recognise':
-      return { title: 'Какая это буква?' };
+      return { title: t('session.prompt.letterRecognise') };
     case 'letter-write':
-      return { title: 'Напишите букву', hint: 'Пальцем по полю — приложение сверит начертание' };
+      return { title: t('session.prompt.letterWrite'), hint: t('session.prompt.letterWriteHint') };
     case 'word-he-ru':
-      return { title: 'Что означает слово?' };
+      return { title: t('session.prompt.wordHe') };
     case 'word-ru-he':
-      return { title: 'Выберите написание' };
+      return { title: t('session.prompt.wordGloss') };
     case 'phrase-translate':
-      return { title: 'Выберите перевод фразы' };
+      return { title: t('session.prompt.phrase') };
     case 'passage-question':
-      return { title: 'Прочитайте и ответьте на иврите' };
+      return { title: t('session.prompt.passage') };
   }
 }
 
@@ -233,7 +242,8 @@ function CardBody({
   onStrokes: (strokes: Stroke[]) => void;
   onPick: (value: string) => void;
 }) {
-  const prompt = promptFor(card);
+  const { t, lang } = useI18n();
+  const prompt = promptFor(card, t);
   const answered = picked !== null;
   const withTranscription = showTranscription(settings.level);
 
@@ -257,13 +267,13 @@ function CardBody({
       {card.exercise === 'letter-write' && letter && expected ? (
         <View style={styles.writeBlock}>
           <Surface style={styles.writePrompt}>
-            <AppText variant="title">{letter.nameRu}</AppText>
+            <AppText variant="title">{letterName(letter, lang)}</AppText>
             <AppText muted style={styles.centered}>
-              {letter.sound}
+              {letterSound(letter, lang)}
             </AppText>
             {expected.form === 'final' ? (
               <AppText variant="label" tone="accent">
-                конечная форма
+                {t('session.finalForm')}
               </AppText>
             ) : null}
           </Surface>
@@ -271,14 +281,14 @@ function CardBody({
           <HandwritingCanvas
             resetKey={`${card.cardId}-${write.attempts}-${write.verdict}`}
             disabled={write.verdict === 'match' || write.verdict === 'mismatch'}
-            hint="Напишите букву здесь"
+            hint={t('session.writeHere')}
             onChange={onStrokes}
           />
 
           {write.verdict === 'mismatch' || write.verdict === 'match' ? (
             <Surface tone="alt" style={styles.writeAnswer}>
               <AppText variant="caption" muted>
-                Образец
+                {t('session.sample')}
               </AppText>
               <HebrewText size="card" align="center">
                 {expected.char}
@@ -295,10 +305,10 @@ function CardBody({
               </HebrewText>
               {card.isNew ? (
                 <AppText variant="label" muted>
-                  {letter.nameRu} · {letter.sound}
+                  {letterName(letter, lang)} · {letterSound(letter, lang)}
                 </AppText>
               ) : null}
-              <AudioButton audio={letter.audio} label="Название" />
+              <AudioButton audio={letter.audio} label={t('common.letterName')} />
             </>
           ) : null}
 
@@ -319,10 +329,10 @@ function CardBody({
           {card.exercise === 'word-ru-he' && word ? (
             <>
               <AppText variant="title" style={styles.centered}>
-                {word.ru}
+                {wordGloss(word, lang)}
               </AppText>
               <AppText variant="caption" muted>
-                {word.pos}
+                {posLabel(word.pos, lang)}
               </AppText>
             </>
           ) : null}
@@ -349,7 +359,7 @@ function CardBody({
                 </HebrewText>
                 {answered ? (
                   <AppText variant="caption" muted>
-                    {passage.question.ru}
+                    {lang === 'en' ? passage.question.en : passage.question.ru}
                   </AppText>
                 ) : null}
               </View>
@@ -411,6 +421,7 @@ function Footer({
   onRetry: () => void;
   onGrade: (grade: Grade) => void;
 }) {
+  const { t } = useI18n();
   const answered = picked !== null;
   const correct = picked === card.answer;
 
@@ -419,18 +430,18 @@ function Footer({
       return (
         <View style={styles.footer}>
           <AppText variant="label" tone="success">
-            Начертание узнано. Как далось?
+            {t('session.howWasIt')}
           </AppText>
           <View style={styles.footerRow}>
             <Button
-              label="С трудом"
+              label={t('session.hard')}
               variant="secondary"
               onPress={() => onGrade('hard')}
               style={styles.footerButton}
             />
-            <Button label="Нормально" onPress={() => onGrade('good')} style={styles.footerButton} />
+            <Button label={t('session.good')} onPress={() => onGrade('good')} style={styles.footerButton} />
             <Button
-              label="Легко"
+              label={t('session.easy')}
               variant="secondary"
               onPress={() => onGrade('easy')}
               style={styles.footerButton}
@@ -443,10 +454,10 @@ function Footer({
       return (
         <View style={styles.footer}>
           <AppText variant="label" tone="danger">
-            Это другая буква. Карточка вернётся в конец очереди.
+            {t('session.mismatch')}
           </AppText>
           <Button
-            label="Понятно"
+            label={t('common.understood')}
             size="lg"
             onPress={() => onGrade(gradeForVerdict('mismatch') ?? 'again')}
           />
@@ -457,16 +468,16 @@ function Footer({
       return (
         <View style={styles.footer}>
           <AppText variant="label" tone="accent">
-            Не разобрал начертание. Напишите ещё раз — ошибка не записана.
+            {t('session.unsure')}
           </AppText>
-          <Button label="Стереть и написать заново" size="lg" onPress={onRetry} />
+          <Button label={t('session.retry')} size="lg" onPress={onRetry} />
         </View>
       );
     }
     return (
       <View style={styles.footer}>
         <AppText variant="caption" muted style={styles.centered}>
-          Отпустите палец — приложение сверит букву
+          {t('session.release')}
         </AppText>
       </View>
     );
@@ -476,7 +487,7 @@ function Footer({
     return (
       <View style={styles.footer}>
         <AppText variant="caption" muted style={styles.centered}>
-          Выберите вариант
+          {t('session.pick')}
         </AppText>
       </View>
     );
@@ -486,9 +497,9 @@ function Footer({
     return (
       <View style={styles.footer}>
         <AppText variant="label" tone="danger">
-          Не угадали. Карточка вернётся в конец очереди.
+          {t('session.wrong')}
         </AppText>
-        <Button label="Понятно" size="lg" onPress={() => onGrade('again')} />
+        <Button label={t('common.understood')} size="lg" onPress={() => onGrade('again')} />
       </View>
     );
   }
@@ -496,18 +507,18 @@ function Footer({
   return (
     <View style={styles.footer}>
       <AppText variant="label" tone="success">
-        Верно! Как далось?
+        {t('session.rightHow')}
       </AppText>
       <View style={styles.footerRow}>
         <Button
-          label="С трудом"
+          label={t('session.hard')}
           variant="secondary"
           onPress={() => onGrade('hard')}
           style={styles.footerButton}
         />
-        <Button label="Нормально" onPress={() => onGrade('good')} style={styles.footerButton} />
+        <Button label={t('session.good')} onPress={() => onGrade('good')} style={styles.footerButton} />
         <Button
-          label="Легко"
+          label={t('session.easy')}
           variant="secondary"
           onPress={() => onGrade('easy')}
           style={styles.footerButton}
