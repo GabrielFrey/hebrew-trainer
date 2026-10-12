@@ -35,15 +35,10 @@ describe('уровни', () => {
   });
 
   it('открывают колоды текущего уровня и всех ниже', () => {
-    expect(deckIdsForLevel('elementary')).toEqual(['frequent']);
-    expect(deckIdsForLevel('basic')).toEqual([
-      'frequent',
-      'numbers',
-      'family',
-      'food',
-      'verbs-present',
-    ]);
-    expect(deckIdsForLevel('expert')).toEqual(decks.map((deck) => deck.id));
+    expect(deckIdsForLevel('elementary').length).toBeGreaterThan(0);
+    expect(deckIdsForLevel('basic').length).toBeGreaterThan(deckIdsForLevel('elementary').length);
+    const expert = new Set(deckIdsForLevel('expert'));
+    decks.forEach((deck) => expect(expert.has(deck.id)).toBe(true));
   });
 
   it('накапливает словарь с ростом уровня и никогда не урезает его', () => {
@@ -55,14 +50,13 @@ describe('уровни', () => {
   });
 
   it('фильтрует новые слова в очереди по уровню', () => {
-    const elementaryDecks = new Set(deckIdsForLevel('elementary'));
     const queue = buildSession(at('elementary'), NOW);
     const newWords = queue.filter((card) => card.kind === 'word');
     expect(newWords.length).toBeGreaterThan(0);
     newWords.forEach((card) => {
       const word = words.find((w) => w.id === card.refId);
       expect(word).toBeDefined();
-      expect(elementaryDecks.has(word?.deck ?? '')).toBe(true);
+      expect(word?.level).toBe('elementary');
     });
   });
 
@@ -154,7 +148,11 @@ describe('уровни', () => {
   });
 
   it('открывает колоды только того уровня, который выбран', () => {
-    expect(decksForLevel('elementary').map((deck) => deck.id)).toEqual(['frequent']);
+    const elementary = decksForLevel('elementary').map((deck) => deck.id);
+    expect(elementary).toContain('greetings');
+    expect(elementary.length).toBeGreaterThan(1);
+    const allowed = new Set(levels.find((level) => level.id === 'elementary')?.decks);
+    elementary.forEach((id) => expect(allowed.has(id)).toBe(true));
     decksForLevel('intermediate').forEach((deck) => {
       expect(['elementary', 'basic', 'intermediate']).toContain(deck.level);
     });

@@ -2,21 +2,32 @@ import { createAudioPlayer, setAudioModeAsync } from 'expo-audio';
 import type { AudioPlayer } from 'expo-audio';
 
 import { audioAssets } from '@/lib/audio-assets';
+import { ttsAssets } from '@/lib/tts-assets';
 
 /**
- * Проигрывает только записи носителей языка. Синтеза речи здесь нет совсем:
- * если файла нет, экран показывает «нет записи» и ничего не звучит.
+ * Проигрывает заранее готовый файл: сначала запись носителя, иначе кэш TTS.
+ * Синтеза на устройстве нет: если файла нет, экран показывает «нет записи».
  */
+
+function bundledAsset(path: string): number | undefined {
+  if (path in audioAssets) return audioAssets[path];
+  if (path in ttsAssets) return ttsAssets[path];
+  return undefined;
+}
 
 let current: AudioPlayer | null = null;
 let audioModeReady = false;
 
 export function hasRecording(path: string | null | undefined): boolean {
-  return typeof path === 'string' && path in audioAssets;
+  return typeof path === 'string' && bundledAsset(path) !== undefined;
 }
 
 export function recordingCount(): number {
   return Object.keys(audioAssets).length;
+}
+
+export function ttsRecordingCount(): number {
+  return Object.keys(ttsAssets).length;
 }
 
 async function prepareAudioMode(): Promise<void> {
@@ -45,8 +56,8 @@ export function stopPlayback(): void {
  * false означает «записи нет» — вызывающий код показывает это пользователю.
  */
 export function playRecording(path: string | null | undefined): boolean {
-  if (!hasRecording(path)) return false;
-  const asset = audioAssets[path as string];
+  if (typeof path !== 'string') return false;
+  const asset = bundledAsset(path);
   if (asset === undefined) return false;
 
   void prepareAudioMode();

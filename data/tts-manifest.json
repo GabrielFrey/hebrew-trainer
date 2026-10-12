@@ -1,0 +1,6 @@
+{
+  "generatedAt": null,
+  "provider": null,
+  "files": {},
+  "note": "Заполняется scripts/generate-tts.mjs при наличии AZURE_SPEECH_KEY или GOOGLE_TTS_KEY. Пустые аудиозаглушки не коммитятся."
+}

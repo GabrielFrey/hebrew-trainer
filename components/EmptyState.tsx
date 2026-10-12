@@ -15,7 +15,7 @@ export function EmptyState({
 }: {
   icon?: keyof typeof Feather.glyphMap;
   title: string;
-  description: string;
+  description?: string;
   actionLabel?: string;
   onAction?: () => void;
 }) {
@@ -28,9 +28,11 @@ export function EmptyState({
       <AppText variant="heading" style={styles.centered}>
         {title}
       </AppText>
-      <AppText muted style={styles.centered}>
-        {description}
-      </AppText>
+      {description ? (
+        <AppText muted style={styles.centered}>
+          {description}
+        </AppText>
+      ) : null}
       {actionLabel && onAction ? (
         <Button label={actionLabel} onPress={onAction} style={styles.action} />
       ) : null}

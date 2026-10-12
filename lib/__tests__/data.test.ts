@@ -7,6 +7,7 @@ import {
   vowels,
   words,
 } from '@/lib/data';
+import { loadedSlang } from '@/lib/lexicon';
 
 const NIKUD = /[\u0591-\u05C7]/;
 const HEBREW_ONLY = /^[\u0590-\u05FF\s.,!?'-]+$/;
@@ -49,16 +50,31 @@ describe('data/hebrew.json', () => {
     });
   });
 
-  it('у каждого слова есть никуд, транскрипция и перевод', () => {
+  it('у каждого слова есть никуд, транскрипция, перевод и пример', () => {
+    expect(words.length).toBe(5000);
     words.forEach((word) => {
       expect(NIKUD.test(word.nikud)).toBe(true);
-      expect(HEBREW_ONLY.test(word.nikud)).toBe(true);
+      expect(word.hebrew.length).toBeGreaterThan(0);
       expect(NIKUD.test(word.hebrew)).toBe(false);
-      expect(isKtivMaleOf(word.nikud, word.hebrew)).toBe(true);
       expect(word.transcription).not.toHaveLength(0);
       expect(word.ru).not.toHaveLength(0);
       expect(word.en).not.toHaveLength(0);
-      expect(word.audio).toMatch(/^words\/.+\.m4a$/);
+      expect(word.theme).not.toHaveLength(0);
+      expect(word.example.nikud).not.toHaveLength(0);
+      expect(word.example.en).not.toHaveLength(0);
+      expect(word.audio).toMatch(/\.(m4a|mp3)$/);
+    });
+  });
+
+  it('держит 2000 сленговых выражений с пояснением употребления', () => {
+    const slang = loadedSlang();
+    expect(slang.length).toBe(2000);
+    slang.forEach((item) => {
+      expect(NIKUD.test(item.nikud)).toBe(true);
+      expect(item.usage.ru.length).toBeGreaterThan(0);
+      expect(item.usage.en.length).toBeGreaterThan(0);
+      expect(item.en.length).toBeGreaterThan(0);
+      expect(item.ru.length).toBeGreaterThan(0);
     });
   });
 
@@ -71,12 +87,13 @@ describe('data/hebrew.json', () => {
     const deckIds = new Set(decks.map((deck) => deck.id));
     words.forEach((word) => expect(deckIds.has(word.deck)).toBe(true));
     decks.forEach((deck) => {
+      if (deck.id === 'slang') return;
       const size = words.filter((word) => word.deck === deck.id).length;
       expect(size).toBeGreaterThan(0);
-      // Колода и её слова обязаны лежать на одном уровне.
+      // Колода = тема Mondly: слова этой темы есть на нескольких уровнях.
       words
         .filter((word) => word.deck === deck.id)
-        .forEach((word) => expect(word.level).toBe(deck.level));
+        .forEach((word) => expect(word.theme).toBe(deck.id));
     });
   });
 

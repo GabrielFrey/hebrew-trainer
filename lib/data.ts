@@ -1,4 +1,5 @@
 import raw from '@/data/hebrew.json';
+import { getCatalog, getLexiconWord, loadedWords } from '@/lib/lexicon';
 import type {
   Deck,
   HebrewData,
@@ -16,15 +17,45 @@ const data = raw as unknown as HebrewData;
 export const letters: Letter[] = [...data.letters].sort((a, b) => a.order - b.order);
 export const vowels: Vowel[] = data.vowels;
 export const levels: Level[] = [...data.levels].sort((a, b) => a.order - b.order);
-export const decks: Deck[] = data.decks;
-export const words: Word[] = data.words;
 export const phrases: Phrase[] = data.phrases;
 export const passages: Passage[] = data.passages;
+
+/** Колоды = темы Mondly (сленг живёт отдельным разделом, не в колодах слов). */
+export const decks: Deck[] = getCatalog()
+  .themes.filter((theme) => theme.id !== 'slang')
+  .map((theme) => ({
+    id: theme.id,
+    level: getCatalog().units.find((unit) => unit.theme === theme.id)?.level ?? 'elementary',
+    title: theme.title,
+    titleEn: theme.titleEn,
+    subtitle: theme.title,
+    subtitleEn: theme.titleEn,
+    icon: 'book',
+  }));
+
+/** Все подгруженные слова; в тестах jest.setup тянет каждый уровень. */
+export function allWords(): Word[] {
+  return loadedWords();
+}
+
+/** Массив-прокси: длина и методы читают ленивый лексикон, а не пустой снимок. */
+export const words: Word[] = new Proxy([] as Word[], {
+  get(_target, prop) {
+    const list = loadedWords();
+    const value = Reflect.get(list, prop, list);
+    return typeof value === 'function' ? (value as (...args: never[]) => unknown).bind(list) : value;
+  },
+  ownKeys() {
+    return Reflect.ownKeys(loadedWords());
+  },
+  getOwnPropertyDescriptor(_target, prop) {
+    return Reflect.getOwnPropertyDescriptor(loadedWords(), prop);
+  },
+});
 
 export const lettersWithFinalForm: Letter[] = letters.filter((l) => l.finalChar !== null);
 
 const letterById = new Map(letters.map((l) => [l.id, l]));
-const wordById = new Map(words.map((w) => [w.id, w]));
 const phraseById = new Map(phrases.map((p) => [p.id, p]));
 const passageById = new Map(passages.map((p) => [p.id, p]));
 const deckById = new Map(decks.map((d) => [d.id, d]));
@@ -35,7 +66,7 @@ export function getLetter(id: string): Letter | undefined {
 }
 
 export function getWord(id: string): Word | undefined {
-  return wordById.get(id);
+  return getLexiconWord(id);
 }
 
 export function getPhrase(id: string): Phrase | undefined {
@@ -57,10 +88,13 @@ export function getLevel(id: LevelId): Level {
 }
 
 export function wordsInDeck(id: string): Word[] {
-  return words.filter((w) => w.deck === id);
+  return loadedWords().filter((w) => w.deck === id);
 }
 
-export function cardId(kind: 'letter' | 'word' | 'phrase' | 'passage', refId: string): string {
+export function cardId(
+  kind: 'letter' | 'word' | 'phrase' | 'passage' | 'slang',
+  refId: string
+): string {
   return `${kind}:${refId}`;
 }
 

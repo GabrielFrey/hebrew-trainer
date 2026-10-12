@@ -66,20 +66,70 @@ export type Deck = {
   icon: string;
 };
 
+export type Example = {
+  hebrew: string;
+  nikud: string;
+  transcription: string;
+  ru: string;
+  en: string;
+};
+
 export type Word = {
   id: string;
   deck: string;
   level: LevelId;
+  theme: string;
   hebrew: string;
   nikud: string;
   transcription: string;
   ru: string;
   en: string;
   pos: string;
+  emoji: string;
+  example: Example;
   audio: string | null;
   root?: string;
   synonyms?: string[];
   literal?: string;
+};
+
+export type Slang = Word & {
+  usage: { ru: string; en: string };
+};
+
+export type DialogueLine = {
+  speaker: 'a' | 'b';
+  nikud: string;
+  hebrew: string;
+  transcription: string;
+  ru: string;
+  en: string;
+};
+
+export type Dialogue = {
+  id: string;
+  level: LevelId;
+  theme: string;
+  title: string;
+  titleEn: string;
+  lines: DialogueLine[];
+  replies: { nikud: string; ru: string; en: string; correct: boolean }[];
+};
+
+export type ThemeInfo = {
+  id: string;
+  emoji: string;
+  title: string;
+  titleEn: string;
+};
+
+export type Unit = {
+  id: string;
+  level: LevelId;
+  theme: string;
+  order: number;
+  lessonCount: number;
+  wordCount: number;
 };
 
 export type Phrase = {
@@ -128,7 +178,7 @@ export type HebrewData = {
   passages: Passage[];
 };
 
-export type CardKind = 'letter' | 'word' | 'phrase' | 'passage';
+export type CardKind = 'letter' | 'word' | 'phrase' | 'passage' | 'slang';
 
 /** Grades map onto SM-2 quality scores; `again` is the only failing grade. */
 export type Grade = 'again' | 'hard' | 'good' | 'easy';
@@ -189,6 +239,8 @@ export type Progress = {
   cards: Record<string, CardState>;
   sessions: SessionLog[];
   streak: Streak;
+  /** Пройденные уроки вида theme:level:index — SM-2 карточки при этом не сбрасываются. */
+  completedLessons: string[];
 };
 
 export type ExerciseKind =
@@ -197,7 +249,12 @@ export type ExerciseKind =
   | 'word-he-ru'
   | 'word-ru-he'
   | 'phrase-translate'
-  | 'passage-question';
+  | 'passage-question'
+  | 'teach-word'
+  | 'choice-picture'
+  | 'listen-choice'
+  | 'build-phrase'
+  | 'dialogue-reply';
 
 export type SessionCard = {
   cardId: string;
@@ -209,4 +266,8 @@ export type SessionCard = {
   answer: string;
   /** Для «напиши букву»: что именно должен начертить ученик. */
   expectedGlyph?: string;
+  chips?: string[];
+  promptHe?: string;
+  emoji?: string;
+  dialogueId?: string;
 };

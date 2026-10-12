@@ -1,4 +1,5 @@
-import { decks, getLevel, levels, passages, phrases, words } from '@/lib/data';
+import { decks, getLevel, levels, passages, phrases } from '@/lib/data';
+import { loadedSlang, loadedWords } from '@/lib/lexicon';
 import type {
   Deck,
   Level,
@@ -30,8 +31,13 @@ export function decksForLevel(id: LevelId): Deck[] {
 }
 
 export function wordsForLevel(id: LevelId): Word[] {
-  const allowed = new Set(deckIdsForLevel(id));
-  return words.filter((word) => allowed.has(word.deck));
+  const allowed = new Set(levelsUpTo(id).map((level) => level.id));
+  return loadedWords().filter((word) => allowed.has(word.level));
+}
+
+export function slangForLevel(id: LevelId): ReturnType<typeof loadedSlang> {
+  const allowed = new Set(levelsUpTo(id).map((level) => level.id));
+  return loadedSlang().filter((item) => allowed.has(item.level));
 }
 
 export function phrasesForLevel(id: LevelId): Phrase[] {

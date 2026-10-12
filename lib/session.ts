@@ -194,6 +194,7 @@ export function buildSession(
   const known = new Set(candidates.map((c) => cardId(c.kind, c.refId)));
   Object.values(progress.cards).forEach((card) => {
     if (known.has(card.id)) return;
+    if (card.kind === 'slang') return;
     candidates.push({
       kind: card.kind,
       refId: card.refId,

@@ -4,7 +4,7 @@ import type { Progress, Settings } from '@/lib/types';
 
 const STORAGE_KEY = 'hebrew-coach/progress/v1';
 
-export const PROGRESS_VERSION = 2;
+export const PROGRESS_VERSION = 3;
 
 export function emptyProgress(): Progress {
   return {
@@ -24,6 +24,7 @@ export function emptyProgress(): Progress {
     cards: {},
     sessions: [],
     streak: { current: 0, longest: 0, lastDay: null },
+    completedLessons: [],
   };
 }
 
@@ -66,6 +67,9 @@ function migrate(stored: unknown): Progress {
     cards: candidate.cards ?? {},
     sessions: candidate.sessions ?? [],
     streak: { ...base.streak, ...(candidate.streak ?? {}) },
+    completedLessons: Array.isArray(candidate.completedLessons)
+      ? candidate.completedLessons
+      : [],
   };
 }
 

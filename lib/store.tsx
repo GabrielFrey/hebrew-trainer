@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { ReactNode } from 'react';
 
 import { dayKey, daysBetween } from '@/lib/dates';
+import { ensureLevel } from '@/lib/lexicon';
 import { createCard, schedule } from '@/lib/srs';
 import { clearProgress, emptyProgress, loadProgress, saveProgress } from '@/lib/storage';
 import type { CardKind, Grade, Progress, Settings } from '@/lib/types';
@@ -11,6 +12,7 @@ type StoreValue = {
   ready: boolean;
   gradeCard: (kind: CardKind, refId: string, grade: Grade) => void;
   finishSession: (reviewed: number, correct: number) => void;
+  completeLesson: (lessonKey: string) => void;
   updateSettings: (patch: Partial<Settings>) => void;
   reset: () => void;
 };
@@ -25,6 +27,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     let active = true;
     loadProgress().then((loaded) => {
       if (!active) return;
+      ensureLevel(loaded.settings.level);
       setProgress(loaded);
       setReady(true);
     });
@@ -84,8 +87,21 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const completeLesson = useCallback((lessonKey: string) => {
+    setProgress((current) => {
+      if (current.completedLessons.includes(lessonKey)) return current;
+      const next: Progress = {
+        ...current,
+        completedLessons: [...current.completedLessons, lessonKey],
+      };
+      void saveProgress(next);
+      return next;
+    });
+  }, []);
+
   const updateSettings = useCallback((patch: Partial<Settings>) => {
     setProgress((current) => {
+      if (patch.level) ensureLevel(patch.level);
       const next: Progress = {
         ...current,
         settings: { ...current.settings, ...patch },
@@ -101,8 +117,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [commit]);
 
   const value = useMemo<StoreValue>(
-    () => ({ progress, ready, gradeCard, finishSession, updateSettings, reset }),
-    [progress, ready, gradeCard, finishSession, updateSettings, reset]
+    () => ({ progress, ready, gradeCard, finishSession, completeLesson, updateSettings, reset }),
+    [progress, ready, gradeCard, finishSession, completeLesson, updateSettings, reset]
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

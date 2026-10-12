@@ -229,6 +229,8 @@ function promptFor(
       return { title: t('session.prompt.phrase') };
     case 'passage-question':
       return { title: t('session.prompt.passage') };
+    default:
+      return { title: t('session.prompt.wordHe') };
   }
 }
 

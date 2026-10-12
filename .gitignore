@@ -39,3 +39,8 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# TTS cache and generated neural audio (не коммитить пустые заглушки)
+.tts-cache/
+assets/audio/tts/
+scripts/cache/

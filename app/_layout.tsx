@@ -92,6 +92,7 @@ function RootNavigator() {
         <Stack.Screen name="letter/[id]" options={{ title: t('nav.letter') }} />
         <Stack.Screen name="deck/[id]" options={{ title: t('nav.deck') }} />
         <Stack.Screen name="drill/[mode]" options={{ title: t('nav.drill') }} />
+        <Stack.Screen name="lesson/[id]" options={{ title: t('nav.lesson') }} />
       </Stack>
     </NavThemeProvider>
   );

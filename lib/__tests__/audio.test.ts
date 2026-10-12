@@ -3,7 +3,7 @@ import { join } from 'node:path';
 
 import { createAudioPlayer } from 'expo-audio';
 
-import { hasRecording, playRecording, recordingCount, stopPlayback } from '@/lib/audio';
+import { hasRecording, playRecording, recordingCount, stopPlayback, ttsRecordingCount } from '@/lib/audio';
 import { letters, phrases, words } from '@/lib/data';
 
 const createPlayer = createAudioPlayer as unknown as jest.Mock;
@@ -78,9 +78,13 @@ describe('озвучка', () => {
     });
   });
 
-  it('ожидает путь к m4a у всех слов, фраз и букв', () => {
-    words.forEach((word) => expect(word.audio).toMatch(/\.m4a$/));
+  it('ожидает путь к записи у всех слов, фраз и букв', () => {
+    words.forEach((word) => expect(word.audio).toMatch(/\.(m4a|mp3)$/));
     phrases.forEach((phrase) => expect(phrase.audio).toMatch(/\.m4a$/));
     letters.forEach((letter) => expect(letter.audio).toMatch(/\.m4a$/));
+  });
+
+  it('не кладёт нейрозапись в бандл, пока generate-tts не отработал с ключом', () => {
+    expect(ttsRecordingCount()).toBe(0);
   });
 });
