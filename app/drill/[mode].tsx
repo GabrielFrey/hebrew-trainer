@@ -69,6 +69,7 @@ export default function LetterDrillScreen() {
   const [picked, setPicked] = useState<string | null>(null);
   const [verdict, setVerdict] = useState<Verdict | 'idle'>('idle');
   const [attempts, setAttempts] = useState(0);
+  const [wipe, setWipe] = useState(0);
   const [score, setScore] = useState({ correct: 0, total: 0 });
 
   const currentItem = queue[index];
@@ -87,6 +88,7 @@ export default function LetterDrillScreen() {
     setPicked(null);
     setVerdict('idle');
     setAttempts(0);
+    setWipe(0);
     setIndex((value) => value + 1);
   }, []);
 
@@ -96,6 +98,7 @@ export default function LetterDrillScreen() {
     setPicked(null);
     setVerdict('idle');
     setAttempts(0);
+    setWipe(0);
     setScore({ correct: 0, total: 0 });
   }, [buildQueue]);
 
@@ -173,7 +176,7 @@ export default function LetterDrillScreen() {
             </Surface>
 
             <HandwritingCanvas
-              resetKey={`${currentGlyph.id}-${attempts}-${verdict}`}
+              resetKey={`${currentGlyph.id}-${wipe}`}
               disabled={verdict === 'match' || verdict === 'mismatch'}
               hint={t('session.writeHere')}
               onChange={onStrokes}
@@ -230,7 +233,10 @@ export default function LetterDrillScreen() {
                 <Button
                   label={t('session.retry')}
                   size="lg"
-                  onPress={() => setVerdict('idle')}
+                  onPress={() => {
+                    setVerdict('idle');
+                    setWipe((value) => value + 1);
+                  }}
                 />
               </>
             ) : null}

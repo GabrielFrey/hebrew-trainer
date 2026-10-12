@@ -34,9 +34,11 @@ type WriteState = {
   strokes: Stroke[];
   verdict: 'idle' | 'match' | 'mismatch' | 'unsure';
   attempts: number;
+  /** Счётчик явной очистки: холст не стираем при «не уверен», чтобы можно было дописать штрих. */
+  wipe: number;
 };
 
-const EMPTY_WRITE: WriteState = { strokes: [], verdict: 'idle', attempts: 0 };
+const EMPTY_WRITE: WriteState = { strokes: [], verdict: 'idle', attempts: 0, wipe: 0 };
 
 export default function SessionScreen() {
   const router = useRouter();
@@ -92,6 +94,7 @@ export default function SessionScreen() {
         strokes,
         verdict: result.verdict,
         attempts: state.attempts + 1,
+        wipe: state.wipe,
       }));
       if (result.verdict !== 'unsure') tap(result.verdict === 'match');
     },
@@ -199,7 +202,9 @@ export default function SessionScreen() {
           card={current}
           picked={picked}
           write={write}
-          onRetry={() => setWrite((state) => ({ ...EMPTY_WRITE, attempts: state.attempts }))}
+          onRetry={() =>
+            setWrite((state) => ({ ...EMPTY_WRITE, attempts: state.attempts, wipe: state.wipe + 1 }))
+          }
           onGrade={(grade) => advance(current, grade)}
         />
       </ScrollView>
@@ -279,7 +284,7 @@ function CardBody({
           </Surface>
 
           <HandwritingCanvas
-            resetKey={`${card.cardId}-${write.attempts}-${write.verdict}`}
+            resetKey={`${card.cardId}-${write.wipe}`}
             disabled={write.verdict === 'match' || write.verdict === 'mismatch'}
             hint={t('session.writeHere')}
             onChange={onStrokes}
