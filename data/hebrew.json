@@ -1,6 +1,6 @@
 {
   "meta": {
-    "note": "Все формы с огласовками выверены вручную. Не добавляйте слова без проверки по словарю.",
+    "note": "Золотой слой (буквы, фразы, ~100 частых слов) выверен вручную. Остальной лексикон: частота + Dicta Nakdan + перевод. Не добавляйте слова без никуда и уникального id.",
     "audioFormat": "m4a",
     "audioDir": "assets/audio",
     "transcription": "русская практическая транскрипция / English glosses in `en`"
@@ -10,8 +10,8 @@
       "id": "elementary",
       "order": 1,
       "title": "Элементарный",
-      "summary": "Буквы, огласовки и 40 самых частых слов",
-      "detail": "Фразы из 2–3 слов, всегда с огласовками",
+      "summary": "Буквы, огласовки и короткие уроки по темам",
+      "detail": "Приветствия и частые слова, всегда с огласовками",
       "decks": [
         "greetings",
         "core",
@@ -45,15 +45,15 @@
       ],
       "features": [],
       "titleEn": "Elementary",
-      "summaryEn": "Letters, vowels, and the 40 most common words",
-      "detailEn": "2–3 word phrases, always with nikud"
+      "summaryEn": "Letters, vowels, and short themed lessons",
+      "detailEn": "Greetings and frequent words, always with nikud"
     },
     {
       "id": "basic",
       "order": 2,
       "title": "Базовый",
-      "summary": "Числа, семья, еда, глаголы в настоящем",
-      "detail": "Фразы с огласовками",
+      "summary": "Семья, еда, числа и бытовые юниты",
+      "detail": "Уроки с огласовками, плюс сленг уровня",
       "decks": [
         "numbers",
         "family",
@@ -90,8 +90,8 @@
       ],
       "features": [],
       "titleEn": "Basic",
-      "summaryEn": "Numbers, family, food, present-tense verbs",
-      "detailEn": "Phrases with nikud"
+      "summaryEn": "Family, food, numbers, and everyday units",
+      "detailEn": "Lessons with nikud, plus level slang"
     },
     {
       "id": "intermediate",

@@ -107,7 +107,7 @@ const ru: Dict = {
   'words.learnedOf': 'Выучено {learned} из {total}',
   'words.noteTitle': 'Колоды и уровень',
   'words.noteBody':
-    'Открыты колоды текущего уровня и всех, что ниже. Уровень меняется в настройках, и выученное при этом не сбрасывается. Все формы с огласовками лежат в data/hebrew.json и выверены вручную.',
+    'Открыты темы текущего уровня и всех, что ниже. Уровень меняется в настройках, и выученное при этом не сбрасывается. Слова лежат в data/lexicon по уровням.',
 
   'reading.subtitle': '{level} · {count} фраз · уверенно читаете {learned}',
   'reading.empty': 'Фраз для этого уровня нет',
@@ -428,7 +428,7 @@ const en: Dict = {
   'words.learnedOf': 'Learned {learned} of {total}',
   'words.noteTitle': 'Decks and level',
   'words.noteBody':
-    'You get decks from the current level and every level below. Changing level in Settings does not reset cards. Every pointed form lives in data/hebrew.json and was checked by hand.',
+    'You get themes from the current level and every level below. Changing level in Settings does not reset cards. Words live in data/lexicon, split by level.',
 
   'reading.subtitle': '{level} · {count} phrases · reading {learned} confidently',
   'reading.empty': 'No phrases at this level',
