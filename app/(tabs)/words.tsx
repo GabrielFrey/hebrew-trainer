@@ -6,7 +6,7 @@ import { ScreenHeader } from '@/components/ScreenHeader';
 import { ProgressBar } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
-import { getCatalog, lessonId, themeById } from '@/lib/lexicon';
+import { getCatalog, lessonPath, themeById } from '@/lib/lexicon';
 import { isLessonUnlocked, lessonProgress } from '@/lib/lessons';
 import { themeTitle } from '@/lib/i18n';
 import { useStore } from '@/lib/store';
@@ -39,7 +39,7 @@ export default function LessonsScreen() {
                 accessibilityRole="button"
                 onPress={() => {
                   if (!open) return;
-                  router.push(`/lesson/${encodeURIComponent(lessonId(unit.id, next))}`);
+                  router.push(lessonPath(unit.id, next));
                 }}
                 style={({ pressed }) => [{ opacity: pressed ? 0.88 : 1 }]}
               >

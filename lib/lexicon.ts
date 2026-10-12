@@ -1,3 +1,5 @@
+import type { Href } from 'expo-router';
+
 import type { Dialogue, LevelId, Slang, ThemeInfo, Unit, Word } from '@/lib/types';
 
 type WordFile = { words: Word[] };
@@ -130,10 +132,29 @@ export function lessonId(unitId: string, index: number): string {
   return `${unitId}:${index}`;
 }
 
+export function lessonPath(unitId: string, index: number): Href {
+  return `/lesson/${encodeURIComponent(unitId)}/${index}` as Href;
+}
+
 export function parseLessonId(id: string): { unitId: string; index: number } | null {
-  const split = id.lastIndexOf(':');
+  const raw = id.trim();
+  const colon = raw.lastIndexOf(':');
+  const slash = raw.lastIndexOf('/');
+  const split = Math.max(colon, slash);
   if (split <= 0) return null;
-  const index = Number(id.slice(split + 1));
+  const index = Number(raw.slice(split + 1));
   if (!Number.isFinite(index)) return null;
-  return { unitId: id.slice(0, split), index };
+  return { unitId: decodeURIComponent(raw.slice(0, split)), index };
+}
+
+export function lessonKeyFromSlug(slug: string | string[] | undefined): string {
+  const parts = (Array.isArray(slug) ? slug : slug ? [slug] : []).map((part) =>
+    decodeURIComponent(part)
+  );
+  if (parts.length >= 2) return lessonId(parts[0] as string, Number(parts[1]));
+  if (parts.length === 1) {
+    const parsed = parseLessonId(parts[0] as string);
+    return parsed ? lessonId(parsed.unitId, parsed.index) : (parts[0] as string);
+  }
+  return '';
 }

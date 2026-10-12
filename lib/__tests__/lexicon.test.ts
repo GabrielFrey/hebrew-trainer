@@ -1,5 +1,5 @@
 import { allWords } from '@/lib/data';
-import { getCatalog, loadedSlang, parseLessonId, unitsForLevel } from '@/lib/lexicon';
+import { getCatalog, lessonKeyFromSlug, lessonPath, loadedSlang, parseLessonId, unitsForLevel } from '@/lib/lexicon';
 import { buildLesson, dailyLessonGoal, isLessonUnlocked, nextLessonId } from '@/lib/lessons';
 import { MAX_NEW_WORDS_PER_SESSION } from '@/lib/session';
 import { emptyProgress } from '@/lib/storage';
@@ -14,6 +14,7 @@ describe('лексикон Mondly', () => {
     expect(new Set(words.map((word) => word.id)).size).toBe(5000);
     expect(new Set(words.map((word) => word.hebrew)).size).toBe(5000);
     expect(new Set(loadedSlang().map((item) => item.id)).size).toBe(2000);
+    expect(new Set(loadedSlang().map((item) => item.hebrew)).size).toBe(2000);
   });
 
   it('у каждой записи есть никуд, ктив мале, транскрипция, ru/en, тема и пример', () => {
@@ -58,12 +59,26 @@ describe('лексикон Mondly', () => {
       queue.filter((card) => card.kind === 'word' && card.isNew).map((card) => card.refId)
     );
     expect(newWordIds.size).toBeLessThanOrEqual(MAX_NEW_WORDS_PER_SESSION);
+    expect(queue[0]?.exercise).toBe('teach-word');
+    expect(queue.some((card) => card.exercise === 'letter-write')).toBe(false);
+    const heRu = queue.find((card) => card.exercise === 'word-he-ru');
+    expect(heRu).toBeDefined();
+    expect(heRu?.options.length).toBeGreaterThanOrEqual(2);
+    expect(heRu?.options).toContain(heRu?.answer);
     expect(queue.some((card) => card.exercise === 'teach-word')).toBe(true);
     expect(queue.some((card) => card.exercise === 'build-phrase' || card.exercise === 'choice-picture')).toBe(
       true
     );
     expect(queue.some((card) => card.exercise === 'listen-choice')).toBe(true);
     expect(queue.some((card) => card.exercise === 'dialogue-reply')).toBe(true);
+    queue
+      .filter((card) =>
+        ['word-he-ru', 'choice-picture', 'listen-choice', 'dialogue-reply'].includes(card.exercise)
+      )
+      .forEach((card) => {
+        expect(card.options.length).toBeGreaterThanOrEqual(2);
+        expect(card.options).toContain(card.answer);
+      });
   });
 
   it('открывает первый урок и считает дневную цель по минутам', () => {
@@ -75,6 +90,10 @@ describe('лексикон Mondly', () => {
     expect(unit).toBeTruthy();
     if (!unit) return;
     expect(isLessonUnlocked(progress, unit, 0)).toBe(true);
+    expect(parseLessonId('elementary-greetings/0')).toEqual({ unitId: 'elementary-greetings', index: 0 });
+    expect(parseLessonId('elementary-greetings:0')).toEqual({ unitId: 'elementary-greetings', index: 0 });
+    expect(lessonKeyFromSlug(['elementary-greetings', '0'])).toBe('elementary-greetings:0');
+    expect(String(lessonPath('elementary-greetings', 0))).toBe('/lesson/elementary-greetings/0');
     expect(dailyLessonGoal(5)).toBe(1);
     expect(dailyLessonGoal(10)).toBe(2);
     expect(dailyLessonGoal(20)).toBe(3);

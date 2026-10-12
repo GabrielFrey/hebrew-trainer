@@ -10,7 +10,7 @@ import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
 import { dayKey } from '@/lib/dates';
 import { getLevel } from '@/lib/data';
-import { getCatalog, themeById } from '@/lib/lexicon';
+import { getCatalog, lessonPath, parseLessonId, themeById } from '@/lib/lexicon';
 import { dailyLessonGoal, lessonsToday, nextLessonId } from '@/lib/lessons';
 import { levelTitle, pluralUnits, themeTitle } from '@/lib/i18n';
 import { summariseToday } from '@/lib/session';
@@ -82,7 +82,10 @@ export default function TodayScreen() {
               <Button
                 label={t('today.continue')}
                 size="lg"
-                onPress={() => router.push(`/lesson/${encodeURIComponent(nxt)}`)}
+                onPress={() => {
+                  const parsed = parseLessonId(nxt);
+                  router.push(parsed ? lessonPath(parsed.unitId, parsed.index) : '/');
+                }}
               />
             </>
           ) : (

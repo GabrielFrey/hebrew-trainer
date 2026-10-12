@@ -1,5 +1,3 @@
-import { letters } from '@/lib/data';
-import { glyphsForLetter } from '@/lib/handwriting';
 import {
   getCatalog,
   getDialogue,
@@ -9,9 +7,8 @@ import {
   parseLessonId,
   wordsForTheme,
 } from '@/lib/lexicon';
-import { letterName, letterSound, resolveLanguage, wordGloss } from '@/lib/i18n';
+import { resolveLanguage, wordGloss } from '@/lib/i18n';
 import { MAX_NEW_WORDS_PER_SESSION } from '@/lib/session';
-import { teachesLetters } from '@/lib/levels';
 import type { ExerciseKind, LevelId, Progress, SessionCard, Unit, Word } from '@/lib/types';
 
 const WORDS_PER_LESSON = MAX_NEW_WORDS_PER_SESSION;
@@ -80,45 +77,6 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
   const pool = loadedWords().filter((word) => word.level === unit.level);
   const seedBase = Math.floor(now / 1000) + parsed.index * 17;
   const cards: SessionCard[] = [];
-
-  if (teachesLetters(progress.settings.level) && parsed.index === 0 && unit.theme === 'greetings') {
-    letters.slice(0, 2).forEach((letter, offset) => {
-      const forms = glyphsForLetter(letter.id);
-      cards.push({
-        cardId: `letter:${letter.id}`,
-        kind: 'letter',
-        refId: letter.id,
-        exercise: 'letter-write',
-        isNew: !progress.cards[`letter:${letter.id}`],
-        options: [],
-        answer: letterName(letter, lang),
-        expectedGlyph: forms.find((form) => form.form === 'base')?.id,
-      });
-      const label = `${letterName(letter, lang)} — ${letterSound(letter, lang).split(',')[0] ?? ''}`;
-      cards.push({
-        cardId: `letter:${letter.id}:see`,
-        kind: 'letter',
-        refId: letter.id,
-        exercise: 'letter-recognise',
-        isNew: !progress.cards[`letter:${letter.id}`],
-        options: shuffle(
-          [
-            label,
-            ...letters
-              .filter((item) => item.id !== letter.id)
-              .slice(offset, offset + 3)
-              .map(
-                (item) =>
-                  `${letterName(item, lang)} — ${letterSound(item, lang).split(',')[0] ?? ''}`
-              ),
-          ],
-          seedBase + offset
-        ),
-        answer: label,
-        expectedGlyph: forms.find((form) => form.form === 'base')?.id,
-      });
-    });
-  }
 
   items.forEach((word, index) => {
     const seed = seedBase + index * 31;

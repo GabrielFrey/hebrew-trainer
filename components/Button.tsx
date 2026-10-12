@@ -69,11 +69,13 @@ export function ChoiceRow({
   state,
   onPress,
   disabled,
+  testID,
 }: {
   children: React.ReactNode;
   state: ChoiceState;
   onPress: () => void;
   disabled?: boolean;
+  testID?: string;
 }) {
   const palette = usePalette();
 
@@ -94,6 +96,7 @@ export function ChoiceRow({
   return (
     <Pressable
       accessibilityRole="button"
+      testID={testID}
       disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => [
