@@ -508,7 +508,7 @@
         "he": "שָׁלוֹם",
         "translit": "shalom",
         "translitRu": "шалом",
-        "ru": "мир; привет",
+        "ru": "мир / привет",
         "en": "peace; hello"
       },
       "nameEn": "mem",
@@ -689,7 +689,7 @@
         "he": "שָׁלוֹם",
         "translit": "shalom",
         "translitRu": "шалом",
-        "ru": "мир; привет",
+        "ru": "мир / привет",
         "en": "peace; hello"
       },
       "nameEn": "shin",
@@ -908,10 +908,10 @@
       "hebrew": "שלום",
       "nikud": "שָׁלוֹם",
       "transcription": "шало́м",
-      "ru": "привет; мир",
+      "ru": "привет / мир",
       "pos": "существительное",
       "audio": "words/shalom.m4a",
-      "en": "hello; peace"
+      "en": "hello / peace"
     },
     {
       "id": "ken",
@@ -932,10 +932,10 @@
       "hebrew": "לא",
       "nikud": "לֹא",
       "transcription": "ло",
-      "ru": "нет; не",
+      "ru": "нет / не",
       "pos": "частица",
       "audio": "words/lo.m4a",
-      "en": "no; not"
+      "en": "no / not"
     },
     {
       "id": "toda",
@@ -1256,10 +1256,10 @@
       "hebrew": "איש",
       "nikud": "אִישׁ",
       "transcription": "иш",
-      "ru": "мужчина; человек",
+      "ru": "мужчина / человек",
       "pos": "существительное",
       "audio": "words/ish.m4a",
-      "en": "man; person"
+      "en": "man / person"
     },
     {
       "id": "isha",
@@ -1280,10 +1280,10 @@
       "hebrew": "ילד",
       "nikud": "יֶלֶד",
       "transcription": "е́лед",
-      "ru": "ребёнок; мальчик",
+      "ru": "ребёнок / мальчик",
       "pos": "существительное",
       "audio": "words/yeled.m4a",
-      "en": "child; boy"
+      "en": "child / boy"
     },
     {
       "id": "khaver",
@@ -1352,10 +1352,10 @@
       "hebrew": "כל",
       "nikud": "כָּל",
       "transcription": "коль",
-      "ru": "весь; каждый",
+      "ru": "весь / каждый",
       "pos": "определитель",
       "audio": "words/kol.m4a",
-      "en": "all; every"
+      "en": "all / every"
     },
     {
       "id": "akhshav",
@@ -1616,7 +1616,7 @@
       "hebrew": "מספר",
       "nikud": "מִסְפָּר",
       "transcription": "миспа́р",
-      "ru": "число; номер",
+      "ru": "число / номер",
       "pos": "существительное",
       "audio": "words/mispar.m4a",
       "en": "number"
@@ -1916,10 +1916,10 @@
       "hebrew": "עוף",
       "nikud": "עוֹף",
       "transcription": "оф",
-      "ru": "курица; птица",
+      "ru": "курица / птица",
       "pos": "существительное",
       "audio": "words/of.m4a",
-      "en": "chicken; bird"
+      "en": "chicken / bird"
     },
     {
       "id": "orez",
@@ -1964,10 +1964,10 @@
       "hebrew": "עוגה",
       "nikud": "עוּגָה",
       "transcription": "уга́",
-      "ru": "торт; пирог",
+      "ru": "торт / пирог",
       "pos": "существительное",
       "audio": "words/uga.m4a",
-      "en": "cake; pie"
+      "en": "cake / pie"
     },
     {
       "id": "khema",
@@ -3125,11 +3125,11 @@
       "hebrew": "בריאות",
       "nikud": "בְּרִיאוּת",
       "transcription": "бриу́т",
-      "ru": "здоровье; здравоохранение",
+      "ru": "здоровье / здравоохранение",
       "pos": "существительное",
       "root": "ב־ר־א",
       "audio": "words/briut.m4a",
-      "en": "health; healthcare"
+      "en": "health / healthcare"
     },
     {
       "id": "khinukh",
@@ -3271,13 +3271,13 @@
       "hebrew": "חופש",
       "nikud": "חֹפֶשׁ",
       "transcription": "хо́феш",
-      "ru": "свобода; каникулы",
+      "ru": "свобода / каникулы",
       "pos": "существительное",
       "synonyms": [
         "חֵרוּת"
       ],
       "audio": "words/khofesh.m4a",
-      "en": "freedom; vacation"
+      "en": "freedom / vacation"
     },
     {
       "id": "tikva",
@@ -3389,11 +3389,11 @@
       "hebrew": "כל הכבוד",
       "nikud": "כָּל הַכָּבוֹד",
       "transcription": "коль ха-каво́д",
-      "ru": "молодец; респект",
+      "ru": "молодец / респект",
       "literal": "вся честь",
       "pos": "идиома",
       "audio": "words/kol-hakavod.m4a",
-      "en": "well done; respect"
+      "en": "well done / respect"
     },
     {
       "id": "khaval-al-hazman",
@@ -3402,11 +3402,11 @@
       "hebrew": "חבל על הזמן",
       "nikud": "חֲבָל עַל הַזְּמַן",
       "transcription": "хава́ль аль ха-зма́н",
-      "ru": "потрясающе; невероятно",
+      "ru": "потрясающе / невероятно",
       "literal": "жаль времени",
       "pos": "идиома",
       "audio": "words/khaval-al-hazman.m4a",
-      "en": "amazing; incredible"
+      "en": "amazing / incredible"
     },
     {
       "id": "al-hapanim",
@@ -3454,11 +3454,11 @@
       "hebrew": "אין מצב",
       "nikud": "אֵין מַצָּב",
       "transcription": "эйн маца́в",
-      "ru": "ни за что; исключено",
+      "ru": "ни за что / исключено",
       "literal": "нет ситуации",
       "pos": "идиома",
       "audio": "words/ein-matsav.m4a",
-      "en": "no way; out of the question"
+      "en": "no way / out of the question"
     },
     {
       "id": "lo-nora",
@@ -3560,11 +3560,11 @@
       "hebrew": "בעזרת השם",
       "nikud": "בְּעֶזְרַת הַשֵּׁם",
       "transcription": "беэзра́т ха-шэ́м",
-      "ru": "дай Бог; если всё сложится",
+      "ru": "дай Бог / если всё сложится",
       "literal": "с помощью Имени",
       "pos": "идиома",
       "audio": "words/beezrat-hashem.m4a",
-      "en": "God willing; if all goes well"
+      "en": "God willing / if all goes well"
     }
   ],
   "phrases": [
@@ -3574,18 +3574,18 @@
       "hebrew": "אני קורא.",
       "nikud": "אֲנִי קוֹרֵא.",
       "transcription": "ани́ корэ́",
-      "ru": "Я читаю.",
+      "ru": "Я читаю",
       "audio": "phrases/ph-ani-kore.m4a",
       "distractors": [
-        "Я пишу.",
-        "Он читает.",
-        "Я покупаю."
+        "Я пишу",
+        "Он читает",
+        "Я покупаю"
       ],
-      "en": "I am reading.",
+      "en": "I am reading",
       "distractorsEn": [
-        "I am writing.",
-        "He is reading.",
-        "I am buying."
+        "I am writing",
+        "He is reading",
+        "I am buying"
       ]
     },
     {
@@ -3594,18 +3594,18 @@
       "hebrew": "הבית גדול.",
       "nikud": "הַבַּיִת גָּדוֹל.",
       "transcription": "ха-ба́йит гадо́ль",
-      "ru": "Дом большой.",
+      "ru": "Дом большой",
       "audio": "phrases/ph-bayit-gadol.m4a",
       "distractors": [
-        "Дом маленький.",
-        "Город большой.",
-        "Это дом."
+        "Дом маленький",
+        "Город большой",
+        "Это дом"
       ],
-      "en": "The house is big.",
+      "en": "The house is big",
       "distractorsEn": [
-        "The house is small.",
-        "The city is big.",
-        "This is a house."
+        "The house is small",
+        "The city is big",
+        "This is a house"
       ]
     },
     {
@@ -3634,18 +3634,18 @@
       "hebrew": "אבא בבית.",
       "nikud": "אַבָּא בַּבַּיִת.",
       "transcription": "а́ба ба-ба́йит",
-      "ru": "Папа дома.",
+      "ru": "Папа дома",
       "audio": "phrases/ph-aba-babayit.m4a",
       "distractors": [
-        "Мама дома.",
-        "Папа на работе.",
-        "Папа в городе."
+        "Мама дома",
+        "Папа на работе",
+        "Папа в городе"
       ],
-      "en": "Dad is at home.",
+      "en": "Dad is at home",
       "distractorsEn": [
-        "Mom is at home.",
-        "Dad is at work.",
-        "Dad is in the city."
+        "Mom is at home",
+        "Dad is at work",
+        "Dad is in the city"
       ]
     },
     {
@@ -3654,18 +3654,18 @@
       "hebrew": "יש לי ספר.",
       "nikud": "יֵשׁ לִי סֵפֶר.",
       "transcription": "еш ли сэ́фер",
-      "ru": "У меня есть книга.",
+      "ru": "У меня есть книга",
       "audio": "phrases/ph-yesh-li-sefer.m4a",
       "distractors": [
-        "У меня нет книги.",
-        "У него есть книга.",
-        "Это моя книга."
+        "У меня нет книги",
+        "У него есть книга",
+        "Это моя книга"
       ],
-      "en": "I have a book.",
+      "en": "I have a book",
       "distractorsEn": [
-        "I don’t have a book.",
-        "He has a book.",
-        "This is my book."
+        "I don’t have a book",
+        "He has a book",
+        "This is my book"
       ]
     },
     {
@@ -3674,18 +3674,18 @@
       "hebrew": "הילד קטן.",
       "nikud": "הַיֶּלֶד קָטָן.",
       "transcription": "ха-е́лед ката́н",
-      "ru": "Ребёнок маленький.",
+      "ru": "Ребёнок маленький",
       "audio": "phrases/ph-yeled-katan.m4a",
       "distractors": [
-        "Ребёнок большой.",
-        "Девочка маленькая.",
-        "Дом маленький."
+        "Ребёнок большой",
+        "Девочка маленькая",
+        "Дом маленький"
       ],
-      "en": "The child is small.",
+      "en": "The child is small",
       "distractorsEn": [
-        "The child is big.",
-        "The girl is small.",
-        "The house is small."
+        "The child is big",
+        "The girl is small",
+        "The house is small"
       ]
     },
     {
@@ -3694,18 +3694,18 @@
       "hebrew": "אמא שותה מים.",
       "nikud": "אִמָּא שׁוֹתָה מַיִם.",
       "transcription": "и́ма шота́ ма́йим",
-      "ru": "Мама пьёт воду.",
+      "ru": "Мама пьёт воду",
       "audio": "phrases/ph-ima-shota.m4a",
       "distractors": [
-        "Мама пьёт молоко.",
-        "Папа пьёт воду.",
-        "Мама готовит еду."
+        "Мама пьёт молоко",
+        "Папа пьёт воду",
+        "Мама готовит еду"
       ],
-      "en": "Mom is drinking water.",
+      "en": "Mom is drinking water",
       "distractorsEn": [
-        "Mom is drinking milk.",
-        "Dad is drinking water.",
-        "Mom is cooking food."
+        "Mom is drinking milk",
+        "Dad is drinking water",
+        "Mom is cooking food"
       ]
     },
     {
@@ -3734,18 +3734,18 @@
       "hebrew": "אני אוכל לחם וגבינה.",
       "nikud": "אֲנִי אוֹכֵל לֶחֶם וּגְבִינָה.",
       "transcription": "ани́ охэ́ль лэ́хем у-гвина́",
-      "ru": "Я ем хлеб и сыр.",
+      "ru": "Я ем хлеб и сыр",
       "audio": "phrases/ph-okhel-lekhem-gvina.m4a",
       "distractors": [
-        "Я ем хлеб с маслом.",
-        "Я пью молоко.",
-        "Я покупаю хлеб и сыр."
+        "Я ем хлеб с маслом",
+        "Я пью молоко",
+        "Я покупаю хлеб и сыр"
       ],
-      "en": "I eat bread and cheese.",
+      "en": "I eat bread and cheese",
       "distractorsEn": [
-        "I eat bread with butter.",
-        "I drink milk.",
-        "I buy bread and cheese."
+        "I eat bread with butter",
+        "I drink milk",
+        "I buy bread and cheese"
       ]
     },
     {
@@ -3754,18 +3754,18 @@
       "hebrew": "יש לי אח ואחות.",
       "nikud": "יֵשׁ לִי אָח וְאָחוֹת.",
       "transcription": "еш ли ах ве-ахо́т",
-      "ru": "У меня есть брат и сестра.",
+      "ru": "У меня есть брат и сестра",
       "audio": "phrases/ph-yesh-li-akh.m4a",
       "distractors": [
-        "У меня есть сын и дочь.",
-        "У него есть брат.",
-        "У меня нет сестры."
+        "У меня есть сын и дочь",
+        "У него есть брат",
+        "У меня нет сестры"
       ],
-      "en": "I have a brother and a sister.",
+      "en": "I have a brother and a sister",
       "distractorsEn": [
-        "I have a son and a daughter.",
-        "He has a brother.",
-        "I don’t have a sister."
+        "I have a son and a daughter",
+        "He has a brother",
+        "I don’t have a sister"
       ]
     },
     {
@@ -3774,18 +3774,18 @@
       "hebrew": "הספר על השולחן.",
       "nikud": "הַסֵּפֶר עַל הַשֻּׁלְחָן.",
       "transcription": "ха-сэ́фер аль ха-шульха́н",
-      "ru": "Книга на столе.",
+      "ru": "Книга на столе",
       "audio": "phrases/ph-sefer-shulkhan.m4a",
       "distractors": [
-        "Книга в сумке.",
-        "Еда на столе.",
-        "Книга под столом."
+        "Книга в сумке",
+        "Еда на столе",
+        "Книга под столом"
       ],
-      "en": "The book is on the table.",
+      "en": "The book is on the table",
       "distractorsEn": [
-        "The book is in the bag.",
-        "The food is on the table.",
-        "The book is under the table."
+        "The book is in the bag",
+        "The food is on the table",
+        "The book is under the table"
       ]
     },
     {
@@ -3794,18 +3794,18 @@
       "hebrew": "אני גר בתל אביב.",
       "nikud": "אֲנִי גָּר בְּתֵל אָבִיב.",
       "transcription": "ани́ гар бе-тэ́ль-ави́в",
-      "ru": "Я живу в Тель-Авиве.",
+      "ru": "Я живу в Тель-Авиве",
       "audio": "phrases/ph-gar-betel-aviv.m4a",
       "distractors": [
-        "Я живу в Иерусалиме.",
-        "Я работаю в Тель-Авиве.",
-        "Я еду в Тель-Авив."
+        "Я живу в Иерусалиме",
+        "Я работаю в Тель-Авиве",
+        "Я еду в Тель-Авив"
       ],
-      "en": "I live in Tel Aviv.",
+      "en": "I live in Tel Aviv",
       "distractorsEn": [
-        "I live in Jerusalem.",
-        "I work in Tel Aviv.",
-        "I am going to Tel Aviv."
+        "I live in Jerusalem",
+        "I work in Tel Aviv",
+        "I am going to Tel Aviv"
       ]
     },
     {
@@ -3834,18 +3834,18 @@
       "hebrew": "המשפחה אוכלת במטבח.",
       "nikud": "הַמִּשְׁפָּחָה אוֹכֶלֶת בַּמִּטְבָּח.",
       "transcription": "ха-мишпаха́ охэ́лет ба-митба́х",
-      "ru": "Семья ест на кухне.",
+      "ru": "Семья ест на кухне",
       "audio": "phrases/ph-mishpakha-mitbakh.m4a",
       "distractors": [
-        "Семья ест в комнате.",
-        "Мама готовит на кухне.",
-        "Семья спит."
+        "Семья ест в комнате",
+        "Мама готовит на кухне",
+        "Семья спит"
       ],
-      "en": "The family is eating in the kitchen.",
+      "en": "The family is eating in the kitchen",
       "distractorsEn": [
-        "The family is eating in the room.",
-        "Mom is cooking in the kitchen.",
-        "The family is sleeping."
+        "The family is eating in the room",
+        "Mom is cooking in the kitchen",
+        "The family is sleeping"
       ]
     },
     {
@@ -3854,18 +3854,18 @@
       "hebrew": "אני רוצה קפה בבקשה.",
       "nikud": "אֲנִי רוֹצֶה קָפֶה בְּבַקָּשָׁה.",
       "transcription": "ани́ роцэ́ кафэ́ бевакаша́",
-      "ru": "Я хочу кофе, пожалуйста.",
+      "ru": "Я хочу кофе, пожалуйста",
       "audio": "phrases/ph-rotse-kafe.m4a",
       "distractors": [
-        "Я хочу чай, пожалуйста.",
-        "Спасибо за кофе.",
-        "Я не хочу кофе."
+        "Я хочу чай, пожалуйста",
+        "Спасибо за кофе",
+        "Я не хочу кофе"
       ],
-      "en": "I would like coffee, please.",
+      "en": "I would like coffee, please",
       "distractorsEn": [
-        "I would like tea, please.",
-        "Thanks for the coffee.",
-        "I don’t want coffee."
+        "I would like tea, please",
+        "Thanks for the coffee",
+        "I don’t want coffee"
       ]
     },
     {
@@ -3874,18 +3874,18 @@
       "hebrew": "הילדה לומדת בבית הספר.",
       "nikud": "הַיַּלְדָּה לוֹמֶדֶת בְּבֵית הַסֵּפֶר.",
       "transcription": "ха-ялда́ ломэ́дет бе-вэйт ха-сэ́фер",
-      "ru": "Девочка учится в школе.",
+      "ru": "Девочка учится в школе",
       "audio": "phrases/ph-yalda-beit-sefer.m4a",
       "distractors": [
-        "Мальчик учится в школе.",
-        "Девочка читает книгу.",
-        "Девочка идёт в школу."
+        "Мальчик учится в школе",
+        "Девочка читает книгу",
+        "Девочка идёт в школу"
       ],
-      "en": "The girl studies at school.",
+      "en": "The girl studies at school",
       "distractorsEn": [
-        "The boy studies at school.",
-        "The girl is reading a book.",
-        "The girl is going to school."
+        "The boy studies at school",
+        "The girl is reading a book",
+        "The girl is going to school"
       ]
     },
     {
@@ -3894,18 +3894,18 @@
       "hebrew": "איפה אתה גר? אני גר בירושלים.",
       "nikud": "אֵיפֹה אַתָּה גָּר? אֲנִי גָּר בִּירוּשָׁלַיִם.",
       "transcription": "э́йфо ата́ гар? ани́ гар би-рушала́йим",
-      "ru": "Где ты живёшь? — Я живу в Иерусалиме.",
+      "ru": "Где ты живёшь? — Я живу в Иерусалиме",
       "audio": "phrases/ph-eifo-ata-gar.m4a",
       "distractors": [
-        "Куда ты идёшь? — Я иду домой.",
-        "Где ты работаешь? — В Иерусалиме.",
-        "Откуда ты? — Из Иерусалима."
+        "Куда ты идёшь? — Я иду домой",
+        "Где ты работаешь? — В Иерусалиме",
+        "Откуда ты? — Из Иерусалима"
       ],
-      "en": "Where do you live? — I live in Jerusalem.",
+      "en": "Where do you live? — I live in Jerusalem",
       "distractorsEn": [
-        "Where are you going? — I am going home.",
-        "Where do you work? — In Jerusalem.",
-        "Where are you from? — From Jerusalem."
+        "Where are you going? — I am going home",
+        "Where do you work? — In Jerusalem",
+        "Where are you from? — From Jerusalem"
       ]
     },
     {
@@ -3914,18 +3914,18 @@
       "hebrew": "מה עשית אתמול? עבדתי כל היום.",
       "nikud": "מָה עָשִׂיתָ אֶתְמוֹל? עָבַדְתִּי כָּל הַיּוֹם.",
       "transcription": "ма аси́та этмо́ль? ава́дти коль ха-йо́м",
-      "ru": "Что ты делал вчера? — Я работал весь день.",
+      "ru": "Что ты делал вчера? — Я работал весь день",
       "audio": "phrases/ph-ma-asita-etmol.m4a",
       "distractors": [
-        "Что ты делаешь сегодня? — Работаю.",
-        "Где ты был вчера? — На работе.",
-        "Что ты будешь делать завтра? — Работать."
+        "Что ты делаешь сегодня? — Работаю",
+        "Где ты был вчера? — На работе",
+        "Что ты будешь делать завтра? — Работать"
       ],
-      "en": "What did you do yesterday? — I worked all day.",
+      "en": "What did you do yesterday? — I worked all day",
       "distractorsEn": [
-        "What are you doing today? — Working.",
-        "Where were you yesterday? — At work.",
-        "What will you do tomorrow? — Work."
+        "What are you doing today? — Working",
+        "Where were you yesterday? — At work",
+        "What will you do tomorrow? — Work"
       ]
     },
     {
@@ -3934,18 +3934,18 @@
       "hebrew": "מתי תבוא? אבוא מחר בבוקר.",
       "nikud": "מָתַי תָּבוֹא? אָבוֹא מָחָר בַּבֹּקֶר.",
       "transcription": "мата́й таво́? аво́ маха́р ба-бо́кер",
-      "ru": "Когда ты придёшь? — Приду завтра утром.",
+      "ru": "Когда ты придёшь? — Приду завтра утром",
       "audio": "phrases/ph-matai-tavo.m4a",
       "distractors": [
-        "Когда ты придёшь? — Приду вечером.",
-        "Где ты будешь завтра? — Дома.",
-        "Ты придёшь завтра? — Нет."
+        "Когда ты придёшь? — Приду вечером",
+        "Где ты будешь завтра? — Дома",
+        "Ты придёшь завтра? — Нет"
       ],
-      "en": "When will you come? — I’ll come tomorrow morning.",
+      "en": "When will you come? — I’ll come tomorrow morning",
       "distractorsEn": [
-        "When will you come? — I’ll come in the evening.",
-        "Where will you be tomorrow? — At home.",
-        "Will you come tomorrow? — No."
+        "When will you come? — I’ll come in the evening",
+        "Where will you be tomorrow? — At home",
+        "Will you come tomorrow? — No"
       ]
     },
     {
@@ -3954,18 +3954,18 @@
       "hebrew": "אתמול הלכתי לחנות וקניתי לחם.",
       "nikud": "אֶתְמוֹל הָלַכְתִּי לַחֲנוּת וְקָנִיתִי לֶחֶם.",
       "transcription": "этмо́ль хала́хти ла-хану́т ве-кани́ти лэ́хем",
-      "ru": "Вчера я пошёл в магазин и купил хлеб.",
+      "ru": "Вчера я пошёл в магазин и купил хлеб",
       "audio": "phrases/ph-halakhti-lakhanut.m4a",
       "distractors": [
-        "Вчера я был дома и читал книгу.",
-        "Завтра я пойду в магазин за хлебом.",
-        "Я покупаю хлеб в магазине каждый день."
+        "Вчера я был дома и читал книгу",
+        "Завтра я пойду в магазин за хлебом",
+        "Я покупаю хлеб в магазине каждый день"
       ],
-      "en": "Yesterday I went to the store and bought bread.",
+      "en": "Yesterday I went to the store and bought bread",
       "distractorsEn": [
-        "Yesterday I was at home and read a book.",
-        "Tomorrow I will go to the store for bread.",
-        "I buy bread at the store every day."
+        "Yesterday I was at home and read a book",
+        "Tomorrow I will go to the store for bread",
+        "I buy bread at the store every day"
       ]
     },
     {
@@ -3974,18 +3974,18 @@
       "hebrew": "מחר אלמד עברית עם חבר.",
       "nikud": "מָחָר אֶלְמַד עִבְרִית עִם חָבֵר.",
       "transcription": "маха́р эльма́д иври́т им хавэ́р",
-      "ru": "Завтра я буду учить иврит с другом.",
+      "ru": "Завтра я буду учить иврит с другом",
       "audio": "phrases/ph-elmad-ivrit.m4a",
       "distractors": [
-        "Вчера я учил иврит с другом.",
-        "Завтра я пойду к другу.",
-        "Мой друг учит иврит."
+        "Вчера я учил иврит с другом",
+        "Завтра я пойду к другу",
+        "Мой друг учит иврит"
       ],
-      "en": "Tomorrow I will study Hebrew with a friend.",
+      "en": "Tomorrow I will study Hebrew with a friend",
       "distractorsEn": [
-        "Yesterday I studied Hebrew with a friend.",
-        "Tomorrow I will go to a friend.",
-        "My friend is studying Hebrew."
+        "Yesterday I studied Hebrew with a friend",
+        "Tomorrow I will go to a friend",
+        "My friend is studying Hebrew"
       ]
     },
     {
@@ -4014,18 +4014,18 @@
       "hebrew": "הממשלה אישרה את התקציב לשנה הבאה.",
       "nikud": "הַמֶּמְשָׁלָה אִשְּׁרָה אֶת הַתַּקְצִיב לַשָּׁנָה הַבָּאָה.",
       "transcription": "ха-мемшала́ ишра́ эт ха-такци́в ла-шана́ ха-баа́",
-      "ru": "Правительство утвердило бюджет на следующий год.",
+      "ru": "Правительство утвердило бюджет на следующий год",
       "audio": "phrases/ph-memshala-takhtsiv.m4a",
       "distractors": [
-        "Правительство отклонило бюджет на следующий год.",
-        "Кнессет обсуждает бюджет этого года.",
-        "Министр представил новый закон."
+        "Правительство отклонило бюджет на следующий год",
+        "Кнессет обсуждает бюджет этого года",
+        "Министр представил новый закон"
       ],
-      "en": "The government approved the budget for next year.",
+      "en": "The government approved the budget for next year",
       "distractorsEn": [
-        "The government rejected the budget for next year.",
-        "The Knesset is discussing this year’s budget.",
-        "The minister introduced a new law."
+        "The government rejected the budget for next year",
+        "The Knesset is discussing this year’s budget",
+        "The minister introduced a new law"
       ]
     },
     {
@@ -4034,18 +4034,18 @@
       "hebrew": "שר הבריאות הודיע על החלטה חדשה.",
       "nikud": "שַׂר הַבְּרִיאוּת הוֹדִיעַ עַל הַחְלָטָה חֲדָשָׁה.",
       "transcription": "сар ха-бриу́т ходи́а аль хахлата́ хадаша́",
-      "ru": "Министр здравоохранения сообщил о новом решении.",
+      "ru": "Министр здравоохранения сообщил о новом решении",
       "audio": "phrases/ph-sar-habriut.m4a",
       "distractors": [
-        "Министр образования объявил о реформе.",
-        "Правительство приняло решение о здравоохранении.",
-        "Министр здравоохранения ушёл в отставку."
+        "Министр образования объявил о реформе",
+        "Правительство приняло решение о здравоохранении",
+        "Министр здравоохранения ушёл в отставку"
       ],
-      "en": "The health minister announced a new decision.",
+      "en": "The health minister announced a new decision",
       "distractorsEn": [
-        "The education minister announced a reform.",
-        "The government made a decision on healthcare.",
-        "The health minister resigned."
+        "The education minister announced a reform",
+        "The government made a decision on healthcare",
+        "The health minister resigned"
       ]
     },
     {
@@ -4054,18 +4054,18 @@
       "hebrew": "המשטרה פתחה בחקירה לאחר ההפגנה בעיר.",
       "nikud": "הַמִּשְׁטָרָה פָּתְחָה בַּחֲקִירָה לְאַחַר הַהַפְגָּנָה בָּעִיר.",
       "transcription": "ха-миштара́ патха́ ба-хакира́ ле-аха́р ха-хафгана́ ба-и́р",
-      "ru": "Полиция начала расследование после демонстрации.",
+      "ru": "Полиция начала расследование после демонстрации",
       "audio": "phrases/ph-mishtara-khakira.m4a",
       "distractors": [
-        "Полиция разрешила провести демонстрацию.",
-        "Демонстрация прошла без расследования.",
-        "Суд начал слушание после демонстрации."
+        "Полиция разрешила провести демонстрацию",
+        "Демонстрация прошла без расследования",
+        "Суд начал слушание после демонстрации"
       ],
-      "en": "The police opened an investigation after the demonstration.",
+      "en": "The police opened an investigation after the demonstration",
       "distractorsEn": [
-        "The police allowed the demonstration to go ahead.",
-        "The demonstration took place without an investigation.",
-        "The court opened a hearing after the demonstration."
+        "The police allowed the demonstration to go ahead",
+        "The demonstration took place without an investigation",
+        "The court opened a hearing after the demonstration"
       ]
     },
     {
@@ -4074,18 +4074,18 @@
       "hebrew": "הכלכלה צמחה באחוז אחד ברבעון האחרון.",
       "nikud": "הַכַּלְכָּלָה צָמְחָה בְּאָחוּז אֶחָד בָּרִבְעוֹן הָאַחֲרוֹן.",
       "transcription": "ха-калькала́ цамха́ бе-аху́з эха́д ба-ривъо́н ха-ахаро́н",
-      "ru": "Экономика выросла на один процент в последнем квартале.",
+      "ru": "Экономика выросла на один процент в последнем квартале",
       "audio": "phrases/ph-kalkala-tsamkha.m4a",
       "distractors": [
-        "Экономика упала на один процент.",
-        "Безработица выросла на один процент.",
-        "Налоги выросли на один процент."
+        "Экономика упала на один процент",
+        "Безработица выросла на один процент",
+        "Налоги выросли на один процент"
       ],
-      "en": "The economy grew by one percent last quarter.",
+      "en": "The economy grew by one percent last quarter",
       "distractorsEn": [
-        "The economy fell by one percent.",
-        "Unemployment grew by one percent.",
-        "Taxes rose by one percent."
+        "The economy fell by one percent",
+        "Unemployment grew by one percent",
+        "Taxes rose by one percent"
       ]
     },
     {
@@ -4094,18 +4094,18 @@
       "hebrew": "העיתון פרסם ידיעה על הסכם בין שתי המדינות.",
       "nikud": "הָעִתּוֹן פִּרְסֵם יְדִיעָה עַל הֶסְכֵּם בֵּין שְׁתֵּי הַמְּדִינוֹת.",
       "transcription": "ха-ито́н пирсэ́м едиа́ аль хэскэ́м бэйн штэй ха-медино́т",
-      "ru": "Газета опубликовала сообщение о соглашении между двумя странами.",
+      "ru": "Газета опубликовала сообщение о соглашении между двумя странами",
       "audio": "phrases/ph-iton-pirsem.m4a",
       "distractors": [
-        "Газета написала о войне между двумя странами.",
-        "Две страны подписали соглашение о торговле.",
-        "Правительство опровергло сообщение газеты."
+        "Газета написала о войне между двумя странами",
+        "Две страны подписали соглашение о торговле",
+        "Правительство опровергло сообщение газеты"
       ],
-      "en": "The newspaper published a report on an agreement between two countries.",
+      "en": "The newspaper published a report on an agreement between two countries",
       "distractorsEn": [
-        "The newspaper wrote about a war between two countries.",
-        "Two countries signed a trade agreement.",
-        "The government denied the newspaper report."
+        "The newspaper wrote about a war between two countries",
+        "Two countries signed a trade agreement",
+        "The government denied the newspaper report"
       ]
     }
   ],
@@ -4116,7 +4116,7 @@
       "title": "Утро",
       "hebrew": "כל בוקר אני קם בשבע, שותה קפה וקורא עיתון. אחרי זה אני נוסע לעבודה באוטובוס. בערב אני לומד עברית, ואם יש זמן אני פוגש חברים. היום עובר מהר, אבל אני מרוצה.",
       "nikud": "כָּל בֹּקֶר אֲנִי קָם בְּשֶׁבַע, שׁוֹתֶה קָפֶה וְקוֹרֵא עִתּוֹן. אַחֲרֵי זֶה אֲנִי נוֹסֵע לָעֲבוֹדָה בָּאוֹטוֹבּוּס. בָּעֶרֶב אֲנִי לוֹמֵד עִבְרִית, וְאִם יֵשׁ זְמַן אֲנִי פּוֹגֵשׁ חֲבֵרִים. הַיּוֹם עוֹבֵר מַהֵר, אֲבָל אֲנִי מְרֻצֶּה.",
-      "ru": "Каждое утро я встаю в семь, пью кофе и читаю газету. Потом я езжу на работу на автобусе. Вечером я учу иврит, а если есть время — встречаюсь с друзьями. День проходит быстро, но я доволен.",
+      "ru": "Каждое утро я встаю в семь, пью кофе и читаю газету. Потом я езжу на работу на автобусе. Вечером я учу иврит, а если есть время — встречаюсь с друзьями. День проходит быстро, но я доволен",
       "audio": "passages/pa-boker.m4a",
       "question": {
         "hebrew": "מה הוא עושה בערב?",
@@ -4140,7 +4140,7 @@
       "title": "Как я учил иврит",
       "hebrew": "למדתי עברית שלוש שנים. בהתחלה קראתי רק עם ניקוד, וכל מילה לקחה לי זמן. אחרי שנה התחלתי לקרוא עיתון בלי ניקוד. עכשיו אני מבין כמעט הכול, אבל עוד קשה לי לדבר מהר.",
       "nikud": "לָמַדְתִּי עִבְרִית שָׁלוֹשׁ שָׁנִים. בַּהַתְחָלָה קָרָאתִי רַק עִם נִקּוּד, וְכָל מִלָּה לָקְחָה לִי זְמַן. אַחֲרֵי שָׁנָה הִתְחַלְתִּי לִקְרֹא עִתּוֹן בְּלִי נִקּוּד. עַכְשָׁו אֲנִי מֵבִין כִּמְעַט הַכֹּל, אֲבָל עוֹד קָשֶׁה לִי לְדַבֵּר מַהֵר.",
-      "ru": "Я учил иврит три года. Сначала я читал только с огласовками, и каждое слово занимало у меня время. Через год я начал читать газету без огласовок. Сейчас я понимаю почти всё, но мне ещё трудно говорить быстро.",
+      "ru": "Я учил иврит три года. Сначала я читал только с огласовками, и каждое слово занимало у меня время. Через год я начал читать газету без огласовок. Сейчас я понимаю почти всё, но мне ещё трудно говорить быстро",
       "audio": "passages/pa-lomed-ivrit.m4a",
       "question": {
         "hebrew": "מה עוד קשה לו?",

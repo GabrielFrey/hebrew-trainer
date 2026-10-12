@@ -1,11 +1,14 @@
 import { letters, phrases, words } from '@/lib/data';
 import {
+  displayAnswer,
   phraseGloss,
   resolveLanguage,
+  resolveTranslation,
   systemLanguage,
   translate,
   wordGloss,
 } from '@/lib/i18n';
+import { buildLesson, nextLessonId } from '@/lib/lessons';
 import { buildSession } from '@/lib/session';
 import { emptyProgress } from '@/lib/storage';
 
@@ -78,6 +81,63 @@ describe('язык интерфейса', () => {
     progress.settings.language = 'en';
     const queue = buildSession(progress, Date.UTC(2026, 1, 10, 9, 0, 0));
     expect(queue.filter((card) => card.isNew && card.kind === 'word').length).toBeLessThanOrEqual(5);
+  });
+
+  it('язык перевода по умолчанию следует за интерфейсом и не сбрасывает карточки', () => {
+    const progress = emptyProgress();
+    progress.cards['word:shalom'] = {
+      id: 'word:shalom',
+      kind: 'word',
+      refId: 'shalom',
+      reps: 4,
+      lapses: 0,
+      ease: 2.6,
+      intervalDays: 6,
+      dueAt: Date.now(),
+      introducedAt: Date.now(),
+      lastReviewedAt: Date.now(),
+      correct: 4,
+      total: 4,
+    };
+    expect(progress.settings.translationLanguage).toBeUndefined();
+    expect(resolveTranslation(progress.settings)).toBe(resolveLanguage(progress.settings.language));
+    progress.settings.language = 'en';
+    expect(resolveTranslation(progress.settings)).toBe('en');
+    progress.settings.translationLanguage = 'ru';
+    expect(resolveTranslation(progress.settings)).toBe('ru');
+    expect(progress.cards['word:shalom']?.reps).toBe(4);
+  });
+
+  it('в сессии SM-2 подставляет перевод независимо от языка интерфейса', () => {
+    const progress = emptyProgress();
+    progress.settings.onboarded = true;
+    progress.settings.language = 'en';
+    progress.settings.translationLanguage = 'ru';
+    const queue = buildSession(progress, Date.UTC(2026, 1, 10, 9, 0, 0));
+    const wordCard = queue.find((card) => card.exercise === 'word-he-ru');
+    expect(wordCard).toBeDefined();
+    const word = words.find((item) => item.id === wordCard?.refId);
+    expect(wordCard?.answer).toBe(word?.ru);
+    expect(wordCard?.options).toContain(word?.ru);
+    expect(wordCard?.options).not.toContain(word?.en);
+    expect(displayAnswer(wordCard as NonNullable<typeof wordCard>, 'en')).toBe(word?.en);
+  });
+
+  it('урок мгновенно меняет язык вариантов без пересборки очереди', () => {
+    const progress = emptyProgress();
+    progress.settings.onboarded = true;
+    progress.settings.language = 'ru';
+    progress.settings.translationLanguage = 'ru';
+    const id = nextLessonId(progress, 'elementary');
+    expect(id).toBeTruthy();
+    const queue = buildLesson(progress, id as string);
+    const choice = queue.find((card) => card.exercise === 'word-he-ru');
+    expect(choice?.bilingualOptions?.length).toBeGreaterThanOrEqual(2);
+    const ruAnswer = displayAnswer(choice as NonNullable<typeof choice>, 'ru');
+    const enAnswer = displayAnswer(choice as NonNullable<typeof choice>, 'en');
+    expect(ruAnswer).toBe(choice?.answer);
+    expect(enAnswer.length).toBeGreaterThan(0);
+    expect(enAnswer).not.toBe(ruAnswer);
   });
 
   it('у каждой буквы и фразы есть английский текст', () => {

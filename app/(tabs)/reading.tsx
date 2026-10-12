@@ -6,6 +6,7 @@ import { EmptyState } from '@/components/EmptyState';
 import { HebrewText } from '@/components/HebrewText';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { AppText, Screen, Surface } from '@/components/Themed';
+import { TranslationToggle } from '@/components/TranslationToggle';
 import { radius, spacing } from '@/constants/theme';
 import { exampleGloss, posLabel } from '@/lib/i18n';
 import { hebrewFor, showTranscription, slangForLevel } from '@/lib/levels';
@@ -15,7 +16,7 @@ import { useI18n } from '@/lib/use-i18n';
 
 export default function SlangScreen() {
   const { progress } = useStore();
-  const { t, lang } = useI18n();
+  const { t, lang, translation } = useI18n();
   const palette = usePalette();
   const [query, setQuery] = useState('');
   const items = slangForLevel(progress.settings.level);
@@ -34,7 +35,11 @@ export default function SlangScreen() {
   return (
     <Screen>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <ScreenHeader title={t('slang.title')} subtitle={t('slang.subtitle')} />
+        <ScreenHeader
+          title={t('slang.title')}
+          subtitle={t('slang.subtitle')}
+          extra={<TranslationToggle />}
+        />
         <TextInput
           value={query}
           onChangeText={setQuery}
@@ -67,13 +72,13 @@ export default function SlangScreen() {
                 {showTranscription(settings.level) ? (
                   <AppText muted>{item.transcription}</AppText>
                 ) : null}
-                <AppText variant="heading">{lang === 'en' ? item.en : item.ru}</AppText>
+                <AppText variant="heading">{translation === 'en' ? item.en : item.ru}</AppText>
                 <AppText variant="caption" muted>
                   {posLabel(item.pos, lang)}
                 </AppText>
                 <AppText variant="label">{t('slang.usage')}</AppText>
-                <AppText>{lang === 'en' ? item.usage.en : item.usage.ru}</AppText>
-                <AppText muted>{exampleGloss(item.example, lang)}</AppText>
+                <AppText>{translation === 'en' ? item.usage.en : item.usage.ru}</AppText>
+                <AppText muted>{exampleGloss(item.example, translation)}</AppText>
                 <AudioButton audio={item.audio} compact />
               </Surface>
             ))}

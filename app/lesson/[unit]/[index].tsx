@@ -8,15 +8,16 @@ import { EmptyState } from '@/components/EmptyState';
 import { HebrewText } from '@/components/HebrewText';
 import { ProgressBar } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
+import { TranslationToggle } from '@/components/TranslationToggle';
 import { radius, spacing } from '@/constants/theme';
 import { getWord } from '@/lib/data';
+import { displayAnswer, displayOptions, exampleGloss, posLabel, wordGloss } from '@/lib/i18n';
 import { getDialogue, lessonKeyFromSlug } from '@/lib/lexicon';
 import { buildLesson } from '@/lib/lessons';
-import { exampleGloss, posLabel, wordGloss } from '@/lib/i18n';
 import { hebrewFor, showTranscription } from '@/lib/levels';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
-import type { SessionCard } from '@/lib/types';
+import type { SessionCard, UiLanguage } from '@/lib/types';
 import { useI18n } from '@/lib/use-i18n';
 
 function promptFor(exercise: SessionCard['exercise'], t: (key: string) => string): string {
@@ -46,18 +47,21 @@ function Options({
   card,
   picked,
   onPick,
+  translation,
 }: {
   card: SessionCard;
   picked: string | null;
   onPick: (option: string) => void;
+  translation: UiLanguage;
 }) {
-  const options = card.options ?? [];
+  const options = displayOptions(card, translation);
+  const answer = displayAnswer(card, translation);
   if (options.length === 0) return null;
   return (
     <View style={styles.options} testID="lesson-options">
       {options.map((option, optionIndex) => {
         const [primary, secondary] = option.includes('|') ? option.split('|') : [option, null];
-        const isAnswer = option === card.answer;
+        const isAnswer = option === answer;
         const state =
           picked === null
             ? 'idle'
@@ -99,10 +103,12 @@ export default function LessonScreen() {
   const router = useRouter();
   const palette = usePalette();
   const { progress, gradeCard, finishSession, completeLesson } = useStore();
-  const { t, lang } = useI18n();
+  const { t, lang, translation } = useI18n();
   const queue = useMemo(
     () => buildLesson(progress, lessonKey),
-    [lessonKey, progress.settings.level, progress.settings.language]
+    // Язык перевода читается с карточки (bilingual*), очередь не пересобирается.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [lessonKey, progress.settings.level]
   );
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
@@ -112,6 +118,7 @@ export default function LessonScreen() {
   const card = queue[index];
   const word = card?.kind === 'word' ? getWord(card.refId) : undefined;
   const dialogue = card?.dialogueId ? getDialogue(card.dialogueId) : undefined;
+  const answer = card ? displayAnswer(card, translation) : '';
 
   const finish = () => {
     completeLesson(lessonKey);
@@ -131,7 +138,7 @@ export default function LessonScreen() {
   const pickOption = (option: string) => {
     if (!card) return;
     setPicked(option);
-    const ok = option === card.answer;
+    const ok = option === answer;
     setTimeout(() => advance(ok), 450);
   };
 
@@ -181,17 +188,20 @@ export default function LessonScreen() {
         showsVerticalScrollIndicator={false}
         testID={`lesson-card-${card.exercise}`}
       >
-        <View style={styles.progress}>
-          <AppText variant="caption" muted>
-            {t('drill.of', { n: index + 1, total: queue.length })}
-          </AppText>
-          <ProgressBar value={index} total={queue.length} />
+        <View style={styles.toolbar}>
+          <View style={styles.progress}>
+            <AppText variant="caption" muted>
+              {t('drill.of', { n: index + 1, total: queue.length })}
+            </AppText>
+            <ProgressBar value={index} total={queue.length} />
+          </View>
+          <TranslationToggle />
         </View>
         <AppText variant="caption" muted testID="lesson-prompt">
           {promptFor(card.exercise, t)}
         </AppText>
         <AppText testID="lesson-answer" nativeID="lesson-answer" style={styles.srOnly}>
-          {card.answer}
+          {answer}
         </AppText>
 
         {card.exercise === 'teach-word' && word ? (
@@ -203,11 +213,11 @@ export default function LessonScreen() {
             {showTranscription(progress.settings.level) ? (
               <AppText muted>{word.transcription}</AppText>
             ) : null}
-            <AppText variant="heading">{wordGloss(word, lang)}</AppText>
+            <AppText variant="heading">{wordGloss(word, translation)}</AppText>
             <AppText variant="caption" muted>
               {posLabel(word.pos, lang)}
             </AppText>
-            <AppText>{exampleGloss(word.example, lang)}</AppText>
+            <AppText>{exampleGloss(word.example, translation)}</AppText>
             <AudioButton audio={word.audio} />
             <Button label={t('lesson.gotIt')} size="lg" onPress={() => advance(true)} />
           </Surface>
@@ -216,7 +226,7 @@ export default function LessonScreen() {
         {showWordFace && card.exercise !== 'teach-word' && word ? (
           <Surface style={styles.card}>
             <HebrewText size="card" align="center">
-              {card.exercise === 'word-ru-he' ? wordGloss(word, lang) : hebrewFor(word, progress.settings)}
+              {card.exercise === 'word-ru-he' ? wordGloss(word, translation) : hebrewFor(word, progress.settings)}
             </HebrewText>
             {card.exercise !== 'word-ru-he' && showTranscription(progress.settings.level) ? (
               <AppText muted>{word.transcription}</AppText>
@@ -234,8 +244,10 @@ export default function LessonScreen() {
 
         {card.exercise === 'build-phrase' ? (
           <View style={styles.block}>
-            {card.promptHe ? (
-              <AppText muted>{t('lesson.tapChips')}</AppText>
+            {word ? (
+              <AppText muted>
+                {exampleGloss(word.example, translation)} · {t('lesson.tapChips')}
+              </AppText>
             ) : (
               <AppText muted>{t('lesson.tapChips')}</AppText>
             )}
@@ -273,14 +285,14 @@ export default function LessonScreen() {
                 <HebrewText size="inline" align="right">
                   {line.nikud}
                 </HebrewText>
-                <AppText>{lang === 'en' ? line.en : line.ru}</AppText>
+                <AppText>{translation === 'en' ? line.en : line.ru}</AppText>
               </Surface>
             ))}
           </View>
         ) : null}
 
         {card.exercise !== 'teach-word' && card.exercise !== 'build-phrase' ? (
-          <Options card={card} picked={picked} onPick={pickOption} />
+          <Options card={card} picked={picked} onPick={pickOption} translation={translation} />
         ) : null}
 
         <Button label={t('common.exit')} variant="ghost" onPress={() => router.back()} />
@@ -291,7 +303,8 @@ export default function LessonScreen() {
 
 const styles = StyleSheet.create({
   content: { gap: spacing.lg, padding: spacing.lg, paddingBottom: spacing.xxl },
-  progress: { gap: spacing.sm },
+  toolbar: { alignItems: 'flex-start', flexDirection: 'row', gap: spacing.md },
+  progress: { flex: 1, gap: spacing.sm },
   card: { alignItems: 'center', gap: spacing.sm },
   block: { gap: spacing.md },
   options: { gap: spacing.md },

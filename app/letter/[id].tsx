@@ -16,7 +16,7 @@ export default function LetterScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { progress } = useStore();
-  const { t, lang } = useI18n();
+  const { t, lang, translation } = useI18n();
   const letter = getLetter(id ?? '');
 
   if (!letter) {
@@ -65,7 +65,7 @@ export default function LetterScreen() {
           <AppText variant="label" muted>
             {letter.example.translitRu} · {letter.example.translit}
           </AppText>
-          <AppText>{exampleGloss(letter.example, lang)}</AppText>
+          <AppText>{exampleGloss(letter.example, translation)}</AppText>
           <AudioButton audio={null} />
         </Surface>
 
@@ -80,7 +80,7 @@ export default function LetterScreen() {
             </AppText>
             <HebrewText size="card">{letter.finalExample.he}</HebrewText>
             <AppText variant="label" muted>
-              {letter.finalExample.translitRu} — {exampleGloss(letter.finalExample, lang)}
+              {letter.finalExample.translitRu} — {exampleGloss(letter.finalExample, translation)}
             </AppText>
             <AudioButton audio={null} />
           </Surface>

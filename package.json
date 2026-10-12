@@ -11,6 +11,8 @@
     "lint": "expo lint",
     "test": "jest",
     "lexicon": "node scripts/build-lexicon.mjs",
+    "lexicon:check": "node scripts/check-lexicon.mjs",
+    "lexicon:polish": "node scripts/polish-lexicon.mjs",
     "tts": "node scripts/generate-tts.mjs"
   },
   "dependencies": {

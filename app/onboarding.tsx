@@ -10,14 +10,14 @@ import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
 import { levels } from '@/lib/data';
 import { defaultShowNikud } from '@/lib/levels';
-import { levelDetail, levelSummary, levelTitle } from '@/lib/i18n';
+import { levelDetail, levelSummary, levelTitle, resolveLanguage } from '@/lib/i18n';
 import { requestPermission, syncReminder } from '@/lib/notifications';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
-import type { Goal, LevelId, MinutesPerDay } from '@/lib/types';
+import type { Goal, LevelId, MinutesPerDay, UiLanguage } from '@/lib/types';
 import { useI18n } from '@/lib/use-i18n';
 
-const STEPS = 3;
+const STEPS = 4;
 const MINUTES: MinutesPerDay[] = [5, 10, 20];
 const REMINDER_HOUR = 20;
 
@@ -29,6 +29,9 @@ export default function OnboardingScreen() {
   const [level, setLevel] = useState<LevelId>('elementary');
   const [goal, setGoal] = useState<Goal>('reading');
   const [minutes, setMinutes] = useState<MinutesPerDay>(10);
+  const [translationLanguage, setTranslationLanguage] = useState<UiLanguage>(() =>
+    resolveLanguage(progress.settings.language)
+  );
 
   const finish = async () => {
     updateSettings({
@@ -38,6 +41,7 @@ export default function OnboardingScreen() {
       showNikud: defaultShowNikud(level),
       onboarded: true,
       reminderHour: REMINDER_HOUR,
+      translationLanguage,
     });
     router.replace('/');
 
@@ -119,6 +123,23 @@ export default function OnboardingScreen() {
                 onPress={() => setMinutes(value)}
               />
             ))}
+          </Step>
+        ) : null}
+
+        {step === 3 ? (
+          <Step title={t('onboarding.translationTitle')} description={t('onboarding.translationHint')}>
+            <Option
+              selected={translationLanguage === 'ru'}
+              title={t('settings.translation.ru')}
+              description={t('onboarding.translation.ruHint')}
+              onPress={() => setTranslationLanguage('ru')}
+            />
+            <Option
+              selected={translationLanguage === 'en'}
+              title={t('settings.translation.en')}
+              description={t('onboarding.translation.enHint')}
+              onPress={() => setTranslationLanguage('en')}
+            />
           </Step>
         ) : null}
 

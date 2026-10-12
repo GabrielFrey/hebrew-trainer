@@ -4,10 +4,8 @@ import { glyphsForLetter } from '@/lib/handwriting';
 import {
   letterName,
   letterSound,
-  phraseDistractors,
-  phraseGloss,
-  resolveLanguage,
-  wordGloss,
+  pickBilingual,
+  resolveTranslation,
 } from '@/lib/i18n';
 import {
   hasFeature,
@@ -17,10 +15,12 @@ import {
   wordsForLevel,
 } from '@/lib/levels';
 import type {
+  BilingualText,
   CardState,
   ExerciseKind,
   Progress,
   SessionCard,
+  UiLanguage,
   Word,
 } from '@/lib/types';
 
@@ -78,7 +78,45 @@ function exerciseFor(candidate: Candidate, seed: number): ExerciseKind {
   return 'phrase-translate';
 }
 
-type BuiltCard = { options: string[]; answer: string; expectedGlyph?: string };
+type BuiltCard = {
+  options: string[];
+  answer: string;
+  expectedGlyph?: string;
+  bilingualOptions?: BilingualText[];
+  bilingualAnswer?: BilingualText;
+};
+
+function resolveBuilt(
+  bilingualOptions: BilingualText[],
+  bilingualAnswer: BilingualText,
+  lang: UiLanguage,
+  extra: Partial<BuiltCard> = {}
+): BuiltCard {
+  return {
+    options: bilingualOptions.map((item) => pickBilingual(item, lang)),
+    answer: pickBilingual(bilingualAnswer, lang),
+    bilingualOptions,
+    bilingualAnswer,
+    ...extra,
+  };
+}
+
+function uniqueWords(word: Word, pool: Word[], count: number, seed: number): Word[] {
+  const unique: Word[] = [];
+  const ru = new Set([word.ru]);
+  const en = new Set([word.en]);
+  for (const item of shuffle(
+    pool.filter((entry) => entry.id !== word.id),
+    seed
+  )) {
+    if (ru.has(item.ru) || en.has(item.en)) continue;
+    ru.add(item.ru);
+    en.add(item.en);
+    unique.push(item);
+    if (unique.length >= count) break;
+  }
+  return unique;
+}
 
 function buildCard(
   candidate: Candidate,
@@ -86,7 +124,7 @@ function buildCard(
   progress: Progress,
   seed: number
 ): BuiltCard {
-  const lang = resolveLanguage(progress.settings.language);
+  const lang = resolveTranslation(progress.settings);
 
   if (candidate.kind === 'letter') {
     const letter = getLetter(candidate.refId);
@@ -99,37 +137,44 @@ function buildCard(
       const final = forms.find((form) => form.form === 'final');
       const base = forms.find((form) => form.form === 'base');
       const target = final && reps >= 4 && seed % 2 === 0 ? final : base;
-      return { options: [], answer: letterName(letter, lang), expectedGlyph: target?.id };
+      const bilingualAnswer = { ru: letterName(letter, 'ru'), en: letterName(letter, 'en') };
+      return {
+        options: [],
+        answer: pickBilingual(bilingualAnswer, lang),
+        bilingualAnswer,
+        expectedGlyph: target?.id,
+      };
     }
 
-    const label = (item: typeof letter) =>
-      `${letterName(item, lang)} — ${letterSound(item, lang).split(',')[0] ?? letterSound(item, lang)}`;
-    const answer = label(letter);
-    const pool = letters.map((l) => label(l));
-    return { options: shuffle([answer, ...pickDistractors(pool, answer, 3, seed)], seed + 7), answer };
+    const labelOf = (item: NonNullable<typeof letter>, ui: UiLanguage) =>
+      `${letterName(item, ui)} — ${letterSound(item, ui).split(',')[0] ?? letterSound(item, ui)}`;
+    const others = letters.filter((item) => item.id !== letter.id);
+    const picked = [letter, ...shuffle(others, seed).slice(0, 3)];
+    const bilingualOptions = shuffle(
+      picked.map((item) => ({ ru: labelOf(item, 'ru'), en: labelOf(item, 'en') })),
+      seed + 7
+    );
+    return resolveBuilt(bilingualOptions, { ru: labelOf(letter, 'ru'), en: labelOf(letter, 'en') }, lang);
   }
 
   if (candidate.kind === 'word') {
     const word = getWord(candidate.refId);
     if (!word) return { options: [], answer: '' };
     const available = wordsForLevel(progress.settings.level);
-    const sameDeck = available.filter((w: Word) => w.deck === word.deck && w.id !== word.id);
+    const sameDeck = available.filter((item: Word) => item.deck === word.deck && item.id !== word.id);
     const pool = sameDeck.length >= 3 ? sameDeck : available;
 
     if (exercise === 'word-ru-he') {
       const answer = word.nikud;
       const options = shuffle(
-        [answer, ...pickDistractors(pool.map((w) => w.nikud), answer, 3, seed)],
+        [answer, ...pickDistractors(pool.map((item) => item.nikud), answer, 3, seed)],
         seed + 11
       );
       return { options, answer };
     }
-    const answer = wordGloss(word, lang);
-    const options = shuffle(
-      [answer, ...pickDistractors(pool.map((w) => wordGloss(w, lang)), answer, 3, seed)],
-      seed + 13
-    );
-    return { options, answer };
+    const choices = shuffle([word, ...uniqueWords(word, pool, 3, seed)], seed + 13);
+    const bilingualOptions = choices.map((item) => ({ ru: item.ru, en: item.en }));
+    return resolveBuilt(bilingualOptions, { ru: word.ru, en: word.en }, lang);
   }
 
   if (candidate.kind === 'passage') {
@@ -140,11 +185,18 @@ function buildCard(
 
   const phrase = getPhrase(candidate.refId);
   if (!phrase) return { options: [], answer: '' };
-  const gloss = phraseGloss(phrase, lang);
-  return {
-    options: shuffle([gloss, ...phraseDistractors(phrase, lang).slice(0, 3)], seed + 17),
-    answer: gloss,
-  };
+  const bilingualAnswer = { ru: phrase.ru, en: phrase.en };
+  const bilingualOptions = shuffle(
+    [
+      bilingualAnswer,
+      ...phrase.distractors.slice(0, 3).map((ru, index) => ({
+        ru,
+        en: phrase.distractorsEn[index] ?? ru,
+      })),
+    ],
+    seed + 17
+  );
+  return resolveBuilt(bilingualOptions, bilingualAnswer, lang);
 }
 
 export type SessionOptions = {
@@ -257,6 +309,8 @@ export function buildSession(
       isNew: candidate.isNew,
       options: built.options,
       answer: built.answer,
+      ...(built.bilingualOptions ? { bilingualOptions: built.bilingualOptions } : {}),
+      ...(built.bilingualAnswer ? { bilingualAnswer: built.bilingualAnswer } : {}),
       ...(built.expectedGlyph ? { expectedGlyph: built.expectedGlyph } : {}),
     };
   });

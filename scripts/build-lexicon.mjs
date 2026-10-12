@@ -191,13 +191,22 @@ function guessEmoji(theme, en) {
   return map[theme] ?? '⭐';
 }
 
+function capSentence(text) {
+  const sense = String(text)
+    .split(/\s*(?:\/|;)\s*/)[0]
+    .trim();
+  if (!sense) return text;
+  const body = sense.charAt(0).toUpperCase() + sense.slice(1);
+  return /[.!?…]$/.test(body) ? body : `${body}.`;
+}
+
 function makeExample(nikud, hebrew, transcription, ru, en) {
   return {
     nikud: `${nikud}.`,
     hebrew: `${hebrew}.`,
     transcription: `${transcription}.`,
-    ru: `«${ru}».`,
-    en: `“${en}”.`,
+    ru: capSentence(ru),
+    en: capSentence(en),
   };
 }
 
@@ -336,8 +345,8 @@ CORE_SLANG.forEach((row, index) => {
 const frames = [
   {
     nikud: (w) => `יַאלְּלָה, ${w.nikud}`,
-    ru: (w) => `давай, ${w.ru}`,
-    en: (w) => `come on, ${w.en}`,
+    ru: (w) => `Ялла, ${w.ru}!`,
+    en: (w) => `Come on, ${w.en}!`,
     tr: (w) => `yalla, ${w.transcription}`,
     usageRu: 'Погонялка перед делом или предметом разговора.',
     usageEn: 'Urging someone, naming the thing you want to deal with.',
@@ -345,8 +354,8 @@ const frames = [
   },
   {
     nikud: (w) => `סַבָּבָה, יֵשׁ ${w.nikud}`,
-    ru: (w) => `норм, есть ${w.ru}`,
-    en: (w) => `cool, we’ve got ${w.en}`,
+    ru: (w) => `Сабаба, есть ${w.ru}.`,
+    en: (w) => `Cool, we’ve got ${w.en}.`,
     tr: (w) => `sababa, yesh ${w.transcription}`,
     usageRu: 'Спокойное «ок, есть вот это».',
     usageEn: 'Laid-back “okay, that’s available”.',
@@ -498,16 +507,16 @@ for (const level of LEVELS) {
             nikud: `מָה שְׁלוֹמְךָ? יֵשׁ ${a.nikud}?`,
             hebrew: stripNikud(`מה שלומך יש ${a.hebrew}`),
             transcription: `ma shlomkha? yesh ${a.transcription}?`,
-            ru: `Как дела? Есть ${a.ru}?`,
-            en: `How are you? Got ${a.en}?`,
+            ru: `Как дела? Есть ${a.ru.split(/[;/]/)[0].trim()}?`,
+            en: `How are you? Is there ${a.en.split(/[;/]/)[0].trim()}?`,
           },
           {
             speaker: 'b',
             nikud: `סַבָּבָה, יֵשׁ ${b.nikud}.`,
             hebrew: stripNikud(`סבבה יש ${b.hebrew}`),
             transcription: `sababa, yesh ${b.transcription}.`,
-            ru: `Норм, есть ${b.ru}.`,
-            en: `Cool, we’ve got ${b.en}.`,
+            ru: `Сабаба, есть ${b.ru.split(/[;/]/)[0].trim()}.`,
+            en: `Cool, we’ve got ${b.en.split(/[;/]/)[0].trim()}.`,
           },
         ],
         replies: [

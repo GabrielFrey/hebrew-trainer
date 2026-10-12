@@ -7,9 +7,18 @@ import {
   parseLessonId,
   wordsForTheme,
 } from '@/lib/lexicon';
-import { resolveLanguage, wordGloss } from '@/lib/i18n';
+import { pickBilingual, resolveTranslation } from '@/lib/i18n';
 import { MAX_NEW_WORDS_PER_SESSION } from '@/lib/session';
-import type { ExerciseKind, LevelId, Progress, SessionCard, Unit, Word } from '@/lib/types';
+import type {
+  BilingualText,
+  ExerciseKind,
+  LevelId,
+  Progress,
+  SessionCard,
+  UiLanguage,
+  Unit,
+  Word,
+} from '@/lib/types';
 
 const WORDS_PER_LESSON = MAX_NEW_WORDS_PER_SESSION;
 
@@ -27,6 +36,23 @@ function shuffle<T>(items: T[], seed: number): T[] {
   return out;
 }
 
+function seedFromKey(key: string): number {
+  let hash = 2166136261;
+  for (let i = 0; i < key.length; i += 1) {
+    hash ^= key.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0) || 1;
+}
+
+function glossOf(word: Word): BilingualText {
+  return { ru: word.ru, en: word.en };
+}
+
+function resolveList(items: BilingualText[], lang: UiLanguage): string[] {
+  return items.map((item) => pickBilingual(item, lang));
+}
+
 export function getUnit(unitId: string): Unit | undefined {
   return getCatalog().units.find((unit) => unit.id === unitId);
 }
@@ -37,12 +63,21 @@ export function wordsInLesson(unit: Unit, index: number): Word[] {
   return pool.slice(start, start + WORDS_PER_LESSON);
 }
 
-function distractors(word: Word, pool: Word[], count: number, seed: number, lang: 'ru' | 'en'): string[] {
-  const answer = wordGloss(word, lang);
-  const unique = Array.from(
-    new Set(pool.filter((item) => item.id !== word.id).map((item) => wordGloss(item, lang)))
-  ).filter((item) => item !== answer);
-  return shuffle(unique, seed).slice(0, count);
+function distractorWords(word: Word, pool: Word[], count: number, seed: number): Word[] {
+  const unique: Word[] = [];
+  const ru = new Set([word.ru]);
+  const en = new Set([word.en]);
+  for (const item of shuffle(
+    pool.filter((entry) => entry.id !== word.id),
+    seed
+  )) {
+    if (ru.has(item.ru) || en.has(item.en)) continue;
+    ru.add(item.ru);
+    en.add(item.en);
+    unique.push(item);
+    if (unique.length >= count) break;
+  }
+  return unique;
 }
 
 function pictureDistractors(word: Word, pool: Word[], seed: number): Word[] {
@@ -62,6 +97,19 @@ function chipsFor(word: Word, pool: Word[], seed: number): { chips: string[]; an
   };
 }
 
+function withResolved(
+  bilingualOptions: BilingualText[],
+  bilingualAnswer: BilingualText,
+  lang: UiLanguage
+): { options: string[]; answer: string; bilingualOptions: BilingualText[]; bilingualAnswer: BilingualText } {
+  return {
+    options: resolveList(bilingualOptions, lang),
+    answer: pickBilingual(bilingualAnswer, lang),
+    bilingualOptions,
+    bilingualAnswer,
+  };
+}
+
 /**
  * Короткий урок в стиле Mondly: показ слова, выбор перевода, картинка,
  * аудирование, сборка фразы, иногда диалог. Новых слов не больше пяти.
@@ -71,20 +119,25 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
   if (!parsed) return [];
   const unit = getUnit(parsed.unitId);
   if (!unit) return [];
-  const lang = resolveLanguage(progress.settings.language);
+  const lang = resolveTranslation(progress.settings);
   const items = wordsInLesson(unit, parsed.index);
   if (items.length === 0) return [];
   const pool = loadedWords().filter((word) => word.level === unit.level);
-  const seedBase = Math.floor(now / 1000) + parsed.index * 17;
+  const seedBase = seedFromKey(lessonKey) + parsed.index * 17 + Math.floor(now / 86_400_000);
   const cards: SessionCard[] = [];
 
   items.forEach((word, index) => {
     const seed = seedBase + index * 31;
     const isNew = !progress.cards[`word:${word.id}`];
-    const gloss = wordGloss(word, lang);
-    const options = shuffle([gloss, ...distractors(word, pool, 3, seed, lang)], seed + 5);
+    const gloss = glossOf(word);
+    const optionTexts = shuffle([gloss, ...distractorWords(word, pool, 3, seed).map(glossOf)], seed + 5);
     const pics = [word, ...pictureDistractors(word, pool, seed + 9)];
+    const picTexts = shuffle(
+      pics.map((item) => ({ ru: `${item.emoji}|${item.ru}`, en: `${item.emoji}|${item.en}` })),
+      seed + 13
+    );
     const built = chipsFor(word, pool, seed + 11);
+    const choice = withResolved(optionTexts, gloss, lang);
 
     cards.push({
       cardId: `word:${word.id}:teach`,
@@ -93,7 +146,8 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
       exercise: 'teach-word',
       isNew,
       options: [],
-      answer: gloss,
+      answer: choice.answer,
+      bilingualAnswer: gloss,
       emoji: word.emoji,
     });
     cards.push({
@@ -102,8 +156,7 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
       refId: word.id,
       exercise: 'word-he-ru',
       isNew,
-      options,
-      answer: gloss,
+      ...choice,
     });
     if (word.emoji) {
       cards.push({
@@ -112,11 +165,7 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
         refId: word.id,
         exercise: 'choice-picture',
         isNew,
-        options: shuffle(
-          pics.map((item) => `${item.emoji}|${wordGloss(item, lang)}`),
-          seed + 13
-        ),
-        answer: `${word.emoji}|${gloss}`,
+        ...withResolved(picTexts, { ru: `${word.emoji}|${word.ru}`, en: `${word.emoji}|${word.en}` }, lang),
         emoji: word.emoji,
       });
     }
@@ -126,8 +175,7 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
       refId: word.id,
       exercise: 'listen-choice',
       isNew,
-      options,
-      answer: gloss,
+      ...choice,
     });
     if (built.chips.length >= 2) {
       cards.push({
@@ -147,14 +195,15 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
   const dialogue = getDialogue(`${unit.id}-d0`);
   if (dialogue) {
     const correct = dialogue.replies.find((reply) => reply.correct);
+    const replies = dialogue.replies.map((reply) => ({ ru: reply.ru, en: reply.en }));
+    const answerText = { ru: correct?.ru ?? '', en: correct?.en ?? '' };
     cards.push({
       cardId: `word:${items[0]?.id}:dlg`,
       kind: 'word',
       refId: items[0]?.id ?? dialogue.id,
       exercise: 'dialogue-reply',
       isNew: false,
-      options: dialogue.replies.map((reply) => (lang === 'en' ? reply.en : reply.ru)),
-      answer: (lang === 'en' ? correct?.en : correct?.ru) ?? '',
+      ...withResolved(replies, answerText, lang),
       dialogueId: dialogue.id,
     });
   }

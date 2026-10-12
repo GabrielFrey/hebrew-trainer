@@ -202,7 +202,13 @@ export type Goal = 'reading' | 'speaking';
 export type ThemePreference = 'system' | 'light' | 'dark';
 export type UiLanguage = 'ru' | 'en';
 export type LanguagePreference = 'system' | UiLanguage;
+export type TranslationLanguage = UiLanguage;
 export type MinutesPerDay = 5 | 10 | 20;
+
+export type BilingualText = {
+  ru: string;
+  en: string;
+};
 
 export type Settings = {
   onboarded: boolean;
@@ -212,6 +218,11 @@ export type Settings = {
   theme: ThemePreference;
   /** Интерфейс: система, русский или английский. */
   language: LanguagePreference;
+  /**
+   * Язык перевода слов и упражнений. Не зависит от языка интерфейса.
+   * Если не задан — следует за интерфейсом.
+   */
+  translationLanguage?: TranslationLanguage;
   /** Показывать огласовки, когда уровень допускает переключение. */
   showNikud: boolean;
   remindersEnabled: boolean;
@@ -264,6 +275,9 @@ export type SessionCard = {
   isNew: boolean;
   options: string[];
   answer: string;
+  /** Оба языка сразу: переключатель перевода не пересобирает очередь. */
+  bilingualOptions?: BilingualText[];
+  bilingualAnswer?: BilingualText;
   /** Для «напиши букву»: что именно должен начертить ученик. */
   expectedGlyph?: string;
   chips?: string[];

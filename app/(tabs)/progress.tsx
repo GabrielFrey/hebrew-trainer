@@ -35,7 +35,7 @@ export default function ProgressScreen() {
   const router = useRouter();
   const palette = usePalette();
   const { progress } = useStore();
-  const { t, lang } = useI18n();
+  const { t, lang, translation } = useI18n();
 
   const cards = useMemo(() => Object.values(progress.cards), [progress.cards]);
 
@@ -134,7 +134,7 @@ export default function ProgressScreen() {
           ) : (
             <Surface padded={false}>
               {dueToday.map((card, index) => {
-                const label = cardLabel(card, lang);
+                const label = cardLabel(card, translation);
                 if (!label) return null;
                 return (
                   <View
@@ -207,7 +207,7 @@ export default function ProgressScreen() {
             </AppText>
             <Surface style={styles.weakList}>
               {weakest.map((card) => {
-                const label = cardLabel(card, lang);
+                const label = cardLabel(card, translation);
                 if (!label) return null;
                 return (
                   <View key={card.id} style={styles.weakRow}>

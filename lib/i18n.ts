@@ -1,10 +1,13 @@
 import { pluralRu } from '@/lib/dates';
 import type {
+  BilingualText,
   Deck,
   LanguagePreference,
   Letter,
   Level,
   Phrase,
+  SessionCard,
+  Settings,
   ThemeInfo,
   UiLanguage,
   Vowel,
@@ -23,6 +26,32 @@ export function systemLanguage(): UiLanguage {
 export function resolveLanguage(preference: LanguagePreference | undefined): UiLanguage {
   if (preference === 'ru' || preference === 'en') return preference;
   return systemLanguage();
+}
+
+/** Перевод упражнений: явный выбор или язык интерфейса. */
+export function resolveTranslation(
+  settings: Pick<Settings, 'language' | 'translationLanguage'> | undefined
+): UiLanguage {
+  if (settings?.translationLanguage === 'ru' || settings?.translationLanguage === 'en') {
+    return settings.translationLanguage;
+  }
+  return resolveLanguage(settings?.language);
+}
+
+export function pickBilingual(item: BilingualText, lang: UiLanguage): string {
+  return lang === 'en' ? item.en : item.ru;
+}
+
+export function displayOptions(card: SessionCard, lang: UiLanguage): string[] {
+  if (card.bilingualOptions && card.bilingualOptions.length > 0) {
+    return card.bilingualOptions.map((item) => pickBilingual(item, lang));
+  }
+  return card.options;
+}
+
+export function displayAnswer(card: SessionCard, lang: UiLanguage): string {
+  if (card.bilingualAnswer) return pickBilingual(card.bilingualAnswer, lang);
+  return card.answer;
 }
 
 type Dict = Record<string, string>;
@@ -186,10 +215,20 @@ const ru: Dict = {
   'settings.theme.darkName': 'тёмная',
   'settings.theme.lightName': 'светлая',
   'settings.language': 'Язык интерфейса',
-  'settings.languageHint': 'От него зависит перевод слов в упражнениях. Иврит не меняется.',
+  'settings.languageHint': 'Подписи кнопок и экранов. На перевод слов не влияет.',
   'settings.language.system': 'Как в системе',
   'settings.language.ru': 'Русский',
   'settings.language.en': 'English',
+  'settings.translation': 'Язык перевода',
+  'settings.translationHint': 'Какой перевод иврита показывать в уроках, сленге и колодах. Интерфейс от этого не меняется.',
+  'settings.translation.ru': 'Русский',
+  'settings.translation.en': 'English',
+  'common.translationToggle': 'Язык перевода',
+  'onboarding.translationTitle': 'Язык перевода',
+  'onboarding.translationHint':
+    'На каком языке показывать значение слов, сленга и реплик. Его можно сменить в любой момент — прогресс не сбросится.',
+  'onboarding.translation.ruHint': 'Перевод слов, сленга и диалогов на русский',
+  'onboarding.translation.enHint': 'Значения слов, сленга и диалогов по-английски',
   'settings.about': 'О данных и звуке',
   'settings.aboutBody':
     'Прогресс хранится локально через AsyncStorage, синхронизации и аккаунта нет. 5000 слов и 2000 разговорных выражений лежат в data/lexicon по уровням. Озвучка — записи носителей ({count} шт.), иначе заранее сгенерированный нейроголос; синтеза на устройстве нет, без файла кнопка говорит «нет записи».',
@@ -506,10 +545,21 @@ const en: Dict = {
   'settings.theme.darkName': 'dark',
   'settings.theme.lightName': 'light',
   'settings.language': 'Interface language',
-  'settings.languageHint': 'This also switches word translations in exercises. Hebrew stays Hebrew.',
+  'settings.languageHint': 'Button labels and screens. It does not change word translations.',
   'settings.language.system': 'System',
   'settings.language.ru': 'Русский',
   'settings.language.en': 'English',
+  'settings.translation': 'Translation language',
+  'settings.translationHint':
+    'Which translation of Hebrew to show in lessons, slang, and decks. The interface language stays as it is.',
+  'settings.translation.ru': 'Русский',
+  'settings.translation.en': 'English',
+  'common.translationToggle': 'Translation language',
+  'onboarding.translationTitle': 'Translation language',
+  'onboarding.translationHint':
+    'The language for word meanings, slang notes, and dialogue lines. You can change it any time — progress is kept.',
+  'onboarding.translation.ruHint': 'Russian translations of words, slang, and dialogues',
+  'onboarding.translation.enHint': 'English glosses for words, slang, and dialogues',
   'settings.about': 'Data and audio',
   'settings.aboutBody':
     'Progress is stored locally in AsyncStorage; there is no account or sync. 5000 words and 2000 slang items live in data/lexicon, split by level. Audio is native recordings ({count}) first, then pre-generated neural files; nothing is synthesized on device, and a missing file shows “no recording”.',

@@ -15,7 +15,14 @@ import { spacing } from '@/constants/theme';
 import { getLetter, getPassage, getPhrase, getWord } from '@/lib/data';
 import { getGlyph, gradeForVerdict, recognise } from '@/lib/handwriting';
 import type { Stroke } from '@/lib/handwriting';
-import { letterName, letterSound, posLabel, wordGloss } from '@/lib/i18n';
+import {
+  displayAnswer,
+  displayOptions,
+  letterName,
+  letterSound,
+  posLabel,
+  wordGloss,
+} from '@/lib/i18n';
 import { hebrewFor, showNikud, showTranscription } from '@/lib/levels';
 import { buildSession } from '@/lib/session';
 import { useStore } from '@/lib/store';
@@ -45,7 +52,7 @@ export default function SessionScreen() {
   const palette = usePalette();
   const { ahead } = useLocalSearchParams<{ ahead?: string }>();
   const { progress, gradeCard, finishSession } = useStore();
-  const { t } = useI18n();
+  const { t, translation } = useI18n();
   const settings = progress.settings;
 
   const initialQueue = useMemo(
@@ -194,7 +201,7 @@ export default function SessionScreen() {
           onStrokes={(strokes) => checkHandwriting(current, strokes)}
           onPick={(value) => {
             setPicked(value);
-            tap(value === current.answer);
+            tap(value === displayAnswer(current, translation));
           }}
         />
 
@@ -249,10 +256,12 @@ function CardBody({
   onStrokes: (strokes: Stroke[]) => void;
   onPick: (value: string) => void;
 }) {
-  const { t, lang } = useI18n();
+  const { t, lang, translation } = useI18n();
   const prompt = promptFor(card, t);
   const answered = picked !== null;
   const withTranscription = showTranscription(settings.level);
+  const options = displayOptions(card, translation);
+  const answer = displayAnswer(card, translation);
 
   const letter = card.kind === 'letter' ? getLetter(card.refId) : undefined;
   const word = card.kind === 'word' ? getWord(card.refId) : undefined;
@@ -274,9 +283,9 @@ function CardBody({
       {card.exercise === 'letter-write' && letter && expected ? (
         <View style={styles.writeBlock}>
           <Surface style={styles.writePrompt}>
-            <AppText variant="title">{letterName(letter, lang)}</AppText>
+            <AppText variant="title">{letterName(letter, translation)}</AppText>
             <AppText muted style={styles.centered}>
-              {letterSound(letter, lang)}
+              {letterSound(letter, translation)}
             </AppText>
             {expected.form === 'final' ? (
               <AppText variant="label" tone="accent">
@@ -312,7 +321,7 @@ function CardBody({
               </HebrewText>
               {card.isNew ? (
                 <AppText variant="label" muted>
-                  {letterName(letter, lang)} · {letterSound(letter, lang)}
+                  {letterName(letter, translation)} · {letterSound(letter, translation)}
                 </AppText>
               ) : null}
               <AudioButton audio={letter.audio} label={t('common.letterName')} />
@@ -336,7 +345,7 @@ function CardBody({
           {card.exercise === 'word-ru-he' && word ? (
             <>
               <AppText variant="title" style={styles.centered}>
-                {wordGloss(word, lang)}
+                {wordGloss(word, translation)}
               </AppText>
               <AppText variant="caption" muted>
                 {posLabel(word.pos, lang)}
@@ -366,7 +375,7 @@ function CardBody({
                 </HebrewText>
                 {answered ? (
                   <AppText variant="caption" muted>
-                    {lang === 'en' ? passage.question.en : passage.question.ru}
+                    {translation === 'en' ? passage.question.en : passage.question.ru}
                   </AppText>
                 ) : null}
               </View>
@@ -377,8 +386,8 @@ function CardBody({
 
       {card.exercise === 'letter-write' ? null : (
         <View style={styles.options}>
-          {card.options.map((option) => {
-            const isAnswer = option === card.answer;
+          {options.map((option) => {
+            const isAnswer = option === answer;
             const state = !answered
               ? 'idle'
               : option === picked
@@ -428,9 +437,9 @@ function Footer({
   onRetry: () => void;
   onGrade: (grade: Grade) => void;
 }) {
-  const { t } = useI18n();
+  const { t, translation } = useI18n();
   const answered = picked !== null;
-  const correct = picked === card.answer;
+  const correct = picked === displayAnswer(card, translation);
 
   if (card.exercise === 'letter-write') {
     if (write.verdict === 'match') {

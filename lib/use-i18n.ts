@@ -1,15 +1,17 @@
 import { useMemo } from 'react';
 
-import { makeT, resolveLanguage } from '@/lib/i18n';
+import { makeT, resolveLanguage, resolveTranslation } from '@/lib/i18n';
 import { useStore } from '@/lib/store';
 import type { UiLanguage } from '@/lib/types';
 
 export function useI18n(): {
   lang: UiLanguage;
+  translation: UiLanguage;
   t: (key: string, vars?: Record<string, string | number>) => string;
 } {
-  const preference = useStore().progress.settings.language;
-  const lang = resolveLanguage(preference);
+  const settings = useStore().progress.settings;
+  const lang = resolveLanguage(settings.language);
+  const translation = resolveTranslation(settings);
   const t = useMemo(() => makeT(lang), [lang]);
-  return { lang, t };
+  return { lang, translation, t };
 }

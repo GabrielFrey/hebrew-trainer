@@ -10,10 +10,17 @@ import { recordingCount } from '@/lib/audio';
 import { levels, words } from '@/lib/data';
 import { canToggleNikud, decksForLevel, defaultShowNikud, wordsForLevel } from '@/lib/levels';
 import { hasPermission, requestPermission, syncReminder } from '@/lib/notifications';
-import { levelDetail, levelSummary, levelTitle } from '@/lib/i18n';
+import { levelDetail, levelSummary, levelTitle, resolveTranslation } from '@/lib/i18n';
 import { useStore } from '@/lib/store';
 import { usePalette, useTheme } from '@/lib/theme';
-import type { Goal, LanguagePreference, LevelId, MinutesPerDay, ThemePreference } from '@/lib/types';
+import type {
+  Goal,
+  LanguagePreference,
+  LevelId,
+  MinutesPerDay,
+  ThemePreference,
+  UiLanguage,
+} from '@/lib/types';
 import { useI18n } from '@/lib/use-i18n';
 
 const MINUTES: MinutesPerDay[] = [5, 10, 20];
@@ -194,6 +201,17 @@ export default function SettingsScreen() {
                   language: value,
                 });
               }}
+            />
+          ))}
+        </Section>
+
+        <Section title={t('settings.translation')} hint={t('settings.translationHint')}>
+          {(['ru', 'en'] as UiLanguage[]).map((value) => (
+            <Row
+              key={value}
+              label={t(`settings.translation.${value}`)}
+              selected={resolveTranslation(settings) === value}
+              onPress={() => updateSettings({ translationLanguage: value })}
             />
           ))}
         </Section>

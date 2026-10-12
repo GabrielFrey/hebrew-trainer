@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/EmptyState';
 import { HebrewText } from '@/components/HebrewText';
 import { AudioButton } from '@/components/AudioButton';
 import { AppText, Screen, Surface } from '@/components/Themed';
+import { TranslationToggle } from '@/components/TranslationToggle';
 import { radius, spacing } from '@/constants/theme';
 import { getDeck, wordsInDeck } from '@/lib/data';
 import { deckSubtitle, deckTitle, posLabel, wordGloss } from '@/lib/i18n';
@@ -22,7 +23,7 @@ export default function DeckScreen() {
   const navigation = useNavigation();
   const palette = usePalette();
   const { progress } = useStore();
-  const { t, lang } = useI18n();
+  const { t, lang, translation } = useI18n();
   const [showTranslation, setShowTranslation] = useState(true);
 
   const deck = getDeck(id ?? '');
@@ -54,6 +55,7 @@ export default function DeckScreen() {
         <View style={styles.head}>
           <AppText muted>{deckSubtitle(deck, lang)}</AppText>
           <View style={styles.headActions}>
+            <TranslationToggle />
             <Button
               label={showTranslation ? t('deck.hideTranslation') : t('deck.showTranslation')}
               variant="secondary"
@@ -89,7 +91,7 @@ export default function DeckScreen() {
                 </AppText>
 
                 {showTranslation ? (
-                  <AppText variant="heading">{wordGloss(word, lang)}</AppText>
+                  <AppText variant="heading">{wordGloss(word, translation)}</AppText>
                 ) : (
                   <AppText muted>{t('deck.hidden')}</AppText>
                 )}
@@ -150,7 +152,7 @@ export default function DeckScreen() {
 const styles = StyleSheet.create({
   content: { gap: spacing.md, padding: spacing.lg, paddingBottom: spacing.xxl },
   head: { gap: spacing.md },
-  headActions: { flexDirection: 'row' },
+  headActions: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   card: { gap: spacing.sm },
   cardTop: { alignItems: 'flex-start', flexDirection: 'row', gap: spacing.md, justifyContent: 'space-between' },
   hebrewColumn: { alignItems: 'flex-end', flex: 1 },
