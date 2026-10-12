@@ -1,7 +1,6 @@
 import { Feather } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-import { StyleSheet } from 'react-native';
-
+import { typography } from '@/constants/tokens';
 import { usePalette } from '@/lib/theme';
 import { useI18n } from '@/lib/use-i18n';
 
@@ -12,17 +11,16 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerStyle: { backgroundColor: palette.background },
-        headerTintColor: palette.text,
-        headerShadowVisible: false,
+        headerShown: false,
         tabBarActiveTintColor: palette.accent,
         tabBarInactiveTintColor: palette.tabInactive,
         tabBarStyle: {
           backgroundColor: palette.surface,
           borderTopColor: palette.border,
-          borderTopWidth: StyleSheet.hairlineWidth,
+          borderTopWidth: 2,
+          height: 64,
         },
-        tabBarLabelStyle: { fontSize: 11 },
+        tabBarLabelStyle: { fontFamily: typography.fontFamily.extra, fontSize: 11 },
         sceneStyle: { backgroundColor: palette.background },
       }}
     >
@@ -30,15 +28,13 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: t('tabs.today'),
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => <Feather name="sun" color={color} size={size} />,
+          tabBarIcon: ({ color, size }) => <Feather name="home" color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="alphabet"
         options={{
           title: t('tabs.alphabet'),
-          headerShown: false,
           tabBarIcon: ({ color, size }) => <Feather name="type" color={color} size={size} />,
         }}
       />
@@ -46,24 +42,21 @@ export default function TabsLayout() {
         name="words"
         options={{
           title: t('tabs.words'),
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => <Feather name="book-open" color={color} size={size} />,
+          tabBarIcon: ({ color, size }) => <Feather name="map" color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="reading"
         options={{
           title: t('tabs.reading'),
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => <Feather name="align-right" color={color} size={size} />,
+          tabBarIcon: ({ color, size }) => <Feather name="message-circle" color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="progress"
         options={{
           title: t('tabs.progress'),
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => <Feather name="bar-chart-2" color={color} size={size} />,
+          tabBarIcon: ({ color, size }) => <Feather name="award" color={color} size={size} />,
         }}
       />
     </Tabs>

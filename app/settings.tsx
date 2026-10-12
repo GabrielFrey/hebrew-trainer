@@ -90,6 +90,7 @@ export default function SettingsScreen() {
     <Screen edges={['left', 'right']}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Section
+          icon="layers"
           title={t('settings.level')}
           hint={t('settings.levelHint', {
             decks: unlockedDecks,
@@ -109,7 +110,7 @@ export default function SettingsScreen() {
         </Section>
 
         {canToggleNikud(settings.level) ? (
-          <Section title={t('settings.nikud')} hint={t('settings.nikudHint')}>
+          <Section icon="eye" title={t('settings.nikud')} hint={t('settings.nikudHint')}>
             <Row
               label={t('settings.nikudOn')}
               selected={settings.showNikud}
@@ -130,7 +131,7 @@ export default function SettingsScreen() {
           </Surface>
         )}
 
-        <Section title={t('settings.goal')}>
+        <Section icon="target" title={t('settings.goal')}>
           {(['reading', 'speaking'] as Goal[]).map((value) => (
             <Row
               key={value}
@@ -141,7 +142,7 @@ export default function SettingsScreen() {
           ))}
         </Section>
 
-        <Section title={t('settings.minutes')}>
+        <Section icon="clock" title={t('settings.minutes')}>
           {MINUTES.map((value) => (
             <Row
               key={value}
@@ -156,6 +157,7 @@ export default function SettingsScreen() {
         </Section>
 
         <Section
+          icon="bell"
           title={t('settings.reminder')}
           hint={
             permission === false && !settings.remindersEnabled
@@ -184,6 +186,7 @@ export default function SettingsScreen() {
         </Section>
 
         <Section
+          icon="globe"
           title={t('settings.language')}
           hint={t('settings.languageHint')}
         >
@@ -205,7 +208,7 @@ export default function SettingsScreen() {
           ))}
         </Section>
 
-        <Section title={t('settings.translation')} hint={t('settings.translationHint')}>
+        <Section icon="flag" title={t('settings.translation')} hint={t('settings.translationHint')}>
           {(['ru', 'en'] as UiLanguage[]).map((value) => (
             <Row
               key={value}
@@ -216,7 +219,16 @@ export default function SettingsScreen() {
           ))}
         </Section>
 
+        <Section icon="volume-2" title={t('settings.sounds')} hint={t('settings.soundsHint')}>
+          <Row
+            label={settings.soundEnabled === false ? t('settings.soundsOff') : t('settings.soundsOn')}
+            selected={settings.soundEnabled !== false}
+            onPress={() => updateSettings({ soundEnabled: settings.soundEnabled === false })}
+          />
+        </Section>
+
         <Section
+          icon="moon"
           title={t('settings.theme')}
           hint={t('settings.themeHint', {
             scheme: scheme === 'dark' ? t('settings.theme.darkName') : t('settings.theme.lightName'),
@@ -250,17 +262,27 @@ export default function SettingsScreen() {
 }
 
 function Section({
+  icon,
   title,
   hint,
   children,
 }: {
+  icon: keyof typeof Feather.glyphMap;
   title: string;
   hint?: string;
   children: React.ReactNode;
 }) {
+  const palette = usePalette();
   return (
     <View style={styles.section}>
-      <AppText variant="heading">{title}</AppText>
+      <View style={styles.sectionHead}>
+        <View style={[styles.sectionIcon, { backgroundColor: palette.successSoft }]}>
+          <Feather name={icon} size={18} color={palette.accent} />
+        </View>
+        <AppText variant="heading" style={styles.sectionTitle}>
+          {title}
+        </AppText>
+      </View>
       {hint ? (
         <AppText variant="caption" muted>
           {hint}
@@ -311,6 +333,15 @@ function Row({
 const styles = StyleSheet.create({
   content: { gap: spacing.xl, padding: spacing.lg, paddingBottom: spacing.xxl },
   section: { gap: spacing.sm },
+  sectionHead: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
+  sectionTitle: { flex: 1 },
+  sectionIcon: {
+    alignItems: 'center',
+    borderRadius: radius.sm,
+    height: 36,
+    justifyContent: 'center',
+    width: 36,
+  },
   rows: { borderRadius: radius.md, marginTop: spacing.xs, overflow: 'hidden' },
   row: {
     alignItems: 'center',

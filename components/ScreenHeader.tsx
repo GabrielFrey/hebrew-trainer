@@ -2,8 +2,8 @@ import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
-import { spacing } from '@/constants/theme';
 import { AppText } from '@/components/Themed';
+import { radius, spacing } from '@/constants/tokens';
 import { usePalette } from '@/lib/theme';
 
 export function ScreenHeader({
@@ -35,7 +35,7 @@ export function ScreenHeader({
               onPress={action.onPress}
               style={({ pressed }) => [
                 styles.action,
-                { backgroundColor: palette.surfaceAlt, opacity: pressed ? 0.8 : 1 },
+                { backgroundColor: palette.surface, opacity: pressed ? 0.8 : 1 },
               ]}
             >
               <Feather name={action.icon} size={18} color={palette.text} />
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   trailing: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
   action: {
     alignItems: 'center',
-    borderRadius: 999,
+    borderRadius: radius.pill,
     height: 40,
     justifyContent: 'center',
     width: 40,

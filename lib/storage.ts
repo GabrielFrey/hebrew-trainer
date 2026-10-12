@@ -20,6 +20,7 @@ export function emptyProgress(): Progress {
       remindersEnabled: false,
       reminderHour: 20,
       reminderAsked: false,
+      soundEnabled: true,
     },
     cards: {},
     sessions: [],

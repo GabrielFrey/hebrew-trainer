@@ -7,8 +7,9 @@ import { HebrewText } from '@/components/HebrewText';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { TranslationToggle } from '@/components/TranslationToggle';
-import { radius, spacing } from '@/constants/theme';
-import { exampleGloss, posLabel } from '@/lib/i18n';
+import { radius, spacing, unitBannerColors } from '@/constants/tokens';
+import { levels } from '@/lib/data';
+import { exampleGloss, levelTitle, posLabel } from '@/lib/i18n';
 import { hebrewFor, showTranscription, slangForLevel } from '@/lib/levels';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
@@ -64,8 +65,20 @@ export default function SlangScreen() {
           <EmptyState icon="search" title={t('slang.empty')} description={t('slang.search')} />
         ) : (
           <View style={styles.list}>
-            {filtered.map((item) => (
+            {filtered.map((item) => {
+              const levelIndex = ['elementary', 'basic', 'intermediate', 'advanced', 'expert'].indexOf(
+                item.level
+              );
+              const tagColor = unitBannerColors[levelIndex] ?? unitBannerColors[0];
+              const darkOnTag = tagColor === '#FFC800' || tagColor === '#FF9600' || tagColor === '#FF86D0';
+              const level = levels.find((entry) => entry.id === item.level);
+              return (
               <Surface key={item.id} style={styles.card}>
+                <View style={[styles.tag, { backgroundColor: tagColor }]}>
+                  <AppText variant="caption" style={{ color: darkOnTag ? '#1B3A14' : '#FFFFFF' }}>
+                    {level ? levelTitle(level, lang) : item.level}
+                  </AppText>
+                </View>
                 <HebrewText size="card" align="right">
                   {hebrewFor(item, settings)}
                 </HebrewText>
@@ -81,7 +94,8 @@ export default function SlangScreen() {
                 <AppText muted>{exampleGloss(item.example, translation)}</AppText>
                 <AudioButton audio={item.audio} compact />
               </Surface>
-            ))}
+              );
+            })}
           </View>
         )}
       </ScrollView>
@@ -92,10 +106,11 @@ export default function SlangScreen() {
 const styles = StyleSheet.create({
   content: { gap: spacing.lg, padding: spacing.lg, paddingBottom: spacing.xxl },
   list: { gap: spacing.md },
-  card: { gap: spacing.sm, borderRadius: radius.md },
+  card: { gap: spacing.sm, borderRadius: radius.lg },
+  tag: { alignSelf: 'flex-start', borderRadius: radius.pill, paddingHorizontal: spacing.md, paddingVertical: 4 },
   search: {
     borderRadius: radius.md,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 2,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm + 2,
   },

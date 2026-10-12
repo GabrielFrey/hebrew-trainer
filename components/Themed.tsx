@@ -3,17 +3,17 @@ import { StyleSheet, Text, View } from 'react-native';
 import type { StyleProp, TextProps, TextStyle, ViewProps, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { radius, spacing } from '@/constants/theme';
+import { radius, shadows, spacing, typography } from '@/constants/tokens';
 import { usePalette } from '@/lib/theme';
 
 type TextVariant = 'title' | 'heading' | 'body' | 'label' | 'caption';
 
 const variantStyles: Record<TextVariant, TextStyle> = {
-  title: { fontSize: 30, fontWeight: '700', lineHeight: 36 },
-  heading: { fontSize: 20, fontWeight: '600', lineHeight: 26 },
-  body: { fontSize: 16, lineHeight: 23 },
-  label: { fontSize: 14, fontWeight: '600', lineHeight: 20 },
-  caption: { fontSize: 13, lineHeight: 18 },
+  title: { ...typography.title, fontFamily: typography.fontFamily.extra },
+  heading: { ...typography.heading, fontFamily: typography.fontFamily.bold },
+  body: { ...typography.body, fontFamily: typography.fontFamily.semibold },
+  label: { ...typography.label, fontFamily: typography.fontFamily.extra },
+  caption: { ...typography.caption, fontFamily: typography.fontFamily.semibold },
 };
 
 export type AppTextProps = TextProps & {
@@ -39,6 +39,8 @@ export function AppText({
 
   return (
     <Text
+      allowFontScaling
+      maxFontSizeMultiplier={1.4}
       {...rest}
       style={[variantStyles[variant], { color: muted ? palette.textMuted : toneColor }, style]}
     />
@@ -74,6 +76,7 @@ export function Surface({ tone = 'surface', padded = true, style, ...rest }: Sur
       {...rest}
       style={[
         styles.surface,
+        shadows.card,
         {
           backgroundColor: tone === 'alt' ? palette.surfaceAlt : palette.surface,
           borderColor: palette.border,
@@ -94,8 +97,8 @@ const styles = StyleSheet.create({
   screen: { flex: 1 },
   screenInner: { flex: 1 },
   surface: {
-    borderRadius: radius.md,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: radius.lg,
+    borderWidth: 2,
   },
   divider: { height: StyleSheet.hairlineWidth, width: '100%' },
 });

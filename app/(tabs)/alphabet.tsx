@@ -6,7 +6,7 @@ import { Button } from '@/components/Button';
 import { HebrewText } from '@/components/HebrewText';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { AppText, Screen, Surface } from '@/components/Themed';
-import { radius, spacing } from '@/constants/theme';
+import { radius, spacing } from '@/constants/tokens';
 import { letters, vowels } from '@/lib/data';
 import { isLearned } from '@/lib/srs';
 import { letterName, vowelName, vowelSound } from '@/lib/i18n';
@@ -76,27 +76,25 @@ export default function AlphabetScreen() {
                   accessibilityLabel={t('alphabet.letterA11y', { name: letterName(letter, lang) })}
                   onPress={() => router.push(`/letter/${letter.id}`)}
                   style={({ pressed }) => [
-                    styles.cell,
-                    {
-                      backgroundColor: palette.surface,
-                      borderColor: accent,
-                      opacity: pressed ? 0.85 : 1,
-                    },
+                    styles.cellShadow,
+                    { backgroundColor: accent, opacity: pressed ? 0.9 : 1 },
                   ]}
                 >
-                  <HebrewText size={44} align="center" style={styles.cellGlyph}>
-                    {letter.char}
-                  </HebrewText>
-                  <AppText variant="caption" muted>
-                    {letterName(letter, lang)}
-                  </AppText>
-                  {letter.finalChar ? (
-                    <View style={[styles.finalTag, { backgroundColor: palette.surfaceAlt }]}>
-                      <AppText variant="caption" muted>
-                        {t('alphabet.finalTag', { char: letter.finalChar })}
-                      </AppText>
-                    </View>
-                  ) : null}
+                  <View style={[styles.cell, { backgroundColor: palette.surface, borderColor: accent }]}>
+                    <HebrewText size={44} align="center" style={styles.cellGlyph}>
+                      {letter.char}
+                    </HebrewText>
+                    <AppText variant="caption" muted>
+                      {letterName(letter, lang)}
+                    </AppText>
+                    {letter.finalChar ? (
+                      <View style={[styles.finalTag, { backgroundColor: palette.surfaceAlt }]}>
+                        <AppText variant="caption" muted>
+                          {t('alphabet.finalTag', { char: letter.finalChar })}
+                        </AppText>
+                      </View>
+                    ) : null}
+                  </View>
                 </Pressable>
               );
             })}
@@ -157,12 +155,16 @@ const styles = StyleSheet.create({
   modeButton: { flex: 1 },
   sectionTitle: { marginBottom: spacing.md },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
+  cellShadow: {
+    borderRadius: radius.md,
+    flexBasis: '30%',
+    flexGrow: 1,
+    paddingBottom: 4,
+  },
   cell: {
     alignItems: 'center',
     borderRadius: radius.md,
-    borderWidth: 1.5,
-    flexBasis: '30%',
-    flexGrow: 1,
+    borderWidth: 2,
     gap: 2,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.md,

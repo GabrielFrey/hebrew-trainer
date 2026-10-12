@@ -229,6 +229,8 @@ export type Settings = {
   /** Час локального напоминания, 0–23. */
   reminderHour: number;
   reminderAsked: boolean;
+  /** Короткие звуки «верно/неверно». По умолчанию включены. */
+  soundEnabled?: boolean;
 };
 
 export type SessionLog = {

@@ -20,15 +20,16 @@
 
 ### Иконка и splash
 
-`scripts/build-icons.mjs` рисует их шрифтом Noto Sans Hebrew, поэтому глиф — настоящий
-алеф, а не похожая на него картинка. Пересобрать: `node scripts/build-icons.mjs`.
+`scripts/build-icons.mjs` рисует зелёный квадрат, пятно-маскот и настоящий алеф шрифтом
+Noto Sans Hebrew. Пересобрать: `node scripts/build-icons.mjs`.
 
 - `assets/images/icon.png` — 1024×1024, `rgb24`, **без альфа-канала** (Apple отклоняет
   иконки с прозрачностью);
 - `assets/images/adaptive-icon.png` — 1024×1024 RGBA, передний план для Android;
 - `assets/images/splash-icon.png` — 1024×1024 RGBA, подключён через плагин
-  `expo-splash-screen` с `imageWidth: 220`;
-- `assets/images/favicon.png` — 64×64 для веба.
+  `expo-splash-screen` с `imageWidth: 220` и фоном `#EAF8DE` / тёмным `#102016`;
+- `assets/images/favicon.png` — 64×64 для веба;
+- `assets/images/icon-{180,167,152,120,80,76,40}.png` — размеры иконок App Store / iPhone.
 
 На всех картинках нет никакого текста, кроме одной большой буквы, так что требование
 «без текста на иврите мельче 32 pt» выполняется по построению.

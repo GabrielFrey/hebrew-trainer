@@ -1,24 +1,32 @@
-import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useMemo, useRef, useState } from 'react';
+import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
 import { AudioButton } from '@/components/AudioButton';
 import { Button, ChoiceRow } from '@/components/Button';
+import { ChatBubble } from '@/components/ChatBubble';
+import { Confetti } from '@/components/Confetti';
 import { EmptyState } from '@/components/EmptyState';
+import { FeedbackSheet } from '@/components/FeedbackSheet';
 import { HebrewText } from '@/components/HebrewText';
+import { Mascot } from '@/components/Mascot';
 import { ProgressBar } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { TranslationToggle } from '@/components/TranslationToggle';
-import { radius, spacing } from '@/constants/theme';
+import { radius, spacing } from '@/constants/tokens';
 import { getWord } from '@/lib/data';
 import { displayAnswer, displayOptions, exampleGloss, posLabel, wordGloss } from '@/lib/i18n';
 import { getDialogue, lessonKeyFromSlug } from '@/lib/lexicon';
 import { buildLesson } from '@/lib/lessons';
 import { hebrewFor, showTranscription } from '@/lib/levels';
+import { playSfx } from '@/lib/sfx';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
 import type { SessionCard, UiLanguage } from '@/lib/types';
 import { useI18n } from '@/lib/use-i18n';
+import { lessonXp } from '@/lib/xp';
 
 function promptFor(exercise: SessionCard['exercise'], t: (key: string) => string): string {
   switch (exercise) {
@@ -43,14 +51,23 @@ function promptFor(exercise: SessionCard['exercise'], t: (key: string) => string
   }
 }
 
+function buzz(ok: boolean) {
+  if (Platform.OS === 'web') return;
+  void Haptics.notificationAsync(
+    ok ? Haptics.NotificationFeedbackType.Success : Haptics.NotificationFeedbackType.Warning
+  );
+}
+
 function Options({
   card,
   picked,
+  checked,
   onPick,
   translation,
 }: {
   card: SessionCard;
   picked: string | null;
+  checked: boolean;
   onPick: (option: string) => void;
   translation: UiLanguage;
 }) {
@@ -62,22 +79,23 @@ function Options({
       {options.map((option, optionIndex) => {
         const [primary, secondary] = option.includes('|') ? option.split('|') : [option, null];
         const isAnswer = option === answer;
-        const state =
-          picked === null
-            ? 'idle'
-            : option === picked
-              ? isAnswer
-                ? 'correct'
-                : 'wrong'
-              : isAnswer
-                ? 'revealed'
-                : 'idle';
+        const state = !checked
+          ? picked === option
+            ? 'selected'
+            : 'idle'
+          : option === picked
+            ? isAnswer
+              ? 'correct'
+              : 'wrong'
+            : isAnswer
+              ? 'revealed'
+              : 'idle';
         return (
           <ChoiceRow
             key={`${option}-${optionIndex}`}
             testID={`lesson-option-${optionIndex}`}
             state={state}
-            disabled={picked !== null}
+            disabled={checked}
             onPress={() => onPick(option)}
           >
             <View>
@@ -104,49 +122,67 @@ export default function LessonScreen() {
   const palette = usePalette();
   const { progress, gradeCard, finishSession, completeLesson } = useStore();
   const { t, lang, translation } = useI18n();
+  const startedAt = useRef(Date.now());
+  const finishedRef = useRef(false);
   const queue = useMemo(
     () => buildLesson(progress, lessonKey),
-    // Язык перевода читается с карточки (bilingual*), очередь не пересобирается.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [lessonKey, progress.settings.level]
   );
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
   const [built, setBuilt] = useState<string[]>([]);
+  const [checked, setChecked] = useState(false);
+  const [lastOk, setLastOk] = useState(true);
   const [score, setScore] = useState({ correct: 0, total: 0 });
+  const [hearts, setHearts] = useState(5);
 
   const card = queue[index];
   const word = card?.kind === 'word' ? getWord(card.refId) : undefined;
   const dialogue = card?.dialogueId ? getDialogue(card.dialogueId) : undefined;
   const answer = card ? displayAnswer(card, translation) : '';
+  const soundsOn = progress.settings.soundEnabled !== false;
 
-  const finish = () => {
+  const commitFinish = () => {
+    if (finishedRef.current) return;
+    finishedRef.current = true;
     completeLesson(lessonKey);
     finishSession(score.total || queue.length, score.correct);
   };
 
-  const advance = (ok: boolean) => {
+  const goNext = () => {
+    setPicked(null);
+    setBuilt([]);
+    setChecked(false);
+    setIndex((value) => value + 1);
+  };
+
+  const applyResult = (ok: boolean) => {
     if (card && card.kind === 'word' && (card.exercise === 'word-he-ru' || card.exercise === 'listen-choice')) {
       gradeCard('word', card.refId, ok ? 'good' : 'again');
     }
     setScore((s) => ({ correct: s.correct + (ok ? 1 : 0), total: s.total + 1 }));
-    setPicked(null);
-    setBuilt([]);
-    setIndex((v) => v + 1);
+    if (!ok) setHearts((value) => Math.max(0, value - 1));
+    setLastOk(ok);
+    setChecked(true);
+    playSfx(ok ? 'correct' : 'wrong', soundsOn);
+    buzz(ok);
   };
 
-  const pickOption = (option: string) => {
-    if (!card) return;
-    setPicked(option);
-    const ok = option === answer;
-    setTimeout(() => advance(ok), 450);
+  const checkChoice = () => {
+    if (!card || picked === null || checked) return;
+    applyResult(picked === answer);
+  };
+
+  const checkBuild = () => {
+    if (!card || checked) return;
+    applyResult(built.join(' ') === card.answer);
   };
 
   if (queue.length === 0) {
     return (
       <Screen>
         <EmptyState
-          icon="book"
           title={t('notFound.title')}
           description={t('notFound.body')}
           actionLabel={t('common.back')}
@@ -157,18 +193,29 @@ export default function LessonScreen() {
   }
 
   if (!card) {
+    commitFinish();
+    const seconds = Math.max(1, Math.round((Date.now() - startedAt.current) / 1000));
+    const pct = score.total ? Math.round((score.correct / score.total) * 100) : 100;
+    const xp = lessonXp(score.correct, score.total || queue.length);
     return (
       <Screen>
         <View style={styles.done} testID="lesson-finished">
-          <EmptyState
-            icon="check-circle"
-            title={t('lesson.finished')}
-            description={t('lesson.finishedHint')}
-            actionLabel={t('common.done')}
-            onAction={() => {
-              finish();
-              router.replace('/');
-            }}
+          <Confetti play />
+          <Mascot pose="cheer" size={160} />
+          <AppText variant="title">{t('celebrate.title')}</AppText>
+          <AppText variant="heading" tone="accent">
+            {t('celebrate.xp', { count: xp })}
+          </AppText>
+          <AppText muted>{t('celebrate.accuracy', { pct })}</AppText>
+          <AppText muted>{t('celebrate.time', { seconds })}</AppText>
+          <AppText muted>
+            {t('celebrate.streak', { count: Math.max(1, progress.streak.current) })}
+          </AppText>
+          <Button
+            label={t('common.done')}
+            size="lg"
+            onPress={() => router.replace('/')}
+            style={styles.doneBtn}
           />
         </View>
       </Screen>
@@ -183,21 +230,34 @@ export default function LessonScreen() {
 
   return (
     <Screen edges={['left', 'right']}>
+      <View style={styles.top}>
+        <Pressable
+          accessibilityLabel={t('lesson.closeA11y')}
+          accessibilityRole="button"
+          onPress={() => router.back()}
+          hitSlop={10}
+          style={[styles.close, { backgroundColor: palette.surface }]}
+        >
+          <Feather name="x" size={20} color={palette.text} />
+        </Pressable>
+        <View style={styles.progress}>
+          <ProgressBar value={index} total={queue.length} />
+        </View>
+        <View style={styles.hearts}>
+          <Feather name="heart" size={16} color={palette.heart} />
+          <AppText variant="label" style={{ color: palette.heart }}>
+            {hearts}
+          </AppText>
+        </View>
+        <TranslationToggle />
+      </View>
+
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
         testID={`lesson-card-${card.exercise}`}
       >
-        <View style={styles.toolbar}>
-          <View style={styles.progress}>
-            <AppText variant="caption" muted>
-              {t('drill.of', { n: index + 1, total: queue.length })}
-            </AppText>
-            <ProgressBar value={index} total={queue.length} />
-          </View>
-          <TranslationToggle />
-        </View>
-        <AppText variant="caption" muted testID="lesson-prompt">
+        <AppText variant="heading" testID="lesson-prompt">
           {promptFor(card.exercise, t)}
         </AppText>
         <AppText testID="lesson-answer" nativeID="lesson-answer" style={styles.srOnly}>
@@ -219,7 +279,6 @@ export default function LessonScreen() {
             </AppText>
             <AppText>{exampleGloss(word.example, translation)}</AppText>
             <AudioButton audio={word.audio} />
-            <Button label={t('lesson.gotIt')} size="lg" onPress={() => advance(true)} />
           </Surface>
         ) : null}
 
@@ -237,6 +296,7 @@ export default function LessonScreen() {
 
         {card.exercise === 'listen-choice' && word ? (
           <Surface style={styles.card}>
+            <Mascot pose="think" size={88} />
             <AppText variant="heading">{t('common.listen')}</AppText>
             <AudioButton audio={word.audio} />
           </Surface>
@@ -244,33 +304,57 @@ export default function LessonScreen() {
 
         {card.exercise === 'build-phrase' ? (
           <View style={styles.block}>
-            {word ? (
-              <AppText muted>
-                {exampleGloss(word.example, translation)} · {t('lesson.tapChips')}
-              </AppText>
-            ) : (
-              <AppText muted>{t('lesson.tapChips')}</AppText>
-            )}
+            <AppText muted>{t('lesson.tapChips')}</AppText>
             <Surface style={styles.built} testID="lesson-built">
-              <HebrewText size="inline">{built.join(' ') || '…'}</HebrewText>
+              {built.length === 0 ? (
+                <HebrewText size="inline">…</HebrewText>
+              ) : (
+                <View style={styles.chips}>
+                  {built.map((chip, builtIndex) => (
+                    <Pressable
+                      key={`${chip}-built-${builtIndex}`}
+                      disabled={checked}
+                      onPress={() =>
+                        setBuilt((value) => value.filter((_, index) => index !== builtIndex))
+                      }
+                      style={[styles.chipShadow, { backgroundColor: palette.banner }]}
+                    >
+                      <View style={[styles.chip, { backgroundColor: palette.surface, borderColor: palette.banner }]}>
+                        <HebrewText size="inline">{chip}</HebrewText>
+                      </View>
+                    </Pressable>
+                  ))}
+                </View>
+              )}
             </Surface>
             <View style={styles.chips}>
-              {(card.chips ?? []).map((chip, chipIndex) => (
-                <Pressable
-                  key={`${chip}-${chipIndex}`}
-                  testID={`lesson-chip-${chipIndex}`}
-                  onPress={() => setBuilt((value) => [...value, chip])}
-                  style={[styles.chip, { borderColor: palette.border, backgroundColor: palette.surface }]}
-                >
-                  <AppText>{chip}</AppText>
-                </Pressable>
-              ))}
+              {(card.chips ?? []).map((chip, chipIndex) => {
+                const used = built.filter((item) => item === chip).length;
+                const total = (card.chips ?? []).filter((item) => item === chip).length;
+                const disabled = used >= total;
+                return (
+                  <Pressable
+                    key={`${chip}-${chipIndex}`}
+                    testID={`lesson-chip-${chipIndex}`}
+                    disabled={checked || disabled}
+                    onPress={() => setBuilt((value) => [...value, chip])}
+                    style={[styles.chipShadow, { backgroundColor: disabled ? palette.locked : palette.border }]}
+                  >
+                    <View
+                      style={[
+                        styles.chip,
+                        {
+                          borderColor: palette.border,
+                          backgroundColor: disabled ? palette.surfaceAlt : palette.surface,
+                        },
+                      ]}
+                    >
+                      <HebrewText size="inline">{chip}</HebrewText>
+                    </View>
+                  </Pressable>
+                );
+              })}
             </View>
-            <Button
-              label={t('lesson.check')}
-              size="lg"
-              onPress={() => advance(built.join(' ') === card.answer)}
-            />
             <Button label={t('session.retry')} variant="ghost" onPress={() => setBuilt([])} />
           </View>
         ) : null}
@@ -278,44 +362,79 @@ export default function LessonScreen() {
         {card.exercise === 'dialogue-reply' && dialogue ? (
           <View style={styles.block}>
             {dialogue.lines.map((line, lineIndex) => (
-              <Surface key={lineIndex} style={styles.card}>
-                <AppText variant="caption" muted>
-                  {line.speaker === 'a' ? 'A' : 'B'}
-                </AppText>
-                <HebrewText size="inline" align="right">
-                  {line.nikud}
-                </HebrewText>
-                <AppText>{translation === 'en' ? line.en : line.ru}</AppText>
-              </Surface>
+              <ChatBubble
+                key={lineIndex}
+                speaker={line.speaker}
+                hebrew={line.nikud}
+                gloss={translation === 'en' ? line.en : line.ru}
+              />
             ))}
           </View>
         ) : null}
 
         {card.exercise !== 'teach-word' && card.exercise !== 'build-phrase' ? (
-          <Options card={card} picked={picked} onPick={pickOption} translation={translation} />
+          <Options
+            card={card}
+            picked={picked}
+            checked={checked}
+            onPick={setPicked}
+            translation={translation}
+          />
         ) : null}
-
-        <Button label={t('common.exit')} variant="ghost" onPress={() => router.back()} />
       </ScrollView>
+
+      {checked ? (
+        <FeedbackSheet visible ok={lastOk} answer={answer} onContinue={goNext} />
+      ) : (
+        <View style={styles.footer}>
+          {card.exercise === 'teach-word' ? (
+            <Button label={t('lesson.gotIt')} size="lg" onPress={() => applyResult(true)} />
+          ) : (
+            <Button
+              label={t('lesson.check')}
+              size="lg"
+              disabled={card.exercise === 'build-phrase' ? built.length === 0 : picked === null}
+              onPress={card.exercise === 'build-phrase' ? checkBuild : checkChoice}
+            />
+          )}
+        </View>
+      )}
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
+  top: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.md,
+  },
+  close: {
+    alignItems: 'center',
+    borderRadius: radius.pill,
+    height: 40,
+    justifyContent: 'center',
+    width: 40,
+  },
+  progress: { flex: 1 },
+  hearts: { alignItems: 'center', flexDirection: 'row', gap: 4 },
   content: { gap: spacing.lg, padding: spacing.lg, paddingBottom: spacing.xxl },
-  toolbar: { alignItems: 'flex-start', flexDirection: 'row', gap: spacing.md },
-  progress: { flex: 1, gap: spacing.sm },
   card: { alignItems: 'center', gap: spacing.sm },
   block: { gap: spacing.md },
   options: { gap: spacing.md },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  chipShadow: { borderRadius: radius.md, paddingBottom: 3 },
   chip: {
-    borderRadius: radius.pill,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: radius.md,
+    borderWidth: 2,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
   },
-  built: { minHeight: 56, justifyContent: 'center' },
-  done: { flex: 1, justifyContent: 'center', padding: spacing.lg },
+  built: { minHeight: 64, justifyContent: 'center' },
+  footer: { padding: spacing.lg },
+  done: { alignItems: 'center', flex: 1, gap: spacing.sm, justifyContent: 'center', padding: spacing.lg },
+  doneBtn: { marginTop: spacing.lg, minWidth: 220 },
   srOnly: { height: 0, overflow: 'hidden', opacity: 0, position: 'absolute' },
 });

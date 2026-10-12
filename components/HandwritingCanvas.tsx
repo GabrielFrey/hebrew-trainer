@@ -109,18 +109,19 @@ export function HandwritingCanvas({
       onLayout={onLayout}
       style={[
         styles.canvas,
-        { backgroundColor: palette.surface, borderColor: palette.border },
+        { backgroundColor: palette.surface, borderColor: palette.accent },
       ]}
       {...responder.panHandlers}
     >
       {size > 0 ? (
         <Svg width={size} height={size} style={styles.svg} pointerEvents="none">
-          {/* Направляющая: середина поля, чтобы буква не уезжала вверх. */}
+          {/* Пунктирная базовая линия, как в прописях. */}
           <Path
-            d={`M0 ${size / 2} L${size} ${size / 2}`}
-            stroke={palette.border}
-            strokeWidth={1}
-            strokeDasharray="6 8"
+            d={`M12 ${size * 0.72} L${size - 12} ${size * 0.72}`}
+            stroke={palette.accent}
+            strokeWidth={2}
+            strokeDasharray="7 8"
+            opacity={0.45}
           />
           {paths.map((d, index) => (
             <Path
@@ -150,8 +151,8 @@ export function HandwritingCanvas({
 const styles = StyleSheet.create({
   canvas: {
     aspectRatio: 1,
-    borderRadius: radius.md,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: radius.lg,
+    borderWidth: 2,
     overflow: 'hidden',
     width: '100%',
   },

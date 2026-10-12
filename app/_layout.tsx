@@ -5,6 +5,7 @@ import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { useAppFonts } from '@/lib/fonts';
 import { syncReminder } from '@/lib/notifications';
 import { StoreProvider, useStore } from '@/lib/store';
 import { ThemeProvider, useTheme } from '@/lib/theme';
@@ -15,6 +16,14 @@ export const unstable_settings = {
 };
 
 export default function RootLayout() {
+  const fontsLoaded = useAppFonts();
+  if (!fontsLoaded) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#EAF8DE' }}>
+        <ActivityIndicator color="#58CC02" />
+      </View>
+    );
+  }
   return (
     <SafeAreaProvider>
       <StoreProvider>

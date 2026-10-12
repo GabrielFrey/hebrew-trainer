@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 
 import { Button } from '@/components/Button';
 import { HebrewText } from '@/components/HebrewText';
+import { Mascot } from '@/components/Mascot';
 import { ProgressBar } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
@@ -17,7 +18,7 @@ import { usePalette } from '@/lib/theme';
 import type { Goal, LevelId, MinutesPerDay, UiLanguage } from '@/lib/types';
 import { useI18n } from '@/lib/use-i18n';
 
-const STEPS = 4;
+const STEPS = 3;
 const MINUTES: MinutesPerDay[] = [5, 10, 20];
 const REMINDER_HOUR = 20;
 
@@ -63,11 +64,12 @@ export default function OnboardingScreen() {
     <Screen>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
+          <Mascot pose={step === 2 ? 'cheer' : 'wave'} size={120} />
           <HebrewText size="card" align="center">
             שָׁלוֹם
           </HebrewText>
-          <AppText variant="caption" muted style={styles.centered}>
-            шало́м
+          <AppText muted style={styles.centered}>
+            {t('mascot.hi')}
           </AppText>
         </View>
 
@@ -93,7 +95,10 @@ export default function OnboardingScreen() {
         ) : null}
 
         {step === 1 ? (
-          <Step title={t('onboarding.goalTitle')} description={t('onboarding.goalHint')}>
+          <Step
+            title={t('onboarding.comboTitle')}
+            description={t('onboarding.comboHint', { hour: REMINDER_HOUR })}
+          >
             <Option
               selected={goal === 'reading'}
               title={t('settings.goal.reading')}
@@ -106,14 +111,6 @@ export default function OnboardingScreen() {
               description={t('onboarding.goal.speakingHint')}
               onPress={() => setGoal('speaking')}
             />
-          </Step>
-        ) : null}
-
-        {step === 2 ? (
-          <Step
-            title={t('onboarding.minutesTitle')}
-            description={t('onboarding.minutesHint', { hour: REMINDER_HOUR })}
-          >
             {MINUTES.map((value) => (
               <Option
                 key={value}
@@ -126,7 +123,7 @@ export default function OnboardingScreen() {
           </Step>
         ) : null}
 
-        {step === 3 ? (
+        {step === 2 ? (
           <Step title={t('onboarding.translationTitle')} description={t('onboarding.translationHint')}>
             <Option
               selected={translationLanguage === 'ru'}

@@ -6,12 +6,15 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 
 import { AudioButton } from '@/components/AudioButton';
 import { Button, ChoiceRow } from '@/components/Button';
+import { Confetti } from '@/components/Confetti';
 import { EmptyState } from '@/components/EmptyState';
 import { HandwritingCanvas } from '@/components/HandwritingCanvas';
 import { HebrewText } from '@/components/HebrewText';
+import { Mascot } from '@/components/Mascot';
 import { ProgressBar } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
-import { spacing } from '@/constants/theme';
+import { spacing } from '@/constants/tokens';
+import { playSfx } from '@/lib/sfx';
 import { getLetter, getPassage, getPhrase, getWord } from '@/lib/data';
 import { getGlyph, gradeForVerdict, recognise } from '@/lib/handwriting';
 import type { Stroke } from '@/lib/handwriting';
@@ -30,7 +33,8 @@ import { usePalette } from '@/lib/theme';
 import type { Grade, SessionCard, Settings } from '@/lib/types';
 import { useI18n } from '@/lib/use-i18n';
 
-function tap(success: boolean) {
+function tap(success: boolean, soundsOn = true) {
+  playSfx(success ? 'correct' : 'wrong', soundsOn);
   if (Platform.OS === 'web') return;
   void Haptics.notificationAsync(
     success ? Haptics.NotificationFeedbackType.Success : Haptics.NotificationFeedbackType.Warning
@@ -103,9 +107,11 @@ export default function SessionScreen() {
         attempts: state.attempts + 1,
         wipe: state.wipe,
       }));
-      if (result.verdict !== 'unsure') tap(result.verdict === 'match');
+      if (result.verdict !== 'unsure') {
+        tap(result.verdict === 'match', progress.settings.soundEnabled !== false);
+      }
     },
-    []
+    [progress.settings.soundEnabled]
   );
 
   const closeSession = useCallback(() => {
@@ -139,6 +145,8 @@ export default function SessionScreen() {
     return (
       <Screen>
         <View style={styles.center}>
+          <Confetti play />
+          <Mascot pose="cheer" size={140} />
           <Surface style={styles.summary}>
             <HebrewText size="card" align="center">
               כָּל הַכָּבוֹד!
@@ -201,7 +209,7 @@ export default function SessionScreen() {
           onStrokes={(strokes) => checkHandwriting(current, strokes)}
           onPick={(value) => {
             setPicked(value);
-            tap(value === displayAnswer(current, translation));
+            tap(value === displayAnswer(current, translation), progress.settings.soundEnabled !== false);
           }}
         />
 

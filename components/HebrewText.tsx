@@ -1,7 +1,7 @@
-import { Platform, StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import type { StyleProp, TextStyle } from 'react-native';
 
-import { hebrewFontSizes } from '@/constants/theme';
+import { hebrewFontSizes, typography } from '@/constants/tokens';
 import { usePalette } from '@/lib/theme';
 
 export type HebrewTextProps = {
@@ -14,9 +14,7 @@ export type HebrewTextProps = {
 };
 
 /**
- * Hebrew is always laid out right-to-left and never smaller than 32pt.
- * `writingDirection` keeps punctuation on the correct side on iOS; the explicit
- * RLM-free approach relies on the platform bidi algorithm elsewhere.
+ * Иврит всегда RTL и не меньше 32 pt. Интерфейс при этом остаётся LTR.
  */
 export function HebrewText({
   children,
@@ -31,6 +29,8 @@ export function HebrewText({
 
   return (
     <Text
+      allowFontScaling
+      maxFontSizeMultiplier={1.35}
       numberOfLines={numberOfLines}
       style={[
         styles.base,
@@ -51,10 +51,7 @@ export function HebrewText({
 const styles = StyleSheet.create({
   base: {
     writingDirection: 'rtl',
+    fontFamily: typography.fontFamily.hebrew,
     fontWeight: '500',
-    ...Platform.select({
-      ios: { fontFamily: 'Arial Hebrew' },
-      default: {},
-    }),
   },
 });

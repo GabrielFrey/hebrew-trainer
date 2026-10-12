@@ -1,30 +1,28 @@
 import { StyleSheet, View } from 'react-native';
-import { Feather } from '@expo/vector-icons';
 
-import { spacing } from '@/constants/theme';
-import { AppText } from '@/components/Themed';
 import { Button } from '@/components/Button';
-import { usePalette } from '@/lib/theme';
+import { Mascot } from '@/components/Mascot';
+import type { MascotPose } from '@/components/Mascot';
+import { AppText } from '@/components/Themed';
+import { spacing } from '@/constants/tokens';
 
 export function EmptyState({
-  icon = 'inbox',
   title,
   description,
   actionLabel,
   onAction,
+  pose = 'think',
 }: {
-  icon?: keyof typeof Feather.glyphMap;
+  icon?: string;
   title: string;
   description?: string;
   actionLabel?: string;
   onAction?: () => void;
+  pose?: MascotPose;
 }) {
-  const palette = usePalette();
   return (
     <View style={styles.wrap}>
-      <View style={[styles.badge, { backgroundColor: palette.surfaceAlt }]}>
-        <Feather name={icon} size={26} color={palette.textMuted} />
-      </View>
+      <Mascot pose={pose} size={132} />
       <AppText variant="heading" style={styles.centered}>
         {title}
       </AppText>
@@ -47,14 +45,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.xxl,
   },
-  badge: {
-    alignItems: 'center',
-    borderRadius: 999,
-    height: 56,
-    justifyContent: 'center',
-    marginBottom: spacing.sm,
-    width: 56,
-  },
   centered: { textAlign: 'center' },
-  action: { marginTop: spacing.lg },
+  action: { marginTop: spacing.lg, minWidth: 200 },
 });

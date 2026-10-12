@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
-import { radius, spacing } from '@/constants/theme';
 import { AppText } from '@/components/Themed';
+import { radius, shadows, spacing } from '@/constants/tokens';
 import { usePalette } from '@/lib/theme';
 
 export function StatTile({
@@ -18,6 +18,7 @@ export function StatTile({
     <View
       style={[
         styles.tile,
+        shadows.card,
         { backgroundColor: palette.surface, borderColor: palette.border },
       ]}
     >
@@ -46,7 +47,11 @@ export function ProgressBar({
   const palette = usePalette();
   const ratio = total <= 0 ? 0 : Math.min(1, Math.max(0, value / total));
   return (
-    <View style={[styles.track, { backgroundColor: palette.surfaceAlt }]}>
+    <View
+      style={[styles.track, { backgroundColor: palette.surfaceAlt, borderColor: palette.border }]}
+      accessibilityRole="progressbar"
+      accessibilityValue={{ min: 0, max: total, now: value }}
+    >
       <View
         style={[
           styles.fill,
@@ -63,15 +68,16 @@ export function ProgressBar({
 const styles = StyleSheet.create({
   tile: {
     borderRadius: radius.md,
-    borderWidth: StyleSheet.hairlineWidth,
-    flexGrow: 1,
+    borderWidth: 2,
     flexBasis: 140,
+    flexGrow: 1,
     gap: 2,
     padding: spacing.lg,
   },
   track: {
     borderRadius: radius.pill,
-    height: 8,
+    borderWidth: 2,
+    height: 16,
     overflow: 'hidden',
     width: '100%',
   },

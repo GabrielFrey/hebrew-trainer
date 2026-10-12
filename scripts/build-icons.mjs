@@ -1,11 +1,5 @@
-// Собирает иконку, splash и favicon.
-//
-// Глиф рисуется шрифтом Noto Sans Hebrew, а не подбирается на глаз: так буква
-// точно остаётся настоящим алефом. Текста, кроме самой буквы, на картинках нет
-// вообще, поэтому требование «без текста на иврите мельче 32» выполняется по
-// построению.
-//
-// Запуск: node scripts/build-icons.mjs
+#!/usr/bin/env node
+/** Зелёный квадрат, алеф и пятно-маскот. App Store берёт 1024 без альфы. */
 import { execFileSync } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
@@ -13,53 +7,45 @@ import { join } from 'node:path';
 const ROOT = new URL('..', import.meta.url).pathname;
 const OUT = join(ROOT, 'assets/images');
 const FONT = '/usr/share/fonts/truetype/noto/NotoSansHebrew-Bold.ttf';
-
-const TEAL = '#0E4F63';
-const CREAM = '#F6F1E3';
-const GLYPH = 'א';
+const GREEN = '0x58CC02';
+const CREAM = '0xF7FFEF';
+const SAND = '0xE8A05A';
 
 mkdirSync(OUT, { recursive: true });
 
-function render({ file, size, background, fontSize, pixelFormat }) {
-  const args = [
-    '-y',
-    '-loglevel',
-    'error',
+function run(args) {
+  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...args], { stdio: ['ignore', 'ignore', 'inherit'] });
+}
+
+function square(file, size, pixelFormat, fontSize) {
+  run([
     '-f',
     'lavfi',
     '-i',
-    `color=${background}:s=${size}x${size}`,
-    '-vf',
-    `drawtext=fontfile=${FONT}:text='${GLYPH}':fontcolor=${CREAM}:fontsize=${fontSize}:x=(w-text_w)/2:y=(h-text_h)/2`,
+    `color=${GREEN}:s=${size}x${size}`,
+    '-f',
+    'lavfi',
+    '-i',
+    `color=${SAND}:s=${Math.round(size * 0.28)}x${Math.round(size * 0.28)}`,
+    '-filter_complex',
+    `[1:v]format=rgba,geq=lum='p(X,Y)':a='if(lt(pow((X-W/2)/W*2,2)+pow((Y-H/2)/H*2,2),1),255,0)'[blob];[0:v][blob]overlay=${Math.round(size * 0.12)}:${Math.round(size * 0.55)}:format=auto,drawtext=fontfile=${FONT}:text='א':fontcolor=${CREAM}:fontsize=${fontSize}:x=(w-text_w)/2:y=(h-text_h)/2-8`,
     '-frames:v',
     '1',
     '-pix_fmt',
     pixelFormat,
     join(OUT, file),
-  ];
-  execFileSync('ffmpeg', args, { stdio: ['ignore', 'ignore', 'inherit'] });
+  ]);
   process.stderr.write(`✓ ${file} ${size}x${size}\n`);
 }
 
-// Иконка App Store: без альфа-канала, глиф занимает ~60% стороны.
-render({ file: 'icon.png', size: 1024, background: TEAL, fontSize: 620, pixelFormat: 'rgb24' });
-
-// Android: передний план с запасом под обрезку по кругу.
-render({
-  file: 'adaptive-icon.png',
-  size: 1024,
-  background: `${TEAL}@0.0`,
-  fontSize: 440,
-  pixelFormat: 'rgba',
-});
-
-// Splash: много воздуха вокруг буквы.
-render({
-  file: 'splash-icon.png',
-  size: 1024,
-  background: `${TEAL}@0.0`,
-  fontSize: 380,
-  pixelFormat: 'rgba',
-});
-
-render({ file: 'favicon.png', size: 64, background: TEAL, fontSize: 40, pixelFormat: 'rgb24' });
+square('icon.png', 1024, 'rgb24', 560);
+square('adaptive-icon.png', 1024, 'rgba', 420);
+square('splash-icon.png', 1024, 'rgba', 380);
+square('favicon.png', 64, 'rgb24', 36);
+square('icon-180.png', 180, 'rgb24', 100);
+square('icon-167.png', 167, 'rgb24', 92);
+square('icon-152.png', 152, 'rgb24', 84);
+square('icon-120.png', 120, 'rgb24', 68);
+square('icon-80.png', 80, 'rgb24', 46);
+square('icon-76.png', 76, 'rgb24', 42);
+square('icon-40.png', 40, 'rgb24', 22);

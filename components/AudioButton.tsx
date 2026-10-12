@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
-import { radius, spacing } from '@/constants/theme';
+import { radius, spacing } from '@/constants/tokens';
 import { AppText } from '@/components/Themed';
 import { hasRecording, playRecording } from '@/lib/audio';
 import { usePalette } from '@/lib/theme';
@@ -33,7 +33,7 @@ export function AudioButton({
         style={[
           styles.base,
           compact ? styles.compact : styles.full,
-          { backgroundColor: 'transparent', borderColor: palette.border },
+          { backgroundColor: 'transparent', borderColor: palette.border, borderWidth: 2 },
         ]}
       >
         <Feather name="mic-off" size={compact ? 15 : 17} color={palette.textMuted} />
@@ -56,15 +56,17 @@ export function AudioButton({
         styles.base,
         compact ? styles.compact : styles.full,
         {
-          backgroundColor: palette.surfaceAlt,
-          borderColor: palette.border,
-          opacity: pressed ? 0.8 : 1,
+          backgroundColor: palette.accent,
+          borderColor: palette.accentShadow,
+          borderWidth: 2,
+          opacity: pressed ? 0.88 : 1,
+          transform: [{ translateY: pressed ? 2 : 0 }],
         },
       ]}
     >
-      <Feather name="volume-2" size={compact ? 16 : 18} color={palette.accent} />
+      <Feather name="volume-2" size={compact ? 16 : 18} color={palette.accentText} />
       {compact ? null : (
-        <AppText variant="label" tone="accent">
+        <AppText variant="label" style={{ color: palette.accentText }}>
           {listenLabel}
         </AppText>
       )}

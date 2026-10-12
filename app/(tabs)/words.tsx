@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { ProgressBar } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
-import { radius, spacing } from '@/constants/theme';
+import { radius, spacing, unitBannerColors } from '@/constants/tokens';
 import { getCatalog, lessonPath, themeById } from '@/lib/lexicon';
 import { isLessonUnlocked, lessonProgress } from '@/lib/lessons';
 import { themeTitle } from '@/lib/i18n';
@@ -46,7 +46,9 @@ export default function LessonsScreen() {
                 <Surface
                   style={[
                     styles.card,
-                    { borderColor: open ? palette.border : palette.surfaceAlt },
+                    {
+                      borderColor: open ? unitBannerColors[unit.order % unitBannerColors.length] : palette.locked,
+                    },
                   ]}
                 >
                   <View style={styles.row}>

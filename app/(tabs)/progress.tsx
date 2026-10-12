@@ -8,10 +8,11 @@ import { HebrewText } from '@/components/HebrewText';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { ProgressBar, StatTile } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
-import { radius, spacing } from '@/constants/theme';
+import { radius, spacing, unitBannerColors } from '@/constants/tokens';
+import { totalXp } from '@/lib/xp';
 import { dayKey, endOfToday } from '@/lib/dates';
-import { getLetter, getPhrase, getWord, letters, phrases, words } from '@/lib/data';
-import { letterName, phraseGloss, pluralUnits, wordGloss } from '@/lib/i18n';
+import { getLetter, getPhrase, getWord, letters, levels, phrases, words } from '@/lib/data';
+import { letterName, levelTitle, phraseGloss, pluralUnits, wordGloss } from '@/lib/i18n';
 import { accuracy, isLearned } from '@/lib/srs';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
@@ -111,6 +112,9 @@ export default function ProgressScreen() {
         />
 
         <View style={styles.block}>
+          <AppText variant="heading" style={styles.sectionTitle}>
+            {t('hud.xp', { count: totalXp(progress) })}
+          </AppText>
           <View style={styles.tiles}>
             <StatTile value={`${learnedLetters}/${letters.length}`} label={t('progress.letters')} />
             <StatTile value={`${learnedWords}/${words.length}`} label={t('progress.words')} />
@@ -171,7 +175,7 @@ export default function ProgressScreen() {
 
         <View style={styles.block}>
           <AppText variant="heading" style={styles.sectionTitle}>
-            {t('progress.last7')}
+            {t('progress.xpChart')}
           </AppText>
           <Surface style={styles.chart}>
             <View style={styles.bars}>
@@ -198,6 +202,61 @@ export default function ProgressScreen() {
               {t('progress.chartHint')}
             </AppText>
           </Surface>
+        </View>
+
+        <View style={styles.block}>
+          <AppText variant="heading" style={styles.sectionTitle}>
+            {t('progress.calendar')}
+          </AppText>
+          <Surface style={styles.calendar}>
+            {Array.from({ length: 14 }, (_, offset) => {
+              const day = dayKey(Date.now() - (13 - offset) * 24 * 60 * 60 * 1000);
+              const active = progress.sessions.some((session) => session.day === day);
+              return (
+                <View key={day} style={styles.calCell}>
+                  <AppText variant="caption" muted>
+                    {day.slice(8)}
+                  </AppText>
+                  <View
+                    style={[
+                      styles.calDot,
+                      { backgroundColor: active ? palette.warning : palette.surfaceAlt },
+                    ]}
+                  />
+                </View>
+              );
+            })}
+          </Surface>
+        </View>
+
+        <View style={styles.block}>
+          <AppText variant="heading" style={styles.sectionTitle}>
+            {t('progress.rings')}
+          </AppText>
+          <View style={styles.rings}>
+            {levels.map((level) => {
+              const learned = wordCards.filter(
+                (card) => isLearned(card) && words.some((word) => word.id === card.refId && word.level === level.id)
+              ).length;
+              const total = Math.max(1, words.filter((word) => word.level === level.id).length);
+              const pct = Math.round((learned / total) * 100);
+              return (
+                <View key={level.id} style={styles.ringWrap}>
+                  <View
+                    style={[
+                      styles.ring,
+                      { borderColor: unitBannerColors[(level.order - 1) % unitBannerColors.length] },
+                    ]}
+                  >
+                    <AppText variant="label">{pct}%</AppText>
+                  </View>
+                  <AppText variant="caption" muted style={styles.ringLabel}>
+                    {levelTitle(level, lang)}
+                  </AppText>
+                </View>
+              );
+            })}
+          </View>
         </View>
 
         {weakest.length > 0 ? (
@@ -257,4 +316,18 @@ const styles = StyleSheet.create({
   bar: { borderRadius: radius.sm, width: '100%' },
   weakList: { gap: spacing.lg },
   weakRow: { alignItems: 'center', flexDirection: 'row', gap: spacing.md },
+  calendar: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  calCell: { alignItems: 'center', gap: 4, width: 36 },
+  calDot: { borderRadius: radius.pill, height: 18, width: 18 },
+  rings: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
+  ringWrap: { alignItems: 'center', gap: spacing.xs, width: 88 },
+  ringLabel: { textAlign: 'center' },
+  ring: {
+    alignItems: 'center',
+    borderRadius: 36,
+    borderWidth: 6,
+    height: 72,
+    justifyContent: 'center',
+    width: 72,
+  },
 });
