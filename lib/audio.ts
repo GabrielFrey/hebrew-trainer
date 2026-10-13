@@ -3,6 +3,7 @@ import type { AudioPlayer } from 'expo-audio';
 
 import { audioAssets } from '@/lib/audio-assets';
 import { ttsAssets } from '@/lib/tts-assets';
+import type { ExerciseKind } from '@/lib/types';
 
 /**
  * Проигрывает заранее готовый файл: сначала запись носителя, иначе кэш TTS.
@@ -20,6 +21,10 @@ let audioModeReady = false;
 
 export function hasRecording(path: string | null | undefined): boolean {
   return typeof path === 'string' && bundledAsset(path) !== undefined;
+}
+
+export function exerciseNeedsAudio(kind: ExerciseKind): boolean {
+  return kind === 'listen-choice';
 }
 
 export function recordingCount(): number {

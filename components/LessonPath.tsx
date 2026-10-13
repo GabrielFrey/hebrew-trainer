@@ -12,8 +12,13 @@ import { useEffect } from 'react';
 import { AppText } from '@/components/Themed';
 import { radius, spacing, unitBannerColors } from '@/constants/tokens';
 import { themeTitle } from '@/lib/i18n';
-import { isLessonUnlocked, lessonProgress } from '@/lib/lessons';
 import { getCatalog, lessonPath, themeById } from '@/lib/lexicon';
+import {
+  displayLessonProgress,
+  displayUnitUnlocked,
+  nextDisplayLesson,
+  reshapeUnits,
+} from '@/lib/units';
 import { useReduceMotion } from '@/lib/motion';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
@@ -28,20 +33,22 @@ export function LessonPath() {
   const { t, lang } = useI18n();
   const palette = usePalette();
   const router = useRouter();
-  const units = getCatalog().units.filter((unit) => unit.level === progress.settings.level);
+  const units = reshapeUnits(
+    getCatalog().units.filter((unit) => unit.level === progress.settings.level)
+  );
 
   return (
     <View style={styles.wrap}>
       {units.map((unit, index) => {
         const theme = themeById(unit.theme);
-        const done = lessonProgress(progress, unit);
-        const open = isLessonUnlocked(progress, unit, 0) || done > 0;
+        const done = displayLessonProgress(progress, unit);
+        const open = displayUnitUnlocked(progress, units, unit) || done > 0;
         const complete = done >= unit.lessonCount;
         const current = open && !complete;
         const state: NodeState = complete ? 'done' : current ? 'current' : 'locked';
         const side = index % 2 === 0 ? 'left' : 'right';
         const banner = unitBannerColors[index % unitBannerColors.length];
-        const next = Math.min(done, Math.max(0, unit.lessonCount - 1));
+        const next = nextDisplayLesson(progress, unit);
 
         return (
           <View key={unit.id} style={styles.block}>
@@ -59,8 +66,8 @@ export function LessonPath() {
                 label={theme?.emoji ?? '★'}
                 a11y={t(`path.${state}`, { title: theme ? themeTitle(theme, lang) : unit.theme })}
                 onPress={() => {
-                  if (state === 'locked') return;
-                  router.push(lessonPath(unit.id, next));
+                  if (state === 'locked' || !next) return;
+                  router.push(lessonPath(next.sourceId, next.index));
                 }}
               />
               {index < units.length - 1 ? (

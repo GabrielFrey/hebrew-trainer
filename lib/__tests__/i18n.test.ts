@@ -4,6 +4,7 @@ import {
   phraseGloss,
   resolveLanguage,
   resolveTranslation,
+  shortGloss,
   systemLanguage,
   translate,
   wordGloss,
@@ -41,8 +42,8 @@ describe('язык интерфейса', () => {
   });
 
   it('переводит интерфейс', () => {
-    expect(translate('ru', 'tabs.today')).toBe('Сегодня');
-    expect(translate('en', 'tabs.today')).toBe('Today');
+    expect(translate('ru', 'tabs.today')).toBe('Учить');
+    expect(translate('en', 'tabs.today')).toBe('Learn');
     expect(translate('en', 'common.recordMissing')).toBe('no recording');
   });
 
@@ -70,9 +71,9 @@ describe('язык интерфейса', () => {
     expect(wordCard).toBeDefined();
     const word = words.find((item) => item.id === wordCard?.refId);
     expect(word).toBeDefined();
-    expect(wordCard?.answer).toBe(word?.en);
-    expect(wordCard?.options).toContain(word?.en);
-    expect(wordCard?.options).not.toContain(word?.ru);
+    expect(wordCard?.answer).toBe(shortGloss(word?.en ?? ''));
+    expect(wordCard?.options).toContain(shortGloss(word?.en ?? ''));
+    expect(wordCard?.options).not.toContain(shortGloss(word?.ru ?? ''));
   });
 
   it('не ломает лимит пяти новых слов при смене языка', () => {
@@ -117,10 +118,10 @@ describe('язык интерфейса', () => {
     const wordCard = queue.find((card) => card.exercise === 'word-he-ru');
     expect(wordCard).toBeDefined();
     const word = words.find((item) => item.id === wordCard?.refId);
-    expect(wordCard?.answer).toBe(word?.ru);
-    expect(wordCard?.options).toContain(word?.ru);
-    expect(wordCard?.options).not.toContain(word?.en);
-    expect(displayAnswer(wordCard as NonNullable<typeof wordCard>, 'en')).toBe(word?.en);
+    expect(wordCard?.answer).toBe(shortGloss(word?.ru ?? ''));
+    expect(wordCard?.options).toContain(shortGloss(word?.ru ?? ''));
+    expect(wordCard?.options).not.toContain(shortGloss(word?.en ?? ''));
+    expect(displayAnswer(wordCard as NonNullable<typeof wordCard>, 'en')).toBe(shortGloss(word?.en ?? ''));
   });
 
   it('урок мгновенно меняет язык вариантов без пересборки очереди', () => {

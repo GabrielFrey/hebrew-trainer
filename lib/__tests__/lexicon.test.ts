@@ -1,8 +1,10 @@
+import { hasRecording } from '@/lib/audio';
 import { allWords } from '@/lib/data';
 import { getCatalog, lessonKeyFromSlug, lessonPath, loadedSlang, parseLessonId, unitsForLevel } from '@/lib/lexicon';
-import { buildLesson, dailyLessonGoal, isLessonUnlocked, nextLessonId } from '@/lib/lessons';
+import { buildLesson, dailyLessonGoal, exerciseNeedsAudio, isLessonUnlocked, nextLessonId } from '@/lib/lessons';
 import { MAX_NEW_WORDS_PER_SESSION } from '@/lib/session';
 import { emptyProgress } from '@/lib/storage';
+import { reshapeUnits } from '@/lib/units';
 
 const NIKUD = /[\u0591-\u05C7]/;
 
@@ -80,7 +82,17 @@ describe('лексикон Mondly', () => {
     listenCards.forEach((card) => {
       const word = allWords().find((item) => item.id === card.refId);
       expect(word).toBeDefined();
+      expect(exerciseNeedsAudio(card.exercise)).toBe(true);
+      expect(hasRecording(word?.audio)).toBe(true);
     });
+    const practice = queue.filter((card) => card.exercise !== 'teach-word');
+    for (let i = 1; i < practice.length; i += 1) {
+      const run = [practice[i - 1]?.refId, practice[i]?.refId, practice[i + 1]?.refId, practice[i + 2]?.refId];
+      if (run.every((id) => id && id === practice[i]?.refId)) {
+        throw new Error(`одно слово ${practice[i]?.refId} четыре раза подряд`);
+      }
+    }
+    expect(newWordIds.size).toBeGreaterThanOrEqual(3);
     expect(queue.some((card) => card.exercise === 'type-word')).toBe(true);
     expect(queue.some((card) => card.exercise === 'gender-agree')).toBe(true);
     expect(queue.some((card) => card.exercise === 'dialogue-reply')).toBe(true);
@@ -109,8 +121,23 @@ describe('лексикон Mondly', () => {
     expect(parseLessonId('elementary-greetings:0')).toEqual({ unitId: 'elementary-greetings', index: 0 });
     expect(lessonKeyFromSlug(['elementary-greetings', '0'])).toBe('elementary-greetings:0');
     expect(String(lessonPath('elementary-greetings', 0))).toBe('/lesson/elementary-greetings/0');
-    expect(dailyLessonGoal(5)).toBe(1);
-    expect(dailyLessonGoal(10)).toBe(2);
-    expect(dailyLessonGoal(20)).toBe(3);
+    expect(dailyLessonGoal(5)).toBe(5);
+    expect(dailyLessonGoal(10)).toBe(10);
+    expect(dailyLessonGoal(20)).toBe(20);
+  });
+
+  it('режет крупные темы на 5–8 уроков и склеивает мелкие', () => {
+    const units = reshapeUnits(getCatalog().units);
+    expect(units.length).toBeGreaterThan(20);
+    units.forEach((unit) => {
+      expect(unit.lessonCount).toBeGreaterThanOrEqual(1);
+      expect(unit.lessonCount).toBeLessThanOrEqual(8);
+    });
+    const oversized = getCatalog().units.filter((unit) => unit.lessonCount > 8);
+    expect(oversized.length).toBeGreaterThan(0);
+    expect(units.every((unit) => unit.lessonCount <= 8)).toBe(true);
+    const tinyLeft = units.filter((unit) => unit.lessonCount < 5).length;
+    const originalTiny = getCatalog().units.filter((unit) => unit.lessonCount < 5).length;
+    expect(tinyLeft).toBeLessThan(originalTiny);
   });
 });

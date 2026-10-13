@@ -24,7 +24,7 @@ export function emptyProgress(): Progress {
     },
     cards: {},
     sessions: [],
-    streak: { current: 0, longest: 0, lastDay: null },
+    streak: { current: 0, longest: 0, lastDay: null, freezes: 1 },
     completedLessons: [],
   };
 }

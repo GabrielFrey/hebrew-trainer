@@ -186,5 +186,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md + 4,
   },
-  choiceInner: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+  choiceInner: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
 });

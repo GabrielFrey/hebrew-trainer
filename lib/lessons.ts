@@ -1,4 +1,4 @@
-import { hasRecording } from '@/lib/audio';
+import { exerciseNeedsAudio, hasRecording } from '@/lib/audio';
 import {
   getCatalog,
   getDialogue,
@@ -8,7 +8,7 @@ import {
   parseLessonId,
   wordsForTheme,
 } from '@/lib/lexicon';
-import { pickBilingual, resolveTranslation } from '@/lib/i18n';
+import { pickBilingual, resolveTranslation, shortGloss } from '@/lib/i18n';
 import { clozeFromExample, formDistractors, pickGenderItem } from '@/lib/recall';
 import { MAX_NEW_WORDS_PER_SESSION } from '@/lib/session';
 import { allVerbs, lexiconWordForVerb, pickFormPrompt } from '@/lib/verbs';
@@ -50,7 +50,7 @@ function seedFromKey(key: string): number {
 }
 
 function glossOf(word: Word): BilingualText {
-  return { ru: word.ru, en: word.en };
+  return { ru: shortGloss(word.ru), en: shortGloss(word.en) };
 }
 
 function resolveList(items: BilingualText[], lang: UiLanguage): string[] {
@@ -58,7 +58,8 @@ function resolveList(items: BilingualText[], lang: UiLanguage): string[] {
 }
 
 export function getUnit(unitId: string): Unit | undefined {
-  return getCatalog().units.find((unit) => unit.id === unitId);
+  const id = unitId.split('~')[0]?.split('+')[0] ?? unitId;
+  return getCatalog().units.find((unit) => unit.id === unitId || unit.id === id);
 }
 
 export function wordsInLesson(unit: Unit, index: number): Word[] {
@@ -67,25 +68,66 @@ export function wordsInLesson(unit: Unit, index: number): Word[] {
   return pool.slice(start, start + WORDS_PER_LESSON);
 }
 
-function distractorWords(word: Word, pool: Word[], count: number, seed: number): Word[] {
+function samePos(a: string, b: string): boolean {
+  return a.trim().toLowerCase() === b.trim().toLowerCase();
+}
+
+function distractorWords(
+  word: Word,
+  pool: Word[],
+  count: number,
+  seed: number,
+  used: Set<string>
+): Word[] {
   const unique: Word[] = [];
-  const ru = new Set([word.ru]);
-  const en = new Set([word.en]);
-  for (const item of shuffle(
-    pool.filter((entry) => entry.id !== word.id),
-    seed
-  )) {
-    if (ru.has(item.ru) || en.has(item.en)) continue;
-    ru.add(item.ru);
-    en.add(item.en);
+  const ru = new Set([shortGloss(word.ru)]);
+  const en = new Set([shortGloss(word.en)]);
+  const ranked = [
+    ...shuffle(
+      pool.filter((item) => item.id !== word.id && item.theme === word.theme && samePos(item.pos, word.pos)),
+      seed
+    ),
+    ...shuffle(
+      pool.filter((item) => item.id !== word.id && item.theme === word.theme),
+      seed + 1
+    ),
+    ...shuffle(
+      pool.filter((item) => item.id !== word.id && samePos(item.pos, word.pos)),
+      seed + 2
+    ),
+    ...shuffle(
+      pool.filter((item) => item.id !== word.id),
+      seed + 3
+    ),
+  ];
+  for (const item of ranked) {
+    if (used.has(item.id)) continue;
+    const ruG = shortGloss(item.ru);
+    const enG = shortGloss(item.en);
+    if (ru.has(ruG) || en.has(enG)) continue;
+    ru.add(ruG);
+    en.add(enG);
+    used.add(item.id);
     unique.push(item);
     if (unique.length >= count) break;
   }
   return unique;
 }
 
-function pictureDistractors(word: Word, pool: Word[], seed: number): Word[] {
-  const unique = pool.filter((item) => item.id !== word.id && item.emoji && item.emoji !== word.emoji);
+function canAskPicture(word: Word): boolean {
+  if (!word.emoji || word.emoji === '⭐') return false;
+  const pos = word.pos.trim().toLowerCase();
+  return pos === 'noun' || pos === 'существительное';
+}
+
+function pictureDistractors(word: Word, pool: Word[], seed: number, used: Set<string>): Word[] {
+  const unique = pool.filter(
+    (item) =>
+      item.id !== word.id &&
+      canAskPicture(item) &&
+      item.emoji !== word.emoji &&
+      !used.has(`pic:${item.emoji}`)
+  );
   return shuffle(unique, seed).slice(0, 3);
 }
 
@@ -114,9 +156,29 @@ function withResolved(
   };
 }
 
+function interleave<T>(groups: T[][]): T[] {
+  const out: T[] = [];
+  let i = 0;
+  let more = true;
+  while (more) {
+    more = false;
+    for (const group of groups) {
+      const item = group[i];
+      if (item !== undefined) {
+        out.push(item);
+        more = true;
+      }
+    }
+    i += 1;
+  }
+  return out;
+}
+
+export { exerciseNeedsAudio };
+
 /**
- * Короткий урок в стиле Mondly: показ слова, выбор перевода, картинка,
- * аудирование, сборка фразы, иногда диалог. Новых слов не больше пяти.
+ * Короткий урок: 3–5 разных слов, показ, затем упражнения вперемешку.
+ * Аудирование только если файл есть. Новых слов не больше пяти.
  */
 export function buildLesson(progress: Progress, lessonKey: string, now = Date.now()): SessionCard[] {
   const parsed = parseLessonId(lessonKey);
@@ -128,34 +190,34 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
   if (items.length === 0) return [];
   const pool = loadedWords().filter((word) => word.level === unit.level);
   const seedBase = seedFromKey(lessonKey) + parsed.index * 17 + Math.floor(now / 86_400_000);
-  const cards: SessionCard[] = [];
+  const usedIds = new Set<string>();
+  const teach: SessionCard[] = [];
+  const practice: SessionCard[][] = items.map(() => []);
 
   items.forEach((word, index) => {
     const seed = seedBase + index * 31;
     const isNew = !progress.cards[`word:${word.id}`];
     const gloss = glossOf(word);
-    const optionTexts = shuffle([gloss, ...distractorWords(word, pool, 3, seed).map(glossOf)], seed + 5);
-    const pics = [word, ...pictureDistractors(word, pool, seed + 9)];
-    const picTexts = shuffle(
-      pics.map((item) => ({ ru: `${item.emoji}|${item.ru}`, en: `${item.emoji}|${item.en}` })),
-      seed + 13
-    );
-    const built = chipsFor(word, pool, seed + 11);
-    const choice = withResolved(optionTexts, gloss, lang);
-    const phraseTokens = built.answer.split(/\s+/).filter(Boolean);
+    const group = practice[index] ?? [];
 
-    cards.push({
+    teach.push({
       cardId: `word:${word.id}:teach`,
       kind: 'word',
       refId: word.id,
       exercise: 'teach-word',
       isNew,
       options: [],
-      answer: choice.answer,
+      answer: pickBilingual(gloss, lang),
       bilingualAnswer: gloss,
       emoji: word.emoji,
     });
-    cards.push({
+
+    const optionTexts = shuffle(
+      [gloss, ...distractorWords(word, pool, 3, seed, usedIds).map(glossOf)],
+      seed + 5
+    );
+    const choice = withResolved(optionTexts, gloss, lang);
+    group.push({
       cardId: `word:${word.id}`,
       kind: 'word',
       refId: word.id,
@@ -163,28 +225,41 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
       isNew,
       ...choice,
     });
-    if (word.emoji) {
-      cards.push({
+
+    if (canAskPicture(word)) {
+      const pics = [word, ...pictureDistractors(word, pool, seed + 9, usedIds)];
+      pics.forEach((item) => usedIds.add(`pic:${item.emoji}`));
+      const picTexts = shuffle(
+        pics.map((item) => ({ ru: shortGloss(item.ru), en: shortGloss(item.en) })),
+        seed + 13
+      );
+      group.push({
         cardId: `word:${word.id}:pic`,
         kind: 'word',
         refId: word.id,
         exercise: 'choice-picture',
         isNew,
-        ...withResolved(picTexts, { ru: `${word.emoji}|${word.ru}`, en: `${word.emoji}|${word.en}` }, lang),
+        ...withResolved(picTexts, gloss, lang),
         emoji: word.emoji,
       });
     }
-    if (hasRecording(word.audio)) {
-      cards.push({
+
+    if (exerciseNeedsAudio('listen-choice') && hasRecording(word.audio)) {
+      const listenOpts = shuffle(
+        [gloss, ...distractorWords(word, pool, 3, seed + 17, usedIds).map(glossOf)],
+        seed + 19
+      );
+      group.push({
         cardId: `word:${word.id}:listen`,
         kind: 'word',
         refId: word.id,
         exercise: 'listen-choice',
         isNew,
-        ...choice,
+        ...withResolved(listenOpts, gloss, lang),
       });
     }
-    cards.push({
+
+    group.push({
       cardId: `word:${word.id}:type`,
       kind: 'word',
       refId: word.id,
@@ -194,9 +269,10 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
       answer: word.nikud,
       bilingualAnswer: gloss,
     });
+
     const cloze = clozeFromExample(word);
     if (cloze) {
-      cards.push({
+      group.push({
         cardId: `word:${word.id}:cloze`,
         kind: 'word',
         refId: word.id,
@@ -208,6 +284,7 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
         bilingualAnswer: gloss,
       });
     }
+
     const verb = allVerbs().find((item) => {
       const linked = lexiconWordForVerb(item);
       if (linked?.id === word.id) return true;
@@ -215,16 +292,16 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
       return stripNikud(word.hebrew) === inf || stripNikud(word.nikud) === inf;
     });
     if (verb) {
-      const prompt = pickFormPrompt(verb, seed + 19);
+      const prompt = pickFormPrompt(verb, seed + 23);
       if (prompt) {
-        const distractors = formDistractors(verb, prompt.answer, seed + 23);
-        cards.push({
+        const distractors = formDistractors(verb, prompt.answer, seed + 29);
+        group.push({
           cardId: `word:${word.id}:form`,
           kind: 'word',
           refId: word.id,
           exercise: 'form-verb',
           isNew,
-          options: shuffle([prompt.answer, ...distractors], seed + 29),
+          options: shuffle([prompt.answer, ...distractors], seed + 31),
           answer: prompt.answer,
           verbId: verb.id,
           formTense: prompt.tense,
@@ -233,8 +310,11 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
         });
       }
     }
-    if (phraseTokens.length >= 2 && built.chips.length >= 2) {
-      cards.push({
+
+    const built = chipsFor(word, pool, seed + 11);
+    const phraseTokens = built.answer.split(/\s+/).filter(Boolean);
+    if (phraseTokens.length >= 2 && built.chips.length >= 2 && word.example?.ru) {
+      group.push({
         cardId: `word:${word.id}:build`,
         kind: 'word',
         refId: word.id,
@@ -244,9 +324,12 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
         answer: built.answer,
         chips: built.chips,
         promptHe: word.example.nikud,
+        bilingualAnswer: { ru: word.example.ru, en: word.example.en },
       });
     }
   });
+
+  const cards = [...teach, ...interleave(practice)];
 
   const genderSeed = seedBase + 41;
   const genderVerb = allVerbs().find((item) => items.some((word) => lexiconWordForVerb(item)?.id === word.id));
@@ -264,11 +347,11 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
     promptHe: `${gender.promptRu}|||${gender.promptEn}`,
   });
 
-  const dialogue = getDialogue(`${unit.id}-d0`);
+  const dialogue = getDialogue(`${unit.id}-d0`) ?? getDialogue(`${parsed.unitId}-d0`);
   if (dialogue) {
     const correct = dialogue.replies.find((reply) => reply.correct);
-    const replies = dialogue.replies.map((reply) => ({ ru: reply.ru, en: reply.en }));
-    const answerText = { ru: correct?.ru ?? '', en: correct?.en ?? '' };
+    const replies = dialogue.replies.map((reply) => ({ ru: shortGloss(reply.ru), en: shortGloss(reply.en) }));
+    const answerText = { ru: shortGloss(correct?.ru ?? ''), en: shortGloss(correct?.en ?? '') };
     cards.push({
       cardId: `word:${items[0]?.id}:dlg`,
       kind: 'word',
@@ -318,18 +401,19 @@ export function isLessonUnlocked(progress: Progress, unit: Unit, index: number):
   return progress.completedLessons.includes(lessonId(unit.id, index - 1));
 }
 
+/** Дневная цель в минутах, как выбрано в онбординге. */
 export function dailyLessonGoal(minutes: 5 | 10 | 20): number {
-  if (minutes === 5) return 1;
-  if (minutes === 10) return 2;
-  return 3;
+  return minutes;
+}
+
+export function minutesToday(progress: Progress, day: string): number {
+  return progress.sessions
+    .filter((session) => session.day === day)
+    .reduce((sum, session) => sum + (session.seconds ? Math.max(1, Math.round(session.seconds / 60)) : 5), 0);
 }
 
 export function lessonsToday(progress: Progress, day: string): number {
   return progress.sessions.filter((session) => session.day === day).length;
-}
-
-export function exerciseNeedsAudio(kind: ExerciseKind): boolean {
-  return kind === 'listen-choice';
 }
 
 export { WORDS_PER_LESSON, getLexiconWord };

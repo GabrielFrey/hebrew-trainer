@@ -25,7 +25,7 @@ export function HebrewText({
   numberOfLines,
 }: HebrewTextProps) {
   const palette = usePalette();
-  const fontSize = typeof size === 'number' ? Math.max(32, size) : hebrewFontSizes[size];
+  const fontSize = typeof size === 'number' ? Math.max(28, size) : hebrewFontSizes[size];
 
   return (
     <Text

@@ -31,6 +31,7 @@ export type Palette = {
   locked: string;
   overlay: string;
   banner: string;
+  bannerText: string;
 };
 
 export const palettes: Record<ColorScheme, Palette> = {
@@ -42,22 +43,23 @@ export const palettes: Record<ColorScheme, Palette> = {
     text: '#1B3A14',
     textMuted: '#5B7354',
     accent: '#58CC02',
-    accentText: '#FFFFFF',
+    accentText: '#1B3A14',
     accentShadow: '#46A302',
     success: '#58CC02',
     successSoft: '#D7FFB8',
     successText: '#285C02',
-    danger: '#FF4B4B',
+    danger: '#C62828',
     dangerSoft: '#FFDFE0',
     dangerText: '#8A1010',
-    warning: '#FF9600',
-    xp: '#FFC800',
-    heart: '#FF4B4B',
-    tabInactive: '#AFBF9F',
+    warning: '#C05600',
+    xp: '#8A6400',
+    heart: '#C62828',
+    tabInactive: '#5B7354',
     path: '#C9E5A8',
     locked: '#C5D3B8',
     overlay: 'rgba(27, 58, 20, 0.45)',
-    banner: '#1CB0F6',
+    banner: '#0277BD',
+    bannerText: '#08324D',
   },
   dark: {
     background: '#102016',
@@ -72,17 +74,18 @@ export const palettes: Record<ColorScheme, Palette> = {
     success: '#7AC70C',
     successSoft: '#234018',
     successText: '#D7FFB8',
-    danger: '#FF6B6B',
+    danger: '#FF8A80',
     dangerSoft: '#4A1C1C',
     dangerText: '#FFD6D6',
     warning: '#FFB020',
     xp: '#FFD84D',
-    heart: '#FF6B6B',
-    tabInactive: '#6E8068',
+    heart: '#FF8A80',
+    tabInactive: '#A8BFA0',
     path: '#2A4630',
     locked: '#3A4F3E',
     overlay: 'rgba(0, 0, 0, 0.55)',
-    banner: '#1899D6',
+    banner: '#4FC3F7',
+    bannerText: '#E8F6FF',
   },
 };
 
@@ -90,6 +93,7 @@ export const lightPalette = palettes.light;
 export const darkPalette = palettes.dark;
 
 export const hebrewFontSizes = {
+  chip: 28,
   inline: 32,
   card: 56,
   glyph: 96,
@@ -153,12 +157,12 @@ export const buttonHeight = {
 export const pressDepth = 4;
 
 export const unitBannerColors = [
-  '#1CB0F6',
-  '#CE82FF',
-  '#FF9600',
-  '#FF4B4B',
-  '#58CC02',
-  '#FFC800',
-  '#2B70C9',
-  '#FF86D0',
+  '#0277BD',
+  '#7B1FA2',
+  '#C05600',
+  '#C62828',
+  '#2E7D32',
+  '#8A6400',
+  '#1565C0',
+  '#AD1457',
 ] as const;

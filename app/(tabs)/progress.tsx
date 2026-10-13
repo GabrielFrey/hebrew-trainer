@@ -14,6 +14,7 @@ import { dayKey, endOfToday } from '@/lib/dates';
 import { getLetter, getPhrase, getWord, letters, levels, phrases, words } from '@/lib/data';
 import { letterName, levelTitle, phraseGloss, pluralUnits, wordGloss } from '@/lib/i18n';
 import { accuracy, isLearned } from '@/lib/srs';
+import { streakStatus } from '@/lib/streak';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
 import type { CardState, UiLanguage } from '@/lib/types';
@@ -80,16 +81,15 @@ export default function ProgressScreen() {
 
   const maxReviewed = Math.max(1, ...last7.map((d) => d.reviewed));
 
-  if (cards.length === 0) {
+  if (cards.length === 0 && progress.completedLessons.length === 0) {
     return (
       <Screen>
-        <ScreenHeader title={t('tabs.progress')} />
         <EmptyState
-          icon="bar-chart-2"
+          pose="wave"
           title={t('progress.empty')}
           description={t('progress.emptyHint')}
           actionLabel={t('progress.start')}
-          onAction={() => router.push('/session')}
+          onAction={() => router.replace('/')}
         />
       </Screen>
     );
@@ -101,12 +101,15 @@ export default function ProgressScreen() {
         <ScreenHeader
           title={t('tabs.progress')}
           subtitle={
-            progress.streak.current > 0
-              ? t('progress.subtitleStreak', {
-                  count: progress.streak.current,
-                  daysWord: pluralUnits(lang, progress.streak.current, 'day'),
-                })
-              : t('progress.subtitleBroken')
+            (() => {
+              const status = streakStatus(progress);
+              if (status.kind === 'fresh' || status.kind === 'broken') return t('progress.subtitleFresh');
+              if (status.kind === 'frozen') return t('progress.subtitleFrozen');
+              return t('progress.subtitleStreak', {
+                count: status.current,
+                daysWord: pluralUnits(lang, status.current, 'day'),
+              });
+            })()
           }
           action={{ icon: 'settings', label: t('common.settings'), onPress: () => router.push('/settings') }}
         />

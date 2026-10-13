@@ -42,23 +42,36 @@ export function pickBilingual(item: BilingualText, lang: UiLanguage): string {
   return lang === 'en' ? item.en : item.ru;
 }
 
+/** Убирает «👋|» и оставляет не больше двух значений через слэш. */
+export function shortGloss(text: string): string {
+  let value = text.trim();
+  const bar = value.indexOf('|');
+  if (bar > 0 && bar <= 4) value = value.slice(bar + 1).trim();
+  return value
+    .split(/\s*\/\s*/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .join(' / ');
+}
+
 export function displayOptions(card: SessionCard, lang: UiLanguage): string[] {
-  if (card.bilingualOptions && card.bilingualOptions.length > 0) {
-    return card.bilingualOptions.map((item) => pickBilingual(item, lang));
-  }
-  return card.options;
+  const raw =
+    card.bilingualOptions && card.bilingualOptions.length > 0
+      ? card.bilingualOptions.map((item) => pickBilingual(item, lang))
+      : card.options;
+  return raw.map(shortGloss);
 }
 
 export function displayAnswer(card: SessionCard, lang: UiLanguage): string {
-  if (card.bilingualAnswer) return pickBilingual(card.bilingualAnswer, lang);
-  return card.answer;
+  if (card.bilingualAnswer) return shortGloss(pickBilingual(card.bilingualAnswer, lang));
+  return shortGloss(card.answer);
 }
 
 type Dict = Record<string, string>;
 
 const ru: Dict = {
   'app.name': 'Иврит с нуля',
-  'tabs.today': 'Сегодня',
+  'tabs.today': 'Учить',
   'tabs.alphabet': 'Алфавит',
   'tabs.words': 'Уроки',
   'tabs.reading': 'Сленг',
@@ -158,25 +171,26 @@ const ru: Dict = {
   'reading.alwaysNikudHint':
     'На уровне «{level}» никуд показывается всегда. Переключатель появится на среднем уровне.',
   'reading.phraseMeta': 'Фраза {n} из {total} · {levelTag}',
-  'reading.yourLevel': 'ваш уровень',
+  'reading.yourLevel': 'твой уровень',
   'reading.pastLevel': 'пройденный уровень',
   'reading.readAloud': 'Прочитать вслух',
   'reading.readAloudDone': 'Прочитано вслух',
   'reading.readHint': 'Прочитайте вслух, потом выберите перевод.',
   'reading.great': 'Отлично.',
   'reading.greatWith': 'Отлично. Транскрипция: {text}',
-  'reading.choose': 'Выберите перевод',
+  'reading.choose': 'Выбери перевод',
   'reading.rightAnswer': 'Правильный перевод: {text}',
   'reading.nextPhrase': 'Следующая фраза',
   'reading.passages': 'Тексты на абзац',
   'reading.passageHint': 'Вопрос и ответ на иврите разбираются в тренировке.',
 
   'progress.subtitleStreak': '{count} {daysWord} подряд',
-  'progress.subtitleBroken': 'Серия прервана — начните заново сегодня',
-  'progress.empty': 'Статистики пока нет',
-  'progress.emptyHint':
-    'Пройдите первую сессию: после неё здесь появятся выученные буквы, слова и точность ответов.',
-  'progress.start': 'Начать тренировку',
+  'progress.subtitleBroken': 'Начни серию сегодня 🔥',
+  'progress.subtitleFresh': 'Начни серию сегодня 🔥',
+  'progress.subtitleFrozen': 'Серия на паузе — заморозка сберегла день',
+  'progress.empty': 'Пока пусто — и это нормально',
+  'progress.emptyHint': 'Пройди короткий урок, и здесь появятся выученные слова и серия дней.',
+  'progress.start': 'К первому уроку',
   'progress.letters': 'Буквы',
   'progress.words': 'Слова',
   'progress.phrases': 'Фразы',
@@ -196,10 +210,10 @@ const ru: Dict = {
   'progress.practice': 'Тренироваться',
 
   'settings.level': 'Уровень',
-  'settings.levelHint': 'Открыто {decks} колод и {words} слов из {total}',
+  'settings.levelHint': 'Открыто {decks} тем и {words} слов из {total}',
   'settings.nikud': 'Огласовки',
   'settings.nikudHint':
-    'Адаптивно: чем лучше слово выучено по SM-2, тем чаще оно без никуда. Нажмите на слово, чтобы вернуть огласовки.',
+    'Адаптивно: чем лучше слово выучено, тем чаще оно без никуда. Нажми на слово, чтобы вернуть огласовки.',
   'settings.nikudOn': 'С огласовками',
   'settings.nikudOff': 'Без огласовок',
   'settings.nikudAlways': 'Всегда',
@@ -231,7 +245,7 @@ const ru: Dict = {
   'settings.language.ru': 'Русский',
   'settings.language.en': 'English',
   'settings.translation': 'Язык перевода',
-  'settings.translationHint': 'Какой перевод иврита показывать в уроках, сленге и колодах. Интерфейс от этого не меняется.',
+  'settings.translationHint': 'Какой перевод иврита показывать в уроках, сленге и темах. Интерфейс от этого не меняется.',
   'settings.translation.ru': 'Русский',
   'settings.translation.en': 'English',
   'common.translationToggle': 'Язык перевода',
@@ -249,9 +263,9 @@ const ru: Dict = {
   'settings.version': 'Иврит с нуля · локальная сборка',
 
   'onboarding.step': 'Шаг {n} из {total}',
-  'onboarding.levelTitle': 'Ваш уровень',
+  'onboarding.levelTitle': 'Твой уровень',
   'onboarding.levelHint':
-    'От него зависят колоды, длина фраз и огласовки. Уровень можно поменять в любой момент — выученное не сбросится.',
+    'От него зависят темы, длина фраз и огласовки. Уровень можно поменять в любой момент — выученное не сбросится.',
   'onboarding.goalTitle': 'Главная цель',
   'onboarding.goalHint': 'Акцент в сессии: разбор текста или живая речь.',
   'onboarding.goal.readingHint': 'Уверенно читать вслух, в том числе без огласовок',
@@ -277,8 +291,8 @@ const ru: Dict = {
   'session.prompt.letterWrite': 'Напишите букву',
   'session.prompt.letterWriteHint': 'Пальцем по полю — приложение сверит начертание',
   'session.prompt.wordHe': 'Что означает слово?',
-  'session.prompt.wordGloss': 'Выберите написание',
-  'session.prompt.phrase': 'Выберите перевод фразы',
+  'session.prompt.wordGloss': 'Выбери написание',
+  'session.prompt.phrase': 'Выбери перевод фразы',
   'session.prompt.passage': 'Прочитайте и ответьте на иврите',
   'session.prompt.listen': 'Прослушайте и выберите перевод',
   'session.prompt.typeWord': 'Напишите слово на иврите',
@@ -297,7 +311,7 @@ const ru: Dict = {
   'session.unsure': 'Не разобрал начертание. Напишите ещё раз — ошибка не записана.',
   'session.retry': 'Стереть и написать заново',
   'session.release': 'Отпустите палец — приложение сверит букву',
-  'session.pick': 'Выберите вариант',
+  'session.pick': 'Выбери вариант',
   'session.wrong': 'Не угадали. Карточка вернётся в конец очереди.',
   'session.rightHow': 'Верно! Как далось?',
 
@@ -321,7 +335,7 @@ const ru: Dict = {
   'deck.learning': 'в работе',
   'deck.new': 'новое',
   'deck.note':
-    'В колоде {count} слов. Озвучка — запись носителя или готовый нейроголос; где файла нет, кнопки звука нет.',
+    'В теме {count} слов. Озвучка — запись носителя или готовый нейроголос; где файла нет, кнопки звука нет.',
 
   'drill.writePrompt': 'Напишите букву пальцем',
   'drill.which': 'Какая это буква?',
@@ -372,27 +386,27 @@ const ru: Dict = {
   'pos.idiom': 'идиома',
 
   'today.continue': 'Продолжить урок',
-  'today.dailyGoal': 'Цель на сегодня: {done} из {goal}',
-  'today.reviewSm2': 'Повторения SM-2',
+  'today.dailyGoal': '{done} / {goal} мин',
+  'today.reviewSm2': 'Повторить слова ({count})',
   'today.newLesson': 'Новый урок',
   'today.goalMet': 'Дневная цель закрыта',
   'today.lessonsDone': 'Все уроки уровня пройдены',
 
   'lessons.title': 'Уроки',
   'lessons.subtitle': 'Короткие темы, как в Mondly. Новых слов в уроке — не больше пяти.',
-  'lessons.locked': 'Сначала закройте предыдущую тему',
+  'lessons.locked': 'Сначала закрой предыдущую тему',
   'lessons.of': '{done} / {total} уроков',
   'lessons.start': 'Начать урок',
 
   'lesson.teach': 'Новое слово',
-  'lesson.pickGloss': 'Выберите перевод',
+  'lesson.pickGloss': 'Выбери перевод',
   'lesson.pickPicture': 'Какая карточка подходит?',
-  'lesson.listen': 'Прослушайте и выберите',
+  'lesson.listen': 'Послушай и выбери',
   'lesson.build': 'Соберите фразу',
   'lesson.dialogue': 'Диалог',
   'lesson.gotIt': 'Понятно',
   'lesson.finished': 'Урок пройден',
-  'lesson.finishedHint': 'Пять новых слов ушли в SM-2. Серия дней обновится, если это первое занятие за день.',
+  'lesson.finishedHint': 'Новые слова ушли в повторения. Серия дней обновится, если это первое занятие за день.',
   'lesson.check': 'Проверить',
   'lesson.tapChips': 'Нажимайте слова по порядку',
   'lesson.type': 'Напишите слово',
@@ -437,7 +451,7 @@ const ru: Dict = {
   'slang.usage': 'Как говорят',
   'slang.empty': 'На этом уровне сленг ещё закрыт',
   'slang.search': 'Поиск по сленгу',
-  'slang.count': '{shown} из {total}',
+  'slang.count': 'Выражения твоего уровня и ниже: {shown} из {total}',
 
   'hud.streak': 'Серия {count}',
   'hud.xp': '{count} XP',
@@ -466,12 +480,29 @@ const ru: Dict = {
   'path.current': 'Сейчас: {title}',
   'path.locked': 'Закрыто: {title}',
   'onboarding.comboTitle': 'Цель и ритм',
-  'onboarding.comboHint': 'Зачем учите и сколько минут в день. Напоминание придёт в {hour}:00.',
+  'onboarding.comboHint': 'Зачем учишь и сколько минут в день. Напоминание придёт в {hour}:00.',
+  'lesson.report': 'Пожаловаться на задание',
+  'lesson.reported': 'Спасибо, записали',
+  'lesson.exitTitle': 'Выйти из урока?',
+  'lesson.exitBody': 'Прогресс этого урока не сохранится.',
+  'lesson.exit': 'Выйти',
+  'lesson.stay': 'Остаться',
+  'lesson.buildPrompt': 'Собери: {text}',
+  'lesson.next': 'Следующий урок',
+  'today.verbs': 'Глаголы',
+  'today.goalRing': '{done} / {goal} мин',
+  'settings.address': 'Обращение',
+  'settings.addressHint': 'Как говорить с тобой по-ивритски: ты мужчина или женщина.',
+  'settings.address.m': 'Как к мужчине',
+  'settings.address.f': 'Как к женщине',
+  'onboarding.addressTitle': 'Как к тебе обращаться?',
+  'celebrate.next': 'Следующий урок',
+  'nav.theme': 'Тема',
 };
 
 const en: Dict = {
   'app.name': 'Hebrew from scratch',
-  'tabs.today': 'Today',
+  'tabs.today': 'Learn',
   'tabs.alphabet': 'Alphabet',
   'tabs.words': 'Lessons',
   'tabs.reading': 'Slang',
@@ -584,11 +615,12 @@ const en: Dict = {
   'reading.passageHint': 'The Hebrew question and answer are practiced in the session.',
 
   'progress.subtitleStreak': '{count} {daysWord} in a row',
-  'progress.subtitleBroken': 'Streak broken — start again today',
-  'progress.empty': 'No stats yet',
-  'progress.emptyHint':
-    'Finish the first session: learned letters, words, and accuracy will show up here.',
-  'progress.start': 'Start practice',
+  'progress.subtitleBroken': 'Start a streak today 🔥',
+  'progress.subtitleFresh': 'Start a streak today 🔥',
+  'progress.subtitleFrozen': 'Streak paused — a freeze saved the day',
+  'progress.empty': 'Nothing here yet — that’s fine',
+  'progress.emptyHint': 'Finish a short lesson and your words and streak will show up here.',
+  'progress.start': 'Start the first lesson',
   'progress.letters': 'Letters',
   'progress.words': 'Words',
   'progress.phrases': 'Phrases',
@@ -608,10 +640,10 @@ const en: Dict = {
   'progress.practice': 'Practice',
 
   'settings.level': 'Level',
-  'settings.levelHint': '{decks} decks and {words} of {total} words unlocked',
+  'settings.levelHint': '{decks} topics and {words} of {total} words unlocked',
   'settings.nikud': 'Vowels',
   'settings.nikudHint':
-    'Adaptive: the better a word is learned in SM-2, the more often it appears without nikud. Tap a word to show the vowels.',
+    'Adaptive: the better a word is learned, the more often it appears without nikud. Tap a word to show the vowels.',
   'settings.nikudOn': 'With vowels',
   'settings.nikudOff': 'Without vowels',
   'settings.nikudAlways': 'Always',
@@ -785,8 +817,8 @@ const en: Dict = {
   'pos.idiom': 'idiom',
 
   'today.continue': 'Continue lesson',
-  'today.dailyGoal': 'Today’s goal: {done} of {goal}',
-  'today.reviewSm2': 'SM-2 reviews',
+  'today.dailyGoal': '{done} / {goal} min',
+  'today.reviewSm2': 'Review words ({count})',
   'today.newLesson': 'New lesson',
   'today.goalMet': 'Daily goal done',
   'today.lessonsDone': 'Every lesson at this level is done',
@@ -805,7 +837,7 @@ const en: Dict = {
   'lesson.dialogue': 'Dialogue',
   'lesson.gotIt': 'Got it',
   'lesson.finished': 'Lesson complete',
-  'lesson.finishedHint': 'Those five words went into SM-2. Your streak updates if this is the first session today.',
+  'lesson.finishedHint': 'New words went into reviews. Your streak updates if this is the first session today.',
   'lesson.check': 'Check',
   'lesson.tapChips': 'Tap the words in order',
   'lesson.type': 'Type the word',
@@ -850,7 +882,7 @@ const en: Dict = {
   'slang.usage': 'How it’s used',
   'slang.empty': 'Slang for this level is still locked',
   'slang.search': 'Search slang',
-  'slang.count': '{shown} of {total}',
+  'slang.count': 'Phrases at your level and below: {shown} of {total}',
 
   'hud.streak': 'Streak {count}',
   'hud.xp': '{count} XP',
@@ -880,6 +912,23 @@ const en: Dict = {
   'path.locked': 'Locked: {title}',
   'onboarding.comboTitle': 'Goal and pace',
   'onboarding.comboHint': 'Why you’re learning and how many minutes a day. Reminder at {hour}:00.',
+  'lesson.report': 'Report this exercise',
+  'lesson.reported': 'Thanks, saved',
+  'lesson.exitTitle': 'Leave the lesson?',
+  'lesson.exitBody': 'Progress in this lesson will not be saved.',
+  'lesson.exit': 'Leave',
+  'lesson.stay': 'Stay',
+  'lesson.buildPrompt': 'Build: {text}',
+  'lesson.next': 'Next lesson',
+  'today.verbs': 'Verbs',
+  'today.goalRing': '{done} / {goal} min',
+  'settings.address': 'Addressed as',
+  'settings.addressHint': 'How Hebrew should speak to you: masculine or feminine.',
+  'settings.address.m': 'As a man',
+  'settings.address.f': 'As a woman',
+  'onboarding.addressTitle': 'How should we address you?',
+  'celebrate.next': 'Next lesson',
+  'nav.theme': 'Topic',
 };
 
 const TABLES: Record<UiLanguage, Dict> = { ru, en };
@@ -921,7 +970,7 @@ export function pluralUnits(
 }
 
 export function wordGloss(word: Word, lang: UiLanguage): string {
-  return lang === 'en' ? word.en : word.ru;
+  return shortGloss(lang === 'en' ? word.en : word.ru);
 }
 
 export function phraseGloss(phrase: Phrase, lang: UiLanguage): string {

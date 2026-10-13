@@ -236,6 +236,8 @@ export type Settings = {
   reminderAsked: boolean;
   /** Короткие звуки «верно/неверно». По умолчанию включены. */
   soundEnabled?: boolean;
+  /** Обращение в иврите: мужское или женское. */
+  address?: 'm' | 'f';
 };
 
 export type SessionLog = {
@@ -243,12 +245,16 @@ export type SessionLog = {
   reviewed: number;
   correct: number;
   finishedAt: number;
+  /** Длительность занятия в секундах, если известна. */
+  seconds?: number;
 };
 
 export type Streak = {
   current: number;
   longest: number;
   lastDay: string | null;
+  /** Сколько пропусков серии ещё можно закрыть. По умолчанию 1. */
+  freezes?: number;
 };
 
 export type Progress = {

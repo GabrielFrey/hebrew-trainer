@@ -1,4 +1,4 @@
-import { hasRecording } from '@/lib/audio';
+import { exerciseNeedsAudio, hasRecording } from '@/lib/audio';
 import { endOfToday } from '@/lib/dates';
 import { cardId, getLetter, getPassage, getPhrase, getWord, letters } from '@/lib/data';
 import { glyphsForLetter } from '@/lib/handwriting';
@@ -8,6 +8,7 @@ import {
   letterSound,
   pickBilingual,
   resolveTranslation,
+  shortGloss,
 } from '@/lib/i18n';
 import {
   hasFeature,
@@ -88,10 +89,12 @@ function exerciseFor(candidate: Candidate, seed: number): ExerciseKind {
   if (candidate.kind === 'word') {
     const word = getWord(candidate.refId);
     if (reps < 1) {
-      return hasRecording(word?.audio) && seed % 5 === 0 ? 'listen-choice' : 'word-he-ru';
+      return exerciseNeedsAudio('listen-choice') && hasRecording(word?.audio) && seed % 5 === 0
+        ? 'listen-choice'
+        : 'word-he-ru';
     }
     const kinds: ExerciseKind[] = ['word-he-ru', 'word-ru-he', 'type-word'];
-    if (hasRecording(word?.audio)) kinds.push('listen-choice');
+    if (exerciseNeedsAudio('listen-choice') && hasRecording(word?.audio)) kinds.push('listen-choice');
     if (word && clozeFromExample(word)) kinds.push('cloze-example');
     if (verbForWord(word)) kinds.push('form-verb');
     kinds.push('gender-agree');
@@ -128,10 +131,25 @@ function uniqueWords(word: Word, pool: Word[], count: number, seed: number): Wor
   const unique: Word[] = [];
   const ru = new Set([word.ru]);
   const en = new Set([word.en]);
-  for (const item of shuffle(
-    pool.filter((entry) => entry.id !== word.id),
-    seed
-  )) {
+  const ranked = [
+    ...shuffle(
+      pool.filter((entry) => entry.id !== word.id && entry.theme === word.theme && entry.pos === word.pos),
+      seed
+    ),
+    ...shuffle(
+      pool.filter((entry) => entry.id !== word.id && entry.theme === word.theme),
+      seed + 1
+    ),
+    ...shuffle(
+      pool.filter((entry) => entry.id !== word.id && entry.pos === word.pos),
+      seed + 2
+    ),
+    ...shuffle(
+      pool.filter((entry) => entry.id !== word.id),
+      seed + 3
+    ),
+  ];
+  for (const item of ranked) {
     if (ru.has(item.ru) || en.has(item.en)) continue;
     ru.add(item.ru);
     en.add(item.en);
@@ -225,12 +243,12 @@ function buildCard(
     }
     if (exercise === 'listen-choice') {
       const choices = shuffle([word, ...uniqueWords(word, pool, 3, seed)], seed + 13);
-      const bilingualOptions = choices.map((item) => ({ ru: item.ru, en: item.en }));
-      return resolveBuilt(bilingualOptions, { ru: word.ru, en: word.en }, lang);
+      const bilingualOptions = choices.map((item) => ({ ru: shortGloss(item.ru), en: shortGloss(item.en) }));
+      return resolveBuilt(bilingualOptions, { ru: shortGloss(word.ru), en: shortGloss(word.en) }, lang);
     }
     const choices = shuffle([word, ...uniqueWords(word, pool, 3, seed)], seed + 13);
-    const bilingualOptions = choices.map((item) => ({ ru: item.ru, en: item.en }));
-    return resolveBuilt(bilingualOptions, { ru: word.ru, en: word.en }, lang);
+    const bilingualOptions = choices.map((item) => ({ ru: shortGloss(item.ru), en: shortGloss(item.en) }));
+    return resolveBuilt(bilingualOptions, { ru: shortGloss(word.ru), en: shortGloss(word.en) }, lang);
   }
 
   if (candidate.kind === 'passage') {

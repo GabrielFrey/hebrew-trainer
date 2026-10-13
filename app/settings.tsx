@@ -141,6 +141,17 @@ export default function SettingsScreen() {
           ))}
         </Section>
 
+        <Section icon="user" title={t('settings.address')} hint={t('settings.addressHint')}>
+          {(['m', 'f'] as const).map((value) => (
+            <Row
+              key={value}
+              label={t(`settings.address.${value}`)}
+              selected={(settings.address ?? 'm') === value}
+              onPress={() => updateSettings({ address: value })}
+            />
+          ))}
+        </Section>
+
         <Section icon="clock" title={t('settings.minutes')}>
           {MINUTES.map((value) => (
             <Row

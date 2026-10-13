@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
   action: {
     alignItems: 'center',
     borderRadius: radius.pill,
-    height: 40,
+    height: 44,
     justifyContent: 'center',
-    width: 40,
+    width: 44,
   },
 });

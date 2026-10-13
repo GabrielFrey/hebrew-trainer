@@ -77,9 +77,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   chipCompact: {
-    minWidth: 40,
+    minHeight: 44,
+    minWidth: 44,
     paddingHorizontal: spacing.sm,
-    paddingVertical: 6,
+    paddingVertical: spacing.sm,
   },
   chipWide: {
     minWidth: 72,

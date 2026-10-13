@@ -17,6 +17,7 @@ import { ProgressBar } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { spacing } from '@/constants/tokens';
 import { playSfx } from '@/lib/sfx';
+import { exerciseNeedsAudio, hasRecording } from '@/lib/audio';
 import { getLetter, getPassage, getPhrase, getWord } from '@/lib/data';
 import { getGlyph, gradeForVerdict, recognise } from '@/lib/handwriting';
 import type { Stroke } from '@/lib/handwriting';
@@ -65,7 +66,12 @@ export default function SessionScreen() {
   const settings = progress.settings;
 
   const initialQueue = useMemo(
-    () => buildSession(progress, Date.now(), { allowAhead: ahead === '1' }),
+    () =>
+      buildSession(progress, Date.now(), { allowAhead: ahead === '1' }).filter((card) => {
+        if (!exerciseNeedsAudio(card.exercise)) return true;
+        const word = getWord(card.refId);
+        return hasRecording(word?.audio);
+      }),
     // Built once per session so that grading does not reshuffle the queue.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []

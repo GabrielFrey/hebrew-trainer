@@ -1,9 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 
-import { dayKey, daysBetween } from '@/lib/dates';
+import { dayKey } from '@/lib/dates';
 import { ensureLevel } from '@/lib/lexicon';
 import { createCard, schedule } from '@/lib/srs';
+import { applyStreak } from '@/lib/streak';
 import { clearProgress, emptyProgress, loadProgress, saveProgress } from '@/lib/storage';
 import type { CardKind, Grade, Progress, Settings } from '@/lib/types';
 
@@ -11,7 +12,7 @@ type StoreValue = {
   progress: Progress;
   ready: boolean;
   gradeCard: (kind: CardKind, refId: string, grade: Grade) => void;
-  finishSession: (reviewed: number, correct: number) => void;
+  finishSession: (reviewed: number, correct: number, seconds?: number) => void;
   completeLesson: (lessonKey: string) => void;
   updateSettings: (patch: Partial<Settings>) => void;
   reset: () => void;
@@ -57,30 +58,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     []
   );
 
-  const finishSession = useCallback((reviewed: number, correct: number) => {
+  const finishSession = useCallback((reviewed: number, correct: number, seconds?: number) => {
     setProgress((current) => {
       const today = dayKey();
-      const last = current.streak.lastDay;
-      let currentStreak = current.streak.current;
-      if (last === today) {
-        currentStreak = Math.max(1, currentStreak);
-      } else if (last !== null && daysBetween(last, today) === 1) {
-        currentStreak += 1;
-      } else {
-        currentStreak = 1;
-      }
-
       const next: Progress = {
         ...current,
         sessions: [
           ...current.sessions.slice(-59),
-          { day: today, reviewed, correct, finishedAt: Date.now() },
+          { day: today, reviewed, correct, finishedAt: Date.now(), seconds },
         ],
-        streak: {
-          current: currentStreak,
-          longest: Math.max(current.streak.longest, currentStreak),
-          lastDay: today,
-        },
+        streak: applyStreak(current, today),
       };
       void saveProgress(next);
       return next;

@@ -3,15 +3,14 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 
 import { Button } from '@/components/Button';
+import { GoalRing } from '@/components/GoalRing';
 import { HudBar } from '@/components/HudBar';
 import { LessonPath } from '@/components/LessonPath';
-import { Mascot } from '@/components/Mascot';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { spacing } from '@/constants/tokens';
 import { dayKey } from '@/lib/dates';
-import { getCatalog, lessonPath, parseLessonId, themeById } from '@/lib/lexicon';
-import { dailyLessonGoal, lessonsToday, nextLessonId } from '@/lib/lessons';
-import { themeTitle } from '@/lib/i18n';
+import { lessonPath, parseLessonId } from '@/lib/lexicon';
+import { dailyLessonGoal, minutesToday, nextLessonId } from '@/lib/lessons';
 import { summariseToday } from '@/lib/session';
 import { useStore } from '@/lib/store';
 import { useI18n } from '@/lib/use-i18n';
@@ -19,7 +18,7 @@ import { useI18n } from '@/lib/use-i18n';
 export default function TodayScreen() {
   const router = useRouter();
   const { progress } = useStore();
-  const { t, lang } = useI18n();
+  const { t } = useI18n();
   const [now, setNow] = useState(() => Date.now());
 
   useFocusEffect(
@@ -30,10 +29,8 @@ export default function TodayScreen() {
 
   const summary = useMemo(() => summariseToday(progress, now), [progress, now]);
   const goal = dailyLessonGoal(progress.settings.minutesPerDay);
-  const doneToday = lessonsToday(progress, dayKey());
+  const doneToday = minutesToday(progress, dayKey());
   const nxt = nextLessonId(progress, progress.settings.level);
-  const nxtUnit = nxt ? getCatalog().units.find((unit) => nxt.startsWith(`${unit.id}:`)) : undefined;
-  const nxtTheme = nxtUnit ? themeById(nxtUnit.theme) : undefined;
 
   return (
     <Screen>
@@ -42,10 +39,7 @@ export default function TodayScreen() {
       </View>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Surface style={styles.hero}>
-          <Mascot pose={doneToday >= goal ? 'cheer' : 'wave'} size={96} />
-          <AppText variant="heading">
-            {nxtTheme ? `${nxtTheme.emoji} ${themeTitle(nxtTheme, lang)}` : t('today.lessonsDone')}
-          </AppText>
+          <GoalRing value={doneToday} total={goal} label={t('today.goalRing', { done: doneToday, goal })} />
           <AppText muted>
             {doneToday >= goal ? t('today.goalMet') : t('today.dailyGoal', { done: doneToday, goal })}
           </AppText>
@@ -58,16 +52,17 @@ export default function TodayScreen() {
                 router.push(parsed ? lessonPath(parsed.unitId, parsed.index) : '/');
               }}
             />
-          ) : null}
-          {summary.queueSize > 0 ? (
-            <Button label={t('today.reviewSm2')} variant="secondary" onPress={() => router.push('/session')} />
           ) : (
-            <Button
-              label={t('today.reviewAhead')}
-              variant="ghost"
-              onPress={() => router.push('/session?ahead=1')}
-            />
+            <AppText>{t('today.lessonsDone')}</AppText>
           )}
+          {summary.queueSize > 0 ? (
+            <Button
+              label={t('today.reviewSm2', { count: summary.queueSize })}
+              variant="secondary"
+              onPress={() => router.push('/session')}
+            />
+          ) : null}
+          <Button label={t('today.verbs')} variant="ghost" onPress={() => router.push('/verbs')} />
         </Surface>
         <LessonPath />
       </ScrollView>

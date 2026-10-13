@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -18,11 +18,13 @@ import { ProgressBar } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { TranslationToggle } from '@/components/TranslationToggle';
 import { radius, spacing } from '@/constants/tokens';
+import { hasRecording } from '@/lib/audio';
 import { getWord } from '@/lib/data';
 import { answersMatch } from '@/lib/hebrew-script';
-import { displayAnswer, displayOptions, exampleGloss, posLabel, wordGloss } from '@/lib/i18n';
-import { getDialogue, lessonKeyFromSlug } from '@/lib/lexicon';
-import { buildLesson } from '@/lib/lessons';
+import { displayAnswer, displayOptions, exampleGloss, wordGloss } from '@/lib/i18n';
+import { getDialogue, lessonKeyFromSlug, lessonPath, parseLessonId } from '@/lib/lexicon';
+import { buildLesson, exerciseNeedsAudio, nextLessonId } from '@/lib/lessons';
+import { reportExercise } from '@/lib/reports';
 import { showTranscription } from '@/lib/levels';
 import { isTypedExercise } from '@/lib/recall';
 import { getVerb } from '@/lib/verbs';
@@ -111,8 +113,10 @@ function Options({
             disabled={checked}
             onPress={() => onPick(option)}
           >
-            <View>
-              <AppText variant="heading">{primary}</AppText>
+            <View style={{ flex: 1 }}>
+              <AppText variant="heading" style={{ flexShrink: 1 }}>
+                {primary}
+              </AppText>
               {secondary ? (
                 <AppText variant="caption" muted>
                   {secondary}
@@ -134,11 +138,16 @@ export default function LessonScreen() {
   const router = useRouter();
   const palette = usePalette();
   const { progress, gradeCard, finishSession, completeLesson } = useStore();
-  const { t, lang, translation } = useI18n();
+  const { t, translation } = useI18n();
   const startedAt = useRef(Date.now());
   const finishedRef = useRef(false);
   const queue = useMemo(
-    () => buildLesson(progress, lessonKey),
+    () =>
+      buildLesson(progress, lessonKey).filter((item) => {
+        if (!exerciseNeedsAudio(item.exercise)) return true;
+        const audioWord = getWord(item.refId);
+        return hasRecording(audioWord?.audio);
+      }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [lessonKey, progress.settings.level]
   );
@@ -149,7 +158,6 @@ export default function LessonScreen() {
   const [checked, setChecked] = useState(false);
   const [lastOk, setLastOk] = useState(true);
   const [score, setScore] = useState({ correct: 0, total: 0 });
-  const [hearts, setHearts] = useState(5);
 
   const card = queue[index];
   const word = card?.kind === 'word' ? getWord(card.refId) : undefined;
@@ -161,7 +169,8 @@ export default function LessonScreen() {
     if (finishedRef.current) return;
     finishedRef.current = true;
     completeLesson(lessonKey);
-    finishSession(score.total || queue.length, score.correct);
+    const elapsed = Math.max(1, Math.round((Date.now() - startedAt.current) / 1000));
+    finishSession(score.total || queue.length, score.correct, elapsed);
   };
 
   const goNext = () => {
@@ -183,7 +192,6 @@ export default function LessonScreen() {
       gradeCard('word', card.refId, ok ? 'good' : 'again');
     }
     setScore((s) => ({ correct: s.correct + (ok ? 1 : 0), total: s.total + 1 }));
-    if (!ok) setHearts((value) => Math.max(0, value - 1));
     setLastOk(ok);
     setChecked(true);
     playSfx(ok ? 'correct' : 'wrong', soundsOn);
@@ -238,11 +246,20 @@ export default function LessonScreen() {
             {t('celebrate.streak', { count: Math.max(1, progress.streak.current) })}
           </AppText>
           <Button
-            label={t('common.done')}
+            label={t('celebrate.next')}
             size="lg"
-            onPress={() => router.replace('/')}
+            onPress={() => {
+              const nxt = nextLessonId(progress, progress.settings.level);
+              const parsed = nxt ? parseLessonId(nxt) : null;
+              if (parsed) {
+                router.replace(lessonPath(parsed.unitId, parsed.index));
+                return;
+              }
+              router.replace('/');
+            }}
             style={styles.doneBtn}
           />
+          <Button label={t('common.done')} variant="secondary" size="lg" onPress={() => router.replace('/')} />
         </View>
       </Screen>
     );
@@ -260,20 +277,24 @@ export default function LessonScreen() {
         <Pressable
           accessibilityLabel={t('lesson.closeA11y')}
           accessibilityRole="button"
-          onPress={() => router.back()}
-          hitSlop={10}
+          onPress={() => {
+            const leave = () => router.replace('/');
+            if (Platform.OS === 'web') {
+              if (window.confirm(`${t('lesson.exitTitle')}\n${t('lesson.exitBody')}`)) leave();
+              return;
+            }
+            Alert.alert(t('lesson.exitTitle'), t('lesson.exitBody'), [
+              { text: t('lesson.stay'), style: 'cancel' },
+              { text: t('lesson.exit'), style: 'destructive', onPress: leave },
+            ]);
+          }}
+          hitSlop={8}
           style={[styles.close, { backgroundColor: palette.surface }]}
         >
           <Feather name="x" size={20} color={palette.text} />
         </Pressable>
         <View style={styles.progress}>
           <ProgressBar value={index} total={queue.length} />
-        </View>
-        <View style={styles.hearts}>
-          <Feather name="heart" size={16} color={palette.heart} />
-          <AppText variant="label" style={{ color: palette.heart }}>
-            {hearts}
-          </AppText>
         </View>
         <TranslationToggle />
       </View>
@@ -303,9 +324,6 @@ export default function LessonScreen() {
               <AppText muted>{word.transcription}</AppText>
             ) : null}
             <AppText variant="heading">{wordGloss(word, translation)}</AppText>
-            <AppText variant="caption" muted>
-              {posLabel(word.pos, lang)}
-            </AppText>
             {exampleGloss(word.example, translation) ? (
               <AppText>{exampleGloss(word.example, translation)}</AppText>
             ) : null}
@@ -344,15 +362,26 @@ export default function LessonScreen() {
 
         {card.exercise === 'build-phrase' ? (
           <View style={styles.block}>
+            <AppText variant="heading">
+              {t('lesson.buildPrompt', {
+                text:
+                  translation === 'en'
+                    ? card.bilingualAnswer?.en ?? t('lesson.tapChips')
+                    : card.bilingualAnswer?.ru ?? t('lesson.tapChips'),
+              })}
+            </AppText>
             <AppText muted>{t('lesson.tapChips')}</AppText>
             <Surface style={styles.built} testID="lesson-built">
               {built.length === 0 ? (
-                <HebrewText size="inline">…</HebrewText>
+                <HebrewText size="chip">…</HebrewText>
               ) : (
                 <View style={styles.chips}>
                   {built.map((chip, builtIndex) => (
                     <Pressable
                       key={`${chip}-built-${builtIndex}`}
+                      accessibilityRole="button"
+                      accessibilityLabel={chip}
+                      accessibilityLanguage="he"
                       disabled={checked}
                       onPress={() =>
                         setBuilt((value) => value.filter((_, index) => index !== builtIndex))
@@ -360,7 +389,7 @@ export default function LessonScreen() {
                       style={[styles.chipShadow, { backgroundColor: palette.banner }]}
                     >
                       <View style={[styles.chip, { backgroundColor: palette.surface, borderColor: palette.banner }]}>
-                        <HebrewText size="inline">{chip}</HebrewText>
+                        <HebrewText size="chip">{chip}</HebrewText>
                       </View>
                     </Pressable>
                   ))}
@@ -376,6 +405,9 @@ export default function LessonScreen() {
                   <Pressable
                     key={`${chip}-${chipIndex}`}
                     testID={`lesson-chip-${chipIndex}`}
+                    accessibilityRole="button"
+                    accessibilityLabel={chip}
+                    accessibilityLanguage="he"
                     disabled={checked || disabled}
                     onPress={() => setBuilt((value) => [...value, chip])}
                     style={[styles.chipShadow, { backgroundColor: disabled ? palette.locked : palette.border }]}
@@ -389,7 +421,7 @@ export default function LessonScreen() {
                         },
                       ]}
                     >
-                      <HebrewText size="inline">{chip}</HebrewText>
+                      <HebrewText size="chip">{chip}</HebrewText>
                     </View>
                   </Pressable>
                 );
@@ -478,11 +510,33 @@ export default function LessonScreen() {
       </ScrollView>
 
       {checked ? (
-        <FeedbackSheet visible ok={lastOk} answer={answer} onContinue={goNext} />
+        <FeedbackSheet
+          key={card.cardId}
+          visible
+          ok={lastOk}
+          answer={answer}
+          hebrew={word?.nikud}
+          transcription={word && showTranscription(progress.settings.level) ? word.transcription : undefined}
+          onContinue={goNext}
+          onReport={
+            lastOk
+              ? undefined
+              : () => {
+                  void reportExercise({
+                    at: Date.now(),
+                    lessonKey,
+                    cardId: card.cardId,
+                    exercise: card.exercise,
+                    refId: card.refId,
+                    answer,
+                  });
+                }
+          }
+        />
       ) : (
         <View style={styles.footer}>
           {card.exercise === 'teach-word' ? (
-            <Button label={t('lesson.gotIt')} size="lg" onPress={() => applyResult(true)} />
+            <Button label={t('lesson.gotIt')} size="lg" onPress={goNext} />
           ) : (
             <Button
               label={t('lesson.check')}
@@ -520,12 +574,11 @@ const styles = StyleSheet.create({
   close: {
     alignItems: 'center',
     borderRadius: radius.pill,
-    height: 40,
+    height: 44,
     justifyContent: 'center',
-    width: 40,
+    width: 44,
   },
   progress: { flex: 1 },
-  hearts: { alignItems: 'center', flexDirection: 'row', gap: 4 },
   content: { gap: spacing.lg, padding: spacing.lg, paddingBottom: spacing.xxl },
   card: { alignItems: 'center', gap: spacing.sm },
   block: { gap: spacing.md },

@@ -11,7 +11,7 @@ import { usePalette } from '@/lib/theme';
 import { useI18n } from '@/lib/use-i18n';
 import { totalXp } from '@/lib/xp';
 
-export function HudBar({ hearts = 5 }: { hearts?: number }) {
+export function HudBar() {
   const palette = usePalette();
   const router = useRouter();
   const { progress } = useStore();
@@ -29,12 +29,6 @@ export function HudBar({ hearts = 5 }: { hearts?: number }) {
         a11y={t('hud.streak', { count: streak })}
       />
       <HudChip color={palette.xp} icon="star" label={String(xp)} a11y={t('hud.xp', { count: xp })} />
-      <HudChip
-        color={palette.heart}
-        icon="heart"
-        label={String(hearts)}
-        a11y={t('hud.hearts', { count: hearts })}
-      />
       <View style={styles.flag} accessibilityLabel={t('hud.flag', { code: flag })}>
         <TranslationToggle />
       </View>
@@ -42,10 +36,10 @@ export function HudBar({ hearts = 5 }: { hearts?: number }) {
         accessibilityLabel={t('common.settings')}
         accessibilityRole="button"
         onPress={() => router.push('/settings')}
-        hitSlop={8}
+        hitSlop={6}
         style={[styles.gear, { backgroundColor: palette.surfaceAlt }]}
       >
-        <Feather name="settings" size={18} color={palette.text} />
+        <Feather name="settings" size={20} color={palette.text} />
       </Pressable>
     </View>
   );
@@ -94,8 +88,8 @@ const styles = StyleSheet.create({
   gear: {
     alignItems: 'center',
     borderRadius: radius.pill,
-    height: 36,
+    height: 44,
     justifyContent: 'center',
-    width: 36,
+    width: 44,
   },
 });

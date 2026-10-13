@@ -15,7 +15,7 @@ import { levelDetail, levelSummary, levelTitle, resolveLanguage } from '@/lib/i1
 import { requestPermission, syncReminder } from '@/lib/notifications';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
-import type { Goal, LevelId, MinutesPerDay, UiLanguage } from '@/lib/types';
+import type { Goal, LevelId, MinutesPerDay, Settings, UiLanguage } from '@/lib/types';
 import { useI18n } from '@/lib/use-i18n';
 
 const STEPS = 3;
@@ -33,6 +33,7 @@ export default function OnboardingScreen() {
   const [translationLanguage, setTranslationLanguage] = useState<UiLanguage>(() =>
     resolveLanguage(progress.settings.language)
   );
+  const [address, setAddress] = useState<NonNullable<Settings['address']>>('m');
 
   const finish = async () => {
     updateSettings({
@@ -44,6 +45,7 @@ export default function OnboardingScreen() {
       onboarded: true,
       reminderHour: REMINDER_HOUR,
       translationLanguage,
+      address,
     });
     router.replace('/');
 
@@ -137,6 +139,19 @@ export default function OnboardingScreen() {
               title={t('settings.translation.en')}
               description={t('onboarding.translation.enHint')}
               onPress={() => setTranslationLanguage('en')}
+            />
+            <AppText variant="heading">{t('onboarding.addressTitle')}</AppText>
+            <Option
+              selected={address === 'm'}
+              title={t('settings.address.m')}
+              description={t('settings.addressHint')}
+              onPress={() => setAddress('m')}
+            />
+            <Option
+              selected={address === 'f'}
+              title={t('settings.address.f')}
+              description={t('settings.addressHint')}
+              onPress={() => setAddress('f')}
             />
           </Step>
         ) : null}

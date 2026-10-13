@@ -70,7 +70,7 @@ export default function SlangScreen() {
                 item.level
               );
               const tagColor = unitBannerColors[levelIndex] ?? unitBannerColors[0];
-              const darkOnTag = tagColor === '#FFC800' || tagColor === '#FF9600' || tagColor === '#FF86D0';
+                  const darkOnTag = tagColor === '#8A6400' || tagColor === '#C05600';
               const level = levels.find((entry) => entry.id === item.level);
               return (
               <Surface key={item.id} style={styles.card}>

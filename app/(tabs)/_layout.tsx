@@ -41,15 +41,15 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="words"
         options={{
+          href: null,
           title: t('tabs.words'),
-          tabBarIcon: ({ color, size }) => <Feather name="map" color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="verbs"
         options={{
+          href: null,
           title: t('tabs.verbs'),
-          tabBarIcon: ({ color, size }) => <Feather name="repeat" color={color} size={size} />,
         }}
       />
       <Tabs.Screen
