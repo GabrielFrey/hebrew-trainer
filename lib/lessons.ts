@@ -1,3 +1,4 @@
+import { hasRecording } from '@/lib/audio';
 import {
   getCatalog,
   getDialogue,
@@ -8,7 +9,10 @@ import {
   wordsForTheme,
 } from '@/lib/lexicon';
 import { pickBilingual, resolveTranslation } from '@/lib/i18n';
+import { clozeFromExample, formDistractors, pickGenderItem } from '@/lib/recall';
 import { MAX_NEW_WORDS_PER_SESSION } from '@/lib/session';
+import { allVerbs, lexiconWordForVerb, pickFormPrompt } from '@/lib/verbs';
+import { stripNikud } from '@/lib/hebrew-script';
 import type {
   BilingualText,
   ExerciseKind,
@@ -170,14 +174,65 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
         emoji: word.emoji,
       });
     }
+    if (hasRecording(word.audio)) {
+      cards.push({
+        cardId: `word:${word.id}:listen`,
+        kind: 'word',
+        refId: word.id,
+        exercise: 'listen-choice',
+        isNew,
+        ...choice,
+      });
+    }
     cards.push({
-      cardId: `word:${word.id}:listen`,
+      cardId: `word:${word.id}:type`,
       kind: 'word',
       refId: word.id,
-      exercise: 'listen-choice',
+      exercise: 'type-word',
       isNew,
-      ...choice,
+      options: [],
+      answer: word.nikud,
+      bilingualAnswer: gloss,
     });
+    const cloze = clozeFromExample(word);
+    if (cloze) {
+      cards.push({
+        cardId: `word:${word.id}:cloze`,
+        kind: 'word',
+        refId: word.id,
+        exercise: 'cloze-example',
+        isNew,
+        options: [],
+        answer: cloze.answer,
+        promptHe: cloze.prompt,
+        bilingualAnswer: gloss,
+      });
+    }
+    const verb = allVerbs().find((item) => {
+      const linked = lexiconWordForVerb(item);
+      if (linked?.id === word.id) return true;
+      const inf = stripNikud(item.forms.infinitive);
+      return stripNikud(word.hebrew) === inf || stripNikud(word.nikud) === inf;
+    });
+    if (verb) {
+      const prompt = pickFormPrompt(verb, seed + 19);
+      if (prompt) {
+        const distractors = formDistractors(verb, prompt.answer, seed + 23);
+        cards.push({
+          cardId: `word:${word.id}:form`,
+          kind: 'word',
+          refId: word.id,
+          exercise: 'form-verb',
+          isNew,
+          options: shuffle([prompt.answer, ...distractors], seed + 29),
+          answer: prompt.answer,
+          verbId: verb.id,
+          formTense: prompt.tense,
+          formSlot: prompt.slot,
+          bilingualAnswer: { ru: verb.ru, en: verb.en },
+        });
+      }
+    }
     if (phraseTokens.length >= 2 && built.chips.length >= 2) {
       cards.push({
         cardId: `word:${word.id}:build`,
@@ -191,6 +246,22 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
         promptHe: word.example.nikud,
       });
     }
+  });
+
+  const genderSeed = seedBase + 41;
+  const genderVerb = allVerbs().find((item) => items.some((word) => lexiconWordForVerb(item)?.id === word.id));
+  const gender = pickGenderItem(genderSeed, genderVerb);
+  cards.push({
+    cardId: `word:${items[0]?.id}:gender`,
+    kind: 'word',
+    refId: items[0]?.id ?? 'gender',
+    exercise: 'gender-agree',
+    isNew: false,
+    options: gender.options,
+    answer: gender.answer,
+    bilingualOptions: gender.bilingualOptions,
+    bilingualAnswer: { ru: gender.answer, en: gender.answer },
+    promptHe: `${gender.promptRu}|||${gender.promptEn}`,
   });
 
   const dialogue = getDialogue(`${unit.id}-d0`);

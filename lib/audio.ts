@@ -6,7 +6,7 @@ import { ttsAssets } from '@/lib/tts-assets';
 
 /**
  * Проигрывает заранее готовый файл: сначала запись носителя, иначе кэш TTS.
- * Синтеза на устройстве нет: если файла нет, экран показывает «нет записи».
+ * Синтеза на устройстве нет: если файла нет, кнопку звука скрывают.
  */
 
 function bundledAsset(path: string): number | undefined {
@@ -51,11 +51,16 @@ export function stopPlayback(): void {
   current = null;
 }
 
+export const SLOW_PLAYBACK_RATE = 0.7;
+
 /**
  * Возвращает true, если запись нашлась и воспроизведение началось.
- * false означает «записи нет» — вызывающий код показывает это пользователю.
+ * false — файла нет: вызывающий код скрывает кнопку, а не пишет «нет записи».
  */
-export function playRecording(path: string | null | undefined): boolean {
+export function playRecording(
+  path: string | null | undefined,
+  options: { rate?: number } = {}
+): boolean {
   if (typeof path !== 'string') return false;
   const asset = bundledAsset(path);
   if (asset === undefined) return false;
@@ -65,6 +70,9 @@ export function playRecording(path: string | null | undefined): boolean {
   try {
     const player = createAudioPlayer(asset);
     current = player;
+    if (typeof options.rate === 'number' && options.rate > 0) {
+      player.playbackRate = options.rate;
+    }
     player.play();
     return true;
   } catch {

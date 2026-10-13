@@ -46,6 +46,13 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="verbs"
+        options={{
+          title: t('tabs.verbs'),
+          tabBarIcon: ({ color, size }) => <Feather name="repeat" color={color} size={size} />,
+        }}
+      />
+      <Tabs.Screen
         name="reading"
         options={{
           title: t('tabs.reading'),

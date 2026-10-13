@@ -7,6 +7,6 @@ require('./lib/lexicon').loadLexiconForTests();
 // Нативный аудиомодуль в тестах не поднимается, поэтому фиксируем вызовы:
 // так проверяется, что для слова без записи плеер вообще не создаётся.
 jest.mock('expo-audio', () => ({
-  createAudioPlayer: jest.fn(() => ({ play: jest.fn(), remove: jest.fn() })),
+  createAudioPlayer: jest.fn(() => ({ play: jest.fn(), remove: jest.fn(), playbackRate: 1 })),
   setAudioModeAsync: jest.fn(() => Promise.resolve()),
 }));

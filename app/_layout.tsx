@@ -103,6 +103,7 @@ function RootNavigator() {
         <Stack.Screen name="drill/[mode]" options={{ title: t('nav.drill') }} />
         <Stack.Screen name="lesson/[id]" options={{ title: t('nav.lesson') }} />
         <Stack.Screen name="lesson/[unit]/[index]" options={{ title: t('nav.lesson') }} />
+        <Stack.Screen name="verb/[id]" options={{ title: t('nav.verb') }} />
       </Stack>
     </NavThemeProvider>
   );

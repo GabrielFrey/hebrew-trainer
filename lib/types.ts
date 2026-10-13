@@ -37,6 +37,9 @@ export type LevelId = 'elementary' | 'basic' | 'intermediate' | 'advanced' | 'ex
 /** Как уровень обходится с огласовками: всегда, по переключателю или никогда. */
 export type NikudPolicy = 'always' | 'toggle' | 'off';
 
+/** Пользовательский режим никуда: всегда, постепенно (SM-2) или никогда. */
+export type NikudMode = 'always' | 'adaptive' | 'never';
+
 export type LevelFeature = 'root' | 'synonyms' | 'passages' | 'hebrew-answers';
 
 export type Level = {
@@ -225,6 +228,8 @@ export type Settings = {
   translationLanguage?: TranslationLanguage;
   /** Показывать огласовки, когда уровень допускает переключение. */
   showNikud: boolean;
+  /** Всегда / адаптивно по SM-2 / никогда. Если нет — выводится из showNikud. */
+  nikudMode?: NikudMode;
   remindersEnabled: boolean;
   /** Час локального напоминания, 0–23. */
   reminderHour: number;
@@ -267,7 +272,11 @@ export type ExerciseKind =
   | 'choice-picture'
   | 'listen-choice'
   | 'build-phrase'
-  | 'dialogue-reply';
+  | 'dialogue-reply'
+  | 'type-word'
+  | 'cloze-example'
+  | 'gender-agree'
+  | 'form-verb';
 
 export type SessionCard = {
   cardId: string;
@@ -286,4 +295,7 @@ export type SessionCard = {
   promptHe?: string;
   emoji?: string;
   dialogueId?: string;
+  verbId?: string;
+  formTense?: 'infinitive' | 'present' | 'past' | 'future' | 'imperative';
+  formSlot?: string;
 };

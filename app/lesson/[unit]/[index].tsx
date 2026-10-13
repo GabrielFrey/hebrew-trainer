@@ -10,17 +10,22 @@ import { ChatBubble } from '@/components/ChatBubble';
 import { Confetti } from '@/components/Confetti';
 import { EmptyState } from '@/components/EmptyState';
 import { FeedbackSheet } from '@/components/FeedbackSheet';
+import { HebrewKeyboard } from '@/components/HebrewKeyboard';
 import { HebrewText } from '@/components/HebrewText';
+import { PointedHebrew } from '@/components/PointedHebrew';
 import { Mascot } from '@/components/Mascot';
 import { ProgressBar } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
 import { TranslationToggle } from '@/components/TranslationToggle';
 import { radius, spacing } from '@/constants/tokens';
 import { getWord } from '@/lib/data';
+import { answersMatch } from '@/lib/hebrew-script';
 import { displayAnswer, displayOptions, exampleGloss, posLabel, wordGloss } from '@/lib/i18n';
 import { getDialogue, lessonKeyFromSlug } from '@/lib/lexicon';
 import { buildLesson } from '@/lib/lessons';
-import { hebrewFor, showTranscription } from '@/lib/levels';
+import { showTranscription } from '@/lib/levels';
+import { isTypedExercise } from '@/lib/recall';
+import { getVerb } from '@/lib/verbs';
 import { playSfx } from '@/lib/sfx';
 import { useStore } from '@/lib/store';
 import { usePalette } from '@/lib/theme';
@@ -46,6 +51,14 @@ function promptFor(exercise: SessionCard['exercise'], t: (key: string) => string
       return t('session.prompt.letterRecognise');
     case 'word-ru-he':
       return t('session.prompt.wordGloss');
+    case 'type-word':
+      return t('lesson.type');
+    case 'cloze-example':
+      return t('lesson.cloze');
+    case 'gender-agree':
+      return t('lesson.gender');
+    case 'form-verb':
+      return t('lesson.form');
     default:
       return t('lesson.pickGloss');
   }
@@ -131,6 +144,7 @@ export default function LessonScreen() {
   );
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
+  const [typed, setTyped] = useState('');
   const [built, setBuilt] = useState<string[]>([]);
   const [checked, setChecked] = useState(false);
   const [lastOk, setLastOk] = useState(true);
@@ -152,13 +166,20 @@ export default function LessonScreen() {
 
   const goNext = () => {
     setPicked(null);
+    setTyped('');
     setBuilt([]);
     setChecked(false);
     setIndex((value) => value + 1);
   };
 
   const applyResult = (ok: boolean) => {
-    if (card && card.kind === 'word' && (card.exercise === 'word-he-ru' || card.exercise === 'listen-choice')) {
+    if (
+      card &&
+      card.kind === 'word' &&
+      ['word-he-ru', 'listen-choice', 'type-word', 'cloze-example', 'gender-agree', 'form-verb'].includes(
+        card.exercise
+      )
+    ) {
       gradeCard('word', card.refId, ok ? 'good' : 'again');
     }
     setScore((s) => ({ correct: s.correct + (ok ? 1 : 0), total: s.total + 1 }));
@@ -177,6 +198,11 @@ export default function LessonScreen() {
   const checkBuild = () => {
     if (!card || checked) return;
     applyResult(built.join(' ') === card.answer);
+  };
+
+  const checkTyped = () => {
+    if (!card || checked) return;
+    applyResult(answersMatch(typed, card.answer));
   };
 
   if (queue.length === 0) {
@@ -267,9 +293,12 @@ export default function LessonScreen() {
         {card.exercise === 'teach-word' && word ? (
           <Surface style={styles.card}>
             <AppText variant="title">{word.emoji}</AppText>
-            <HebrewText size="card" align="center">
-              {hebrewFor(word, progress.settings)}
-            </HebrewText>
+            <PointedHebrew
+              nikud={word.nikud}
+              hebrew={word.hebrew}
+              card={progress.cards[`word:${word.id}`]}
+              id={`word:${word.id}`}
+            />
             {showTranscription(progress.settings.level) ? (
               <AppText muted>{word.transcription}</AppText>
             ) : null}
@@ -286,9 +315,18 @@ export default function LessonScreen() {
 
         {showWordFace && card.exercise !== 'teach-word' && word ? (
           <Surface style={styles.card}>
-            <HebrewText size="card" align="center">
-              {card.exercise === 'word-ru-he' ? wordGloss(word, translation) : hebrewFor(word, progress.settings)}
-            </HebrewText>
+            {card.exercise === 'word-ru-he' ? (
+              <HebrewText size="card" align="center">
+                {wordGloss(word, translation)}
+              </HebrewText>
+            ) : (
+              <PointedHebrew
+                nikud={word.nikud}
+                hebrew={word.hebrew}
+                card={progress.cards[`word:${word.id}`]}
+                id={`word:${word.id}`}
+              />
+            )}
             {card.exercise !== 'word-ru-he' && showTranscription(progress.settings.level) ? (
               <AppText muted>{word.transcription}</AppText>
             ) : null}
@@ -361,6 +399,56 @@ export default function LessonScreen() {
           </View>
         ) : null}
 
+        {card.exercise === 'type-word' && word ? (
+          <Surface style={styles.card}>
+            <AppText variant="heading">{wordGloss(word, translation)}</AppText>
+            <AppText variant="caption" muted>
+              {t('session.prompt.typeHint')}
+            </AppText>
+            <HebrewKeyboard value={typed} onChange={setTyped} disabled={checked} />
+          </Surface>
+        ) : null}
+
+        {card.exercise === 'cloze-example' ? (
+          <Surface style={styles.card}>
+            <HebrewText size="inline" align="center">
+              {card.promptHe ?? '____'}
+            </HebrewText>
+            <AppText variant="caption" muted>
+              {t('session.prompt.typeHint')}
+            </AppText>
+            <HebrewKeyboard value={typed} onChange={setTyped} disabled={checked} />
+          </Surface>
+        ) : null}
+
+        {card.exercise === 'form-verb' ? (
+          <Surface style={styles.card}>
+            <AppText>
+              {t(`verbs.form.${card.formTense ?? 'present'}`)}
+              {card.formSlot && card.formTense !== 'infinitive' ? ` · ${t(`verbs.person.${card.formSlot}`)}` : ''}
+            </AppText>
+            {card.bilingualAnswer ? (
+              <AppText muted>
+                {translation === 'en' ? card.bilingualAnswer.en : card.bilingualAnswer.ru}
+              </AppText>
+            ) : null}
+            {getVerb(card.verbId ?? '') ? (
+              <AppText variant="caption" muted>
+                {t('verbs.root', { root: getVerb(card.verbId ?? '')?.root ?? '' })}
+              </AppText>
+            ) : null}
+            {(card.options?.length ?? 0) === 0 ? (
+              <HebrewKeyboard value={typed} onChange={setTyped} disabled={checked} />
+            ) : null}
+          </Surface>
+        ) : null}
+
+        {card.exercise === 'gender-agree' && card.promptHe ? (
+          <AppText muted>
+            {translation === 'en' ? card.promptHe.split('|||')[1] : card.promptHe.split('|||')[0]}
+          </AppText>
+        ) : null}
+
         {card.exercise === 'dialogue-reply' && dialogue ? (
           <View style={styles.block}>
             {dialogue.lines.map((line, lineIndex) => (
@@ -374,7 +462,11 @@ export default function LessonScreen() {
           </View>
         ) : null}
 
-        {card.exercise !== 'teach-word' && card.exercise !== 'build-phrase' ? (
+        {card.exercise !== 'teach-word' &&
+        card.exercise !== 'build-phrase' &&
+        card.exercise !== 'type-word' &&
+        card.exercise !== 'cloze-example' &&
+        !(card.exercise === 'form-verb' && (card.options?.length ?? 0) === 0) ? (
           <Options
             card={card}
             picked={picked}
@@ -395,8 +487,20 @@ export default function LessonScreen() {
             <Button
               label={t('lesson.check')}
               size="lg"
-              disabled={card.exercise === 'build-phrase' ? built.length === 0 : picked === null}
-              onPress={card.exercise === 'build-phrase' ? checkBuild : checkChoice}
+              disabled={
+                card.exercise === 'build-phrase'
+                  ? built.length === 0
+                  : isTypedExercise(card.exercise) && (card.options?.length ?? 0) === 0
+                    ? typed.trim().length === 0
+                    : picked === null
+              }
+              onPress={
+                card.exercise === 'build-phrase'
+                  ? checkBuild
+                  : isTypedExercise(card.exercise) && (card.options?.length ?? 0) === 0
+                    ? checkTyped
+                    : checkChoice
+              }
             />
           )}
         </View>

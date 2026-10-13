@@ -1,5 +1,6 @@
 import { decks, getLevel, levels, passages, phrases } from '@/lib/data';
 import { loadedSlang, loadedWords } from '@/lib/lexicon';
+import { hebrewByNikud, type NikudContext } from '@/lib/nikud-display';
 import type {
   Deck,
   Level,
@@ -78,8 +79,12 @@ export function teachesLetters(id: LevelId): boolean {
 /** Текст на иврите для показа с учётом политики огласовок уровня. */
 export function hebrewFor(
   item: { hebrew: string; nikud: string },
-  settings: Settings
+  settings: Settings,
+  context?: NikudContext
 ): string {
+  if (settings.nikudMode || context) {
+    return hebrewByNikud(item, settings, context);
+  }
   return showNikud(settings) ? item.nikud : item.hebrew;
 }
 

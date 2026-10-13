@@ -3,7 +3,14 @@ import { join } from 'node:path';
 
 import { createAudioPlayer } from 'expo-audio';
 
-import { hasRecording, playRecording, recordingCount, stopPlayback, ttsRecordingCount } from '@/lib/audio';
+import {
+  SLOW_PLAYBACK_RATE,
+  hasRecording,
+  playRecording,
+  recordingCount,
+  stopPlayback,
+  ttsRecordingCount,
+} from '@/lib/audio';
 import { letters, phrases, words } from '@/lib/data';
 
 const createPlayer = createAudioPlayer as unknown as jest.Mock;
@@ -66,6 +73,13 @@ describe('озвучка', () => {
 
     expect(playRecording(voiced?.audio)).toBe(true);
     expect(createPlayer).toHaveBeenCalledTimes(1);
+  });
+
+  it('ставит 0.7x для медленного прослушивания', () => {
+    const voiced = words.find((word) => hasRecording(word.audio));
+    expect(playRecording(voiced?.audio, { rate: SLOW_PLAYBACK_RATE })).toBe(true);
+    const player = createPlayer.mock.results[0]?.value as { playbackRate: number };
+    expect(player.playbackRate).toBe(SLOW_PLAYBACK_RATE);
   });
 
   it('у каждой вложенной записи есть автор и свободная лицензия', () => {

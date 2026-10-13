@@ -37,11 +37,26 @@ function entries() {
     const words = loadJson(join(root, `data/lexicon/words-${level}.json`)).words ?? [];
     const slang = loadJson(join(root, `data/lexicon/slang-${level}.json`)).slang ?? [];
     for (const item of [...words, ...slang]) {
+      const text = (item.nikud ?? '').trim();
+      if (!text) continue;
       out.push({
         id: item.id,
         level,
-        text: item.nikud,
+        text,
         voice: item.pos === 'slang' ? 'male' : 'female',
+      });
+    }
+    const dialogues = loadJson(join(root, `data/lexicon/dialogues-${level}.json`)).dialogues ?? [];
+    for (const dialogue of dialogues) {
+      (dialogue.lines ?? []).forEach((line, index) => {
+        const text = (line.nikud ?? '').trim();
+        if (!text) return;
+        out.push({
+          id: `${dialogue.id}-l${index}`,
+          level,
+          text,
+          voice: line.speaker === 'b' ? 'male' : 'female',
+        });
       });
     }
   }
@@ -123,11 +138,12 @@ ${lines}
 const azure = Boolean(process.env.AZURE_SPEECH_KEY);
 const google = Boolean(process.env.GOOGLE_TTS_KEY);
 if (!azure && !google) {
-  console.log('Нет AZURE_SPEECH_KEY / GOOGLE_TTS_KEY — синтез пропущен. В приложении будет «нет записи».');
+  console.log('No AZURE_SPEECH_KEY / GOOGLE_TTS_KEY — synthesis skipped.');
+  console.log('The app hides the sound button when a file is missing (no on-device TTS).');
   console.log('Azure: AZURE_SPEECH_KEY=... AZURE_SPEECH_REGION=eastus node scripts/generate-tts.mjs');
   console.log('Google: GOOGLE_TTS_KEY=... node scripts/generate-tts.mjs');
   if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-    console.log('GOOGLE_APPLICATION_CREDENTIALS задан, но скрипт ждёт API-ключ GOOGLE_TTS_KEY.');
+    console.log('GOOGLE_APPLICATION_CREDENTIALS is set, but this script expects GOOGLE_TTS_KEY.');
   }
   process.exit(0);
 }
@@ -158,7 +174,12 @@ for (const item of entries()) {
     }
     if (!existsSync(cacheFile) || statSync(cacheFile).size < 200) continue;
     writeFileSync(dest, readFileSync(cacheFile));
-    manifest.files[item.id] = rel;
+    manifest.files[item.id] = {
+      path: rel,
+      text: item.text,
+      voice: item.voice,
+      hash: sha1(`${item.voice}:${item.text}`),
+    };
     present.push(rel);
     done += 1;
     if (done % 50 === 0) console.log(`tts ${done}`);

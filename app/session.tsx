@@ -9,7 +9,9 @@ import { Button, ChoiceRow } from '@/components/Button';
 import { Confetti } from '@/components/Confetti';
 import { EmptyState } from '@/components/EmptyState';
 import { HandwritingCanvas } from '@/components/HandwritingCanvas';
+import { HebrewKeyboard } from '@/components/HebrewKeyboard';
 import { HebrewText } from '@/components/HebrewText';
+import { PointedHebrew } from '@/components/PointedHebrew';
 import { Mascot } from '@/components/Mascot';
 import { ProgressBar } from '@/components/Stat';
 import { AppText, Screen, Surface } from '@/components/Themed';
@@ -26,9 +28,12 @@ import {
   posLabel,
   wordGloss,
 } from '@/lib/i18n';
+import { answersMatch } from '@/lib/hebrew-script';
 import { hebrewFor, showNikud, showTranscription } from '@/lib/levels';
+import { isTypedExercise } from '@/lib/recall';
 import { buildSession } from '@/lib/session';
 import { useStore } from '@/lib/store';
+import { getVerb } from '@/lib/verbs';
 import { usePalette } from '@/lib/theme';
 import type { Grade, SessionCard, Settings } from '@/lib/types';
 import { useI18n } from '@/lib/use-i18n';
@@ -69,6 +74,7 @@ export default function SessionScreen() {
   const [queue, setQueue] = useState<SessionCard[]>(initialQueue);
   const [position, setPosition] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
+  const [typed, setTyped] = useState('');
   const [write, setWrite] = useState<WriteState>(EMPTY_WRITE);
   const totals = useRef({ reviewed: 0, correct: 0 });
   const [done, setDone] = useState(false);
@@ -91,6 +97,7 @@ export default function SessionScreen() {
       }
 
       setPicked(null);
+      setTyped('');
       setWrite(EMPTY_WRITE);
       setPosition((value) => value + 1);
     },
@@ -205,21 +212,28 @@ export default function SessionScreen() {
           card={current}
           settings={settings}
           picked={picked}
+          typed={typed}
           write={write}
           onStrokes={(strokes) => checkHandwriting(current, strokes)}
           onPick={(value) => {
             setPicked(value);
             tap(value === displayAnswer(current, translation), progress.settings.soundEnabled !== false);
           }}
+          onTyped={setTyped}
         />
 
         <Footer
           card={current}
           picked={picked}
+          typed={typed}
           write={write}
           onRetry={() =>
             setWrite((state) => ({ ...EMPTY_WRITE, attempts: state.attempts, wipe: state.wipe + 1 }))
           }
+          onCheck={() => {
+            setPicked(typed || ' ');
+            tap(answersMatch(typed, current.answer), progress.settings.soundEnabled !== false);
+          }}
           onGrade={(grade) => advance(current, grade)}
         />
       </ScrollView>
@@ -244,29 +258,51 @@ function promptFor(
       return { title: t('session.prompt.phrase') };
     case 'passage-question':
       return { title: t('session.prompt.passage') };
+    case 'listen-choice':
+      return { title: t('session.prompt.listen') };
+    case 'type-word':
+      return { title: t('session.prompt.typeWord'), hint: t('session.prompt.typeHint') };
+    case 'cloze-example':
+      return { title: t('session.prompt.cloze'), hint: t('session.prompt.typeHint') };
+    case 'gender-agree':
+      return { title: t('session.prompt.gender') };
+    case 'form-verb':
+      return { title: t('session.prompt.formVerb') };
     default:
       return { title: t('session.prompt.wordHe') };
   }
+}
+
+function genderPrompt(card: SessionCard, lang: 'ru' | 'en'): string | undefined {
+  if (!card.promptHe?.includes('|||')) return undefined;
+  const [ru, en] = card.promptHe.split('|||');
+  return lang === 'en' ? en : ru;
 }
 
 function CardBody({
   card,
   settings,
   picked,
+  typed,
   write,
   onStrokes,
   onPick,
+  onTyped,
 }: {
   card: SessionCard;
   settings: Settings;
   picked: string | null;
+  typed: string;
   write: WriteState;
   onStrokes: (strokes: Stroke[]) => void;
   onPick: (value: string) => void;
+  onTyped: (value: string) => void;
 }) {
   const { t, lang, translation } = useI18n();
+  const { progress } = useStore();
   const prompt = promptFor(card, t);
-  const answered = picked !== null;
+  const typedKind = isTypedExercise(card.exercise);
+  const answered = typedKind ? picked !== null : picked !== null;
   const withTranscription = showTranscription(settings.level);
   const options = displayOptions(card, translation);
   const answer = displayAnswer(card, translation);
@@ -338,9 +374,12 @@ function CardBody({
 
           {card.exercise === 'word-he-ru' && word ? (
             <>
-              <HebrewText size="card" align="center">
-                {hebrewFor(word, settings)}
-              </HebrewText>
+              <PointedHebrew
+                nikud={word.nikud}
+                hebrew={word.hebrew}
+                card={progress.cards[`word:${word.id}`]}
+                id={`word:${word.id}`}
+              />
               {withTranscription && (card.isNew || answered) ? (
                 <AppText variant="label" muted>
                   {word.transcription}
@@ -348,6 +387,64 @@ function CardBody({
               ) : null}
               <AudioButton audio={word.audio} />
             </>
+          ) : null}
+
+          {card.exercise === 'listen-choice' && word ? (
+            <>
+              <Mascot pose="think" size={88} />
+              <AudioButton audio={word.audio} />
+            </>
+          ) : null}
+
+          {card.exercise === 'type-word' && word ? (
+            <>
+              <AppText variant="title" style={styles.centered}>
+                {wordGloss(word, translation)}
+              </AppText>
+              <AppText variant="caption" muted>
+                {posLabel(word.pos, lang)}
+              </AppText>
+              <HebrewKeyboard value={typed} onChange={onTyped} disabled={answered} />
+            </>
+          ) : null}
+
+          {card.exercise === 'cloze-example' ? (
+            <>
+              <HebrewText size="inline" align="center">
+                {card.promptHe ?? '____'}
+              </HebrewText>
+              <HebrewKeyboard value={typed} onChange={onTyped} disabled={answered} />
+            </>
+          ) : null}
+
+          {card.exercise === 'form-verb' ? (
+            <>
+              <AppText style={styles.centered}>
+                {t(`verbs.form.${card.formTense ?? 'present'}`)}
+                {card.formSlot && card.formTense !== 'infinitive'
+                  ? ` · ${t(`verbs.person.${card.formSlot}`)}`
+                  : ''}
+              </AppText>
+              {card.bilingualAnswer ? (
+                <AppText muted style={styles.centered}>
+                  {translation === 'en' ? card.bilingualAnswer.en : card.bilingualAnswer.ru}
+                </AppText>
+              ) : null}
+              {getVerb(card.verbId ?? '') ? (
+                <AppText variant="caption" muted>
+                  {t('verbs.root', { root: getVerb(card.verbId ?? '')?.root ?? '' })}
+                </AppText>
+              ) : null}
+              {options.length === 0 ? (
+                <HebrewKeyboard value={typed} onChange={onTyped} disabled={answered} />
+              ) : null}
+            </>
+          ) : null}
+
+          {card.exercise === 'gender-agree' ? (
+            <AppText variant="heading" style={styles.centered}>
+              {genderPrompt(card, translation) ?? t('session.prompt.gender')}
+            </AppText>
           ) : null}
 
           {card.exercise === 'word-ru-he' && word ? (
@@ -392,7 +489,7 @@ function CardBody({
         </Surface>
       )}
 
-      {card.exercise === 'letter-write' ? null : (
+      {card.exercise === 'letter-write' || (typedKind && options.length === 0) ? null : (
         <View style={styles.options}>
           {options.map((option) => {
             const isAnswer = option === answer;
@@ -406,7 +503,10 @@ function CardBody({
                   ? 'revealed'
                   : 'idle';
             const hebrewOption =
-              card.exercise === 'word-ru-he' || card.exercise === 'passage-question';
+              card.exercise === 'word-ru-he' ||
+              card.exercise === 'passage-question' ||
+              card.exercise === 'gender-agree' ||
+              card.exercise === 'form-verb';
             return (
               <ChoiceRow
                 key={option}
@@ -435,19 +535,26 @@ function CardBody({
 function Footer({
   card,
   picked,
+  typed,
   write,
   onRetry,
+  onCheck,
   onGrade,
 }: {
   card: SessionCard;
   picked: string | null;
+  typed: string;
   write: WriteState;
   onRetry: () => void;
+  onCheck: () => void;
   onGrade: (grade: Grade) => void;
 }) {
   const { t, translation } = useI18n();
+  const typedKind = isTypedExercise(card.exercise) && (card.options?.length ?? 0) === 0;
   const answered = picked !== null;
-  const correct = picked === displayAnswer(card, translation);
+  const correct = typedKind
+    ? answersMatch(typed, card.answer)
+    : picked === displayAnswer(card, translation);
 
   if (card.exercise === 'letter-write') {
     if (write.verdict === 'match') {
@@ -508,6 +615,13 @@ function Footer({
   }
 
   if (!answered) {
+    if (typedKind) {
+      return (
+        <View style={styles.footer}>
+          <Button label={t('lesson.check')} size="lg" disabled={typed.trim().length === 0} onPress={onCheck} />
+        </View>
+      );
+    }
     return (
       <View style={styles.footer}>
         <AppText variant="caption" muted style={styles.centered}>

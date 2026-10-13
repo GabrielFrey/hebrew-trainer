@@ -76,11 +76,19 @@ describe('лексикон Mondly', () => {
     expect(queue.some((card) => card.exercise === 'build-phrase' || card.exercise === 'choice-picture')).toBe(
       true
     );
-    expect(queue.some((card) => card.exercise === 'listen-choice')).toBe(true);
+    const listenCards = queue.filter((card) => card.exercise === 'listen-choice');
+    listenCards.forEach((card) => {
+      const word = allWords().find((item) => item.id === card.refId);
+      expect(word).toBeDefined();
+    });
+    expect(queue.some((card) => card.exercise === 'type-word')).toBe(true);
+    expect(queue.some((card) => card.exercise === 'gender-agree')).toBe(true);
     expect(queue.some((card) => card.exercise === 'dialogue-reply')).toBe(true);
     queue
       .filter((card) =>
-        ['word-he-ru', 'choice-picture', 'listen-choice', 'dialogue-reply'].includes(card.exercise)
+        ['word-he-ru', 'choice-picture', 'listen-choice', 'dialogue-reply', 'gender-agree', 'form-verb'].includes(
+          card.exercise
+        )
       )
       .forEach((card) => {
         expect(card.options.length).toBeGreaterThanOrEqual(2);

@@ -109,7 +109,9 @@ describe('сборка очереди', () => {
 
   it('даёт каждой карточке вариант ответа, содержащий правильный', () => {
     buildSession(onboarded(), NOW).forEach((card) => {
-      if (card.exercise === 'letter-write') return;
+      if (card.exercise === 'letter-write' || card.exercise === 'type-word' || card.exercise === 'cloze-example') {
+        return;
+      }
       expect(card.options).toContain(card.answer);
       expect(card.options.length).toBeGreaterThanOrEqual(2);
       expect(new Set(card.options).size).toBe(card.options.length);

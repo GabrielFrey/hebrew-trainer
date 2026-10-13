@@ -1,6 +1,8 @@
+import { hasRecording } from '@/lib/audio';
 import { endOfToday } from '@/lib/dates';
 import { cardId, getLetter, getPassage, getPhrase, getWord, letters } from '@/lib/data';
 import { glyphsForLetter } from '@/lib/handwriting';
+import { stripNikud } from '@/lib/hebrew-script';
 import {
   letterName,
   letterSound,
@@ -14,6 +16,8 @@ import {
   teachesLetters,
   wordsForLevel,
 } from '@/lib/levels';
+import { clozeFromExample, formDistractors, pickGenderItem } from '@/lib/recall';
+import { allVerbs, lexiconWordForVerb, pickFormPrompt } from '@/lib/verbs';
 import type {
   BilingualText,
   CardState,
@@ -23,6 +27,16 @@ import type {
   UiLanguage,
   Word,
 } from '@/lib/types';
+
+function verbForWord(word: Word | undefined) {
+  if (!word) return undefined;
+  return allVerbs().find((item) => {
+    const linked = lexiconWordForVerb(item);
+    if (linked?.id === word.id) return true;
+    const inf = stripNikud(item.forms.infinitive);
+    return stripNikud(word.hebrew) === inf || stripNikud(word.nikud) === inf;
+  });
+}
 
 export const SESSION_SIZE = 15;
 export const MAX_NEW_WORDS_PER_SESSION = 5;
@@ -72,7 +86,16 @@ function exerciseFor(candidate: Candidate, seed: number): ExerciseKind {
     return reps >= 2 && seed % 2 === 0 ? 'letter-write' : 'letter-recognise';
   }
   if (candidate.kind === 'word') {
-    return reps >= 1 && seed % 3 === 0 ? 'word-ru-he' : 'word-he-ru';
+    const word = getWord(candidate.refId);
+    if (reps < 1) {
+      return hasRecording(word?.audio) && seed % 5 === 0 ? 'listen-choice' : 'word-he-ru';
+    }
+    const kinds: ExerciseKind[] = ['word-he-ru', 'word-ru-he', 'type-word'];
+    if (hasRecording(word?.audio)) kinds.push('listen-choice');
+    if (word && clozeFromExample(word)) kinds.push('cloze-example');
+    if (verbForWord(word)) kinds.push('form-verb');
+    kinds.push('gender-agree');
+    return kinds[seed % kinds.length] ?? 'word-he-ru';
   }
   if (candidate.kind === 'passage') return 'passage-question';
   return 'phrase-translate';
@@ -171,6 +194,39 @@ function buildCard(
         seed + 11
       );
       return { options, answer };
+    }
+    if (exercise === 'type-word') {
+      return { options: [], answer: word.nikud, bilingualAnswer: { ru: word.ru, en: word.en } };
+    }
+    if (exercise === 'cloze-example') {
+      const cloze = clozeFromExample(word);
+      return {
+        options: [],
+        answer: cloze?.answer ?? word.nikud,
+        bilingualAnswer: { ru: word.ru, en: word.en },
+      };
+    }
+    if (exercise === 'form-verb') {
+      const verb = verbForWord(word);
+      const prompt = verb ? pickFormPrompt(verb, seed) : null;
+      if (verb && prompt) {
+        const options = shuffle([prompt.answer, ...formDistractors(verb, prompt.answer, seed + 3)], seed + 5);
+        return { options, answer: prompt.answer, bilingualAnswer: { ru: verb.ru, en: verb.en } };
+      }
+      return { options: [], answer: word.nikud };
+    }
+    if (exercise === 'gender-agree') {
+      const gender = pickGenderItem(seed, verbForWord(word));
+      return {
+        options: gender.options,
+        answer: gender.answer,
+        bilingualAnswer: { ru: gender.answer, en: gender.answer },
+      };
+    }
+    if (exercise === 'listen-choice') {
+      const choices = shuffle([word, ...uniqueWords(word, pool, 3, seed)], seed + 13);
+      const bilingualOptions = choices.map((item) => ({ ru: item.ru, en: item.en }));
+      return resolveBuilt(bilingualOptions, { ru: word.ru, en: word.en }, lang);
     }
     const choices = shuffle([word, ...uniqueWords(word, pool, 3, seed)], seed + 13);
     const bilingualOptions = choices.map((item) => ({ ru: item.ru, en: item.en }));
@@ -313,6 +369,31 @@ export function buildSession(
       ...(built.bilingualAnswer ? { bilingualAnswer: built.bilingualAnswer } : {}),
       ...(built.expectedGlyph ? { expectedGlyph: built.expectedGlyph } : {}),
     };
+  }).map((card, index) => {
+    if (card.exercise !== 'cloze-example' && card.exercise !== 'form-verb' && card.exercise !== 'gender-agree') {
+      return card;
+    }
+    const word = getWord(card.refId);
+    const seed = seedBase + index * 31;
+    if (card.exercise === 'cloze-example' && word) {
+      const cloze = clozeFromExample(word);
+      return { ...card, promptHe: cloze?.prompt };
+    }
+    if (card.exercise === 'form-verb' && word) {
+      const verb = verbForWord(word);
+      const prompt = verb ? pickFormPrompt(verb, seed) : null;
+      return {
+        ...card,
+        verbId: verb?.id,
+        formTense: prompt?.tense,
+        formSlot: prompt?.slot,
+      };
+    }
+    if (card.exercise === 'gender-agree' && word) {
+      const gender = pickGenderItem(seed, verbForWord(word));
+      return { ...card, promptHe: `${gender.promptRu}|||${gender.promptEn}` };
+    }
+    return card;
   });
 }
 

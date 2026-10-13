@@ -8,7 +8,7 @@ import { AppText, Screen, Surface } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
 import { recordingCount } from '@/lib/audio';
 import { levels, words } from '@/lib/data';
-import { canToggleNikud, decksForLevel, defaultShowNikud, wordsForLevel } from '@/lib/levels';
+import { decksForLevel, defaultShowNikud, wordsForLevel } from '@/lib/levels';
 import { hasPermission, requestPermission, syncReminder } from '@/lib/notifications';
 import { levelDetail, levelSummary, levelTitle, resolveTranslation } from '@/lib/i18n';
 import { useStore } from '@/lib/store';
@@ -65,7 +65,11 @@ export default function SettingsScreen() {
 
   const changeLevel = (level: LevelId) => {
     // Смена уровня не сбрасывает карточки: меняется только набор нового материала.
-    updateSettings({ level, showNikud: defaultShowNikud(level) });
+    updateSettings({
+      level,
+      showNikud: defaultShowNikud(level),
+      nikudMode: settings.nikudMode ?? (defaultShowNikud(level) ? 'always' : 'adaptive'),
+    });
   };
 
   const confirmReset = () => {
@@ -109,27 +113,22 @@ export default function SettingsScreen() {
           ))}
         </Section>
 
-        {canToggleNikud(settings.level) ? (
-          <Section icon="eye" title={t('settings.nikud')} hint={t('settings.nikudHint')}>
+        <Section icon="eye" title={t('settings.nikud')} hint={t('settings.nikudHint')}>
+          {(
+            [
+              ['always', 'settings.nikudAlways'],
+              ['adaptive', 'settings.nikudAdaptive'],
+              ['never', 'settings.nikudNever'],
+            ] as const
+          ).map(([mode, key]) => (
             <Row
-              label={t('settings.nikudOn')}
-              selected={settings.showNikud}
-              onPress={() => updateSettings({ showNikud: true })}
+              key={mode}
+              label={t(key)}
+              selected={(settings.nikudMode ?? (settings.showNikud ? 'always' : 'never')) === mode}
+              onPress={() => updateSettings({ nikudMode: mode, showNikud: mode !== 'never' })}
             />
-            <Row
-              label={t('settings.nikudOff')}
-              selected={!settings.showNikud}
-              onPress={() => updateSettings({ showNikud: false })}
-            />
-          </Section>
-        ) : (
-          <Surface tone="alt" style={styles.about}>
-            <AppText variant="label">{t('settings.nikud')}</AppText>
-            <AppText variant="caption" muted>
-              {t('settings.nikudLocked')}
-            </AppText>
-          </Surface>
-        )}
+          ))}
+        </Section>
 
         <Section icon="target" title={t('settings.goal')}>
           {(['reading', 'speaking'] as Goal[]).map((value) => (

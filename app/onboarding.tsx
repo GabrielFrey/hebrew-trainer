@@ -40,6 +40,7 @@ export default function OnboardingScreen() {
       goal,
       minutesPerDay: minutes,
       showNikud: defaultShowNikud(level),
+      nikudMode: 'adaptive',
       onboarded: true,
       reminderHour: REMINDER_HOUR,
       translationLanguage,
