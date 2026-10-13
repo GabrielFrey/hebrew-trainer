@@ -201,16 +201,7 @@ function polishWord(word) {
   const en = polishEn(override?.en ?? word.en, word.ru) || word.en;
   word.ru = ru || word.ru;
   word.en = en || word.en;
-  if (word.example) {
-    const prevHe = word.example.hebrew;
-    const prevNi = word.example.nikud;
-    const prevTr = word.example.transcription;
-    word.example.ru = exampleFrom(word.ru, 'ru');
-    word.example.en = exampleFrom(word.en, 'en');
-    word.example.hebrew = prevHe;
-    word.example.nikud = prevNi;
-    word.example.transcription = prevTr;
-  }
+  // Не переписываем живые примеры на повтор перевода леммы.
   return word;
 }
 
@@ -223,16 +214,7 @@ function polishSlang(item) {
     item.usage.ru = polishGloss(item.usage.ru) || item.usage.ru;
     item.usage.en = String(item.usage.en ?? '').trim();
   }
-  if (item.example) {
-    const prevHe = item.example.hebrew;
-    const prevNi = item.example.nikud;
-    const prevTr = item.example.transcription;
-    item.example.ru = exampleFrom(item.ru, 'ru');
-    item.example.en = exampleFrom(item.en, 'en');
-    item.example.hebrew = prevHe;
-    item.example.nikud = prevNi;
-    item.example.transcription = prevTr;
-  }
+  // Примеры сленга не сводим к переводу леммы.
   return item;
 }
 
@@ -242,18 +224,12 @@ function extractAfter(text, re) {
 }
 
 function polishDialogue(dialogue) {
+  const templateA = /^Как дела\?\s*Есть\s*(.+)\?\s*$/u;
+  const templateB = /^(?:Норм|Сабаба), есть\s*(.+)\.\s*$/u;
   for (const line of dialogue.lines ?? []) {
-    if (line.speaker === 'a') {
-      const ruInner = polishGloss(extractAfter(line.ru, /^Как дела\?\s*Есть\s*(.+)\?\s*$/u));
-      const enInner = polishEn(extractAfter(line.en, /^How are you\?\s*Got\s*(.+)\?\s*$/i));
-      line.ru = `Как дела? Есть ${firstSense(ruInner) || ruInner}?`;
-      line.en = `How are you? Is there ${firstSense(enInner) || enInner}?`;
-    } else {
-      const ruInner = polishGloss(extractAfter(line.ru, /^Норм, есть\s*(.+)\.\s*$/u));
-      const enInner = polishEn(extractAfter(line.en, /^Cool, we[’']ve got\s*(.+)\.\s*$/i));
-      line.ru = `Сабаба, есть ${firstSense(ruInner) || ruInner}.`;
-      line.en = `Cool, we’ve got ${firstSense(enInner) || enInner}.`;
-    }
+    if (templateA.test(line.ru) || templateB.test(line.ru)) continue;
+    line.ru = polishGloss(line.ru) || line.ru;
+    line.en = polishEn(line.en) || line.en;
   }
   for (const reply of dialogue.replies ?? []) {
     reply.ru = polishGloss(reply.ru) || reply.ru;

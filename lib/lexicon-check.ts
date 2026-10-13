@@ -12,11 +12,20 @@ export function issuesForBilingual(
   return issues;
 }
 
+export function isEmptyExample(example: { ru?: string; en?: string; nikud?: string; hebrew?: string } | null | undefined): boolean {
+  if (!example) return true;
+  return ![example.ru, example.en, example.nikud, example.hebrew].some(isFilled);
+}
+
 export function issuesForWord(
-  word: { id?: string; ru?: string; en?: string; example?: { ru?: string; en?: string } },
+  word: { id?: string; ru?: string; en?: string; example?: { ru?: string; en?: string; nikud?: string; hebrew?: string } },
   path: string
 ): string[] {
-  return [...issuesForBilingual(word, path), ...issuesForBilingual(word.example, `${path}.example`)];
+  const issues = issuesForBilingual(word, path);
+  if (!isEmptyExample(word.example)) {
+    issues.push(...issuesForBilingual(word.example, `${path}.example`));
+  }
+  return issues;
 }
 
 export function issuesForSlang(

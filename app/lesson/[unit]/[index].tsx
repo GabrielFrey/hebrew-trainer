@@ -277,7 +277,9 @@ export default function LessonScreen() {
             <AppText variant="caption" muted>
               {posLabel(word.pos, lang)}
             </AppText>
-            <AppText>{exampleGloss(word.example, translation)}</AppText>
+            {exampleGloss(word.example, translation) ? (
+              <AppText>{exampleGloss(word.example, translation)}</AppText>
+            ) : null}
             <AudioButton audio={word.audio} />
           </Surface>
         ) : null}

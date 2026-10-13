@@ -91,7 +91,9 @@ export default function SlangScreen() {
                 </AppText>
                 <AppText variant="label">{t('slang.usage')}</AppText>
                 <AppText>{translation === 'en' ? item.usage.en : item.usage.ru}</AppText>
-                <AppText muted>{exampleGloss(item.example, translation)}</AppText>
+                {exampleGloss(item.example, translation) ? (
+                  <AppText muted>{exampleGloss(item.example, translation)}</AppText>
+                ) : null}
                 <AudioButton audio={item.audio} compact />
               </Surface>
               );

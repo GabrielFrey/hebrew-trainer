@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Собирает лексикон: 5000 частых слов + 2000 разговорных выражений,
- * юниты Mondly, диалоги. Пишет data/lexicon/*.json по уровням.
+ * Собирает 5000 частых слов и юниты Mondly. Пишет data/lexicon/words-*.json.
+ * Сленг и диалоги — живой набор из scripts/repair_content.py; этот скрипт их не трогает.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -200,14 +200,8 @@ function capSentence(text) {
   return /[.!?…]$/.test(body) ? body : `${body}.`;
 }
 
-function makeExample(nikud, hebrew, transcription, ru, en) {
-  return {
-    nikud: `${nikud}.`,
-    hebrew: `${hebrew}.`,
-    transcription: `${transcription}.`,
-    ru: capSentence(ru),
-    en: capSentence(en),
-  };
+function makeExample() {
+  return { nikud: '', hebrew: '', transcription: '', ru: '', en: '' };
 }
 
 function readCache(name) {
@@ -310,164 +304,10 @@ if (words.length < 5000) {
 const byLevel = Object.fromEntries(LEVELS.map((level) => [level, []]));
 for (const word of words.slice(0, 5000)) byLevel[word.level].push(word);
 
+// Сленг и диалоги больше не склеиваются по шаблонам: живой набор
+// пишет scripts/repair_content.py и лежит в slang-*.json / dialogues-*.json.
 const slang = [];
-const slangPlain = new Set();
-
-function pushSlang(item) {
-  const hebrewPlain = stripNikud(item.nikud);
-  if (slangPlain.has(item.nikud) || slangPlain.has(hebrewPlain + item.ru)) return;
-  slangPlain.add(item.nikud);
-  slangPlain.add(hebrewPlain + item.ru);
-  slang.push(item);
-}
-
-CORE_SLANG.forEach((row, index) => {
-  const [nikud, tr, ru, en, usageRu, usageEn] = row;
-  const level = index < 12 ? 'elementary' : index < 24 ? 'basic' : 'intermediate';
-  pushSlang({
-    id: `slang-${slug(tr)}-${index}`,
-    deck: 'slang',
-    level,
-    theme: 'slang',
-    hebrew: stripNikud(nikud),
-    nikud,
-    transcription: tr,
-    ru,
-    en,
-    pos: 'slang',
-    emoji: '💬',
-    example: makeExample(nikud, stripNikud(nikud), tr, ru, en),
-    audio: `tts/${level}/slang-${slug(tr)}-${index}.mp3`,
-    usage: { ru: usageRu, en: usageEn },
-  });
-});
-
-const frames = [
-  {
-    nikud: (w) => `יַאלְּלָה, ${w.nikud}`,
-    ru: (w) => `Ялла, ${w.ru}!`,
-    en: (w) => `Come on, ${w.en}!`,
-    tr: (w) => `yalla, ${w.transcription}`,
-    usageRu: 'Погонялка перед делом или предметом разговора.',
-    usageEn: 'Urging someone, naming the thing you want to deal with.',
-    level: 'elementary',
-  },
-  {
-    nikud: (w) => `סַבָּבָה, יֵשׁ ${w.nikud}`,
-    ru: (w) => `Сабаба, есть ${w.ru}.`,
-    en: (w) => `Cool, we’ve got ${w.en}.`,
-    tr: (w) => `sababa, yesh ${w.transcription}`,
-    usageRu: 'Спокойное «ок, есть вот это».',
-    usageEn: 'Laid-back “okay, that’s available”.',
-    level: 'elementary',
-  },
-  {
-    nikud: (w) => `אֵין מַצָּב בְּלִי ${w.nikud}`,
-    ru: (w) => `ни за что без: ${w.ru}`,
-    en: (w) => `no way without ${w.en}`,
-    tr: (w) => `ein matzav bli ${w.transcription}`,
-    usageRu: 'Игровая категоричность.',
-    usageEn: 'Playful absolute refusal.',
-    level: 'basic',
-  },
-  {
-    nikud: (w) => `בְּקִצוּר, זֶה ${w.nikud}`,
-    ru: (w) => `короче, это ${w.ru}`,
-    en: (w) => `anyway, it’s ${w.en}`,
-    tr: (w) => `be-kitsur, ze ${w.transcription}`,
-    usageRu: 'Сжать рассказ до сути.',
-    usageEn: 'Cut the story to the point.',
-    level: 'basic',
-  },
-  {
-    nikud: (w) => `וַאללָּה, ${w.nikud} זֶה חֲבָל עַל הַזְּמַן`,
-    ru: (w) => `вот это да: ${w.ru} — огонь`,
-    en: (w) => `wow, ${w.en} is amazing`,
-    tr: (w) => `walla, ${w.transcription} ze khaval al ha-zman`,
-    usageRu: 'Восторженная оценка.',
-    usageEn: 'Emphatic praise.',
-    level: 'intermediate',
-  },
-  {
-    nikud: (w) => `עַל הַפָּנִים, הַ${w.nikud}`,
-    ru: (w) => `полный провал с: ${w.ru}`,
-    en: (w) => `${w.en} was a disaster`,
-    tr: (w) => `al ha-panim, ha-${w.transcription}`,
-    usageRu: 'Резко отрицательная оценка.',
-    usageEn: 'Harsh thumbs-down.',
-    level: 'intermediate',
-  },
-  {
-    nikud: (w) => `תַּזְרִים עַל ${w.nikud}`,
-    ru: (w) => `бабки на ${w.ru}`,
-    en: (w) => `cash for ${w.en}`,
-    tr: (w) => `tazrim al ${w.transcription}`,
-    usageRu: 'Разговорно про деньги и трату.',
-    usageEn: 'Talking money, very informal.',
-    level: 'advanced',
-  },
-  {
-    nikud: (w) => `סְמוּךְ עָלַי לְגַבֵּי ${w.nikud}`,
-    ru: (w) => `положись на меня насчёт: ${w.ru}`,
-    en: (w) => `I got ${w.en}`,
-    tr: (w) => `smukh alai legabei ${w.transcription}`,
-    usageRu: 'Обещание закрыть вопрос.',
-    usageEn: 'I’ve got this covered.',
-    level: 'advanced',
-  },
-  {
-    nikud: (w) => `בַּסַּךְ הַכֹּל זֶה ${w.nikud}`,
-    ru: (w) => `в итоге это ${w.ru}`,
-    en: (w) => `all in all it’s ${w.en}`,
-    tr: (w) => `ba-sakh ha-kol ze ${w.transcription}`,
-    usageRu: 'Подвести черту в разговоре.',
-    usageEn: 'Wrapping up a spoken point.',
-    level: 'expert',
-  },
-  {
-    nikud: (w) => `לֹא דּוֹפֵק חֶשְׁבּוֹן עַל ${w.nikud}`,
-    ru: (w) => `плевать на ${w.ru}`,
-    en: (w) => `doesn’t give a damn about ${w.en}`,
-    tr: (w) => `lo dofek kheshbon al ${w.transcription}`,
-    usageRu: 'Грубовато: наплевать. Не для вежливой речи.',
-    usageEn: 'Blunt: doesn’t care. Not polite register.',
-    level: 'expert',
-  },
-];
-
-const nounish = words.filter((w) => w.pos === 'noun' || w.pos === 'adjective' || w.theme === 'food');
-let frameIdx = 0;
-for (const word of nounish) {
-  if (slang.length >= 2000) break;
-  const frame = frames[frameIdx % frames.length];
-  frameIdx += 1;
-  const nikud = frame.nikud(word);
-  const id = `slang-x${slang.length}-${word.id}`.slice(0, 48);
-  pushSlang({
-    id,
-    deck: 'slang',
-    level: frame.level,
-    theme: 'slang',
-    hebrew: stripNikud(nikud),
-    nikud,
-    transcription: frame.tr(word),
-    ru: frame.ru(word),
-    en: frame.en(word),
-    pos: 'slang',
-    emoji: '💬',
-    example: makeExample(nikud, stripNikud(nikud), frame.tr(word), frame.ru(word), frame.en(word)),
-    audio: `tts/${frame.level}/${id}.mp3`,
-    usage: { ru: frame.usageRu, en: frame.usageEn },
-  });
-}
-
-if (slang.length < 2000) {
-  throw new Error(`Сленга собрано ${slang.length}, нужно 2000`);
-}
-
 const slangByLevel = Object.fromEntries(LEVELS.map((level) => [level, []]));
-slang.slice(0, 2000).forEach((item) => slangByLevel[item.level].push(item));
-
 const units = [];
 const dialogues = [];
 const themes = THEMES.map(([id, emoji, title, titleEn]) => ({ id, emoji, title, titleEn }));
@@ -492,40 +332,6 @@ for (const level of LEVELS) {
       lessonCount,
       wordCount: list.length,
     });
-    const a = list[0];
-    const b = list[1] ?? list[0];
-    if (a && b) {
-      dialogues.push({
-        id: `${unitId}-d0`,
-        level,
-        theme,
-        title: 'Короткий диалог',
-        titleEn: 'A short dialogue',
-        lines: [
-          {
-            speaker: 'a',
-            nikud: `מָה שְׁלוֹמְךָ? יֵשׁ ${a.nikud}?`,
-            hebrew: stripNikud(`מה שלומך יש ${a.hebrew}`),
-            transcription: `ma shlomkha? yesh ${a.transcription}?`,
-            ru: `Как дела? Есть ${a.ru.split(/[;/]/)[0].trim()}?`,
-            en: `How are you? Is there ${a.en.split(/[;/]/)[0].trim()}?`,
-          },
-          {
-            speaker: 'b',
-            nikud: `סַבָּבָה, יֵשׁ ${b.nikud}.`,
-            hebrew: stripNikud(`סבבה יש ${b.hebrew}`),
-            transcription: `sababa, yesh ${b.transcription}.`,
-            ru: `Сабаба, есть ${b.ru.split(/[;/]/)[0].trim()}.`,
-            en: `Cool, we’ve got ${b.en.split(/[;/]/)[0].trim()}.`,
-          },
-        ],
-        replies: [
-          { nikud: 'תּוֹדָה רַבָּה', ru: 'Большое спасибо', en: 'Thanks a lot', correct: true },
-          { nikud: 'לֹא, תּוֹדָה', ru: 'Нет, спасибо', en: 'No, thanks', correct: false },
-          { nikud: 'אֲנִי לֹא יוֹדֵעַ', ru: 'Я не знаю', en: 'I don’t know', correct: false },
-        ],
-      });
-    }
     order += 1;
   }
 }
@@ -538,19 +344,15 @@ const catalog = {
   units,
   counts: {
     words: words.slice(0, 5000).length,
-    slang: slang.slice(0, 2000).length,
-    dialogues: dialogues.length,
+    slang: 0,
+    dialogues: 0,
   },
 };
 writeFileSync(join(outDir, 'catalog.json'), JSON.stringify(catalog));
 
 for (const level of LEVELS) {
   writeFileSync(join(outDir, `words-${level}.json`), JSON.stringify({ words: byLevel[level] }));
-  writeFileSync(join(outDir, `slang-${level}.json`), JSON.stringify({ slang: slangByLevel[level] }));
-  writeFileSync(
-    join(outDir, `dialogues-${level}.json`),
-    JSON.stringify({ dialogues: dialogues.filter((d) => d.level === level) })
-  );
+  // slang-*.json и dialogues-*.json не перезаписываем: это живой набор из repair_content.py
 }
 
 const levelDecks = {};

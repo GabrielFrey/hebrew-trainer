@@ -231,7 +231,7 @@ const ru: Dict = {
   'onboarding.translation.enHint': 'Значения слов, сленга и диалогов по-английски',
   'settings.about': 'О данных и звуке',
   'settings.aboutBody':
-    'Прогресс хранится локально через AsyncStorage, синхронизации и аккаунта нет. 5000 слов и 2000 разговорных выражений лежат в data/lexicon по уровням. Озвучка — записи носителей ({count} шт.), иначе заранее сгенерированный нейроголос; синтеза на устройстве нет, без файла кнопка говорит «нет записи».',
+    'Прогресс хранится локально через AsyncStorage, синхронизации и аккаунта нет. Частотные слова и несколько сотен живых разговорных выражений лежат в data/lexicon по уровням. Озвучка — записи носителей ({count} шт.), иначе заранее сгенерированный нейроголос; синтеза на устройстве нет, без файла кнопка говорит «нет записи».',
   'settings.reset': 'Сбросить прогресс',
   'settings.resetTitle': 'Сбросить прогресс?',
   'settings.resetBody': 'Все выученные буквы, слова и серия дней будут удалены с устройства.',
@@ -380,7 +380,7 @@ const ru: Dict = {
   'lesson.tapChips': 'Нажимайте слова по порядку',
 
   'slang.title': 'Сленг',
-  'slang.subtitle': 'Разговорный иврит с пояснением, когда так говорят.',
+  'slang.subtitle': 'Живой израильский сленг — только выражения, которые реально говорят.',
   'slang.usage': 'Как говорят',
   'slang.empty': 'На этом уровне сленг ещё закрыт',
   'slang.search': 'Поиск по сленгу',
@@ -591,7 +591,7 @@ const en: Dict = {
   'onboarding.translation.enHint': 'English glosses for words, slang, and dialogues',
   'settings.about': 'Data and audio',
   'settings.aboutBody':
-    'Progress is stored locally in AsyncStorage; there is no account or sync. 5000 words and 2000 slang items live in data/lexicon, split by level. Audio is native recordings ({count}) first, then pre-generated neural files; nothing is synthesized on device, and a missing file shows “no recording”.',
+    'Progress is stored locally in AsyncStorage; there is no account or sync. Frequent words and a few hundred real spoken expressions live in data/lexicon, split by level. Audio is native recordings ({count}) first, then pre-generated neural files; nothing is synthesized on device, and a missing file shows “no recording”.',
   'settings.reset': 'Reset progress',
   'settings.resetTitle': 'Reset progress?',
   'settings.resetBody': 'All learned letters, words, and your streak will be deleted from this device.',
@@ -740,7 +740,7 @@ const en: Dict = {
   'lesson.tapChips': 'Tap the words in order',
 
   'slang.title': 'Slang',
-  'slang.subtitle': 'Spoken Hebrew, with a note on when people actually say it.',
+  'slang.subtitle': 'Real Israeli slang — only expressions people actually say.',
   'slang.usage': 'How it’s used',
   'slang.empty': 'Slang for this level is still locked',
   'slang.search': 'Search slang',
@@ -866,8 +866,9 @@ export function posLabel(pos: string, lang: UiLanguage): string {
   return translate(lang, `pos.${pos}`);
 }
 
-export function exampleGloss(example: { ru: string; en: string }, lang: UiLanguage): string {
-  return lang === 'en' ? example.en : example.ru;
+export function exampleGloss(example: { ru?: string; en?: string } | undefined, lang: UiLanguage): string {
+  const text = lang === 'en' ? example?.en : example?.ru;
+  return (text ?? '').trim();
 }
 
 export function themeTitle(theme: ThemeInfo, lang: UiLanguage): string {

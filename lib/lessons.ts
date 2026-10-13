@@ -86,7 +86,7 @@ function pictureDistractors(word: Word, pool: Word[], seed: number): Word[] {
 }
 
 function chipsFor(word: Word, pool: Word[], seed: number): { chips: string[]; answer: string } {
-  const tokens = word.example.nikud.split(/\s+/).filter(Boolean);
+  const tokens = (word.example?.nikud ?? '').split(/\s+/).filter(Boolean);
   const extra = shuffle(
     pool.filter((item) => item.id !== word.id).map((item) => item.nikud),
     seed
@@ -138,6 +138,7 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
     );
     const built = chipsFor(word, pool, seed + 11);
     const choice = withResolved(optionTexts, gloss, lang);
+    const phraseTokens = built.answer.split(/\s+/).filter(Boolean);
 
     cards.push({
       cardId: `word:${word.id}:teach`,
@@ -177,7 +178,7 @@ export function buildLesson(progress: Progress, lessonKey: string, now = Date.no
       isNew,
       ...choice,
     });
-    if (built.chips.length >= 2) {
+    if (phraseTokens.length >= 2 && built.chips.length >= 2) {
       cards.push({
         cardId: `word:${word.id}:build`,
         kind: 'word',

@@ -7,14 +7,16 @@ import { emptyProgress } from '@/lib/storage';
 const NIKUD = /[\u0591-\u05C7]/;
 
 describe('лексикон Mondly', () => {
-  it('держит 5000 уникальных слов и 2000 выражений сленга', () => {
+  it('держит 5000 уникальных слов и несколько сотен живых выражений сленга', () => {
     const words = allWords();
+    const slang = loadedSlang();
     expect(words).toHaveLength(5000);
-    expect(loadedSlang()).toHaveLength(2000);
+    expect(slang.length).toBeGreaterThanOrEqual(300);
+    expect(slang.length).toBeLessThanOrEqual(500);
     expect(new Set(words.map((word) => word.id)).size).toBe(5000);
     expect(new Set(words.map((word) => word.hebrew)).size).toBe(5000);
-    expect(new Set(loadedSlang().map((item) => item.id)).size).toBe(2000);
-    expect(new Set(loadedSlang().map((item) => item.hebrew)).size).toBe(2000);
+    expect(new Set(slang.map((item) => item.id)).size).toBe(slang.length);
+    expect(new Set(slang.map((item) => item.hebrew)).size).toBe(slang.length);
   });
 
   it('у каждой записи есть никуд, ктив мале, транскрипция, ru/en, тема и пример', () => {
@@ -27,9 +29,12 @@ describe('лексикон Mondly', () => {
       expect(word.pos.length).toBeGreaterThan(0);
       expect(word.theme.length).toBeGreaterThan(0);
       expect(word.deck).toBe(word.theme);
-      expect(word.example.nikud.length).toBeGreaterThan(0);
-      expect(word.example.ru.length).toBeGreaterThan(0);
-      expect(word.example.en.length).toBeGreaterThan(0);
+      const exampleFilled = Boolean(word.example.nikud.trim() || word.example.hebrew.trim());
+      if (exampleFilled) {
+        expect(word.example.nikud.length).toBeGreaterThan(0);
+        expect(word.example.ru.length).toBeGreaterThan(0);
+        expect(word.example.en.length).toBeGreaterThan(0);
+      }
     });
   });
 
@@ -38,7 +43,9 @@ describe('лексикон Mondly', () => {
     expect(catalog.themes.length).toBeGreaterThan(8);
     expect(catalog.units.length).toBeGreaterThan(20);
     expect(catalog.counts.words).toBe(5000);
-    expect(catalog.counts.slang).toBe(2000);
+    expect(catalog.counts.slang).toBe(loadedSlang().length);
+    expect(catalog.counts.dialogues).toBeGreaterThanOrEqual(60);
+    expect(catalog.counts.dialogues).toBeLessThanOrEqual(124);
     expect(unitsForLevel('elementary').length).toBeGreaterThan(0);
     expect(unitsForLevel('expert').length).toBeGreaterThan(unitsForLevel('elementary').length);
     const byLevel = { elementary: 0, basic: 0, intermediate: 0, advanced: 0, expert: 0 };

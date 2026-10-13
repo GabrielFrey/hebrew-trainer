@@ -18,11 +18,16 @@ export function issuesForBilingual(item, path, fields = ['ru', 'en']) {
   return issues;
 }
 
+export function isEmptyExample(example) {
+  if (!example) return true;
+  return ![example.ru, example.en, example.nikud, example.hebrew].some(isFilled);
+}
+
 export function issuesForWord(word, path) {
-  const issues = [
-    ...issuesForBilingual(word, path),
-    ...issuesForBilingual(word?.example ?? {}, `${path}.example`),
-  ];
+  const issues = [...issuesForBilingual(word, path)];
+  if (!isEmptyExample(word?.example)) {
+    issues.push(...issuesForBilingual(word.example, `${path}.example`));
+  }
   return issues;
 }
 

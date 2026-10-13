@@ -44,3 +44,5 @@ yarn-error.*
 .tts-cache/
 assets/audio/tts/
 scripts/cache/
+__pycache__/
+*.pyc
