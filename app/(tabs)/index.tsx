@@ -40,9 +40,7 @@ export default function TodayScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Surface style={styles.hero}>
           <GoalRing value={doneToday} total={goal} label={t('today.goalRing', { done: doneToday, goal })} />
-          <AppText muted>
-            {doneToday >= goal ? t('today.goalMet') : t('today.dailyGoal', { done: doneToday, goal })}
-          </AppText>
+          {doneToday >= goal ? <AppText muted>{t('today.goalMet')}</AppText> : null}
           {nxt ? (
             <Button
               label={t('today.continue')}
@@ -55,9 +53,9 @@ export default function TodayScreen() {
           ) : (
             <AppText>{t('today.lessonsDone')}</AppText>
           )}
-          {summary.queueSize > 0 ? (
+          {summary.dueCount > 0 ? (
             <Button
-              label={t('today.reviewSm2', { count: summary.queueSize })}
+              label={t('today.reviewSm2', { count: summary.dueCount })}
               variant="secondary"
               onPress={() => router.push('/session')}
             />

@@ -1,5 +1,5 @@
 import { exerciseNeedsAudio } from '@/lib/audio';
-import { shortGloss } from '@/lib/i18n';
+import { shortGloss, translate } from '@/lib/i18n';
 import { applyStreak, streakStatus } from '@/lib/streak';
 import { emptyProgress } from '@/lib/storage';
 import { getCatalog } from '@/lib/lexicon';
@@ -31,5 +31,14 @@ describe('UX-аудит', () => {
     reshapeUnits(getCatalog().units).forEach((unit) => {
       expect(unit.lessonCount).toBeLessThanOrEqual(8);
     });
+  });
+
+  it('говорит на ты и объясняет счётчик сленга', () => {
+    expect(translate('ru', 'lesson.build')).toBe('Собери фразу');
+    expect(translate('ru', 'lesson.wrongTitle')).toBe('Неверно');
+    expect(translate('ru', 'slang.count', { shown: 80, total: 142 })).toBe(
+      'Выражения твоего уровня и ниже: 80 из 142'
+    );
+    expect(translate('ru', 'today.reviewSm2', { count: 3 })).toBe('Повторить слова (3)');
   });
 });

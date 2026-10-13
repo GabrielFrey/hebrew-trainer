@@ -44,7 +44,9 @@ export function HebrewKeyboard({
           {row.map((ch) => (
             <Pressable
               key={ch}
+              accessibilityRole="button"
               accessibilityLabel={ch}
+              accessibilityLanguage="he"
               disabled={disabled}
               onPress={() => push(ch)}
               style={({ pressed }) => [
@@ -63,6 +65,7 @@ export function HebrewKeyboard({
       ))}
       <View style={styles.row}>
         <Pressable
+          accessibilityRole="button"
           accessibilityLabel={t('keyboard.space')}
           disabled={disabled}
           onPress={() => push(' ')}
@@ -74,6 +77,7 @@ export function HebrewKeyboard({
           <AppText variant="caption">{t('keyboard.space')}</AppText>
         </Pressable>
         <Pressable
+          accessibilityRole="button"
           accessibilityLabel={t('keyboard.backspace')}
           disabled={disabled}
           onPress={() => onChange(value.slice(0, -1))}
@@ -85,6 +89,7 @@ export function HebrewKeyboard({
           <Feather name="delete" size={16} color={palette.text} />
         </Pressable>
         <Pressable
+          accessibilityRole="button"
           accessibilityLabel={t('session.retry')}
           disabled={disabled}
           onPress={() => onChange('')}

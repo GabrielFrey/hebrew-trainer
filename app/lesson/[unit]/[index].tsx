@@ -308,7 +308,10 @@ export default function LessonScreen() {
           {promptFor(card.exercise, t)}
         </AppText>
         <AppText testID="lesson-answer" nativeID="lesson-answer" style={styles.srOnly}>
-          {answer}
+          {card.exercise === 'build-phrase' ||
+          (isTypedExercise(card.exercise) && (card.options?.length ?? 0) === 0)
+            ? card.answer
+            : answer}
         </AppText>
 
         {card.exercise === 'teach-word' && word ? (
