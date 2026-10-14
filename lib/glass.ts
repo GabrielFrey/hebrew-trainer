@@ -40,16 +40,30 @@ export function resolveGlassMode({
   return 'blur';
 }
 
+function overrideFromQuery(): GlassMode | null {
+  if (Platform.OS !== 'web' || typeof window === 'undefined') return null;
+  try {
+    const value = new URLSearchParams(window.location.search).get('glass');
+    if (value === 'solid' || value === 'blur' || value === 'liquid') return value;
+  } catch {
+    return null;
+  }
+  return null;
+}
+
 export function useGlassMode(): GlassMode {
   const reduceTransparency = useReduceTransparency();
   const increaseContrast = useIncreaseContrast();
-  return resolveGlassMode({
-    platform: Platform.OS,
-    liquidAvailable: safeLiquid(),
-    apiAvailable: safeApi(),
-    reduceTransparency,
-    increaseContrast,
-  });
+  return (
+    overrideFromQuery() ??
+    resolveGlassMode({
+      platform: Platform.OS,
+      liquidAvailable: safeLiquid(),
+      apiAvailable: safeApi(),
+      reduceTransparency,
+      increaseContrast,
+    })
+  );
 }
 
 export const MIN_TOUCH = 44;
