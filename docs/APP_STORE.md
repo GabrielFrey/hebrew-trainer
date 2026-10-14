@@ -25,6 +25,11 @@ Noto Sans Hebrew. Пересобрать: `node scripts/build-icons.mjs`.
 
 - `assets/images/icon.png` — 1024×1024, `rgb24`, **без альфа-канала** (Apple отклоняет
   иконки с прозрачностью);
+- `assets/images/ios-light.png` / `ios-dark.png` / `ios-tinted.png` — варианты iOS 26+
+  (`app.json` → `ios.icon`);
+- `assets/app.icon/` — исходник Icon Composer (слои алеф + пятно). На Mac: открыть
+  в Icon Composer (Xcode 26/27), проверить light/dark/tinted и при желании
+  заменить `ios.icon` на `"./assets/app.icon"` для нативного Liquid Glass;
 - `assets/images/adaptive-icon.png` — 1024×1024 RGBA, передний план для Android;
 - `assets/images/splash-icon.png` — 1024×1024 RGBA, подключён через плагин
   `expo-splash-screen` с `imageWidth: 220` и фоном `#EAF8DE` / тёмным `#102016`;
@@ -86,7 +91,12 @@ eas build -p ios --profile production
 eas submit -p ios
 ```
 
-Локально на Mac:
+EAS для SDK 54 по умолчанию берёт Xcode 26 (`eas.json` → `ios.image: latest`). Это
+нужно и для App Store (с 28 апреля 2026 — SDK iOS 26), и для Liquid Glass. Минимальный
+deployment target остаётся **iOS 15.1**. Не поднимайте его до 26: стекло включается
+SDK компиляции, а не min iOS.
+
+Локально на Mac (нужен **Xcode 26** или новее):
 
 ```bash
 npx expo prebuild -p ios     # создаст каталог ios/ из app.json

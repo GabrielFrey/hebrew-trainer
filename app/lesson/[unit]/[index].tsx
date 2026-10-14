@@ -1,11 +1,13 @@
 import { useMemo, useRef, useState } from 'react';
 import { Alert, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
+import { AppSymbol } from '@/components/AppSymbol';
 import { AudioButton } from '@/components/AudioButton';
 import { Button, ChoiceRow } from '@/components/Button';
+import { GlassSurface } from '@/components/GlassSurface';
 import { ChatBubble } from '@/components/ChatBubble';
 import { Confetti } from '@/components/Confetti';
 import { EmptyState } from '@/components/EmptyState';
@@ -137,6 +139,7 @@ export default function LessonScreen() {
     : lessonKeyFromSlug(params.slug);
   const router = useRouter();
   const palette = usePalette();
+  const insets = useSafeAreaInsets();
   const { progress, gradeCard, finishSession, completeLesson } = useStore();
   const { t, translation } = useI18n();
   const startedAt = useRef(Date.now());
@@ -273,30 +276,34 @@ export default function LessonScreen() {
 
   return (
     <Screen edges={['left', 'right']}>
-      <View style={styles.top}>
-        <Pressable
-          accessibilityLabel={t('lesson.closeA11y')}
-          accessibilityRole="button"
-          onPress={() => {
-            const leave = () => router.replace('/');
-            if (Platform.OS === 'web') {
-              if (window.confirm(`${t('lesson.exitTitle')}\n${t('lesson.exitBody')}`)) leave();
-              return;
-            }
-            Alert.alert(t('lesson.exitTitle'), t('lesson.exitBody'), [
-              { text: t('lesson.stay'), style: 'cancel' },
-              { text: t('lesson.exit'), style: 'destructive', onPress: leave },
-            ]);
-          }}
-          hitSlop={8}
-          style={[styles.close, { backgroundColor: palette.surface }]}
-        >
-          <Feather name="x" size={20} color={palette.text} />
-        </Pressable>
-        <View style={styles.progress}>
+      <View style={[styles.top, { paddingTop: Math.max(insets.top, spacing.md) }]}>
+        <GlassSurface style={styles.closeGlass} contentStyle={styles.closeInner}>
+          <Pressable
+            accessibilityLabel={t('lesson.closeA11y')}
+            accessibilityRole="button"
+            onPress={() => {
+              const leave = () => router.replace('/');
+              if (Platform.OS === 'web') {
+                if (window.confirm(`${t('lesson.exitTitle')}\n${t('lesson.exitBody')}`)) leave();
+                return;
+              }
+              Alert.alert(t('lesson.exitTitle'), t('lesson.exitBody'), [
+                { text: t('lesson.stay'), style: 'cancel' },
+                { text: t('lesson.exit'), style: 'destructive', onPress: leave },
+              ]);
+            }}
+            hitSlop={8}
+            style={styles.close}
+          >
+            <AppSymbol sf="xmark" fallback="x" size={20} color={palette.text} />
+          </Pressable>
+        </GlassSurface>
+        <GlassSurface style={styles.progressGlass} contentStyle={styles.progressInner}>
           <ProgressBar value={index} total={queue.length} />
-        </View>
-        <TranslationToggle />
+        </GlassSurface>
+        <GlassSurface style={styles.toggleGlass} contentStyle={styles.toggleInner}>
+          <TranslationToggle />
+        </GlassSurface>
       </View>
 
       <ScrollView
@@ -539,11 +546,12 @@ export default function LessonScreen() {
       ) : (
         <View style={styles.footer}>
           {card.exercise === 'teach-word' ? (
-            <Button label={t('lesson.gotIt')} size="lg" onPress={goNext} />
+            <Button label={t('lesson.gotIt')} size="lg" glass onPress={goNext} />
           ) : (
             <Button
               label={t('lesson.check')}
               size="lg"
+              glass
               disabled={
                 card.exercise === 'build-phrase'
                   ? built.length === 0
@@ -574,14 +582,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.md,
   },
+  closeGlass: { borderRadius: radius.pill },
+  closeInner: { alignItems: 'center', justifyContent: 'center' },
   close: {
     alignItems: 'center',
-    borderRadius: radius.pill,
     height: 44,
     justifyContent: 'center',
     width: 44,
   },
-  progress: { flex: 1 },
+  progressGlass: { flex: 1, borderRadius: radius.pill, minHeight: 44 },
+  progressInner: { flex: 1, justifyContent: 'center', paddingHorizontal: spacing.md },
+  toggleGlass: { borderRadius: radius.pill },
+  toggleInner: { padding: 2 },
   content: { gap: spacing.lg, padding: spacing.lg, paddingBottom: spacing.xxl },
   card: { alignItems: 'center', gap: spacing.sm },
   block: { gap: spacing.md },

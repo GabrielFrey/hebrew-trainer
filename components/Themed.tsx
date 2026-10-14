@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import type { StyleProp, TextProps, TextStyle, ViewProps, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { radius, shadows, spacing, typography } from '@/constants/tokens';
+import { radius, shadows, spacing, tabBarInset, typography } from '@/constants/tokens';
 import { usePalette } from '@/lib/theme';
 
 type TextVariant = 'title' | 'heading' | 'body' | 'label' | 'caption';
@@ -51,15 +51,17 @@ export function Screen({
   children,
   style,
   edges = ['top', 'left', 'right'],
+  tabBar = false,
 }: {
   children: ReactNode;
   style?: StyleProp<ViewStyle>;
   edges?: ('top' | 'bottom' | 'left' | 'right')[];
+  tabBar?: boolean;
 }) {
   const palette = usePalette();
   return (
     <SafeAreaView edges={edges} style={[styles.screen, { backgroundColor: palette.background }]}>
-      <View style={[styles.screenInner, style]}>{children}</View>
+      <View style={[styles.screenInner, tabBar && { paddingBottom: tabBarInset }, style]}>{children}</View>
     </SafeAreaView>
   );
 }

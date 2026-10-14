@@ -33,7 +33,7 @@ export default function AlphabetScreen() {
   const learnedCount = letters.filter((l) => statusById.get(l.id) === 'learned').length;
 
   return (
-    <Screen>
+    <Screen tabBar>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <ScreenHeader
           title={t('tabs.alphabet')}

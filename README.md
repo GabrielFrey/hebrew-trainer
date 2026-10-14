@@ -14,6 +14,14 @@ Nunito, иврит — Noto Sans Hebrew, на карточках не меньш
 Expo SDK 54 · React Native 0.81 · TypeScript (strict) · expo-router. Прогресс хранится
 только на устройстве, аккаунта и бэкенда нет.
 
+На iOS 26+ навигация и контролы используют Liquid Glass (`expo-glass-effect`,
+нативные вкладки `expo-router/unstable-native-tabs` с `minimizeBehavior="onScrollDown"`).
+Карточки с ивритом остаются сплошными. На вебе, Android и iOS 18 и ниже — blur-fallback;
+при Reduce Transparency / Increase Contrast — сплошные поверхности. SDK не поднимали:
+всё это уже есть в SDK 54. Настоящий Liquid Glass виден только в сборке Xcode 26
+(EAS `image: latest`). iOS 27 не требует смены SDK: иконка Icon Composer подхватывает
+новый рендер автоматически.
+
 ## Как запустить
 
 ```bash
@@ -32,6 +40,7 @@ npm run lexicon        # пересобрать 5000 слов (нужны кэш
 npm run lexicon:repair # живой сленг, диалоги, примеры и латинская транскрипция
 npm run lexicon:check  # падает, если у записи нет ru или en
 npm run tts            # нейроозвучка; без ключа просто выходит 0
+node scripts/build-icons.mjs  # light/dark/tinted iOS icons + assets/app.icon
 ```
 
 Сбросить прогресс: вкладка **Учить** → шестерёнка → «Сбросить прогресс».

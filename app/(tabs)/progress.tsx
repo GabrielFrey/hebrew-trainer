@@ -83,7 +83,7 @@ export default function ProgressScreen() {
 
   if (cards.length === 0 && progress.completedLessons.length === 0) {
     return (
-      <Screen>
+      <Screen tabBar>
         <EmptyState
           pose="wave"
           title={t('progress.empty')}
@@ -96,7 +96,7 @@ export default function ProgressScreen() {
   }
 
   return (
-    <Screen>
+    <Screen tabBar>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <ScreenHeader
           title={t('tabs.progress')}

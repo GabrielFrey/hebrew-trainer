@@ -33,7 +33,7 @@ export default function TodayScreen() {
   const nxt = nextLessonId(progress, progress.settings.level);
 
   return (
-    <Screen>
+    <Screen tabBar>
       <View style={styles.hudPad}>
         <HudBar />
       </View>

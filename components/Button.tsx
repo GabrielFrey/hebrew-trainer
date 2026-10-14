@@ -1,9 +1,11 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import type { StyleProp, ViewStyle } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 
+import { GlassSurface } from '@/components/GlassSurface';
 import { AppText } from '@/components/Themed';
 import { buttonHeight, pressDepth, radius, spacing } from '@/constants/tokens';
+import { useGlassMode } from '@/lib/glass';
 import { useReduceMotion } from '@/lib/motion';
 import { usePalette } from '@/lib/theme';
 
@@ -15,6 +17,8 @@ export type ButtonProps = {
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
   accessibilityLabel?: string;
+  /** Glass chrome for Check/Continue. Content buttons stay solid. */
+  glass?: boolean;
 };
 
 export function Button({
@@ -25,10 +29,13 @@ export function Button({
   disabled = false,
   style,
   accessibilityLabel,
+  glass = false,
 }: ButtonProps) {
   const palette = usePalette();
   const reduceMotion = useReduceMotion();
+  const glassMode = useGlassMode();
   const pressed = useSharedValue(0);
+  const useGlass = glass && glassMode !== 'solid' && variant !== 'ghost';
 
   const face = {
     primary: palette.accent,
@@ -66,39 +73,54 @@ export function Button({
       disabled={disabled}
       onPress={onPress}
       onPressIn={() => {
-        pressed.value = reduceMotion ? 0 : withTiming(1, { duration: 80 });
+        pressed.value = reduceMotion ? 0 : withSpring(1, { damping: 18, stiffness: 320 });
       }}
       onPressOut={() => {
-        pressed.value = withTiming(0, { duration: 80 });
+        pressed.value = reduceMotion ? withTiming(0, { duration: 1 }) : withSpring(0, { damping: 16, stiffness: 280 });
       }}
       style={[{ opacity: disabled ? 0.45 : 1 }, style]}
     >
-      <View
-        style={[
-          styles.shadow,
-          {
-            backgroundColor: variant === 'ghost' ? 'transparent' : shadow,
-            paddingBottom: variant === 'ghost' ? 0 : pressDepth,
-          },
-        ]}
-      >
-        <Animated.View
+      {useGlass ? (
+        <Animated.View style={[styles.shadow, shift]}>
+          <GlassSurface
+            interactive
+            tintColor={face}
+            style={[styles.face, size === 'lg' ? styles.lg : styles.md]}
+            contentStyle={styles.glassFace}
+          >
+            <AppText variant="label" style={{ color, textTransform: 'uppercase', letterSpacing: 0.6 }}>
+              {label}
+            </AppText>
+          </GlassSurface>
+        </Animated.View>
+      ) : (
+        <View
           style={[
-            styles.face,
-            size === 'lg' ? styles.lg : styles.md,
+            styles.shadow,
             {
-              backgroundColor: face,
-              borderColor: variant === 'ghost' ? palette.border : 'transparent',
-              borderWidth: variant === 'ghost' || variant === 'secondary' ? 2 : 0,
+              backgroundColor: variant === 'ghost' ? 'transparent' : shadow,
+              paddingBottom: variant === 'ghost' ? 0 : pressDepth,
             },
-            shift,
           ]}
         >
-          <AppText variant="label" style={{ color, textTransform: 'uppercase', letterSpacing: 0.6 }}>
-            {label}
-          </AppText>
-        </Animated.View>
-      </View>
+          <Animated.View
+            style={[
+              styles.face,
+              size === 'lg' ? styles.lg : styles.md,
+              {
+                backgroundColor: face,
+                borderColor: variant === 'ghost' ? palette.border : 'transparent',
+                borderWidth: variant === 'ghost' || variant === 'secondary' ? 2 : 0,
+              },
+              shift,
+            ]}
+          >
+            <AppText variant="label" style={{ color, textTransform: 'uppercase', letterSpacing: 0.6 }}>
+              {label}
+            </AppText>
+          </Animated.View>
+        </View>
+      )}
     </Pressable>
   );
 }
@@ -150,10 +172,10 @@ export function ChoiceRow({
       disabled={disabled}
       onPress={onPress}
       onPressIn={() => {
-        pressed.value = reduceMotion ? 0 : withTiming(1, { duration: 70 });
+        pressed.value = reduceMotion ? 0 : withSpring(1, { damping: 18, stiffness: 320 });
       }}
       onPressOut={() => {
-        pressed.value = withTiming(0, { duration: 70 });
+        pressed.value = reduceMotion ? withTiming(0, { duration: 1 }) : withSpring(0, { damping: 16, stiffness: 280 });
       }}
     >
       <View style={[styles.choiceShadow, { backgroundColor: borderColor }]}>
@@ -176,6 +198,7 @@ const styles = StyleSheet.create({
   },
   md: { minHeight: buttonHeight.md, paddingHorizontal: spacing.lg },
   lg: { minHeight: buttonHeight.lg, paddingHorizontal: spacing.xl },
+  glassFace: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   choiceShadow: {
     borderRadius: radius.md,
     paddingBottom: 3,

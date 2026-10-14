@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Platform, View } from 'react-native';
 import { DarkTheme, DefaultTheme, ThemeProvider as NavThemeProvider } from '@react-navigation/native';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -97,7 +97,16 @@ function RootNavigator() {
           name="session"
           options={{ title: t('nav.session'), presentation: 'fullScreenModal', headerShown: false }}
         />
-        <Stack.Screen name="settings" options={{ title: t('nav.settings') }} />
+        <Stack.Screen
+          name="settings"
+          options={{
+            title: t('nav.settings'),
+            presentation: Platform.OS === 'ios' ? 'formSheet' : 'modal',
+            headerTransparent: Platform.OS === 'ios',
+            headerBlurEffect: Platform.OS === 'ios' ? 'regular' : undefined,
+            contentStyle: { backgroundColor: Platform.OS === 'ios' ? 'transparent' : palette.background },
+          }}
+        />
         <Stack.Screen name="letter/[id]" options={{ title: t('nav.letter') }} />
         <Stack.Screen name="deck/[id]" options={{ title: t('nav.deck') }} />
         <Stack.Screen name="drill/[mode]" options={{ title: t('nav.drill') }} />

@@ -24,7 +24,7 @@ export default function LessonsScreen() {
   });
 
   return (
-    <Screen>
+    <Screen tabBar>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <ScreenHeader title={t('lessons.title')} subtitle={t('lessons.subtitle')} />
         <View style={styles.block}>

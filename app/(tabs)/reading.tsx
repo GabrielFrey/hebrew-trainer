@@ -34,7 +34,7 @@ export default function SlangScreen() {
   }, [items, query]);
 
   return (
-    <Screen>
+    <Screen tabBar>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <ScreenHeader
           title={t('slang.title')}

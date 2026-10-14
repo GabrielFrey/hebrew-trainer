@@ -16,7 +16,7 @@ export default function VerbsScreen() {
   const count = allVerbs().length;
 
   return (
-    <Screen>
+    <Screen tabBar>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <ScreenHeader title={t('verbs.title')} subtitle={t('verbs.subtitle', { count })} />
 

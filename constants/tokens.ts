@@ -154,6 +154,9 @@ export const buttonHeight = {
   lg: 56,
 } as const;
 
+/** Space reserved so tab screens clear the floating glass tab bar. */
+export const tabBarInset = 88;
+
 export const pressDepth = 4;
 
 export const unitBannerColors = [
