@@ -1,4 +1,4 @@
-import { resolveGlassMode } from '@/lib/glass';
+import { colorWithAlpha, resolveGlassMode } from '@/lib/glass';
 
 describe('Liquid Glass mode', () => {
   it('uses native glass only on iOS when the API is compiled in', () => {
@@ -62,5 +62,9 @@ describe('Liquid Glass mode', () => {
         increaseContrast: true,
       })
     ).toBe('solid');
+  });
+
+  it('adds alpha to hex tints so blur overlays stay translucent', () => {
+    expect(colorWithAlpha('#58CC02', 0.45)).toBe('rgba(88, 204, 2, 0.45)');
   });
 });

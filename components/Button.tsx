@@ -81,17 +81,17 @@ export function Button({
       style={[{ opacity: disabled ? 0.45 : 1 }, style]}
     >
       {useGlass ? (
-        <Animated.View style={[styles.shadow, shift]}>
+        <Animated.View style={[styles.shadow, shift, size === 'lg' ? styles.lg : styles.md]}>
           <GlassSurface
-            interactive
             tintColor={face}
-            style={[styles.face, size === 'lg' ? styles.lg : styles.md]}
-            contentStyle={styles.glassFace}
-          >
+            style={StyleSheet.absoluteFill}
+            pointerEvents="none"
+          />
+          <View style={styles.glassFace} pointerEvents="none">
             <AppText variant="label" style={{ color, textTransform: 'uppercase', letterSpacing: 0.6 }}>
               {label}
             </AppText>
-          </GlassSurface>
+          </View>
         </Animated.View>
       ) : (
         <View
