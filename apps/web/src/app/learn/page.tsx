@@ -35,7 +35,7 @@ function LearnInner() {
   return (
     <section data-testid="learn-path">
       <h1 className="mb-2 text-3xl font-semibold">{t("nav.learn")}</h1>
-      <p className="mb-6 text-ink-soft">Short lessons. Follow the house path. Legendary chests are checkpoints, not another brand.</p>
+      <p className="mb-6 text-ink-soft">Short lessons. Follow Biti along the path. Legendary chests are checkpoints, not another brand.</p>
       {units.length ? (
         <ol className="space-y-10">
           {units.map((unit) => (

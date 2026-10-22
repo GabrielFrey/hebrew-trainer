@@ -22,7 +22,7 @@ function StackNav() {
 
 export default function Layout() {
   const [loaded] = useFonts({ NotoSansHebrew_400Regular, NotoSansHebrew_700Bold });
-  if (!loaded) return <View style={{ flex: 1, backgroundColor: "#F6F1E8" }} />;
+  if (!loaded) return <View style={{ flex: 1, backgroundColor: "#EEF2F7" }} />;
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>

@@ -1,38 +1,56 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #1c1917;
-  --ink-soft: #44403c;
-  --sand: #f6f1e8;
-  --sand-deep: #e8dfd0;
-  --paper: #fffcf7;
-  --pomegranate: #c23b3b;
-  --olive: #3f6b4a;
-  --indigo: #2c3d6b;
-  --gold: #c4921a;
-  --line: #d6cbb8;
-  --correct: #2f6b3a;
-  --incorrect: #a33b3b;
-  --almost: #9a6b12;
-  --glass: rgba(255, 252, 247, 0.62);
+  --ink: #142033;
+  --ink-soft: #3a4a5e;
+  --sand: #eef2f7;
+  --sand-deep: #e2e8f0;
+  --paper: #ffffff;
+  --pomegranate: #9a3412;
+  --olive: #0c5f58;
+  --indigo: #184a82;
+  --gold: #854d0e;
+  --line: #6b7787;
+  --correct: #0c5f58;
+  --incorrect: #9a3412;
+  --almost: #854d0e;
+  --correct-bg: #d7edea;
+  --incorrect-bg: #ffedd5;
+  --almost-bg: #fef3c7;
+  --glass: rgba(255, 255, 255, 0.86);
+  --primary: #184a82;
+  --secondary: #5a4a9a;
+  --accent: #7c3aed;
+  --success: #0c5f58;
+  --error: #9a3412;
+  --warning: #854d0e;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --ink: #f6f1e8;
-    --ink-soft: #d6cbb8;
-    --sand: #1a1714;
-    --sand-deep: #26211c;
-    --paper: #221e1a;
-    --pomegranate: #e07070;
-    --olive: #7da886;
-    --indigo: #9aabd4;
-    --gold: #e0b84a;
-    --line: #3a332b;
-    --correct: #8fcb9a;
-    --incorrect: #e07070;
-    --almost: #e0b84a;
-    --glass: rgba(34, 30, 26, 0.62);
+    --ink: #e8eef6;
+    --ink-soft: #b8c4d4;
+    --sand: #101820;
+    --sand-deep: #182230;
+    --paper: #1a2432;
+    --pomegranate: #f0a36a;
+    --olive: #5eead4;
+    --indigo: #8bb6ea;
+    --gold: #fcd34d;
+    --line: #8aa0b5;
+    --correct: #5eead4;
+    --incorrect: #fdba74;
+    --almost: #fcd34d;
+    --correct-bg: #134e4a;
+    --incorrect-bg: #7c2d12;
+    --almost-bg: #78350f;
+    --glass: rgba(26, 36, 50, 0.86);
+    --primary: #8bb6ea;
+    --secondary: #c4b5fd;
+    --accent: #c4b5fd;
+    --success: #5eead4;
+    --error: #fdba74;
+    --warning: #fcd34d;
   }
 }
 
@@ -56,6 +74,15 @@
   --color-correct: var(--correct);
   --color-incorrect: var(--incorrect);
   --color-almost: var(--almost);
+  --color-correct-bg: var(--correct-bg);
+  --color-incorrect-bg: var(--incorrect-bg);
+  --color-almost-bg: var(--almost-bg);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-warning: var(--warning);
   --font-sans: "DejaVu Sans", "Noto Sans", "Liberation Sans", ui-sans-serif, system-ui, sans-serif;
   --font-hebrew: var(--font-he);
   --font-reading: var(--font-read);
@@ -78,7 +105,7 @@ body {
   font-family: var(--font-he), "Noto Sans Hebrew", sans-serif;
   direction: rtl;
   unicode-bidi: isolate;
-  line-height: 1.65;
+  line-height: 1.75;
   font-size: clamp(1.65rem, 4vw, 2.15rem);
 }
 
@@ -86,7 +113,7 @@ body {
   font-family: var(--font-read), "Frank Ruhl Libre", serif;
   direction: rtl;
   unicode-bidi: isolate;
-  line-height: 1.7;
+  line-height: 1.8;
 }
 
 .glass {

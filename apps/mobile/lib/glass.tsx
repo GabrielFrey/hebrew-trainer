@@ -59,7 +59,7 @@ export function GlassSurface({
       testID={testID}
       style={[
         styles.solid,
-        { backgroundColor: palette.paper, borderColor: palette.line },
+        { backgroundColor: palette.glass, borderColor: palette.line },
         Platform.OS === "web" ? styles.webGlass : null,
         style,
       ]}

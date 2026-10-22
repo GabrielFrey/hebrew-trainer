@@ -211,7 +211,19 @@ function Player() {
         </div>
       </div>
       <aside className="space-y-3">
-        <BitiMascot mood={grade?.result === "correct" ? "happy" : grade ? "think" : "idle"} />
+        <BitiMascot
+          mood={
+            combo > 1 && grade?.result === "correct"
+              ? "streak"
+              : grade?.result === "correct"
+                ? "happy"
+                : grade?.result === "almost"
+                  ? "think"
+                  : grade
+                    ? "sad"
+                    : "idle"
+          }
+        />
         <div className="rounded-3xl bg-paper p-4">
           <h2 className="mb-2 font-medium">Vocabulary</h2>
           <ul className="space-y-2">
@@ -416,12 +428,22 @@ function MatchTap({
 }
 
 function Feedback({ grade, t }: { grade: Grade; t: (k: string) => string }) {
-  const tone =
-    grade.result === "correct" ? "text-correct" : grade.result === "almost" ? "text-almost" : "text-incorrect";
+  const kind = grade.result === "correct" ? "correct" : grade.result === "almost" ? "almost" : "incorrect";
+  const icon = kind === "correct" ? "✓" : kind === "almost" ? "~" : "×";
+  const sheet =
+    kind === "correct"
+      ? "bg-correct-bg border-correct text-correct"
+      : kind === "almost"
+        ? "bg-almost-bg border-almost text-almost"
+        : "bg-incorrect-bg border-incorrect text-incorrect";
+  const label = kind === "correct" ? t("lesson.correct") : kind === "almost" ? t("lesson.almost") : t("lesson.incorrect");
   return (
-    <div data-testid="feedback" className={`mt-4 rounded-2xl border border-line p-3 ${tone}`}>
+    <div data-testid="feedback" role="status" className={`mt-4 rounded-2xl border-2 p-3 ${sheet}`}>
       <p data-testid="feedback-result" className="font-medium">
-        {grade.result === "correct" ? t("lesson.correct") : grade.result === "almost" ? t("lesson.almost") : t("lesson.incorrect")}
+        <span aria-hidden="true" className="me-2 text-xl">
+          {icon}
+        </span>
+        {label}
       </p>
       {grade.diff?.length ? (
         <p className="text-sm">

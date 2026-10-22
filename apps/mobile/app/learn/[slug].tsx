@@ -196,7 +196,11 @@ function Player() {
         </View>
       </View>
       <View style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 16, gap: 8 }}>
-        <BitiMascot mood={grade?.result === "correct" ? "happy" : grade ? "think" : "idle"} />
+        <BitiMascot
+          mood={
+            grade?.result === "correct" ? "happy" : grade?.result === "almost" ? "think" : grade ? "sad" : "idle"
+          }
+        />
         <Text style={{ fontWeight: "600", color: palette.ink }}>Vocabulary</Text>
         {lesson.vocabulary.map((v) => (
           <View key={String(v.lemma)} style={{ borderBottomWidth: 1, borderBottomColor: palette.line, paddingBottom: 8 }}>
@@ -357,11 +361,18 @@ function ExerciseBody({
 
 function Feedback({ grade, label }: { grade: Grade; label: string }) {
   const palette = usePalette();
-  const tone = grade.result === "correct" ? palette.correct : grade.result === "almost" ? palette.almost : palette.incorrect;
+  const kind = grade.result === "correct" ? "correct" : grade.result === "almost" ? "almost" : "incorrect";
+  const icon = kind === "correct" ? "✓" : kind === "almost" ? "~" : "×";
+  const tone = palette[kind === "correct" ? "correct" : kind === "almost" ? "almost" : "incorrect"];
+  const bg = palette[kind === "correct" ? "correctBg" : kind === "almost" ? "almostBg" : "incorrectBg"];
   return (
-    <View testID="feedback" style={{ borderWidth: 1, borderColor: palette.line, borderRadius: 16, padding: 12 }}>
+    <View
+      testID="feedback"
+      accessibilityRole="text"
+      style={{ borderWidth: 2, borderColor: tone, backgroundColor: bg, borderRadius: 16, padding: 12 }}
+    >
       <Text testID="feedback-result" style={{ color: tone, fontWeight: "600" }}>
-        {label}
+        {icon} {label}
       </Text>
       {grade.diff?.length
         ? grade.diff.map((d) => (

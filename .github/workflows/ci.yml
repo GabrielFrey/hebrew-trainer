@@ -82,4 +82,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: test -f docs/content-licensing.md && test -f docs/versions.md
+      - run: test -f docs/content-licensing.md && test -f docs/versions.md && test -f docs/color-research.md

@@ -76,6 +76,7 @@ rm -f data/local/*.sqlite
 - [Licensing](docs/content-licensing.md)
 - [ADRs](docs/adr/)
 - [Performance](docs/performance.md)
+- [Color research and palette](docs/color-research.md) — tokens in `packages/design-tokens`; `python3 scripts/check_contrast.py` is the WCAG AA gate; `python3 scripts/render_biti_art.py` rebuilds the Biti icon and mascot rasters.
 
 ## Tests / CI
 
