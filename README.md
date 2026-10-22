@@ -1,191 +1,84 @@
-# Иврит с нуля
+# Biti Ivrit
 
-Тренажёр иврита в духе Mondly: тематические юниты, короткие уроки со смешанными
-упражнениями, дневная цель и серия дней. SM-2, пять уровней и рукописный ввод букв
-сохранены. Интерфейс — русский или английский, отдельно выбирается язык перевода слов
-(тоже русский или английский). Иврит, огласовки и транскрипция не меняются.
+Cross-platform Modern Hebrew from the first letter to everyday Israeli life. Short lessons, deterministic **server** grading, spaced repetition (1/3/7/14/30 days), ulpan-style conversation, and a native-speaker editorial gate.
 
-Визуально это языковая игра в духе Duolingo: зелёная палитра `#58CC02`, дорожка юнитов,
-серия дней с огоньком, XP, 3D-кнопки и маскот Гама. Зелёный выбран вместо синего Mondly,
-потому что путь уроков, серия и «верно/неверно» читаются как игра, а не как кабинет.
-Светлая и тёмная темы следуют системе (или явному выбору в настройках). Шрифт интерфейса —
-Nunito, иврит — Noto Sans Hebrew, на карточках не меньше 32 pt.
+The brand string is configurable (`BITI_BRAND` / i18n `brand.name`). Default: **Biti Ivrit** / ביתי עברית.
 
-Expo SDK 54 · React Native 0.81 · TypeScript (strict) · expo-router. Прогресс хранится
-только на устройстве, аккаунта и бэкенда нет.
+The previous on-device trainer stays intact on `main`. This branch (`biti-ivrit`) is a new monorepo. Useful logic from that trainer (verb tables, keyboard layout, glass fallbacks) was reused, not shipped as the product.
 
-На iOS 26+ навигация и контролы используют Liquid Glass (`expo-glass-effect`,
-нативные вкладки `expo-router/unstable-native-tabs` с `minimizeBehavior="onScrollDown"`).
-Карточки с ивритом остаются сплошными. На вебе, Android и iOS 18 и ниже — blur-fallback;
-при Reduce Transparency / Increase Contrast — сплошные поверхности. SDK не поднимали:
-всё это уже есть в SDK 54. Настоящий Liquid Glass виден только в сборке Xcode 26
-(EAS `image: latest`). iOS 27 не требует смены SDK: иконка Icon Composer подхватывает
-новый рендер автоматически.
+## What runs here
 
-## Как запустить
+| Surface | Command | URL |
+| --- | --- | --- |
+| API | `apps/api/.venv/bin/uvicorn biti.main:app --app-dir apps/api --host 127.0.0.1 --port 43180` | http://127.0.0.1:43180/docs |
+| Web | `npm --prefix apps/web run dev` | http://127.0.0.1:43181 |
+| Mobile | `npm --prefix apps/mobile install && EXPO_PUBLIC_API_URL=http://127.0.0.1:43180 npx --prefix apps/mobile expo start --web --port 43182` | Expo / emulator |
+
+Android emulator API URL: `http://10.0.2.2:43180`. iOS simulator: `http://127.0.0.1:43180`. Physical device: your LAN IP.
+
+This workspace has **no Docker daemon**. Compose files are in `infra/compose/`. Locally the API uses **SQLite** (`BITI_DATABASE_URL=sqlite:///…`). SQLite is rejected when `BITI_ENV=production`.
+
+## First-time setup
 
 ```bash
-npm install
-npx expo start
+python3 -m venv apps/api/.venv
+apps/api/.venv/bin/pip install -r apps/api/requirements.txt
+cp .env.example .env
+npm --prefix apps/web install
+apps/api/.venv/bin/pytest apps/api/tests
 ```
 
-- **iOS на устройстве** — QR-код камерой, открыть в Expo Go.
-- **iOS-симулятор** — `npx expo start --ios`.
-- **Браузер** — `npx expo start --web --port 43127`.
+Demo login is **development-only**. The process refuses to start if `BITI_DEMO_MODE=true` and `BITI_ENV=production`.
+
+## Honest unavailable states
+
+No TTS, speech, or LLM credentials are bundled.
+
+- Audio routes report `capability: unavailable`. Listening items are not mandatory.
+- Speech routes report `capability: unavailable`. No scores are invented.
+- Tutor uses a static-rule fallback. It **never** awards XP or publishes.
+
+Set `BITI_TTS_*`, `BITI_SPEECH_*`, or `BITI_LLM_BASE_URL` + `BITI_LLM_API_KEY` to enable those adapters.
+
+## Hebrew input and fonts
+
+- Web: OS Hebrew IME plus an in-app keyboard (finals ךםןףץ, optional niqqud palette). Lesson islands use `lang="he" dir="rtl"` and `<bdi>`.
+- Mobile: OS Hebrew keyboard; `I18nManager.allowRTL(true)`. Device RTL chrome is unverified here.
+- Fonts (SIL OFL via `next/font/google`): Noto Sans Hebrew, Frank Ruhl Libre, Source Serif 4. Cursive *ktav yad* webfont is **not** vendored yet — tracing uses a labeled print fallback.
+
+## Editorial and weekly pipeline
 
 ```bash
-npm run typecheck   # tsc --noEmit, strict
-npm test            # jest: SM-2, уроки, лексикон, письмо, озвучка
-npm run lexicon        # пересобрать 5000 слов (нужны кэши в /tmp или scripts/cache); сленг и диалоги не трогает
-npm run lexicon:repair # живой сленг, диалоги, примеры и латинская транскрипция
-npm run lexicon:check  # падает, если у записи нет ru или en
-npm run tts            # нейроозвучка; без ключа просто выходит 0
-node scripts/build-icons.mjs  # light/dark/tinted iOS icons + assets/app.icon
+# as editor (demo)
+curl -s -X POST http://127.0.0.1:43180/auth/demo \
+  -H 'content-type: application/json' \
+  -d '{"ui_language":"en","display_name":"Editor","role":"editor"}'
+curl -s -X POST http://127.0.0.1:43180/pipeline/run -H "Authorization: Bearer …"
 ```
 
-Сбросить прогресс: вкладка **Учить** → шестерёнка → «Сбросить прогресс».
+Adapters: original frequency starter, Wiktionary (CC BY-SA + attribution), Academy homepage (terms review required), Project Ben-Yehuda index. Nothing auto-publishes. Native-speaker flag is required to publish.
 
-Четыре вкладки: **Учить** (дорожка + дневная цель) · **Алфавит** · **Сленг** · **Прогресс**.
-Глаголы открываются кнопкой с главной, не отдельной вкладкой.
+Celery beat schedule is `BITI_PIPELINE_CRON` (default Monday 03:00 UTC). Redis is required for the worker; without Redis, trigger the pipeline from the API.
 
-## Уроки
-
-Вкладка **Учить** — темы по 5–8 уроков (крупные вроде «Частые слова» режутся,
-мелкие склеиваются). Урок вводит 3–5 разных слов и чередует упражнения, без
-четырёх повторов одного слова подряд:
-
-- показ слова с никудом, переводом и примером — один тап «Понятно»;
-- выбор перевода (дистракторы той же темы и части речи);
-- выбор картинки — только у конкретных существительных;
-- аудирование — только если есть готовый файл, иначе шаг не создаётся;
-- набор слова со встроенной ивритской клавиатуры (никуд не обязателен);
-- вставь пропущенное слово в примере;
-- согласование по роду;
-- «образуй форму» для глаголов из каталога;
-- собрать фразу из слов, с подсказкой на RU/EN;
-- короткий диалог.
-
-Сердец нет: ошибка не блокирует урок, правильный ответ показывается крупно
-(иврит, никуд, транскрипция) и можно пожаловаться на задание. Рукописный ввод
-букв остаётся в алфавите и в сессии повторений, не в Mondly-уроке.
-
-Пройденные уроки пишутся в `progress.completedLessons` и **не сбрасывают** карточки
-повторений. Дневная цель совпадает с онбордингом: 5 / 10 / 20 минут, кольцо
-`0 / 10 мин`. Серия дней растёт от завершённого урока или сессии повторений;
-один пропуск можно закрыть заморозкой.
-
-Кнопка «Повторить слова» на главной появляется, только если есть карточки к повтору
-(до 15 карточек, не больше 5 новых слов).
-
-## Лексикон
-
-Данные разбиты по файлам, чтобы не раздувать бандл. Приложение подгружает уровень и
-все, что ниже (`lib/lexicon.ts` → `ensureLevel`):
-
-| Файл | Содержание |
-| --- | --- |
-| `data/lexicon/catalog.json` | темы, юниты, счётчики |
-| `data/lexicon/words-{level}.json` | 5000 слов по пяти уровням |
-| `data/lexicon/slang-{level}.json` | несколько сотен живых разговорных выражений |
-| `data/lexicon/dialogues-{level}.json` | бытовые диалоги к юнитам |
-
-У каждой записи: иврит с огласовками и без, транскрипция **только латиницей**
-(h=ה, kh=ח, sh=ש, ts=צ), ru, en, часть речи, тема, уровень. У слова — короткий
-пример-предложение, если его можно сделать осмысленно; иначе поле пустое, а не
-повтор леммы. Сленг (ориентир 300–500 живых выражений) дополнительно содержит
-`usage.ru` / `usage.en`. Вкладка **Сленг** показывает выражения текущего уровня
-и ниже. Диалоги — бытовые сценки к юнитам, не шаблон «מה שלומך? יש X».
-
-Сборка слов: Teach Me Hebrew frequency list → огласовка Dicta Nakdan → перевод EN→RU.
-Живой сленг и диалоги лежат в `scripts/content/` и собираются `npm run lexicon:repair`.
-Золотой слой из выверенных вручную слов `data/hebrew.json` сохраняет прежние `id`
-(чтобы SM-2-карточки `shalom` и т.п. не потерялись). Удалённые id карточек прогресса
-просто не находятся и игнорируются.
-
-## Уровни
-
-Уровень выбирается в онбординге и меняется в настройках. **Смена уровня ничего не
-сбрасывает:** начатые карточки продолжают приходить на повторение.
-
-Огласовки в настройках: **всегда / адаптивно / никогда**. В адаптивном режиме чем
-лучше слово выучено по SM-2, тем чаще оно без никуда; нажатие показывает огласовки.
-
-| Уровень | Огласовки (до выбора режима) | Транскрипция | Фраза, слов |
-| --- | --- | --- | --- |
-| Элементарный | всегда | да | 2–3 |
-| Базовый | всегда | да | 3–5 |
-| Средний | переключатель | да | 4–8 |
-| Продвинутый | по умолчанию выключены | да | 6–12 |
-| Максимально продвинутый | выключены | нет | 20–60 |
-
-Буквы вводятся только на элементарном и базовом уровне.
-
-## Алгоритм повторений
-
-`lib/srs.ts` — SM-2: ease от 2.5, не ниже 1.3, интервалы 1 → 6 → `предыдущий × ease`.
-
-Сессия повторений (`lib/session.ts`): очередь ≤ 15, ≤ 5 новых слов, ошибка сбрасывает
-интервал и отправляет карточку в конец очереди.
-
-## Рукописный ввод
-
-Режим «напиши букву» распознаёт начертание. Шаблоны 27 глифов (22 буквы + 5 конечных)
-в `data/glyphs.json`, осевая линия утончением Чжана — Суня, общая базовая линия.
-Пары ו/ן и י/ך различаются по спуску; неоднозначный спуск → «не уверен», ошибка не
-записывается. Холст при «не уверен» не стирается, чтобы можно было дописать штрих.
-
-## Глаголы
-
-Вкладка **Глаголы**: семь биньянов с пояснением и таблицы спряжения
-(настоящее / прошедшее / будущее / повелительное / инфинитив) для 100–200
-частотных глаголов. Формы считаются движком `lib/verbs-engine.ts`, не копируются
-из Pealim; сомнительные корни не включены. У глагола — корень и однокоренные
-слова из лексикона. Упражнение «образуй форму» входит в уроки и SM-2.
-
-## Озвучка
-
-Синтеза **на устройстве нет**: `expo-speech` запрещён тестом. Если готового файла
-нет, кнопки звука нет (не заглушка «нет записи»). Рядом с «Прослушать» — **Медленно**
-(0.7×). Аудирование в уроке собирается только из слов с записью.
-
-1. **Запись носителя** (`assets/audio/words|letters/*.m4a`) — приоритет. Сейчас 20
-   файлов CC0 с Викисклада, список в `assets/audio/credits.json`.
-2. **Нейросетевой голос**, заранее сгенерированный скриптом — не в рантайме.
+## Reset local data
 
 ```bash
-# Azure Neural (he-IL-HilaNeural / he-IL-AvriNeural)
-AZURE_SPEECH_KEY=... AZURE_SPEECH_REGION=eastus npm run tts
-
-# Google Cloud TTS (he-IL-Wavenet-A / he-IL-Wavenet-C)
-GOOGLE_TTS_KEY=... npm run tts
+rm -f data/local/*.sqlite
 ```
 
-Скрипт `scripts/generate-tts.mjs` синтезирует **по тексту с огласовками** (слова,
-сленг, реплики диалогов), кэширует mp3 в `.tts-cache/{sha1}.mp3`, пишет файлы в
-`assets/audio/tts/{level}/` (в gitignore) и карту `lib/tts-assets.ts`. Манифест —
-`data/tts-manifest.json` (путь, текст, голос, хеш). Без ключа скрипт завершается
-кодом 0 и ничего не синтезирует. Пустые заглушки не пишутся. Живые записи носителя
-имеют приоритет.
+## Docs
 
-## Язык интерфейса и язык перевода
+- [Architecture](docs/architecture.md)
+- [Implementation plan](docs/implementation-plan.md)
+- [Requirements matrix](docs/requirements-matrix.md)
+- [Curriculum](docs/curriculum.md)
+- [Versions](docs/versions.md)
+- [Licensing](docs/content-licensing.md)
+- [ADRs](docs/adr/)
+- [Performance](docs/performance.md)
 
-Это две разные настройки.
+## Tests / CI
 
-- **Язык интерфейса** — подписи кнопок и экранов: система, русский или English.
-- **Язык перевода** — какой перевод иврита показывать: русский или English.
-  Онбординг, настройки и кнопка RU/EN на уроке, сленге и колодах. Переключение
-  мгновенное, прогресс не сбрасывается. По умолчанию совпадает с интерфейсом.
+`apps/api/.venv/bin/pytest apps/api/tests` — grading vectors, answer non-leak, XP-once, AI-never-XP, seed ≥24 lessons, unpublishable drafts.
 
-Поиск по сленгу смотрит и русский, и английский. Иврит, никуд, транскрипция и SM-2
-не зависят от этих настроек.
-
-## Хранение
-
-`lib/storage.ts` — JSON в AsyncStorage `hebrew-coach/progress/v1`: карточки SM-2,
-журнал сессий, серия дней, `completedLessons`, настройки. Миграция со старой схемы
-уровней карточки не трогает.
-
-## App Store
-
-Иконка, splash, `bundleIdentifier` (`app.hebrew.trainer`) — в
-[`docs/APP_STORE.md`](docs/APP_STORE.md).
+CI: `.github/workflows/ci.yml` (lint, pytest, OpenAPI export, web build). Playwright/axe and native device jobs are not wired — marked unverified.

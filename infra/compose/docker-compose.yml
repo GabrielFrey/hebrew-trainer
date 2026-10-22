@@ -1,0 +1,99 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: biti
+      POSTGRES_PASSWORD: biti
+      POSTGRES_DB: biti
+    ports:
+      - "5432:5432"
+    volumes:
+      - biti_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U biti"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7.4-alpine
+    ports:
+      - "6379:6379"
+
+  minio:
+    image: minio/minio:RELEASE.2024-12-18T13-15-44Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: biti
+      MINIO_ROOT_PASSWORD: biti-minio-dev
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8088:8080"
+
+  api:
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile.api
+    environment:
+      BITI_ENV: development
+      BITI_DEMO_MODE: "true"
+      BITI_DATABASE_URL: postgresql+psycopg://biti:biti@postgres:5432/biti
+      BITI_REDIS_URL: redis://redis:6379/0
+      BITI_CORS_ORIGINS: http://127.0.0.1:43181,http://localhost:43181
+    ports:
+      - "43180:43180"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  worker:
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile.api
+    command: celery -A biti.celery_app worker --loglevel=info
+    environment:
+      BITI_ENV: development
+      BITI_DEMO_MODE: "true"
+      BITI_DATABASE_URL: postgresql+psycopg://biti:biti@postgres:5432/biti
+      BITI_REDIS_URL: redis://redis:6379/0
+    depends_on:
+      - api
+      - redis
+
+  beat:
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile.api
+    command: celery -A biti.celery_app beat --loglevel=info
+    environment:
+      BITI_ENV: development
+      BITI_DEMO_MODE: "true"
+      BITI_DATABASE_URL: postgresql+psycopg://biti:biti@postgres:5432/biti
+      BITI_REDIS_URL: redis://redis:6379/0
+    depends_on:
+      - redis
+
+  web:
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile.web
+    environment:
+      NEXT_PUBLIC_API_URL: http://127.0.0.1:43180
+    ports:
+      - "43181:43181"
+    depends_on:
+      - api
+
+volumes:
+  biti_pg:

@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "nfc-geresh",
+      "mode": "relaxed",
+      "input": "ג'ינס",
+      "accepted": ["ג׳ינס"],
+      "expect": "correct",
+      "rule": "geresh_variant"
+    },
+    {
+      "id": "niqqud-relaxed",
+      "mode": "relaxed",
+      "input": "שָׁלוֹם",
+      "accepted": ["שלום"],
+      "expect": "correct",
+      "rule": "strip_niqqud"
+    },
+    {
+      "id": "niqqud-strict-reject",
+      "mode": "strict_niqqud",
+      "input": "שלום",
+      "accepted": ["שָׁלוֹם"],
+      "expect": "incorrect",
+      "rule": "keep_niqqud"
+    },
+    {
+      "id": "niqqud-strict-pass",
+      "mode": "strict_niqqud",
+      "input": "שָׁלוֹם",
+      "accepted": ["שָׁלוֹם"],
+      "expect": "correct",
+      "rule": "keep_niqqud"
+    },
+    {
+      "id": "final-relaxed",
+      "mode": "relaxed",
+      "input": "כלב",
+      "accepted": ["כלב"],
+      "expect": "correct",
+      "rule": "finals_ok"
+    },
+    {
+      "id": "final-wrong-position-relaxed",
+      "mode": "relaxed",
+      "input": "ךלב",
+      "accepted": ["כלב"],
+      "expect": "correct",
+      "rule": "finals_normalized"
+    },
+    {
+      "id": "final-strict-reject",
+      "mode": "strict_finals",
+      "input": "כ",
+      "accepted": ["ך"],
+      "expect": "incorrect",
+      "rule": "keep_finals"
+    },
+    {
+      "id": "final-strict-pass",
+      "mode": "strict_finals",
+      "input": "לך",
+      "accepted": ["לך"],
+      "expect": "correct",
+      "rule": "keep_finals"
+    },
+    {
+      "id": "maqaf",
+      "mode": "relaxed",
+      "input": "בית-ספר",
+      "accepted": ["בית־ספר"],
+      "expect": "correct",
+      "rule": "maqaf"
+    },
+    {
+      "id": "bidi-stripped",
+      "mode": "relaxed",
+      "input": "שלום\u202E",
+      "accepted": ["שלום"],
+      "expect": "correct",
+      "rule": "strip_bidi"
+    },
+    {
+      "id": "root-letters",
+      "mode": "strict_root",
+      "input": "כ.ת.ב",
+      "accepted": ["כתב"],
+      "expect": "correct",
+      "rule": "root_letters"
+    },
+    {
+      "id": "wrong-word",
+      "mode": "relaxed",
+      "input": "להתראות",
+      "accepted": ["שלום"],
+      "expect": "incorrect",
+      "rule": "mismatch"
+    },
+    {
+      "id": "almost-one-letter",
+      "mode": "relaxed",
+      "input": "שלים",
+      "accepted": ["שלום"],
+      "expect": "almost",
+      "rule": "near_miss"
+    },
+    {
+      "id": "ktiv-variant-list",
+      "mode": "relaxed",
+      "input": "אמא",
+      "accepted": ["אמא", "אימא"],
+      "expect": "correct",
+      "rule": "accepted_variant"
+    },
+    {
+      "id": "latin-case",
+      "mode": "relaxed",
+      "input": "Shalom",
+      "accepted": ["shalom"],
+      "expect": "correct",
+      "rule": "latin_case"
+    }
+  ]
+}

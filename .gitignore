@@ -1,15 +1,24 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
 # dependencies
 node_modules/
-
-# Expo
-.expo/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.turbo/
+.next/
 dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Expo / native
+.expo/
 web-build/
 expo-env.d.ts
-
-# Native
 .kotlin/
 *.orig.*
 *.jks
@@ -17,32 +26,34 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
-
-# Metro
 .metro-health-check*
+/ios
+/android
 
-# debug
+# env and secrets
+.env
+.env.*
+!.env.example
+!.env*.example
+*.pem
+
+# local data
+data/local/
+*.sqlite
+*.sqlite3
+.redis/
+.minio/
+
+# caches
+.tts-cache/
+.celery/
+scripts/cache/
+
+# OS / editor
+.DS_Store
 npm-debug.*
 yarn-debug.*
 yarn-error.*
 
-# macOS
-.DS_Store
-*.pem
-
-# local env files
-.env*.local
-
-# typescript
-*.tsbuildinfo
-
-# generated native folders
-/ios
-/android
-
-# TTS cache and generated neural audio (не коммитить пустые заглушки)
-.tts-cache/
-assets/audio/tts/
-scripts/cache/
-__pycache__/
-*.pyc
+# generated SDK snapshots (committed OpenAPI is source of truth)
+apps/api/.openapi-tmp.json

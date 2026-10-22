@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #1c1917;
+  --ink-soft: #44403c;
+  --sand: #f6f1e8;
+  --sand-deep: #e8dfd0;
+  --paper: #fffcf7;
+  --pomegranate: #c23b3b;
+  --olive: #3f6b4a;
+  --indigo: #2c3d6b;
+  --gold: #c4921a;
+  --line: #d6cbb8;
+  --correct: #2f6b3a;
+  --incorrect: #a33b3b;
+  --almost: #9a6b12;
+  --glass: rgba(255, 252, 247, 0.62);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #f6f1e8;
+    --ink-soft: #d6cbb8;
+    --sand: #1a1714;
+    --sand-deep: #26211c;
+    --paper: #221e1a;
+    --pomegranate: #e07070;
+    --olive: #7da886;
+    --indigo: #9aabd4;
+    --gold: #e0b84a;
+    --line: #3a332b;
+    --correct: #8fcb9a;
+    --incorrect: #e07070;
+    --almost: #e0b84a;
+    --glass: rgba(34, 30, 26, 0.62);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass: var(--paper);
+  }
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-sand: var(--sand);
+  --color-sand-deep: var(--sand-deep);
+  --color-paper: var(--paper);
+  --color-pomegranate: var(--pomegranate);
+  --color-olive: var(--olive);
+  --color-indigo: var(--indigo);
+  --color-gold: var(--gold);
+  --color-line: var(--line);
+  --color-correct: var(--correct);
+  --color-incorrect: var(--incorrect);
+  --color-almost: var(--almost);
+  --font-sans: var(--font-ui);
+  --font-hebrew: var(--font-he);
+  --font-reading: var(--font-read);
+}
+
+html,
+body {
+  background: var(--sand);
+  color: var(--ink);
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-ui), Georgia, serif;
+}
+
+.he {
+  font-family: var(--font-he), "Noto Sans Hebrew", sans-serif;
+  direction: rtl;
+  unicode-bidi: isolate;
+  line-height: 1.65;
+  font-size: clamp(1.65rem, 4vw, 2.15rem);
+}
+
+.he-read {
+  font-family: var(--font-read), "Frank Ruhl Libre", serif;
+  direction: rtl;
+  unicode-bidi: isolate;
+  line-height: 1.7;
+}
+
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,8 @@
+FROM node:22-slim
+WORKDIR /app
+COPY apps/web/package.json apps/web/package-lock.json /app/
+RUN npm ci
+COPY apps/web /app
+COPY packages /packages
+EXPOSE 43181
+CMD ["npm", "run", "dev", "--", "--port", "43181", "--hostname", "0.0.0.0"]

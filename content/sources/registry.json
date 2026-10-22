@@ -1,0 +1,32 @@
+{
+  "sources": [
+    {
+      "id": "original-frequency-starter",
+      "adapter": "original_frequency",
+      "url": "https://example.invalid/biti-ivrit/original-frequency",
+      "license": "proprietary-original",
+      "notes": "Short original list authored for Biti. Not scraped."
+    },
+    {
+      "id": "wiktionary-copyrights",
+      "adapter": "wiktionary",
+      "url": "https://en.wiktionary.org/wiki/Wiktionary:Copyrights",
+      "license": "CC BY-SA",
+      "notes": "Attribution required. Share-alike applies to reused wording."
+    },
+    {
+      "id": "hebrew-academy-home",
+      "adapter": "hebrew_academy",
+      "url": "https://hebrew-academy.org.il/",
+      "license": "site-terms-unverified",
+      "notes": "Record only. Editorial must confirm reuse before publish."
+    },
+    {
+      "id": "ben-yehuda-home",
+      "adapter": "ben_yehuda",
+      "url": "https://benyehuda.org/",
+      "license": "public-domain-project-terms",
+      "notes": "Individual works need a public-domain check."
+    }
+  ]
+}
