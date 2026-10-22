@@ -1,7 +1,7 @@
 import { drainQueue } from "./offline";
 import { apiHostLabel, defaultApiBase } from "./api-host";
 import { canServeLocally, localHandle } from "./local-api";
-import { loadSession, loadToken, peekSession, saveSession, saveToken } from "./session";
+import { loadSession, loadToken, peekSession, saveSession, saveToken, newId } from "./session";
 
 const FETCH_MS = 2500;
 
@@ -195,7 +195,7 @@ export async function demoLogin(body: {
 }): Promise<User> {
   const payload = {
     ...body,
-    email: body.role === "editor" ? "demo-editor@biti.local" : `demo-${crypto.randomUUID()}@biti.local`,
+    email: body.role === "editor" ? "demo-editor@biti.local" : `demo-${newId("demo")}@biti.local`,
   };
   try {
     const data = await remoteFetch<{ access_token: string; user: User }>(

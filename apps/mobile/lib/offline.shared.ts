@@ -1,4 +1,5 @@
 import { Platform } from "react-native";
+import { newId } from "./id";
 
 export type QueuedEvent = {
   id: string;
@@ -20,8 +21,7 @@ const MEMORY: QueuedEvent[] = [];
 const LS_KEY = "biti-offline-queue";
 
 export function newQueueId(): string {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
-  return `q-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  return newId("q");
 }
 
 function fromLocalStorage(): QueuedEvent[] {

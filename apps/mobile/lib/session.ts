@@ -1,6 +1,9 @@
 import { Platform } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import type { User } from "./api";
+import { newId } from "./id";
+
+export { newId };
 
 const KEY = "biti_session_v1";
 const LEGACY_TOKEN = "biti_token";
@@ -106,7 +109,3 @@ export async function saveToken(value: string | null): Promise<void> {
   await writeRaw(LEGACY_TOKEN, value);
 }
 
-export function newId(prefix = "id"): string {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) return `${prefix}-${crypto.randomUUID()}`;
-  return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-}
