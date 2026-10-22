@@ -1,0 +1,93 @@
+import { Link, usePathname, useRouter } from "expo-router";
+import { type ReactNode, useEffect } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BitiMascot } from "@/components/BitiMascot";
+import { useAuth } from "@/lib/auth";
+import { GlassSurface } from "@/lib/glass";
+import { t } from "@/lib/i18n";
+import { usePalette } from "@/lib/theme";
+
+const LINKS = [
+  ["/learn", "nav.learn"],
+  ["/review", "nav.review"],
+  ["/alphabet", "nav.alphabet"],
+  ["/verbs", "nav.verbs"],
+  ["/practice", "nav.practice"],
+  ["/profile", "nav.profile"],
+] as const;
+
+export function Shell({ children }: { children: ReactNode }) {
+  const palette = usePalette();
+  const insets = useSafeAreaInsets();
+  const path = usePathname();
+  const router = useRouter();
+  const { user, ready, lang } = useAuth();
+
+  useEffect(() => {
+    if (ready && !user) router.replace("/");
+  }, [ready, user, router]);
+
+  if (!ready || !user) {
+    return (
+      <View style={{ flex: 1, backgroundColor: palette.sand, padding: 24 }}>
+        <Text style={{ color: palette.inkSoft }}>{t(lang, "states.loading")}</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={{ flex: 1, backgroundColor: palette.sand, paddingTop: insets.top }}>
+      <GlassSurface
+        testID="mobile-chrome"
+        style={{ marginHorizontal: 12, marginTop: 8, paddingHorizontal: 14, paddingVertical: 10 }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <BitiMascot size={40} />
+            <View>
+              <Text style={{ fontSize: 18, fontWeight: "700", color: palette.ink }}>Biti Ivrit</Text>
+              <Text style={{ fontSize: 12, color: palette.inkSoft }} {...({ lang: "he" } as object)}>
+                ביתי עברית
+              </Text>
+            </View>
+          </View>
+          <View style={{ flexDirection: "row", gap: 8 }}>
+            <Text accessibilityLabel="XP" style={{ color: palette.ink, fontSize: 12 }}>
+              {user.xp_total} XP
+            </Text>
+            <Text accessibilityLabel="Streak" style={{ color: palette.ink, fontSize: 12 }}>
+              🔥 {user.streak}
+            </Text>
+            <Text accessibilityLabel="Hearts" style={{ color: palette.ink, fontSize: 12 }}>
+              ❤ {user.hearts}
+            </Text>
+          </View>
+        </View>
+      </GlassSurface>
+      <ScrollView horizontal contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 10, gap: 8 }}>
+        {LINKS.map(([href, key]) => {
+          const active = path === href || (href !== "/learn" && path.startsWith(href));
+          return (
+            <Link key={href} href={href} asChild>
+              <Pressable
+                accessibilityRole="link"
+                style={{
+                  borderRadius: 999,
+                  paddingHorizontal: 12,
+                  paddingVertical: 8,
+                  backgroundColor: active ? palette.indigo : palette.paper,
+                  borderWidth: 1,
+                  borderColor: palette.line,
+                }}
+              >
+                <Text style={{ color: active ? palette.paper : palette.ink, fontSize: 14 }}>{t(lang, key)}</Text>
+              </Pressable>
+            </Link>
+          );
+        })}
+      </ScrollView>
+      <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 48, gap: 12 }}>{children}</ScrollView>
+    </View>
+  );
+}

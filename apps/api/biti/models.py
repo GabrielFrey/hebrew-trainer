@@ -50,9 +50,43 @@ class User(Base):
     freeze_available: Mapped[int] = mapped_column(Integer, default=1)
     league: Mapped[str] = mapped_column(String(32), default="olive")
     level: Mapped[str] = mapped_column(String(32), default="starter")
+    course_id: Mapped[str] = mapped_column(String(16), default="he-ru")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
     attempts: Mapped[list[Attempt]] = relationship(back_populates="user")
+
+
+class Course(Base):
+    __tablename__ = "courses"
+    id: Mapped[str] = mapped_column(String(16), primary_key=True)
+    source: Mapped[str] = mapped_column(String(8))
+    target: Mapped[str] = mapped_column(String(8), default="he")
+    title: Mapped[dict[str, str]] = mapped_column(JSON)
+    pair: Mapped[str] = mapped_column(String(40))
+
+
+class CourseProgress(Base):
+    __tablename__ = "course_progress"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
+    course_id: Mapped[str] = mapped_column(String(16), default="he-ru")
+    xp_total: Mapped[int] = mapped_column(Integer, default=0)
+    streak_count: Mapped[int] = mapped_column(Integer, default=0)
+    last_streak_date: Mapped[str | None] = mapped_column(String(16))
+    level: Mapped[str] = mapped_column(String(32), default="starter")
+    league: Mapped[str] = mapped_column(String(32), default="olive")
+    daily_goal_xp: Mapped[int] = mapped_column(Integer, default=50)
+    __table_args__ = (UniqueConstraint("user_id", "course_id", name="uq_course_progress"),)
+
+
+class Unit(Base):
+    __tablename__ = "units"
+    id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    title: Mapped[dict[str, str]] = mapped_column(JSON)
+    level: Mapped[str] = mapped_column(String(32))
+    track_id: Mapped[str] = mapped_column(String(40), default="script")
+    sort: Mapped[int] = mapped_column(Integer, default=0)
+    skills: Mapped[list[dict[str, Any]]] = mapped_column(JSON, default=list)
 
 
 class Track(Base):
@@ -74,6 +108,8 @@ class Lesson(Base):
     prerequisites: Mapped[list[str]] = mapped_column(JSON, default=list)
     status: Mapped[str] = mapped_column(String(16), default="draft")
     sort: Mapped[int] = mapped_column(Integer, default=0)
+    unit_id: Mapped[str | None] = mapped_column(String(40))
+    skill_id: Mapped[str | None] = mapped_column(String(40))
 
 
 class LessonVersion(Base):
@@ -97,8 +133,10 @@ class Attempt(Base):
     __tablename__ = "attempts"
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
+    course_id: Mapped[str] = mapped_column(String(16), default="he-ru")
     lesson_version_id: Mapped[str] = mapped_column(ForeignKey("lesson_versions.id"))
     status: Mapped[str] = mapped_column(String(16), default="in_progress")
+    combo: Mapped[int] = mapped_column(Integer, default=0)
     results: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
     accuracy: Mapped[float] = mapped_column(Float, default=0)
     hint_level: Mapped[int] = mapped_column(Integer, default=0)

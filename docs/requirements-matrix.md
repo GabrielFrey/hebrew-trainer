@@ -12,14 +12,14 @@ Status key: `done` · `partial` · `unverified` · `blocked` · `planned`
 | A6 | Design tokens + Hebrew typography | `packages/design-tokens`, web fonts | Visual in Chromium | partial (cursive OFL font not vendored) |
 | A7 | Compose stack | `infra/compose` | File present; Docker daemon missing | unverified |
 | A8 | CI lint/test/openapi | `.github/workflows/ci.yml` | Workflow present; GH runners unverified | partial |
-| B1 | Web vertical flow | `apps/web` | Browser lesson loop | in progress |
-| B2 | Mobile vertical flow | `apps/mobile` | Expo web; device unverified | in progress |
+| B1 | Web vertical flow | `apps/web` | Playwright scenarios 1,3,5,6,7,15 + axe (run in this env) | partial |
+| B2 | Mobile vertical flow | `apps/mobile` | Expo export + web screenshots; native device unverified | partial |
 | B3 | Deterministic grading + modes | `biti/grading.py` + vectors | pytest vectors | done |
 | B4 | Answers never leak | lesson serializer | pytest | done |
 | B5 | XP once under retry | ledger unique | pytest concurrency | done |
 | B6 | Audio honest unavailable | audio router + UI | no TTS key | done |
-| C1 | 24 published lessons | `biti/seed.py` | seed validation | done |
-| C2 | Prerequisite graph + bosses | curriculum + web path | API + UI | done |
+| C1 | Full tree + published first levels in 5 pairs | `catalog.py` + seed | pytest catalog + seed | partial (Bet+ mapped planned) |
+| C2 | Prerequisite graph + legendary bosses | curriculum + path units | API + UI | done |
 | C3 | SRS 1/3/7/14/30 | `biti/srs.py` | pytest | done |
 | C4 | Hearts / streak / league | gamification services | pytest | done |
 | C5 | Alphabet + verb explorer | API + screens | web | done |
@@ -32,8 +32,8 @@ Status key: `done` · `partial` · `unverified` · `blocked` · `planned`
 | E2 | Editorial approve/publish | API + `/editorial` | API tests | done |
 | E3 | No auto-publish | pipeline creates drafts | pytest | done |
 | F1 | Offline replay | web IndexedDB queue | basic web queue; device SQLite unverified | partial |
-| F2 | a11y WCAG 2.2 AA | semantic UI, lang=he | axe/Playwright unverified in CI | partial |
-| F3 | RTL visual regression | Playwright | not run in this environment | unverified |
+| F2 | a11y WCAG 2.2 AA | semantic UI, lang=he | Playwright axe job in CI | partial (run locally when browsers installed) |
+| F3 | RTL visual regression | Playwright acceptance 5 | run with e2e job | partial |
 | F4 | Speech | capability endpoint | unavailable without provider | done (honest) |
 | F5 | Native iOS/Android builds | Expo | not run | unverified |
 | F6 | Perf budgets | `docs/performance.md` | not measured under load | partial |

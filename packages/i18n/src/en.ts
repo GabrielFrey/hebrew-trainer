@@ -8,6 +8,7 @@ export const en = {
     talk: "Conversation",
     profile: "Profile",
     editorial: "Editorial",
+    practice: "Practice",
   },
   onboarding: {
     title: "Welcome to Biti Ivrit",
@@ -21,6 +22,8 @@ export const en = {
     placement: "Take a short placement",
     skip: "Start from Alef",
     continue: "Continue",
+    course: "Your course",
+    reviewFlag: "Ukrainian, Spanish and French copy is in review until a native speaker signs it.",
   },
   lesson: {
     check: "Check",
@@ -40,6 +43,10 @@ export const en = {
     locked: "Complete the previous lesson first.",
     empty: "No published lessons yet.",
     error: "The lesson could not be loaded.",
+    combo: "Combo",
+    legendary: "Legendary checkpoint",
+    planned: "Coming later — mapped, not a fake lesson.",
+    celebrate: "Biti opened a window for you.",
   },
   progress: {
     xp: "XP",
@@ -55,4 +62,9 @@ export const en = {
     empty: "Nothing here yet.",
   },
   keyboard: { space: "Space", backspace: "Backspace", niqqud: "Niqqud" },
+  practice: {
+    title: "Practice hub",
+    due: "Cards due today",
+    weak: "Lessons to polish",
+  },
 } as const;

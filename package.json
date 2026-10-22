@@ -10,6 +10,12 @@
     "api": "apps/api/.venv/bin/uvicorn biti.main:app --app-dir apps/api --host 127.0.0.1 --port 43180",
     "web": "npm --prefix apps/web run dev",
     "test:api": "apps/api/.venv/bin/pytest apps/api/tests -q",
+    "test:e2e": "playwright test --config e2e/playwright.config.ts",
     "export-openapi": "apps/api/.venv/bin/python scripts/export_openapi.py"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.0",
+    "@playwright/test": "^1.56.1",
+    "axe-core": "^4.11.0"
   }
 }

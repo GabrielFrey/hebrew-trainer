@@ -6,7 +6,9 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from biti.models import Lesson, LessonVersion, PublishedChunk, Track, User, new_id, utcnow
+from biti.courses import COURSES, L10N_STATUS
+from biti.draft_l10n import fill_choice, fill_loc, fill_vocab
+from biti.models import Course, Lesson, LessonVersion, PublishedChunk, Track, Unit, User, new_id, utcnow
 
 EDITORIAL = {
     "author": "Biti curriculum",
@@ -17,8 +19,8 @@ EDITORIAL = {
 }
 
 
-def _loc(en: str, ru: str, he: str = "") -> dict[str, str]:
-    return {"en": en, "ru": ru, "he": he}
+def _loc(en: str, ru: str, he: str = "", uk: str = "", es: str = "", fr: str = "") -> dict[str, str]:
+    return fill_loc({"en": en, "ru": ru, "he": he, "uk": uk, "es": es, "fr": fr})
 
 
 def _mc(eid: str, prompt: dict[str, str], choices: list[dict], accepted: str, **extra: Any) -> dict:
@@ -830,7 +832,9 @@ def _bosses() -> list[dict]:
 
 
 def all_lesson_specs() -> list[dict]:
-    return _script_lessons() + _grammar_lessons() + _vocab_lessons() + _convo_lessons() + _bosses()
+    from biti.lessons_extra import extra_published
+
+    return _script_lessons() + extra_published() + _grammar_lessons() + _vocab_lessons() + _convo_lessons() + _bosses()
 
 
 def validate_lesson(spec: dict) -> list[str]:
@@ -843,24 +847,71 @@ def validate_lesson(spec: dict) -> list[str]:
     for item in ex:
         if item.get("type") in {"speak", "listen", "listen_mc"} and item.get("optional"):
             continue
-        if item.get("type") != "speak" and not item.get("accepted") and item.get("type") != "match":
+        if item.get("type") != "speak" and not item.get("accepted") and item.get("type") not in {"match", "match_tap"}:
             errors.append(f"{spec['slug']}:{item.get('id')} missing accepted")
-        if item.get("type") == "match" and not item.get("pairs"):
+        if item.get("type") in {"match", "match_tap"} and not (item.get("pairs") or item.get("pairs_by_lang")):
             errors.append(f"{spec['slug']}:{item.get('id')} missing pairs")
     if not spec.get("editorial", EDITORIAL).get("license"):
         errors.append(f"{spec['slug']}: missing license")
     return errors
 
 
-def public_exercises(exercises: list[dict]) -> list[dict]:
+def public_exercises(exercises: list[dict], source_lang: str = "en") -> list[dict]:
     public = []
     for item in exercises:
-        clone = {k: v for k, v in item.items() if k not in {"accepted", "pairs"}}
+        clone = {k: v for k, v in item.items() if k not in {"accepted", "pairs", "pairs_by_lang"}}
+        if clone.get("prompt"):
+            clone["prompt"] = fill_loc(clone["prompt"])
+        if clone.get("choices"):
+            clone["choices"] = [fill_choice(c) for c in clone["choices"]]
+        by_lang = item.get("pairs_by_lang") or {}
+        if by_lang:
+            pairs = by_lang.get(source_lang) or by_lang.get("en") or {}
+            clone["left"] = list(pairs.keys())
+            clone["right"] = list(pairs.values())
         public.append(clone)
     return public
 
 
+def _localize_spec(spec: dict[str, Any]) -> dict[str, Any]:
+    out = dict(spec)
+    for key in ("title", "objective", "explanation"):
+        if isinstance(out.get(key), dict):
+            out[key] = fill_loc(out[key])
+    out["vocabulary"] = [fill_vocab(v) for v in out.get("vocabulary") or []]
+    exercises = []
+    for ex in out.get("exercises") or []:
+        item = dict(ex)
+        if item.get("prompt"):
+            item["prompt"] = fill_loc(item["prompt"])
+        if item.get("choices"):
+            item["choices"] = [fill_choice(c) for c in item["choices"]]
+        exercises.append(item)
+    out["exercises"] = exercises
+    editorial = dict(out.get("editorial") or EDITORIAL)
+    editorial.setdefault("l10n_status", dict(L10N_STATUS))
+    out["editorial"] = editorial
+    return out
+
+
 def seed(db: Session) -> None:
+    from biti.catalog import all_catalog_lessons, build_tree
+
+    for course in COURSES:
+        row = db.get(Course, course["id"])
+        if row is None:
+            db.add(Course(id=course["id"], source=course["source"], target=course["target"], title=course["title"], pair=course["pair"]))
+        else:
+            row.title = course["title"]
+            row.pair = course["pair"]
+    for unit in build_tree():
+        row = db.get(Unit, unit["id"])
+        payload = {"title": unit["title"], "level": unit["level"], "track_id": unit["track"], "sort": 0, "skills": unit["skills"]}
+        if row is None:
+            db.add(Unit(id=unit["id"], **payload))
+        else:
+            for key, value in payload.items():
+                setattr(row, key, value)
     for tid, sort, title in TRACKS:
         row = db.get(Track, tid)
         if row is None:
@@ -869,11 +920,14 @@ def seed(db: Session) -> None:
             row.title = title
             row.sort = sort
     db.flush()
-    specs = all_lesson_specs()
+    specs = [_localize_spec(s) for s in all_lesson_specs()]
     problems = [e for spec in specs for e in validate_lesson(spec)]
     if problems:
         raise RuntimeError("seed invalid: " + "; ".join(problems))
+    published_slugs = {s["slug"] for s in specs}
+    catalog_by_slug = {row["slug"]: row for row in all_catalog_lessons()}
     for spec in specs:
+        meta = catalog_by_slug.get(spec["slug"], {})
         lesson = db.query(Lesson).filter(Lesson.slug == spec["slug"]).one_or_none()
         if lesson is None:
             lesson = Lesson(
@@ -882,16 +936,20 @@ def seed(db: Session) -> None:
                 track_id=spec["track"],
                 kind=spec.get("kind", "lesson"),
                 level=spec["level"],
-                cefr=spec["cefr"],
+                cefr=spec.get("cefr", "pre-A1"),
                 prerequisites=spec.get("prerequisites") or [],
                 status="published",
-                sort=spec.get("sort", 0),
+                sort=spec.get("sort", meta.get("sort") or 0),
+                unit_id=spec.get("unit_id") or meta.get("unit_id"),
+                skill_id=spec.get("skill_id") or meta.get("skill_id"),
             )
             db.add(lesson)
             db.flush()
         else:
             lesson.prerequisites = spec.get("prerequisites") or []
             lesson.status = "published"
+            lesson.unit_id = spec.get("unit_id") or meta.get("unit_id") or lesson.unit_id
+            lesson.skill_id = spec.get("skill_id") or meta.get("skill_id") or lesson.skill_id
         version = (
             db.query(LessonVersion)
             .filter(LessonVersion.lesson_id == lesson.id, LessonVersion.version == 1)
@@ -934,6 +992,29 @@ def seed(db: Session) -> None:
                     text=text,
                 )
             )
+    for row in all_catalog_lessons():
+        if row["slug"] in published_slugs:
+            continue
+        lesson = db.query(Lesson).filter(Lesson.slug == row["slug"]).one_or_none()
+        if lesson is None:
+            db.add(
+                Lesson(
+                    id=new_id(),
+                    slug=row["slug"],
+                    track_id=row.get("track") or "vocabulary",
+                    kind=row.get("kind", "lesson"),
+                    level=row.get("level") or "starter",
+                    cefr="planned",
+                    prerequisites=row.get("prerequisites") or [],
+                    status="planned",
+                    sort=row.get("sort") or 0,
+                    unit_id=row.get("unit_id"),
+                    skill_id=row.get("skill_id"),
+                )
+            )
+        else:
+            lesson.status = "planned"
+            lesson.unit_id = row.get("unit_id") or lesson.unit_id
     editor = db.query(User).filter(User.email == "demo-editor@biti.local").one_or_none()
     if editor is None:
         db.add(

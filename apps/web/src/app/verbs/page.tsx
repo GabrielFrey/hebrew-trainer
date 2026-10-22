@@ -29,7 +29,7 @@ function VerbsInner() {
     api<{ paradigms: Paradigm[] }>("/verbs").then((d) => setItems(d.paradigms));
   }, []);
   return (
-    <section>
+    <section data-testid="verbs">
       <h1 className="mb-2 text-3xl font-semibold">Verb explorer</h1>
       <p className="mb-4 text-ink-soft">Root → binyan → present table. Seven binyanim represented.</p>
       <div className="grid gap-3">

@@ -2,61 +2,59 @@
 
 Levels follow Israeli ulpan names and a CEFR overlay. Mapping is pedagogical, not a certified CEFR exam.
 
-| Product level | Ulpan | CEFR band | Niqqud default | Transliteration |
-| --- | --- | --- | --- | --- |
-| Starter | pre-Aleph | pre-A1 | always on | on, toggleable |
-| Beginner | Aleph | A1–A2 | on | on, toggleable |
-| Elementary / Intermediate | Bet | A2–B1 | on for new words | off by default |
-| Upper-Intermediate | Gimel | B1–B2 | off; optional | off |
-| Advanced | Dalet (+Hey) | B2–C1 | off | off |
+Five **courses** share this tree. Target language is always Modern Israeli Hebrew. Source (UI + gloss + translation-grade) is one of: Russian, Ukrainian, English, Spanish, French.
 
-Each level ends with a **boss checkpoint** lesson (`kind: boss`). Placement is skippable and only unlocks at or below the diagnosed level.
+| Course id | Pair | Default UI |
+| --- | --- | --- |
+| `he-ru` | Hebrew↔Russian | ru |
+| `he-uk` | Hebrew↔Ukrainian | uk |
+| `he-en` | Hebrew↔English | en |
+| `he-es` | Hebrew↔Spanish | es |
+| `he-fr` | Hebrew↔French | fr |
+
+Progress (XP, completions, streak on the course record) is **per course**. Hearts stay on the account.
+
+uk / es / fr strings shipped here are **real drafts** with editorial `l10n_status: in_review`. They are not silently marked approved. en / ru / he curriculum copy is `approved`.
+
+| Product level | Ulpan | CEFR band | Lesson target | Vocab target | Niqqud default |
+| --- | --- | --- | --- | --- | --- |
+| Starter | pre-Aleph | pre-A1 | 80 | ~500 by the end of Aleph ramp | always on |
+| Beginner | Aleph | A1–A2 | 180 | ~1500 | on |
+| Elementary | Bet | A2–B1 | 180 | ~3000 | on for new words |
+| Intermediate | Gimel | B1–B2 | 150 | ~6000 | off; optional |
+| Upper | Dalet | B2–C1 | 120 | ~8000 | off |
+| Advanced | Hey | C1–C2 | 100 | 10000+ slang/idioms | off |
+
+The **schema and path** exist for the whole program (`biti/catalog.py`). Playable rows have exercises. The rest are `status: planned` (titled, themed, sequenced — not empty placeholders and not fake drills).
 
 ## Tracks
 
-1. **Alef-Bet & Script** — print, cursive *ktav yad*, sofiyot ךםןףץ, lookalikes ב/כ ד/ר ה/ח/ת ו/ז/ן ס/ם, dagesh, tracing.
-2. **Niqqud & Reading** — vowels, shva na/nach, ktiv male/haser, matres lectionis.
-3. **Pronunciation** — gutturals, ר, ח vs כ, ש/שׂ, milra/mil'el, intonation.
-4. **Grammar** — gender/number, plurals, definiteness, agreement, smichut, pronouns, possessive and preposition suffixes, את, numbers, questions.
-5. **Roots & Verbs** — shoresh, mishkalim, 7 binyanim, gzarot, tenses, tables.
-6. **Vocabulary** — thematic, frequency-aware.
-7. **Conversation** — ulpan scenarios (intros, shuk, transport, kupat holim, rent, bank, work, Misrad HaPnim, phone, emergencies).
-8. **Listening** — dialogs, announcements, voicemail; skipped as mandatory if audio is unavailable.
-9. **Spoken / slang / SMS**.
-10. **Formal register**.
-11. **Advanced reading** — public-domain / licensed only.
+1. **Alef-Bet & Script** — print, cursive *ktav yad*, sofiyot, lookalikes, dagesh, character drills.
+2. **Niqqud & Reading**
+3. **Pronunciation**
+4. **Grammar**
+5. **Roots & Verbs**
+6. **Vocabulary**
+7. **Conversation**
+8. **Listening** (optional while TTS is unavailable)
+9. **Spoken / slang / SMS**
+10. **Formal register**
+11. **Advanced reading** — public-domain / licensed only
 
-Tracks 9–11 have planned (not placeholder) future items labeled `status: planned` in the catalog. First release publishes 24 core lessons:
+## Game loop (original Biti house — not Duolingo chrome)
 
-| Code | Track | Level | Objective |
-| --- | --- | --- | --- |
-| script-alef-he | Script | Starter | Name and recognize א–ה (print) |
-| script-vav-lamed | Script | Starter | Name and recognize ו–ל |
-| script-mem-tav | Script | Starter | Name and recognize מ–ת |
-| script-sofiyot | Script | Starter | Use ך ם ן ף ץ in final position |
-| script-lookalikes | Script | Beginner | Distinguish ב/כ, ד/ר, ה/ח/ת |
-| script-dagesh-ktav | Script | Beginner | Identify dagesh and print vs cursive forms |
-| grammar-gender | Grammar | Beginner | Classify noun gender |
-| grammar-definite | Grammar | Beginner | Form the definite article ה־ |
-| grammar-adjectives | Grammar | Beginner | Agree adjective gender/number |
-| grammar-pronouns | Grammar | Beginner | Use subject pronouns |
-| roots-shoresh | Roots | Beginner | Identify a 3-letter shoresh |
-| verbs-paal-present | Verbs | Beginner | Conjugate פעל present (strong) |
-| vocab-greetings | Vocabulary | Starter | Use everyday greetings |
-| vocab-family | Vocabulary | Beginner | Name close family |
-| vocab-shuk | Vocabulary | Beginner | Shop for food at the shuk |
-| vocab-numbers | Vocabulary | Beginner | Count 1–10 (masculine citation) |
-| vocab-colors | Vocabulary | Beginner | Name basic colors |
-| vocab-home | Vocabulary | Beginner | Name rooms and furniture |
-| convo-introductions | Conversation | Beginner | Introduce yourself |
-| convo-shuk | Conversation | Beginner | Buy fruit and ask a price |
-| convo-transport | Conversation | Beginner | Ask for a bus or train |
-| convo-cafe | Conversation | Beginner | Order at a café |
-| convo-phone | Conversation | Beginner | Answer and close a phone call |
-| convo-emergency | Conversation | Beginner | Ask for help |
+Path of **units → skills → nodes**. Bite-size lessons (5–12 items). XP, hearts, streak, daily goal, combo on consecutive correct, mascot window glow, tap-tiles, matching pairs, listen-and-tap / type-what-you-hear when audio exists (honest skip otherwise), character drills, legendary/boss chests, practice hub.
 
-Boss checkpoints (published, short): `boss-starter`, `boss-beginner`. Higher bosses are `planned`.
+## Published vs planned
 
-## Lesson contract
+Counts come from `catalog_stats()` plus `all_lesson_specs()` (playable). Re-run after seed changes.
 
-Each published lesson has one measurable objective, a prerequisite list, level + CEFR, UI-language explanation with Hebrew examples, a vocabulary list, 5–12 mixed exercises, an accuracy threshold (default 0.8), and editorial metadata (author, native reviewer, sources, license, version, status).
+Playable published lessons (all five courses; same Hebrew, localized prompts):
+
+**pre-Aleph / Starter:** `script-alef-he`, `drill-alef-he`, `script-vav-lamed`, `drill-vav-lamed`, `script-mem-tav`, `drill-mem-tav`, `script-sofiyot`, `script-lookalikes`, `script-dagesh-ktav`, `vocab-greetings`, `tiles-greetings`, `match-greetings`, `words-yes-no`, `vocab-family`, `words-ima-aba`, `vocab-home`, `vocab-numbers`, `vocab-colors`, `boss-starter`
+
+**Aleph / Beginner:** `grammar-gender`, `grammar-definite`, `grammar-adjectives`, `grammar-pronouns`, `roots-shoresh`, `verbs-paal-present`, `vocab-shuk`, `convo-introductions`, `convo-shuk`, `convo-transport`, `convo-cafe`, `convo-phone`, `convo-emergency`, `boss-beginner`
+
+Bet / Gimel / Dalet / Hey: **planned units only** (past tense, smichut, clinic, rent, future, binyanim, slang, idioms, licensed reading, legendary keys). No fabricated exercises.
+
+Priority for the next content drop: finish remaining pre-Aleph planned nodes in the first ten units, then the rest of Aleph, still in all five source languages, still `in_review` until native sign-off.

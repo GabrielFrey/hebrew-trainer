@@ -110,22 +110,24 @@ def grade_order(answer: list[str], accepted: list[str], mode: NormalizeMode = "r
     return GradeResult("incorrect", 0.0, ["order_mismatch"], normalized_answer=" ".join(norm_a))
 
 
-def grade_exercise(exercise: dict[str, Any], payload: dict[str, Any]) -> GradeResult:
+def grade_exercise(exercise: dict[str, Any], payload: dict[str, Any], source_lang: str = "en") -> GradeResult:
+    from biti.draft_l10n import accepted_for, pairs_for
+
     kind = exercise.get("type")
     mode: NormalizeMode = exercise.get("mode") or "relaxed"
-    accepted = exercise.get("accepted") or []
-    if kind in {"mc", "listen_mc", "identify_root", "identify_binyan"}:
+    accepted = accepted_for(exercise, source_lang)
+    if kind in {"mc", "listen_mc", "identify_root", "identify_binyan", "listen_tap", "drill"}:
         return grade_choice(str(payload.get("value", "")), [str(a) for a in accepted])
-    if kind in {"match"}:
+    if kind in {"match", "match_tap"}:
         got = payload.get("pairs") or {}
-        exp = exercise.get("pairs") or {}
+        exp = pairs_for(exercise, source_lang)
         if got == exp:
             return GradeResult("correct", 1.0, ["match_exact"])
         return GradeResult("incorrect", 0.0, ["match_mismatch"])
-    if kind in {"order_rtl"}:
+    if kind in {"order_rtl", "tiles"}:
         return grade_order(payload.get("value") or [], accepted, mode)
     if kind in {"speak"}:
         return GradeResult("incorrect", 0.0, ["speech_unavailable"])
-    if kind in {"listen"} and exercise.get("requires_audio"):
+    if kind in {"listen", "listen_type"} and exercise.get("requires_audio"):
         return GradeResult("incorrect", 0.0, ["audio_unavailable"])
     return grade_text(str(payload.get("value", "")), [str(a) for a in accepted], mode)

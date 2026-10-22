@@ -30,8 +30,8 @@ export function HebrewKeyboard({
   disabled?: boolean;
 }) {
   return (
-    <div className="space-y-2" dir="rtl">
-      <div className="min-h-14 rounded-2xl border-2 border-line bg-paper px-4 py-2 he text-right">
+    <div data-testid="hebrew-keyboard" className="space-y-2" dir="rtl">
+      <div data-testid="keyboard-preview" className="min-h-14 rounded-2xl border-2 border-line bg-paper px-4 py-2 he text-right">
         {value || "…"}
       </div>
       {ROWS.map((row) => (
@@ -40,6 +40,7 @@ export function HebrewKeyboard({
             <button
               key={ch}
               type="button"
+              data-testid={`key-${ch}`}
               lang="he"
               disabled={disabled}
               aria-label={ch}
@@ -57,6 +58,7 @@ export function HebrewKeyboard({
             <button
               key={n.name}
               type="button"
+              data-testid={`key-niqqud-${n.name}`}
               lang="he"
               disabled={disabled}
               aria-label={n.name}
@@ -71,15 +73,16 @@ export function HebrewKeyboard({
       <div className="flex gap-2">
         <button
           type="button"
+          data-testid="key-space"
           className="flex-1 rounded-xl border border-line bg-paper py-2"
           onClick={() => onChange(value + " ")}
         >
           Space
         </button>
-        <button type="button" className="rounded-xl border border-line bg-sand-deep px-4" onClick={() => onChange(value.slice(0, -1))}>
+        <button type="button" data-testid="key-backspace" className="rounded-xl border border-line bg-sand-deep px-4" onClick={() => onChange(value.slice(0, -1))}>
           ⌫
         </button>
-        <button type="button" className="rounded-xl border border-line bg-sand-deep px-4" onClick={() => onChange("")}>
+        <button type="button" data-testid="key-clear" className="rounded-xl border border-line bg-sand-deep px-4" onClick={() => onChange("")}>
           Clear
         </button>
       </div>

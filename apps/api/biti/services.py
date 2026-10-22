@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from biti.models import SRSCard, StreakDay, User, XPLedger, utcnow
+from biti.models import CourseProgress, SRSCard, StreakDay, User, XPLedger, new_id, utcnow
 
 SRS_STEPS = (1, 3, 7, 14, 30)
 HEARTS_MAX = 5
@@ -64,6 +64,16 @@ def award_xp(db: Session, user: User, attempt_id: str, reason: str, amount: int)
         db.flush()
         return 0
     user.xp_total += amount
+    progress = (
+        db.query(CourseProgress)
+        .filter(CourseProgress.user_id == user.id, CourseProgress.course_id == (user.course_id or "he-ru"))
+        .one_or_none()
+    )
+    if progress is None:
+        progress = CourseProgress(id=new_id(), user_id=user.id, course_id=user.course_id or "he-ru")
+        db.add(progress)
+        db.flush()
+    progress.xp_total += amount
     day = user_today(user)
     streak = db.query(StreakDay).filter(StreakDay.user_id == user.id, StreakDay.day == day).one_or_none()
     if streak is None:
@@ -73,6 +83,9 @@ def award_xp(db: Session, user: User, attempt_id: str, reason: str, amount: int)
     streak.xp += amount
     _update_streak(user, day)
     _update_league(user)
+    progress.streak_count = user.streak_count
+    progress.last_streak_date = user.last_streak_date
+    progress.league = user.league
     db.add(user)
     return amount
 
@@ -112,14 +125,22 @@ def xp_for_correct(hint_level: int, base: int = 10) -> int:
     return int(base * HINT_XP[idx])
 
 
-def schedule_card(db: Session, user: User, kind: str, prompt: dict, accepted: list[str], correct: bool) -> SRSCard:
+def schedule_card(
+    db: Session,
+    user: User,
+    kind: str,
+    prompt: dict,
+    accepted: list[str],
+    correct: bool,
+    now: datetime | None = None,
+) -> SRSCard:
     key = f"{kind}:{prompt.get('id') or prompt.get('lemma') or prompt.get('he')}"
     card = (
         db.query(SRSCard)
         .filter(SRSCard.user_id == user.id, SRSCard.kind == kind, SRSCard.due_prompt == key)
         .one_or_none()
     )
-    today = user_today(user)
+    today = user_today(user, now=now)
     if card is None:
         card = SRSCard(
             user_id=user.id,
@@ -133,10 +154,11 @@ def schedule_card(db: Session, user: User, kind: str, prompt: dict, accepted: li
         db.add(card)
         db.flush()
     if correct:
+        days = SRS_STEPS[min(card.step, len(SRS_STEPS) - 1)]
         card.step = min(card.step + 1, len(SRS_STEPS) - 1)
     else:
         card.step = 0
-    days = SRS_STEPS[card.step if correct else 0]
+        days = SRS_STEPS[0]
     base = datetime.fromisoformat(today).date()
     card.due_day = (base + timedelta(days=days)).isoformat()
     card.accepted = accepted

@@ -17,6 +17,16 @@ if db_file.exists():
     db_file.unlink()
 os.environ["BITI_DATABASE_URL"] = f"sqlite:///{db_file}"
 
+from fastapi.testclient import TestClient  # noqa: E402
+import pytest  # noqa: E402
+
 from biti.config import get_settings  # noqa: E402
+from biti.main import app  # noqa: E402
 
 get_settings.cache_clear()
+
+
+@pytest.fixture
+def client():
+    with TestClient(app) as c:
+        yield c

@@ -21,7 +21,7 @@ function ProfileInner() {
   }, []);
   if (!user) return <p>Loading…</p>;
   return (
-    <section className="grid gap-4 md:grid-cols-2">
+    <section data-testid="profile" className="grid gap-4 md:grid-cols-2">
       <div className="rounded-3xl bg-paper p-5">
         <h1 className="text-3xl font-semibold">{user.display_name}</h1>
         <ul className="mt-4 space-y-2">
@@ -32,7 +32,25 @@ function ProfileInner() {
           <li>Level {user.level}</li>
           <li>Daily goal {user.daily_goal_xp} XP</li>
           <li>Language {user.ui_language}</li>
+          <li>Course {user.course_id}</li>
         </ul>
+        <p className="mt-4 text-sm text-ink-soft">Switch course — progress is stored per pair.</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {["he-ru", "he-uk", "he-en", "he-es", "he-fr"].map((id) => (
+            <button
+              key={id}
+              type="button"
+              data-testid={`switch-course-${id}`}
+              className={`rounded-full border px-3 py-1 text-sm ${user.course_id === id ? "border-indigo bg-sand" : "border-line"}`}
+              onClick={async () => {
+                const next = await api<User>("/auth/me", { method: "PATCH", body: JSON.stringify({ course_id: id }) });
+                setUser(next);
+              }}
+            >
+              {id}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="rounded-3xl bg-paper p-5">
         <h2 className="text-xl font-medium">Capabilities</h2>

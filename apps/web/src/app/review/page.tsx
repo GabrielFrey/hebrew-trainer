@@ -28,7 +28,7 @@ function ReviewInner() {
 
   if (!cards.length) {
     return (
-      <section className="rounded-3xl bg-paper p-6">
+      <section data-testid="review-empty" className="rounded-3xl bg-paper p-6">
         <h1 className="text-3xl font-semibold">{t("nav.review")}</h1>
         <p className="mt-2 text-ink-soft">{t("states.empty")} SRS uses 1 / 3 / 7 / 14 / 30 days.</p>
       </section>
@@ -47,14 +47,14 @@ function ReviewInner() {
   }
 
   return (
-    <section className="rounded-3xl bg-paper p-6">
+    <section data-testid="review-card" className="rounded-3xl bg-paper p-6">
       <h1 className="text-3xl font-semibold">{t("nav.review")}</h1>
       <p className="text-ink-soft">{cards.length} due</p>
       <p className="my-4 he" lang="he" dir="rtl">
         {String(card.prompt.he || card.prompt.id)}
       </p>
       <HebrewKeyboard value={value} onChange={setValue} />
-      <button type="button" onClick={send} className="mt-4 rounded-full bg-indigo px-5 py-2 text-paper">
+      <button type="button" data-testid="check-answer" onClick={send} className="mt-4 rounded-full bg-indigo px-5 py-2 text-paper">
         {t("lesson.check")}
       </button>
       {msg ? <p className="mt-3">{msg}</p> : null}

@@ -1,17 +1,35 @@
+import { NotoSansHebrew_400Regular, NotoSansHebrew_700Bold, useFonts } from "@expo-google-fonts/noto-sans-hebrew";
 import { Stack } from "expo-router";
-import { I18nManager } from "react-native";
+import { I18nManager, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { AuthProvider } from "@/lib/auth";
+import { usePalette } from "@/lib/theme";
 
 I18nManager.allowRTL(true);
 
-export default function Layout() {
+function StackNav() {
+  const palette = usePalette();
   return (
     <Stack
       screenOptions={{
-        headerTitle: "Biti Ivrit",
-        headerStyle: { backgroundColor: "#F6F1E8" },
-        headerTintColor: "#1C1917",
-        contentStyle: { backgroundColor: "#F6F1E8" },
+        headerShown: false,
+        contentStyle: { backgroundColor: palette.sand },
       }}
     />
+  );
+}
+
+export default function Layout() {
+  const [loaded] = useFonts({ NotoSansHebrew_400Regular, NotoSansHebrew_700Bold });
+  if (!loaded) return <View style={{ flex: 1, backgroundColor: "#F6F1E8" }} />;
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <AuthProvider>
+          <StackNav />
+        </AuthProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

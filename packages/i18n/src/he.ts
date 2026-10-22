@@ -8,6 +8,7 @@ export const he = {
     talk: "שיחה",
     profile: "פרופיל",
     editorial: "עריכה",
+    practice: "תרגול",
   },
   onboarding: {
     title: "ברוכים הבאים לביתי עברית",
@@ -21,6 +22,8 @@ export const he = {
     placement: "מבחן שיבוץ קצר",
     skip: "להתחיל מאלף",
     continue: "המשך",
+    course: "הקורס שלכם",
+    reviewFlag: "הטקסטים באוקראינית, ספרדית וצרפתית ממתינים לדובר יליד.",
   },
   lesson: {
     check: "בדיקה",
@@ -40,6 +43,10 @@ export const he = {
     locked: "יש לסיים קודם את השיעור הקודם.",
     empty: "אין שיעורים מפורסמים.",
     error: "השיעור לא נטען.",
+    combo: "רצף",
+    legendary: "נקודת אגדה",
+    planned: "יגיע אחר כך — יש ב מפה, זה לא שיעור פיקטיבי.",
+    celebrate: "ביתי פתח חלון.",
   },
   progress: {
     xp: "XP",
@@ -55,4 +62,9 @@ export const he = {
     empty: "אין מה להציג.",
   },
   keyboard: { space: "רווח", backspace: "מחיקה", niqqud: "ניקוד" },
+  practice: {
+    title: "מרכז תרגול",
+    due: "כרטיסים להיום",
+    weak: "שיעורים לחיזוק",
+  },
 } as const;

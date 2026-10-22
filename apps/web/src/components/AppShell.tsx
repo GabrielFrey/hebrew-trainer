@@ -13,6 +13,7 @@ const LINKS = [
   ["/alphabet", "nav.alphabet"],
   ["/verbs", "nav.verbs"],
   ["/conversation", "nav.talk"],
+  ["/practice", "nav.practice"],
   ["/profile", "nav.profile"],
   ["/editorial", "nav.editorial"],
 ] as const;
@@ -40,9 +41,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   const lang = user?.ui_language || "ru";
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "he" ? "rtl" : "ltr";
+  }, [lang]);
   return (
     <I18nProvider lang={lang}>
-      <div className="mx-auto flex min-h-full max-w-6xl flex-col px-4 pb-24 pt-4 md:px-8">
+      <div className="relative mx-auto flex min-h-full max-w-6xl flex-col px-4 pb-24 pt-4 md:px-8">
+        <a
+          href="#main"
+          className="absolute start-4 top-0 z-50 -translate-y-[120%] rounded-full bg-indigo px-4 py-2 text-paper focus:translate-y-3"
+        >
+          Skip to content
+        </a>
         <header className="glass sticky top-3 z-20 mb-6 flex items-center justify-between rounded-3xl border border-line px-4 py-3">
           <Link href="/learn" className="flex items-center gap-3">
             <BitiMascot size={44} />
@@ -60,7 +71,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           ) : null}
         </header>
         <Nav />
-        <main className="flex-1">{children}</main>
+        <main id="main" className="flex-1">
+          {children}
+        </main>
       </div>
     </I18nProvider>
   );
@@ -75,6 +88,7 @@ function Nav() {
         <Link
           key={href}
           href={href}
+          data-testid={`nav-${href.slice(1)}`}
           className={`rounded-full px-3 py-1.5 text-sm ${
             path.startsWith(href) ? "bg-indigo text-paper" : "bg-paper border border-line"
           }`}

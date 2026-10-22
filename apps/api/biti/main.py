@@ -10,6 +10,9 @@ from sqlalchemy.orm import Session
 
 from biti import BRAND_NAME, __version__
 from biti.auth import demo_user, get_current_user, issue_token, require_role
+from biti.catalog import catalog_stats, build_tree
+from biti.courses import COURSES, L10N_STATUS, course_or_default, source_lang
+from biti.draft_l10n import fill_loc
 from biti.config import get_settings
 from biti.db import SessionLocal, get_db, init_db
 from biti.grading import grade_exercise
@@ -17,6 +20,7 @@ from biti.models import (
     Attempt,
     AttemptEvent,
     AuditLog,
+    CourseProgress,
     Draft,
     EditorialReview,
     Lesson,
@@ -73,6 +77,17 @@ class DemoLogin(BaseModel):
     role: str = "learner"
     timezone: str = "Asia/Jerusalem"
     motivation: str = "aliyah"
+    email: str | None = None
+    course_id: str = "he-ru"
+    daily_goal_xp: int = 50
+
+
+class ProfilePatch(BaseModel):
+    course_id: str | None = None
+    ui_language: str | None = None
+    daily_goal_xp: int | None = None
+    niqqud_default: bool | None = None
+    translit_default: bool | None = None
 
 
 class SubmitBody(BaseModel):
@@ -116,12 +131,13 @@ def _published_version(db: Session, lesson: Lesson) -> LessonVersion:
     return version
 
 
-def _progress_map(db: Session, user: User) -> dict[str, Any]:
+def _progress_map(db: Session, user: User, course_id: str | None = None) -> dict[str, Any]:
+    cid = course_id or user.course_id or "he-ru"
     rows = (
         db.query(Attempt, LessonVersion, Lesson)
         .join(LessonVersion, LessonVersion.id == Attempt.lesson_version_id)
         .join(Lesson, Lesson.id == LessonVersion.lesson_id)
-        .filter(Attempt.user_id == user.id, Attempt.status == "completed")
+        .filter(Attempt.user_id == user.id, Attempt.status == "completed", Attempt.course_id == cid)
         .all()
     )
     done = {lesson.slug: attempt.accuracy for attempt, _v, lesson in rows}
@@ -156,14 +172,60 @@ def meta() -> dict[str, Any]:
         "speech": {"capability": "ready" if settings.speech_api_key else "unavailable"},
         "tutor": tutor_status(),
         "srs_steps_days": list(SRS_STEPS),
+        "courses": COURSES,
+        "l10n_status": L10N_STATUS,
+        "catalog": catalog_stats(),
     }
+
+
+@app.get("/courses")
+def list_courses() -> dict[str, Any]:
+    return {"courses": COURSES, "l10n_status": L10N_STATUS}
+
+
+@app.patch("/auth/me")
+def patch_me(body: ProfilePatch, user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> dict[str, Any]:
+    if body.course_id:
+        if body.course_id not in {c["id"] for c in COURSES}:
+            raise HTTPException(400, "unknown_course")
+        user.course_id = body.course_id
+        if (
+            db.query(CourseProgress)
+            .filter(CourseProgress.user_id == user.id, CourseProgress.course_id == body.course_id)
+            .one_or_none()
+            is None
+        ):
+            db.add(CourseProgress(user_id=user.id, course_id=body.course_id))
+    if body.ui_language:
+        if body.ui_language not in {"ru", "uk", "en", "es", "fr", "he"}:
+            raise HTTPException(400, "unknown_language")
+        user.ui_language = body.ui_language
+    if body.daily_goal_xp is not None:
+        user.daily_goal_xp = body.daily_goal_xp
+    if body.niqqud_default is not None:
+        user.niqqud_default = body.niqqud_default
+    if body.translit_default is not None:
+        user.translit_default = body.translit_default
+    db.commit()
+    db.refresh(user)
+    return _user_public(user)
 
 
 @app.post("/auth/demo")
 def auth_demo(body: DemoLogin, response: Response, db: Session = Depends(get_db)) -> dict[str, Any]:
-    user = demo_user(db, body.ui_language, body.display_name, body.role)
+    user = demo_user(db, body.ui_language, body.display_name, body.role, email=body.email)
     user.timezone = body.timezone
     user.motivation = body.motivation
+    user.course_id = body.course_id if body.course_id in {c["id"] for c in COURSES} else "he-ru"
+    user.ui_language = body.ui_language if body.ui_language in {"ru", "uk", "en", "es", "fr", "he"} else "ru"
+    user.daily_goal_xp = body.daily_goal_xp
+    prog = (
+        db.query(CourseProgress)
+        .filter(CourseProgress.user_id == user.id, CourseProgress.course_id == user.course_id)
+        .one_or_none()
+    )
+    if prog is None:
+        db.add(CourseProgress(user_id=user.id, course_id=user.course_id, daily_goal_xp=body.daily_goal_xp))
     db.commit()
     token = issue_token(user)
     response.set_cookie("biti_session", token, httponly=True, samesite="lax", max_age=settings.access_token_minutes * 60)
@@ -199,6 +261,9 @@ def _user_public(user: User) -> dict[str, Any]:
         "daily_goal_xp": user.daily_goal_xp,
         "niqqud_default": user.niqqud_default,
         "translit_default": user.translit_default,
+        "course_id": user.course_id or "he-ru",
+        "course": course_or_default(user.course_id),
+        "l10n_status": L10N_STATUS,
     }
 
 
@@ -212,24 +277,56 @@ def tracks(db: Session = Depends(get_db)) -> list[dict[str, Any]]:
 def path(user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> dict[str, Any]:
     specs = all_lesson_specs()
     done = _progress_map(db, user)
+    by_slug = {s["slug"]: s for s in specs}
     nodes = []
     for spec in specs:
         lesson = db.query(Lesson).filter(Lesson.slug == spec["slug"]).one()
         nodes.append(
             {
                 "slug": spec["slug"],
-                "title": spec["title"],
+                "title": fill_loc(spec["title"]),
                 "track": spec["track"],
                 "level": spec["level"],
                 "kind": spec.get("kind", "lesson"),
+                "status": "published",
                 "prerequisites": spec.get("prerequisites") or [],
                 "unlocked": _unlocked(spec["slug"], specs, done),
                 "accuracy": done.get(spec["slug"]),
                 "completed": spec["slug"] in done,
                 "id": lesson.id,
+                "unit_id": lesson.unit_id,
+                "skill_id": lesson.skill_id,
             }
         )
-    return {"nodes": nodes, "done": done}
+    units_out = []
+    for unit in build_tree():
+        skills_out = []
+        for skill in unit["skills"]:
+            skill_nodes = []
+            for slug in skill["lesson_slugs"]:
+                published = by_slug.get(slug)
+                lesson_row = db.query(Lesson).filter(Lesson.slug == slug).one_or_none()
+                if published:
+                    skill_nodes.append(next(n for n in nodes if n["slug"] == slug))
+                else:
+                    skill_nodes.append(
+                        {
+                            "slug": slug,
+                            "title": fill_loc(unit["title"] if False else (lesson_row and {"en": slug}) or {"en": slug, "ru": slug, "he": slug, "uk": "", "es": "", "fr": ""}),
+                            "track": unit["track"],
+                            "level": unit["level"],
+                            "kind": "lesson",
+                            "status": "planned",
+                            "prerequisites": [],
+                            "unlocked": False,
+                            "completed": False,
+                            "unit_id": unit["id"],
+                            "skill_id": skill["id"],
+                        }
+                    )
+            skills_out.append({"id": skill["id"], "title": fill_loc(skill["title"]), "nodes": skill_nodes})
+        units_out.append({"id": unit["id"], "title": fill_loc(unit["title"]), "level": unit["level"], "track": unit["track"], "skills": skills_out})
+    return {"nodes": nodes, "units": units_out, "done": done, "course": course_or_default(user.course_id)}
 
 
 @app.get("/lessons/{slug}")
@@ -252,9 +349,12 @@ def get_lesson(slug: str, user: User = Depends(get_current_user), db: Session = 
         "objective": version.objective,
         "explanation": version.explanation,
         "vocabulary": version.vocabulary,
-        "exercises": public_exercises(version.exercises),
+        "exercises": public_exercises(version.exercises, source_lang(user.course_id)),
         "threshold": version.threshold,
-        "editorial": {k: version.editorial.get(k) for k in ("author", "native_reviewer", "license", "version")},
+        "editorial": {
+            k: version.editorial.get(k)
+            for k in ("author", "native_reviewer", "license", "version", "l10n_status", "review_note")
+        },
         "audio": {"capability": "unavailable" if not settings.tts_api_key else "ready"},
         "speech": {"capability": "unavailable" if not settings.speech_api_key else "ready"},
     }
@@ -269,7 +369,7 @@ def start_lesson(slug: str, user: User = Depends(get_current_user), db: Session 
     if not _unlocked(slug, all_lesson_specs(), done) and slug not in done:
         raise HTTPException(403, "locked")
     version = _published_version(db, lesson)
-    attempt = Attempt(user_id=user.id, lesson_version_id=version.id, results={})
+    attempt = Attempt(user_id=user.id, course_id=user.course_id or "he-ru", lesson_version_id=version.id, results={})
     db.add(attempt)
     db.commit()
     db.refresh(attempt)
@@ -306,9 +406,14 @@ def submit(
     if exercise.get("type") == "speak" or (exercise.get("requires_audio") and not settings.tts_api_key):
         grade = {"result": "skipped", "score": 0, "rule_ids": ["optional_unavailable"], "diff": []}
     else:
-        grade = grade_exercise(exercise, {"value": body.value, "pairs": body.pairs}).as_dict()
+        grade = grade_exercise(
+            exercise, {"value": body.value, "pairs": body.pairs}, source_lang=source_lang(user.course_id)
+        ).as_dict()
         if grade["result"] != "correct":
             spend_heart(db, user)
+            attempt.combo = 0
+        else:
+            attempt.combo = (attempt.combo or 0) + 1
     event = AttemptEvent(
         attempt_id=attempt.id,
         exercise_id=body.exercise_id,
@@ -322,7 +427,7 @@ def submit(
     attempt.results = results
     attempt.hint_level = max(attempt.hint_level, body.hint_level)
     db.commit()
-    return {"grade": grade, "replayed": False, "hearts": user.hearts}
+    return {"grade": grade, "replayed": False, "hearts": user.hearts, "combo": attempt.combo}
 
 
 @app.post("/attempts/{attempt_id}/complete")
@@ -353,8 +458,12 @@ def complete(
         if accuracy == 1:
             awarded += award_xp(db, user, attempt.id, "perfect", 15)
         for e in version.exercises:
-            if e.get("type") in {"type_he", "mc"} and e.get("accepted"):
-                schedule_card(db, user, "vocab", {"id": e["id"], "he": (e.get("accepted") or [""])[0], "prompt": e.get("prompt")}, e.get("accepted") or [], True)
+            from biti.draft_l10n import accepted_for
+
+            acc = accepted_for(e, source_lang(user.course_id))
+            if e.get("type") in {"type_he", "mc", "tiles", "order_rtl"} and acc:
+                he_form = acc[0] if acc else ""
+                schedule_card(db, user, "vocab", {"id": e["id"], "he": he_form, "prompt": e.get("prompt")}, acc, True)
     db.commit()
     return {"accuracy": accuracy, "passed": accuracy >= version.threshold, "xp_awarded": awarded, "progress": _user_public(user)}
 
@@ -362,6 +471,21 @@ def complete(
 @app.get("/progress/me")
 def progress(user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> dict[str, Any]:
     return {"user": _user_public(user), "completed": _progress_map(db, user), "today": user_today(user)}
+
+
+@app.get("/practice")
+def practice_hub(user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> dict[str, Any]:
+    today = user_today(user)
+    due = db.query(SRSCard).filter(SRSCard.user_id == user.id, SRSCard.due_day <= today).all()
+    done = _progress_map(db, user)
+    reviewable = [slug for slug, acc in done.items() if (acc or 0) < 1]
+    return {
+        "due_cards": len(due),
+        "weak_lessons": reviewable[:8],
+        "daily_goal_xp": user.daily_goal_xp,
+        "course": course_or_default(user.course_id),
+        "hearts": user.hearts,
+    }
 
 
 @app.get("/srs/due")

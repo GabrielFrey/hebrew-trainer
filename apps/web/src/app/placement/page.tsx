@@ -28,7 +28,7 @@ function PlaceInner() {
     router.push("/learn");
   }
   return (
-    <section className="rounded-3xl bg-paper p-6">
+    <section data-testid="placement" className="rounded-3xl bg-paper p-6">
       <h1 className="text-3xl font-semibold">Placement</h1>
       <p className="text-ink-soft">Skippable. Type Hebrew — transliteration is not graded.</p>
       {items.map((item) => (
@@ -38,10 +38,10 @@ function PlaceInner() {
         </div>
       ))}
       <div className="mt-6 flex gap-2">
-        <button type="button" onClick={submit} className="rounded-full bg-indigo px-5 py-2 text-paper">
+        <button type="button" data-testid="placement-submit" onClick={submit} className="rounded-full bg-indigo px-5 py-2 text-paper">
           Submit
         </button>
-        <button type="button" onClick={() => router.push("/learn")} className="rounded-full border border-line px-5 py-2">
+        <button type="button" data-testid="placement-skip" onClick={() => router.push("/learn")} className="rounded-full border border-line px-5 py-2">
           Skip
         </button>
       </div>

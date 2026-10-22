@@ -39,7 +39,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-export type UiLang = "en" | "ru" | "he";
+export type UiLang = "en" | "ru" | "he" | "uk" | "es" | "fr";
 
 export type User = {
   id: string;
@@ -56,6 +56,8 @@ export type User = {
   daily_goal_xp: number;
   niqqud_default: boolean;
   translit_default: boolean;
+  course_id: string;
+  course?: { id: string; source: string; pair: string; title: Record<string, string> };
 };
 
 export type Lesson = {
@@ -97,6 +99,17 @@ export type PathNode = {
   completed: boolean;
   accuracy?: number;
   prerequisites: string[];
+  status?: string;
+  unit_id?: string;
+  skill_id?: string;
+};
+
+export type PathUnit = {
+  id: string;
+  title: Record<string, string>;
+  level: string;
+  track: string;
+  skills: Array<{ id: string; title: Record<string, string>; nodes: PathNode[] }>;
 };
 
 export async function demoLogin(body: {
@@ -104,6 +117,7 @@ export async function demoLogin(body: {
   display_name: string;
   motivation: string;
   role?: string;
+  course_id?: string;
 }) {
   const data = await api<{ access_token: string; user: User }>("/auth/demo", {
     method: "POST",

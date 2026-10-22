@@ -76,13 +76,19 @@ def get_optional_user(
         return None
 
 
-def demo_user(db: Session, ui_language: str, display_name: str, role: str = "learner") -> User:
+def demo_user(
+    db: Session,
+    ui_language: str,
+    display_name: str,
+    role: str = "learner",
+    email: str | None = None,
+) -> User:
     settings = get_settings()
     if not settings.demo_mode:
         raise HTTPException(status_code=403, detail="demo_disabled")
     if role not in ROLES:
         role = "learner"
-    email = f"demo-{role}@biti.local"
+    email = email or f"demo-{role}@biti.local"
     user = db.query(User).filter(User.email == email).one_or_none()
     if user is None:
         user = User(

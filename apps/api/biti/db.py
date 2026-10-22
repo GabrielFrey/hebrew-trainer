@@ -32,6 +32,21 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, futu
 
 def init_db() -> None:
     Base.metadata.create_all(bind=engine)
+    if _settings.database_url.startswith("sqlite"):
+        with engine.begin() as conn:
+            existing = {row[1] for row in conn.exec_driver_sql("PRAGMA table_info(users)").fetchall()}
+            if "course_id" not in existing:
+                conn.exec_driver_sql("ALTER TABLE users ADD COLUMN course_id VARCHAR(16) DEFAULT 'he-ru'")
+            attempts = {row[1] for row in conn.exec_driver_sql("PRAGMA table_info(attempts)").fetchall()}
+            if "course_id" not in attempts:
+                conn.exec_driver_sql("ALTER TABLE attempts ADD COLUMN course_id VARCHAR(16) DEFAULT 'he-ru'")
+            if "combo" not in attempts:
+                conn.exec_driver_sql("ALTER TABLE attempts ADD COLUMN combo INTEGER DEFAULT 0")
+            lessons = {row[1] for row in conn.exec_driver_sql("PRAGMA table_info(lessons)").fetchall()}
+            if "unit_id" not in lessons:
+                conn.exec_driver_sql("ALTER TABLE lessons ADD COLUMN unit_id VARCHAR(40)")
+            if "skill_id" not in lessons:
+                conn.exec_driver_sql("ALTER TABLE lessons ADD COLUMN skill_id VARCHAR(40)")
 
 
 def get_db() -> Generator[Session, None, None]:

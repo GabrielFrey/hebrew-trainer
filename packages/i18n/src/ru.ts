@@ -8,6 +8,7 @@ export const ru = {
     talk: "Разговор",
     profile: "Профиль",
     editorial: "Редакция",
+    practice: "Практика",
   },
   onboarding: {
     title: "Добро пожаловать в Biti Ivrit",
@@ -21,6 +22,8 @@ export const ru = {
     placement: "Короткий тест уровня",
     skip: "Начать с алефа",
     continue: "Дальше",
+    course: "Ваш курс",
+    reviewFlag: "Украинские, испанские и французские тексты ждут носителя — статус in_review.",
   },
   lesson: {
     check: "Проверить",
@@ -40,6 +43,10 @@ export const ru = {
     locked: "Сначала пройдите предыдущий урок.",
     empty: "Опубликованных уроков пока нет.",
     error: "Урок не загрузился.",
+    combo: "Комбо",
+    legendary: "Легендарная точка",
+    planned: "Будет позже — урок в карте, не заглушка.",
+    celebrate: "Бити открыл окошко.",
   },
   progress: {
     xp: "XP",
@@ -55,4 +62,9 @@ export const ru = {
     empty: "Пока пусто.",
   },
   keyboard: { space: "Пробел", backspace: "Стереть", niqqud: "Огласовки" },
+  practice: {
+    title: "Зал практики",
+    due: "Карточки на сегодня",
+    weak: "Уроки для шлифовки",
+  },
 } as const;

@@ -27,7 +27,7 @@ function AlphaInner() {
     });
   }, []);
   return (
-    <section>
+    <section data-testid="alphabet">
       <h1 className="mb-4 text-3xl font-semibold">Alphabet</h1>
       <p className="mb-4 text-ink-soft">{note}</p>
       <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
