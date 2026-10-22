@@ -32,7 +32,7 @@ npm --prefix apps/web install
 apps/api/.venv/bin/pytest apps/api/tests
 ```
 
-On a physical phone, Expo Go talks to Metro on your Mac’s LAN IP. The mobile app derives the API host from that packager address (port **43180**) instead of `127.0.0.1`. If the API is not running, onboarding, the placement test, and published lessons still work **offline** from the bundled catalog and sync later.
+On a physical phone, Expo Go talks to Metro on your Mac’s LAN IP. The mobile app derives the API host from that packager address (port **43180**) instead of `127.0.0.1`. Bind the API to all interfaces if you want the phone to reach it (`--host 0.0.0.0 --port 43180`); a bind to `127.0.0.1` is only visible on the Mac. If the API is not running, onboarding, the placement test, and published lessons still work **offline** from the bundled catalog and sync later.
 
 Demo login is **development-only**. The process refuses to start if `BITI_DEMO_MODE=true` and `BITI_ENV=production`.
 
