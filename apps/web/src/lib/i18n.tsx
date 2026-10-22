@@ -1,15 +1,29 @@
 "use client";
 
 import { createContext, useContext, useMemo } from "react";
-import { t as lookup, type UiLang } from "../../../../packages/i18n/src";
+import { t as lookup, tp as lookupPlural, type UiLang } from "../../../../packages/i18n/src";
 
-const Ctx = createContext<{ lang: UiLang; t: (path: string) => string }>({
+type Translate = (path: string, vars?: Record<string, string | number>) => string;
+
+const Ctx = createContext<{
+  lang: UiLang;
+  t: Translate;
+  tp: (path: string, count: number) => string;
+}>({
   lang: "ru",
   t: (p) => p,
+  tp: (p) => p,
 });
 
 export function I18nProvider({ lang, children }: { lang: UiLang; children: React.ReactNode }) {
-  const value = useMemo(() => ({ lang, t: (path: string) => lookup(lang, path) }), [lang]);
+  const value = useMemo(
+    () => ({
+      lang,
+      t: (path: string, vars?: Record<string, string | number>) => lookup(lang, path, vars),
+      tp: (path: string, count: number) => lookupPlural(lang, path, count),
+    }),
+    [lang],
+  );
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 

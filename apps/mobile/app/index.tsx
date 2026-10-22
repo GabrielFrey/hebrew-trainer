@@ -36,7 +36,7 @@ export default function Onboarding() {
       });
       router.replace(to);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not start");
+      setError(err instanceof Error ? err.message : t(lang, "onboarding.couldNotStart"));
     } finally {
       setBusy(false);
     }
@@ -53,7 +53,7 @@ export default function Onboarding() {
 
   return (
     <ScrollView testID="onboarding" contentContainerStyle={{ padding: 24, gap: 16, backgroundColor: palette.sand }}>
-      <BitiMascot mood="happy" size={96} />
+      <BitiMascot mood="happy" size={96} lang={lang} />
       <Text testID="onboarding-title" style={{ fontSize: 32, fontWeight: "700", color: palette.ink }}>
         {t(lang, "onboarding.title")}
       </Text>

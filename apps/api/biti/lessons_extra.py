@@ -36,7 +36,7 @@ def extra_published() -> list[dict[str, Any]]:
             "sort": 1,
             "unit_id": "pre-letters-1",
             "skill_id": "alef-he",
-            "title": L("Letter drill א–ה", "Тренажёр א–ה", "תרגול א–ה", "Тренажер א–ה", "Práctica א–ה", "Atelier א–ה"),
+            "title": L("Letter drill א–ה", "Тренажёр א–ה", "תרגול א–ה", "Тренування літер א–ה", "Práctica א–ה", "Atelier א–ה"),
             "objective": L(
                 "Tap the named letter quickly.",
                 "Быстро нажимать названную букву.",
@@ -71,7 +71,7 @@ def extra_published() -> list[dict[str, Any]]:
             "cefr": "pre-A1",
             "prerequisites": ["script-vav-lamed"],
             "sort": 2,
-            "title": L("Letter drill ו–ל", "Тренажёр ו–ל", "תרגול ו–ל", "Тренажер ו–ל", "Práctica ו–ל", "Atelier ו–ל"),
+            "title": L("Letter drill ו–ל", "Тренажёр ו–ל", "תרגול ו–ל", "Тренування літер ו–ל", "Práctica ו–ל", "Atelier ו–ל"),
             "objective": L("Spot ו ז ח ט י כ ל.", "Узнавать ו ז ח ט י כ ל.", "לזהות ו ז ח ט י כ ל.", "Впізнавати ו ז ח ט י כ ל.", "Reconocer ו ז ח ט י כ ל.", "Reconnaître ו ז ח ט י כ ל."),
             "explanation": L(
                 "Print forms only. Final kaf ך appears later.",
@@ -84,7 +84,7 @@ def extra_published() -> list[dict[str, Any]]:
             "vocabulary": [_vocab("ל", "ל", "lamed", "ламед", "lamed")],
             "exercises": [
                 _mc("v1", L("Tap Vav", "Нажмите вав", "לחצו על ו", "Натисніть вав", "Toca vav", "Touchez vav"), [{"id": "ו", "he": "ו"}, {"id": "ז", "he": "ז"}, {"id": "י", "he": "י"}], "ו"),
-                _mc("v2", L("Tap Het", "Нажмите хет", "לחצו על ח", "Натисніть хет", "Toca jet", "Touchez heth"), [{"id": "ח", "he": "ח"}, {"id": "ה", "he": "ה"}, {"id": "ת", "he": "ת"}], "ח"),
+                _mc("v2", L("Tap Het", "Нажмите хет", "לחצו על ח", "Натисніть хет", "Toca jet", "Touchez het"), [{"id": "ח", "he": "ח"}, {"id": "ה", "he": "ה"}, {"id": "ת", "he": "ת"}], "ח"),
                 _mc("v3", L("Tap Yod", "Нажмите йод", "לחצו על י", "Натисніть йод", "Toca yod", "Touchez yod"), [{"id": "י", "he": "י"}, {"id": "ו", "he": "ו"}, {"id": "ז", "he": "ז"}], "י"),
                 _mc("v4", L("Tap Lamed", "Нажмите ламед", "לחצו על ל", "Натисніть ламед", "Toca lámed", "Touchez lamed"), [{"id": "ל", "he": "ל"}, {"id": "כ", "he": "כ"}, {"id": "ו", "he": "ו"}], "ל"),
                 _type("vt", L("Type Lamed", "Наберите ламед", "הקלידו ל", "Наберіть ламед", "Escribe lámed", "Tapez lamed"), ["ל"], keyboard=True),
@@ -99,7 +99,7 @@ def extra_published() -> list[dict[str, Any]]:
             "cefr": "pre-A1",
             "prerequisites": ["script-mem-tav"],
             "sort": 3,
-            "title": L("Letter drill מ–ת", "Тренажёр מ–ת", "תרגול מ–ת", "Тренажер מ–ת", "Práctica מ–ת", "Atelier מ–ת"),
+            "title": L("Letter drill מ–ת", "Тренажёр מ–ת", "תרגול מ–ת", "Тренування літер מ–ת", "Práctica מ–ת", "Atelier מ–ת"),
             "objective": L("Finish the print alphabet.", "Закончить печатный алфавит.", "לסיים את האלף-בית בדפוס.", "Закінчити друковану абетку.", "Terminar el alefato impreso.", "Finir l’alphabet imprimé."),
             "explanation": L("Shin and sin share a glyph without dots here.", "Шин и син без точек — одна форма.", "ש בלי נקודות.", "Шин і сін без крапок — одна форма.", "Shin y sin comparten glifo sin punto.", "Shin et sin partagent le glyphe sans point."),
             "vocabulary": [_vocab("ש", "ש", "shin", "шин", "shin")],
@@ -120,7 +120,7 @@ def extra_published() -> list[dict[str, Any]]:
             "cefr": "pre-A1",
             "prerequisites": ["vocab-greetings"],
             "sort": 20,
-            "title": L("Tap-tiles: shalom", "Плитки: шалом", "אריחים: שלום", "Плитки: шалом", "Fichas: shalom", "Tuiles : shalom"),
+            "title": L("Tap-tiles: shalom", "Плитки: шалом", "אריחים: שלום", "Плитки: шалом", "Fichas: shalom", "Tuiles\u00a0: shalom"),
             "objective": L("Build שלום and תודה from tiles.", "Собрать שלום и תודה из плиток.", "לבנות שלום ותודה מאריחים.", "Зібрати שלום і תודה з плиток.", "Armar שלום y תודה con fichas.", "Construire שלום et תודה avec des tuiles."),
             "explanation": L(
                 "Tap tiles right-to-left. Combo grows when you are correct in a row.",
@@ -135,8 +135,8 @@ def extra_published() -> list[dict[str, Any]]:
                 _vocab("תודה", "תּוֹדָה", "todá", "спасибо", "thank you"),
             ],
             "exercises": [
-                _order("o1", L("Build: hello", "Соберите: привет", "סדרו: שלום", "Зберіть: привіт", "Arma: hola", "Montez : bonjour"), ["ש", "ל", "ו", "ם"], ["ש", "ל", "ו", "ם"]),
-                _order("o2", L("Build: thank you", "Соберите: спасибо", "סדרו: תודה", "Зберіть: дякую", "Arma: gracias", "Montez : merci"), ["ת", "ו", "ד", "ה"], ["ת", "ו", "ד", "ה"]),
+                _order("o1", L("Build: hello", "Соберите: привет", "סדרו: שלום", "Зберіть: привіт", "Arma: hola", "Montez\u00a0: bonjour"), ["ש", "ל", "ו", "ם"], ["ש", "ל", "ו", "ם"]),
+                _order("o2", L("Build: thank you", "Соберите: спасибо", "סדרו: תודה", "Зберіть: дякую", "Arma: gracias", "Montez\u00a0: merci"), ["ת", "ו", "ד", "ה"], ["ת", "ו", "ד", "ה"]),
                 _type("t1", L("Type hello", "Наберите привет", "הקלידו שלום", "Наберіть привіт", "Escribe hola", "Tapez bonjour"), ["שלום"], keyboard=True),
                 _type("t2", L("Type thank you", "Наберите спасибо", "הקלידו תודה", "Наберіть дякую", "Escribe gracias", "Tapez merci"), ["תודה"], keyboard=True),
                 _mc(
@@ -159,7 +159,7 @@ def extra_published() -> list[dict[str, Any]]:
             "cefr": "pre-A1",
             "prerequisites": ["tiles-greetings"],
             "sort": 21,
-            "title": L("Match: greetings", "Пары: приветствия", "התאמה: ברכות", "Пари: привітання", "Parejas: saludos", "Paires : salutations"),
+            "title": L("Match: greetings", "Пары: приветствия", "התאמה: ברכות", "Зіставлення: вітання", "Parejas: saludos", "Paires\u00a0: salutations"),
             "objective": L("Match Hebrew greetings to your language.", "Сопоставить приветствия с родным языком.", "להתאים ברכות לשפתכם.", "Зіставити вітання з рідною мовою.", "Unir saludos hebreos con tu idioma.", "Associer les salutations à votre langue."),
             "explanation": L("Tap a Hebrew word, then its meaning. Pairs are checked on the server.", "Нажмите иврит, затем перевод. Пары проверяет сервер.", "לחצו עברית ואז משמעות.", "Натисніть іврит, потім переклад. Пари перевіряє сервер.", "Toca hebreo y luego el significado. El servidor corrige.", "Touchez l’hébreu puis le sens. Le serveur corrige."),
             "vocabulary": [_vocab("בבקשה", "בְּבַקָּשָׁה", "bevakashá", "пожалуйста", "please")],
@@ -205,7 +205,7 @@ def extra_published() -> list[dict[str, Any]]:
                 _mc("y2", L("No is…", "«Нет» — это…", "לא זה", "«Ні» — це…", "«No» es…", "« Non » c’est…"), [{"id": "לא", "he": "לא"}, {"id": "כן", "he": "כן"}], "לא"),
                 _type("y3", L("Type yes", "Наберите «да»", "הקלידו כן", "Наберіть «так»", "Escribe sí", "Tapez oui"), ["כן"], keyboard=True),
                 _type("y4", L("Type no", "Наберите «нет»", "הקלידו לא", "Наберіть «ні»", "Escribe no", "Tapez non"), ["לא"], keyboard=True),
-                _order("y5", L("Build: no", "Соберите: нет", "סדרו לא", "Зберіть: ні", "Arma: no", "Montez : non"), ["ל", "א"], ["ל", "א"]),
+                _order("y5", L("Build: no", "Соберите: нет", "סדרו לא", "Зберіть: ні", "Arma: no", "Montez\u00a0: non"), ["ל", "א"], ["ל", "א"]),
                 _speak("y6", L("Say yes", "Скажите «да»", "אמרו כן", "Скажіть «так»", "Di sí", "Dites oui")),
             ],
             "editorial": editorial,

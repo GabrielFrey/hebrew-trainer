@@ -367,7 +367,7 @@ _HEY = [
 ]
 
 
-def _loc(en: str, ru: str, he: str = "") -> dict[str, str]:
+def _loc(en: str, ru: str = "", he: str = "") -> dict[str, str]:
     from biti.draft_l10n import fill_loc
 
     return fill_loc({"en": en, "ru": ru, "he": he})
@@ -393,12 +393,8 @@ def _fill_higher(level_id: str, track: str, rows: list[tuple], start_sort: int) 
                     "slug": slug,
                     "status": "planned",
                     "kind": kind,
-                    "title": _loc(f"{title_en} · {i + 1}", f"{title_en} · {i + 1}", title_en),
-                    "objective": _loc(
-                        f"Planned: {theme} (lesson {i + 1}/{n}).",
-                        f"Запланировано: {theme} (урок {i + 1}/{n}).",
-                        theme,
-                    ),
+                    "title": _loc(f"{title_en} · {i + 1}"),
+                    "objective": _loc(f"Planned: {theme} (lesson {i + 1}/{n})."),
                     "track": track,
                     "level": {"bet": "elementary", "gimel": "intermediate", "dalet": "upper", "hey": "advanced"}.get(
                         level_id, level_id
@@ -423,8 +419,8 @@ def _fill_higher(level_id: str, track: str, rows: list[tuple], start_sort: int) 
                 if level_id == "hey"
                 else level_id,
                 "track": track,
-                "title": _loc(title_en, title_en, title_en),
-                "skills": [{"id": skill_id, "title": _loc(title_en, title_en, title_en), "lesson_slugs": [x["slug"] for x in lessons]}],
+                "title": _loc(title_en),
+                "skills": [{"id": skill_id, "title": _loc(title_en), "lesson_slugs": [x["slug"] for x in lessons]}],
                 "lessons": lessons,
             }
         )
@@ -447,18 +443,18 @@ def build_tree() -> list[dict[str, Any]]:
                     pub_i += 1
                     status = "published"
                     kind = "checkpoint" if slug.startswith("boss-") or slug.startswith("checkpoint-") else "lesson"
-                    title = _loc(skill_en, skill_en, skill_en)
+                    title = _loc(skill_en)
                 else:
                     slug = _planned_slug(unit_id, skill_id, i)
                     status = "planned"
                     kind = "checkpoint" if skill_id == "legendary" else "lesson"
-                    title = _loc(f"{skill_en} · {i + 1}", f"{skill_en} · {i + 1}", skill_en)
+                    title = _loc(f"{skill_en} · {i + 1}")
                 spec = {
                     "slug": slug,
                     "status": status,
                     "kind": kind,
                     "title": title,
-                    "objective": _loc(f"{skill_en} step {i + 1}", f"{skill_en} шаг {i + 1}", skill_en),
+                    "objective": _loc(f"{skill_en} step {i + 1}"),
                     "track": track,
                     "level": level,
                     "unit_id": unit_id,
@@ -470,7 +466,7 @@ def build_tree() -> list[dict[str, Any]]:
                 slugs.append(slug)
                 prev_slug = slug
                 sort += 1
-            skill_rows.append({"id": skill_id, "title": _loc(skill_en, skill_en, skill_en), "lesson_slugs": slugs})
+            skill_rows.append({"id": skill_id, "title": _loc(skill_en), "lesson_slugs": slugs})
         units.append(
             {
                 "id": unit_id,

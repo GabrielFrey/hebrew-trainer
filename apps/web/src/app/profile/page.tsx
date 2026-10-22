@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { api, type User } from "@/lib/api";
+import { useT } from "@/lib/i18n";
 
 export default function ProfilePage() {
   return (
@@ -13,13 +14,14 @@ export default function ProfilePage() {
 }
 
 function ProfileInner() {
+  const { t } = useT();
   const [user, setUser] = useState<User | null>(null);
   const [meta, setMeta] = useState<Record<string, unknown> | null>(null);
   useEffect(() => {
     api<User>("/auth/me").then(setUser);
     api<Record<string, unknown>>("/meta").then(setMeta);
   }, []);
-  if (!user) return <p>Loading…</p>;
+  if (!user) return <p>{t("states.loading")}</p>;
   return (
     <section data-testid="profile" className="grid gap-4 md:grid-cols-2">
       <div className="rounded-3xl bg-paper p-5">
@@ -70,7 +72,7 @@ function ProfileInner() {
             <li>uk / es / fr copy: in_review until a native reviewer signs off</li>
           </ul>
         ) : (
-          <p className="mt-3 text-sm text-ink-soft">Loading capabilities…</p>
+          <p className="mt-3 text-sm text-ink-soft">{t("profile.loadingCapabilities")}</p>
         )}
         <p className="mt-3 text-sm">
           Achievements: Alef-Bet master, All seven binyanim, and First conversation unlock from server progress — they

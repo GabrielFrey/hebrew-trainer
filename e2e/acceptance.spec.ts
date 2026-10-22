@@ -71,7 +71,7 @@ test.describe("acceptance", () => {
     await page.getByTestId("lang-uk").click();
     await expect(page.getByTestId("onboarding-title")).toContainText("Ласкаво просимо до Biti Ivrit");
     await page.getByTestId("lang-es").click();
-    await expect(page.getByTestId("onboarding-title")).toContainText("Bienvenido a Biti Ivrit");
+    await expect(page.getByTestId("onboarding-title")).toContainText("Te damos la bienvenida a Biti Ivrit");
     await page.getByTestId("lang-fr").click();
     await expect(page.getByTestId("onboarding-title")).toContainText("Bienvenue dans Biti Ivrit");
     await page.getByTestId("lang-en").click();

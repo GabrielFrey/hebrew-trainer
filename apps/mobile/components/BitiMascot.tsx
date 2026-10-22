@@ -1,15 +1,9 @@
 import { View } from "react-native";
+import type { UiLang } from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import Svg, { Circle, Ellipse, Line, Path } from "./svg";
 
 export type BitiMood = "idle" | "happy" | "think" | "sad" | "streak";
-
-const LABELS: Record<BitiMood, string> = {
-  idle: "Biti, a small robot mascot, waiting",
-  happy: "Biti celebrating a correct answer",
-  think: "Biti thinking about an almost-correct answer",
-  sad: "Biti encouraging you after a mistake",
-  streak: "Biti celebrating a streak",
-};
 
 const NAVY = "#0A1628";
 const OUTLINE = "#142033";
@@ -21,9 +15,11 @@ const INK = "#142033";
 export function BitiMascot({
   mood = "idle",
   size = 88,
+  lang = "en",
 }: {
   mood?: BitiMood;
   size?: number;
+  lang?: UiLang;
 }) {
   const happy = mood === "happy" || mood === "streak";
   const sad = mood === "sad";
@@ -39,7 +35,7 @@ export function BitiMascot({
   const ball = sad ? { cx: 49, cy: 21 } : { cx: 60, cy: 18.8 };
   const mouthW = happy ? 4.6 : 4.2;
   return (
-    <View accessible accessibilityRole="image" accessibilityLabel={LABELS[mood]}>
+    <View accessible accessibilityRole="image" accessibilityLabel={t(lang, `mascot.${mood}`)}>
       <Svg width={size} height={size} viewBox="0 0 120 120">
         <Circle cx="28" cy="58" r="12.4" fill={CREAM} />
         <Circle cx="92" cy="58" r="12.4" fill={CREAM} />

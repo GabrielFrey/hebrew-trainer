@@ -30,7 +30,7 @@ function ReviewInner() {
     return (
       <section data-testid="review-empty" className="rounded-3xl bg-paper p-6">
         <h1 className="text-3xl font-semibold">{t("nav.review")}</h1>
-        <p className="mt-2 text-ink-soft">{t("states.empty")} SRS uses 1 / 3 / 7 / 14 / 30 days.</p>
+        <p className="mt-2 text-ink-soft">{t("states.empty")} {t("review.srsHint")}</p>
       </section>
     );
   }

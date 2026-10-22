@@ -1,0 +1,13 @@
+Title: Biti Ivrit
+Short description: Hébreu moderne, de la première lettre à la vie quotidienne en Israël.
+
+Full description:
+Biti Ivrit est un cours d’hébreu israélien moderne : leçons courtes, sentier visuel et porte à la fin de chaque étape.
+
+• Cours hébreu–français et d’autres paires de langues
+• Notation déterministe côté serveur — le tuteur n’attribue pas d’XP
+• Répétition espacée 1 / 3 / 7 / 14 / 30 jours
+• Portes d’étape pour ouvrir le niveau d’oulpan suivant
+• États « indisponible » honnêtes si l’audio ou l’oral n’est pas configuré
+
+Le français est en relecture jusqu’à validation par un locuteur natif.

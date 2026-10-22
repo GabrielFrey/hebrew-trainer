@@ -20,7 +20,7 @@ const LINKS = [
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <Suspense fallback={<p className="p-8 text-ink-soft">Loading…</p>}>
+    <Suspense fallback={<p className="p-8 text-ink-soft">…</p>}>
       <AppShellInner>{children}</AppShellInner>
     </Suspense>
   );
@@ -51,21 +51,15 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
   }, [lang]);
 
   if (!ready) {
-    return <p className="p-8 text-ink-soft">Loading…</p>;
+    return <p className="p-8 text-ink-soft">…</p>;
   }
   return (
     <I18nProvider lang={lang}>
       <div className="relative mx-auto flex min-h-full max-w-6xl flex-col px-4 pb-24 pt-4 md:px-8">
-        <a
-          href="#main"
-          data-testid="skip-content"
-          className="sr-only z-50 rounded-full bg-indigo px-4 py-2 text-paper focus:not-sr-only focus:absolute focus:start-4 focus:top-3"
-        >
-          Skip to content
-        </a>
+        <SkipLink />
         <header className="glass sticky top-3 z-20 mb-6 flex items-center justify-between rounded-3xl border border-line px-4 py-3">
           <Link href="/learn" className="flex items-center gap-3">
-            <BitiMascot size={44} />
+            <BitiMascot size={44} lang={lang} />
             <BrandMark />
           </Link>
           {user ? (
@@ -85,6 +79,19 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
   );
 }
 
+function SkipLink() {
+  const { t } = useT();
+  return (
+    <a
+      href="#main"
+      data-testid="skip-content"
+      className="sr-only z-50 rounded-full bg-indigo px-4 py-2 text-paper focus:not-sr-only focus:absolute focus:start-4 focus:top-3"
+    >
+      {t("chrome.skipToContent")}
+    </a>
+  );
+}
+
 function BrandMark() {
   const { t } = useT();
   return (
@@ -101,7 +108,7 @@ function Nav() {
   const { t } = useT();
   const path = usePathname();
   return (
-    <nav className="mb-6 flex flex-wrap gap-2" aria-label="Primary">
+    <nav className="mb-6 flex flex-wrap gap-2" aria-label={t("chrome.primaryNav")}>
       {LINKS.map(([href, key]) => (
         <Link
           key={href}

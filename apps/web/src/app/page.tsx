@@ -45,7 +45,7 @@ export default function OnboardingPage() {
       });
       router.push(to);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not start");
+      setError(err instanceof Error ? err.message : t(lang, "onboarding.couldNotStart"));
     } finally {
       setBusy(false);
     }
@@ -53,7 +53,7 @@ export default function OnboardingPage() {
 
   return (
     <div data-testid="onboarding" className="mx-auto flex min-h-full max-w-xl flex-col gap-6 px-4 py-10">
-      <BitiMascot mood="happy" size={96} />
+      <BitiMascot mood="happy" size={96} lang={lang} />
       <h1 data-testid="onboarding-title" className="text-4xl font-semibold">
         {t(lang, "onboarding.title")}
       </h1>

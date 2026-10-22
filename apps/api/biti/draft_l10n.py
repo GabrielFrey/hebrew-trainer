@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from biti.title_l10n import TITLES
+
 # English lemma/prompt → Ukrainian, Spanish, French. Do not copy Russian into Ukrainian.
 # These are authored drafts. Editorial l10n_status stays in_review until a native reviewer signs off.
 DRAFTS: dict[str, dict[str, str]] = {
@@ -15,7 +17,7 @@ DRAFTS: dict[str, dict[str, str]] = {
     "He": {"uk": "Һе", "es": "He", "fr": "Hé"},
     "Vav": {"uk": "Вав", "es": "Vav", "fr": "Vav"},
     "Zayin": {"uk": "Заїн", "es": "Záyin", "fr": "Zayin"},
-    "Het": {"uk": "Хет", "es": "Jet", "fr": "Heth"},
+    "Het": {"uk": "Хет", "es": "Jet", "fr": "Het"},
     "Tet": {"uk": "Тет", "es": "Tet", "fr": "Tet"},
     "Yod": {"uk": "Йод", "es": "Yod", "fr": "Yod"},
     "Kaf": {"uk": "Каф", "es": "Kaf", "fr": "Kaf"},
@@ -33,11 +35,11 @@ DRAFTS: dict[str, dict[str, str]] = {
     "alef": {"uk": "алеф", "es": "álef", "fr": "alef"},
     "lamed": {"uk": "ламед", "es": "lámed", "fr": "lamed"},
     "shin": {"uk": "шин", "es": "shin", "fr": "shin"},
-    "kaf sofit": {"uk": "каф софіт", "es": "kaf sofit", "fr": "kaf sofit"},
-    "mem sofit": {"uk": "мем софіт", "es": "mem sofit", "fr": "mem sofit"},
-    "nun sofit": {"uk": "нун софіт", "es": "nun sofit", "fr": "noun sofit"},
-    "pe sofit": {"uk": "пе софіт", "es": "pe sofit", "fr": "pé sofit"},
-    "tsadi sofit": {"uk": "цаді софіт", "es": "tsadi sofit", "fr": "tsadé sofit"},
+    "kaf sofit": {"ru": "каф софит", "uk": "каф софіт", "es": "kaf sofit", "fr": "kaf sofit"},
+    "mem sofit": {"ru": "мем софит", "uk": "мем софіт", "es": "mem sofit", "fr": "mem sofit"},
+    "nun sofit": {"ru": "нун софит", "uk": "нун софіт", "es": "nun sofit", "fr": "noun sofit"},
+    "pe sofit": {"ru": "пе софит", "uk": "пе софіт", "es": "pe sofit", "fr": "pé sofit"},
+    "tsadi sofit": {"ru": "цади софит", "uk": "цаді софіт", "es": "tsadi sofit", "fr": "tsadé sofit"},
     "hello": {"uk": "привіт", "es": "hola", "fr": "bonjour"},
     "hi": {"uk": "привіт", "es": "hola", "fr": "salut"},
     "thank you": {"uk": "дякую", "es": "gracias", "fr": "merci"},
@@ -50,8 +52,8 @@ DRAFTS: dict[str, dict[str, str]] = {
     "book": {"uk": "книга", "es": "libro", "fr": "livre"},
     "boy": {"uk": "хлопчик", "es": "niño", "fr": "garçon"},
     "girl": {"uk": "дівчинка", "es": "niña", "fr": "fille"},
-    "mother": {"uk": "мама", "es": "madre", "fr": "mère"},
-    "father": {"uk": "тато", "es": "padre", "fr": "père"},
+    "mother": {"uk": "мати", "es": "madre", "fr": "mère"},
+    "father": {"uk": "батько", "es": "padre", "fr": "père"},
     "mum": {"uk": "мама", "es": "mamá", "fr": "maman"},
     "mom": {"uk": "мама", "es": "mamá", "fr": "maman"},
     "dad": {"uk": "тато", "es": "papá", "fr": "papa"},
@@ -115,7 +117,7 @@ DRAFTS: dict[str, dict[str, str]] = {
     "market": {"uk": "ринок", "es": "mercado", "fr": "marché"},
     "tomato": {"uk": "помідор", "es": "tomate", "fr": "tomate"},
     "cucumber": {"uk": "огірок", "es": "pepino", "fr": "concombre"},
-    "how much is it": {"uk": "скільки це коштує", "es": "cuánto cuesta", "fr": "combien ça coûte"},
+    "how much is it": {"uk": "скільки це коштує", "es": "¿cuánto cuesta?", "fr": "combien ça coûte\u00a0?"},
     "shekel": {"uk": "шекель", "es": "séquel", "fr": "shekel"},
     "Numbers 1–10": {"uk": "Числа 1–10", "es": "Números 1–10", "fr": "Nombres 1–10"},
     "numbers 1–10": {"uk": "числа 1–10", "es": "números 1–10", "fr": "nombres 1–10"},
@@ -142,47 +144,47 @@ DRAFTS: dict[str, dict[str, str]] = {
     "chair": {"uk": "стілець", "es": "silla", "fr": "chaise"},
     "Introductions": {"uk": "Знайомство", "es": "Presentaciones", "fr": "Présentations"},
     "introductions": {"uk": "знайомство", "es": "presentaciones", "fr": "présentations"},
-    "hello, what is your name (m)": {"uk": "привіт, як тебе звати (чол.)", "es": "hola, ¿cómo te llamas? (m.)", "fr": "bonjour, comment t’appelles-tu ? (m.)"},
+    "hello, what is your name (m)": {"uk": "привіт, як тебе звати (чол.)", "es": "hola, ¿cómo te llamas? (m.)", "fr": "bonjour, comment t’appelles-tu\u00a0? (m.)"},
     "goodbye": {"uk": "бувай", "es": "adiós", "fr": "au revoir"},
     "my name is": {"uk": "мене звати", "es": "me llamo", "fr": "je m’appelle"},
-    "nice to meet you": {"uk": "приємно познайомитися", "es": "encantado/a", "fr": "enchanté"},
+    "nice to meet you": {"uk": "приємно познайомитися", "es": "encantado/a", "fr": "enchanté(e)"},
     "I am from Russia": {"uk": "я з Росії", "es": "soy de Rusia", "fr": "je viens de Russie"},
     "I live in Tel Aviv (m)": {"uk": "я живу в Тель-Авіві (чол.)", "es": "vivo en Tel Aviv (m.)", "fr": "j’habite à Tel-Aviv (m.)"},
     "Buying at the shuk": {"uk": "Покупка на ринку", "es": "Compras en el shuk", "fr": "Achats au shouk"},
     "buying at the shuk": {"uk": "покупка на ринку", "es": "compras en el shuk", "fr": "achats au shouk"},
-    "do you have tomatoes": {"uk": "чи є в тебе помідори", "es": "¿tienes tomates?", "fr": "as-tu des tomates"},
-    "can I have a kilo": {"uk": "можна кіло", "es": "¿puedo un kilo?", "fr": "je peux prendre un kilo"},
+    "do you have tomatoes": {"uk": "чи є в тебе помідори", "es": "¿tienes tomates?", "fr": "as-tu des tomates\u00a0?"},
+    "can I have a kilo": {"uk": "можна кіло", "es": "¿me pones un kilo?", "fr": "je peux prendre un kilo\u00a0?"},
     "thank you very much": {"uk": "дуже дякую", "es": "muchas gracias", "fr": "merci beaucoup"},
     "Transport": {"uk": "Транспорт", "es": "Transporte", "fr": "Transports"},
     "transport": {"uk": "транспорт", "es": "transporte", "fr": "transports"},
-    "where is the stop": {"uk": "де зупинка", "es": "dónde está la parada", "fr": "où est l’arrêt"},
+    "where is the stop": {"uk": "де зупинка", "es": "¿dónde está la parada?", "fr": "où est l’arrêt\u00a0?"},
     "bus": {"uk": "автобус", "es": "autobús", "fr": "bus"},
     "train": {"uk": "поїзд", "es": "tren", "fr": "train"},
     "ticket": {"uk": "квиток", "es": "billete", "fr": "billet"},
-    "when is the next bus": {"uk": "коли наступний автобус", "es": "cuándo es el próximo autobús", "fr": "quand est le prochain bus"},
+    "when is the next bus": {"uk": "коли наступний автобус", "es": "¿cuándo es el próximo autobús?", "fr": "quand est le prochain bus\u00a0?"},
     "At the café": {"uk": "У кафе", "es": "En el café", "fr": "Au café"},
     "at the café": {"uk": "у кафе", "es": "en el café", "fr": "au café"},
-    "can I have a coffee": {"uk": "можна каву", "es": "¿puedo un café?", "fr": "je peux prendre un café"},
+    "can I have a coffee": {"uk": "можна каву", "es": "¿me pones un café?", "fr": "je peux prendre un café\u00a0?"},
     "tea": {"uk": "чай", "es": "té", "fr": "thé"},
     "the bill": {"uk": "рахунок", "es": "la cuenta", "fr": "l’addition"},
     "without sugar": {"uk": "без цукру", "es": "sin azúcar", "fr": "sans sucre"},
     "On the phone": {"uk": "По телефону", "es": "Por teléfono", "fr": "Au téléphone"},
     "on the phone": {"uk": "по телефону", "es": "por teléfono", "fr": "au téléphone"},
-    "hello (phone)": {"uk": "алло", "es": "¿diga?", "fr": "allô"},
-    "who is speaking": {"uk": "хто говорить", "es": "quién habla", "fr": "qui est à l’appareil"},
-    "may I speak with": {"uk": "можна з … поговорити", "es": "¿puedo hablar con…?", "fr": "puis-je parler avec"},
+    "hello (phone)": {"uk": "алло", "es": "¿aló?", "fr": "allô"},
+    "who is speaking": {"uk": "хто говорить", "es": "¿quién habla?", "fr": "qui est à l’appareil\u00a0?"},
+    "may I speak with": {"uk": "можна з … поговорити", "es": "¿puedo hablar con…?", "fr": "puis-je parler avec…\u00a0?"},
     "I will call later": {"uk": "я зателефоную пізніше", "es": "llamaré más tarde", "fr": "je rappellerai plus tard"},
     "Asking for help": {"uk": "Прохання про допомогу", "es": "Pedir ayuda", "fr": "Demander de l’aide"},
     "asking for help": {"uk": "прохання про допомогу", "es": "pedir ayuda", "fr": "demander de l’aide"},
     "I need help (m)": {"uk": "мені потрібна допомога (чол.)", "es": "necesito ayuda (m.)", "fr": "j’ai besoin d’aide (m.)"},
     "police": {"uk": "поліція", "es": "policía", "fr": "police"},
     "ambulance": {"uk": "швидка", "es": "ambulancia", "fr": "ambulance"},
-    "I am lost": {"uk": "я заблукав", "es": "estoy perdido", "fr": "je suis perdu"},
+    "I am lost": {"uk": "я загубився / загубилася", "es": "estoy perdido/a", "fr": "je suis perdu(e)"},
     "I don't feel well (m)": {"uk": "мені погано (чол.)", "es": "no me siento bien (m.)", "fr": "je ne me sens pas bien (m.)"},
     "what is your name (m, unpointed מה שמך)": {
         "uk": "як тебе звати (чол., без ніккуду מה שמך)",
-        "es": "cómo te llamas (m., sin niqqud מה שמך)",
-        "fr": "comment t’appelles-tu (m., sans niqqud מה שמך)",
+        "es": "¿cómo te llamas? (m., sin niqqud מה שמך)",
+        "fr": "comment t’appelles-tu (m., sans niqqud מה שמך)\u00a0?",
     },
     "I (only)": {"uk": "я (лише)", "es": "yo (solo)", "fr": "je (seulement)"},
     "Type hello": {"uk": "Наберіть «привіт»", "es": "Escribe «hola»", "fr": "Tapez « bonjour »"},
@@ -200,17 +202,17 @@ DRAFTS: dict[str, dict[str, str]] = {
     "The definite article": {"uk": "Означений артикль", "es": "El artículo definido", "fr": "L’article défini"},
     "Starter checkpoint": {"uk": "Контроль старту", "es": "Control de inicio", "fr": "Palier de départ"},
     "Beginner checkpoint": {"uk": "Контроль алеф", "es": "Control álef", "fr": "Palier aleph"},
-    "Which letter is Alef?": {"uk": "Яка літера — алеф?", "es": "¿Cuál es álef?", "fr": "Quelle lettre est alef ?"},
-    "Which letter is Bet?": {"uk": "Яка літера — бет?", "es": "¿Cuál es bet?", "fr": "Quelle lettre est bet ?"},
-    "Which letter is Gimel?": {"uk": "Яка літера — ґімель?", "es": "¿Cuál es guímel?", "fr": "Quelle lettre est guimel ?"},
-    "Which letter is Dalet?": {"uk": "Яка літера — далет?", "es": "¿Cuál es dálet?", "fr": "Quelle lettre est dalet ?"},
-    "Which letter is He?": {"uk": "Яка літера — һе?", "es": "¿Cuál es he?", "fr": "Quelle lettre est hé ?"},
+    "Which letter is Alef?": {"uk": "Яка літера — алеф?", "es": "¿Cuál es álef?", "fr": "Quelle lettre est alef\u00a0?"},
+    "Which letter is Bet?": {"uk": "Яка літера — бет?", "es": "¿Cuál es bet?", "fr": "Quelle lettre est bet\u00a0?"},
+    "Which letter is Gimel?": {"uk": "Яка літера — ґімель?", "es": "¿Cuál es guímel?", "fr": "Quelle lettre est guimel\u00a0?"},
+    "Which letter is Dalet?": {"uk": "Яка літера — далет?", "es": "¿Cuál es dálet?", "fr": "Quelle lettre est dalet\u00a0?"},
+    "Which letter is He?": {"uk": "Яка літера — һе?", "es": "¿Cuál es he?", "fr": "Quelle lettre est hé\u00a0?"},
     "Type Alef (ʾalef)": {"uk": "Наберіть алеф", "es": "Escribe álef", "fr": "Tapez alef"},
     "Type Bet (bet)": {"uk": "Наберіть бет", "es": "Escribe bet", "fr": "Tapez bet"},
     "Type Gimel (gimel)": {"uk": "Наберіть ґімель", "es": "Escribe guímel", "fr": "Tapez guimel"},
     "Type Dalet (dalet)": {"uk": "Наберіть далет", "es": "Escribe dálet", "fr": "Tapez dalet"},
     "Type He (he)": {"uk": "Наберіть һе", "es": "Escribe he", "fr": "Tapez hé"},
-    "Match letter and name": {"uk": "Поєднайте літеру й назву", "es": "Une letra y nombre", "fr": "Associez lettre et nom"},
+    "Match letter and name": {"uk": "Поєднайте літеру й назву", "es": "Une la letra con el nombre", "fr": "Associez la lettre et le nom"},
     "Say the first letter aloud": {"uk": "Промовте першу літеру", "es": "Di la primera letra", "fr": "Dites la première lettre"},
     "Print Hebrew is written right to left. Each letter has a name. Niqqud is shown for orientation and is not graded here.": {
         "uk": "Друкований іврит пишеться справа наліво. У кожної літери є назва. Ніккуд тут лише для орієнтиру і не перевіряється.",
@@ -240,7 +242,7 @@ DRAFTS: dict[str, dict[str, str]] = {
     "Five letters change shape at the end of a word. Grading is strict: a non-final form is not accepted.": {
         "uk": "П’ять літер змінюють форму в кінці слова. Перевірка сувора: некінцеву форму не приймають.",
         "es": "Cinco letras cambian de forma al final de la palabra. La corrección es estricta: no se acepta la forma no final.",
-        "fr": "Cinq lettres changent de forme en fin de mot. La notation est stricte : la forme non finale est refusée.",
+        "fr": "Cinq lettres changent de forme en fin de mot. La notation est stricte\u00a0: la forme non finale est refusée.",
     },
     "Tell ב/כ, ד/ר, ה/ח/ת apart.": {
         "uk": "Розрізняйте ב/כ, ד/ר, ה/ח/ת.",
@@ -280,7 +282,7 @@ DRAFTS: dict[str, dict[str, str]] = {
     "Hebrew attaches הַ to the noun: סֵפֶר → הַסֵּפֶר. There is no separate word for 'the'.": {
         "uk": "Іврит приєднує הַ до іменника: סֵפֶר → הַסֵּפֶר. Окремого слова «the» немає.",
         "es": "El hebreo une הַ al nombre: סֵפֶר → הַסֵּפֶר. No hay una palabra aparte para «the».",
-        "fr": "L’hébreu attache הַ au nom : סֵפֶר → הַסֵּפֶר. Il n’y a pas de mot séparé pour « the ».",
+        "fr": "L’hébreu attache הַ au nom\u00a0: סֵפֶר → הַסֵּפֶר. Il n’y a pas de mot séparé pour « the ».",
     },
     "Adjective agreement": {"uk": "Узгодження прикметника", "es": "Concordancia del adjetivo", "fr": "Accord de l’adjectif"},
     "Make adjectives agree in gender and number.": {
@@ -291,7 +293,7 @@ DRAFTS: dict[str, dict[str, str]] = {
     "The adjective follows the noun and copies gender/number: יֶלֶד גָּדוֹל, יַלְדָּה גְּדוֹלָה.": {
         "uk": "Прикметник стоїть після іменника і копіює рід/число: יֶלֶד גָּדוֹל, יַלְדָּה גְּדוֹלָה.",
         "es": "El adjetivo va detrás del nombre y copia género/número: יֶלֶד גָּדוֹל, יַלְדָּה גְּדוֹלָה.",
-        "fr": "L’adjectif suit le nom et reprend le genre/nombre : יֶלֶד גָּדוֹל, יַלְדָּה גְּדוֹלָה.",
+        "fr": "L’adjectif suit le nom et reprend le genre/nombre\u00a0: יֶלֶד גָּדוֹל, יַלְדָּה גְּדוֹלָה.",
     },
     "Subject pronouns": {"uk": "Особові займенники", "es": "Pronombres personales", "fr": "Pronoms personnels"},
     "Use אני אתה את הוא היא.": {
@@ -324,7 +326,7 @@ DRAFTS: dict[str, dict[str, str]] = {
     "Pa'al (קל) present uses a participle: כּוֹתֵב, כּוֹתֶבֶת, כּוֹתְבִים, כּוֹתְבוֹת.": {
         "uk": "Пааль (קל) у теперішньому — дієприкметник: כּוֹתֵב, כּוֹתֶבֶת, כּוֹתְבִים, כּוֹתְבוֹת.",
         "es": "El presente de pa'al (קל) usa un participio: כּוֹתֵב, כּוֹתֶבֶת, כּוֹתְבִים, כּוֹתְבוֹת.",
-        "fr": "Le présent du pa'al (קל) utilise un participe : כּוֹתֵב, כּוֹתֶבֶת, כּוֹתְבִים, כּוֹתְבוֹת.",
+        "fr": "Le présent du pa'al (קל) utilise un participe\u00a0: כּוֹתֵב, כּוֹתֶבֶת, כּוֹתְבִים, כּוֹתְבוֹת.",
     },
     "Say the Hebrew aloud. Transliteration is a hint, not the answer.": {
         "uk": "Промовте іврит уголос. Транскрипція — підказка, не відповідь.",
@@ -334,7 +336,7 @@ DRAFTS: dict[str, dict[str, str]] = {
     "Ulpan style: learn a whole useful line, then the pieces. Listening is optional while TTS is unavailable.": {
         "uk": "Як в ульпані: спочатку ціла корисна фраза, потім частини. Аудіювання не обов’язкове, поки немає TTS.",
         "es": "Estilo ulpán: primero una frase útil entera, luego las piezas. Escuchar es opcional mientras no hay TTS.",
-        "fr": "Style oulpan : d’abord une phrase utile entière, puis les morceaux. L’écoute est facultative tant que le TTS manque.",
+        "fr": "Style oulpan\u00a0: d’abord une phrase utile entière, puis les morceaux. L’écoute est facultative tant que le TTS manque.",
     },
     "Read letters and say hello.": {
         "uk": "Прочитати літери й привітатися.",
@@ -374,7 +376,7 @@ DRAFTS: dict[str, dict[str, str]] = {
     },
     "Say Alef": {"uk": "Промовте алеф", "es": "Di álef", "fr": "Dites alef"},
     "Say the root": {"uk": "Промовте корінь", "es": "Di la raíz", "fr": "Dites la racine"},
-    "Which letter has dagesh?": {"uk": "У якій літері є дагеш?", "es": "¿Qué letra tiene dagesh?", "fr": "Quelle lettre a un dagesh ?"},
+    "Which letter has dagesh?": {"uk": "У якій літері є дагеш?", "es": "¿Qué letra tiene dagesh?", "fr": "Quelle lettre a un dagesh\u00a0?"},
     "Ktav yad is…": {"uk": "Ктав яд — це…", "es": "Ktav yad es…", "fr": "Le ktav yad est…"},
     "Final kaf is…": {"uk": "Кінцева каф — це…", "es": "La kaf final es…", "fr": "Le kaf final est…"},
     "ספר is…": {"uk": "ספר — це…", "es": "ספר es…", "fr": "ספר est…"},
@@ -394,7 +396,7 @@ DRAFTS: dict[str, dict[str, str]] = {
     "אַתְּ is…": {"uk": "אַתְּ — це…", "es": "אַתְּ es…", "fr": "אַתְּ est…"},
     "Root of מכתב": {"uk": "Корінь מכתב", "es": "Raíz de מכתב", "fr": "Racine de מכתב"},
     "Root of כותב": {"uk": "Корінь כותב", "es": "Raíz de כותב", "fr": "Racine de כותב"},
-    "Which word shares כ־ת־ב?": {"uk": "Яке слово має корінь כ־ת־ב?", "es": "¿Qué palabra comparte כ־ת־ב?", "fr": "Quel mot partage כ־ת־ב ?"},
+    "Which word shares כ־ת־ב?": {"uk": "Яке слово має корінь כ־ת־ב?", "es": "¿Qué palabra comparte כ־ת־ב?", "fr": "Quel mot partage כ־ת־ב\u00a0?"},
     "A typical shoresh has…": {"uk": "Типовий шореш має…", "es": "Un shoresh típico tiene…", "fr": "Un shoresh typique a…"},
     "He writes (unpointed)": {"uk": "Він пише (без ніккуду)", "es": "Él escribe (sin niqqud)", "fr": "Il écrit (sans niqqud)"},
     "She writes": {"uk": "Вона пише", "es": "Ella escribe", "fr": "Elle écrit"},
@@ -407,36 +409,52 @@ DRAFTS: dict[str, dict[str, str]] = {
 
 
 def _lookup(en: str) -> dict[str, str]:
-    return DRAFTS.get(en) or {}
+    return TITLES.get(en) or DRAFTS.get(en) or {}
 
 
 def drafts_for(en: str) -> dict[str, str]:
-    """Resolve uk/es/fr drafts. Patterns compose from lemmas; never copy Russian."""
+    """Resolve ru/uk/es/fr drafts. Patterns compose from lemmas; never copy Russian into Ukrainian."""
     hit = _lookup(en)
     if hit:
         return hit
 
-    def wrap(uk: str, es: str, fr: str, inner: dict[str, str]) -> dict[str, str]:
-        return {"uk": uk.format(**inner), "es": es.format(**inner), "fr": fr.format(**inner)}
+    def wrap(
+        uk: str,
+        es: str,
+        fr: str,
+        inner: dict[str, str],
+        ru: str | None = None,
+        he: str | None = None,
+    ) -> dict[str, str]:
+        out = {"uk": uk.format(**inner), "es": es.format(**inner), "fr": fr.format(**inner)}
+        if ru and inner.get("ru"):
+            out["ru"] = ru.format(**inner)
+        elif inner.get("ru"):
+            out["ru"] = inner["ru"]
+        if he and inner.get("he"):
+            out["he"] = he.format(**inner)
+        elif inner.get("he"):
+            out["he"] = inner["he"]
+        return out
 
     m = re.fullmatch(r"Which letter is (.+)\?", en)
     if m and _lookup(m.group(1)):
-        return wrap("Яка літера — {uk}?", "¿Cuál es {es}?", "Quelle lettre est {fr} ?", _lookup(m.group(1)))
+        return wrap("Яка літера — {uk}?", "¿Cuál es {es}?", "Quelle lettre est {fr}\u00a0?", _lookup(m.group(1)))
     m = re.fullmatch(r"Which is (.+)\?", en)
     if m and _lookup(m.group(1)):
-        return wrap("Яке з них — {uk}?", "¿Cuál es {es}?", "Lequel est {fr} ?", _lookup(m.group(1)))
+        return wrap("Яке з них — {uk}?", "¿Cuál es {es}?", "Lequel est {fr}\u00a0?", _lookup(m.group(1)))
     m = re.fullmatch(r"Type (.+) \([^)]+\)", en)
     if m and _lookup(m.group(1)):
         return wrap("Наберіть {uk}", "Escribe {es}", "Tapez {fr}", _lookup(m.group(1)))
     m = re.fullmatch(r"Type: (.+)", en)
     if m and _lookup(m.group(1)):
-        return wrap("Наберіть: {uk}", "Escribe: {es}", "Tapez : {fr}", _lookup(m.group(1)))
+        return wrap("Наберіть: {uk}", "Escribe: {es}", "Tapez\u00a0: {fr}", _lookup(m.group(1)))
     m = re.fullmatch(r"Type '(.+)'(?: \(unpointed\))?", en)
     if m and _lookup(m.group(1)):
         return wrap("Наберіть «{uk}»", "Escribe «{es}»", "Tapez « {fr} »", _lookup(m.group(1)))
     m = re.fullmatch(r"What is (.+)\?", en)
     if m and _lookup(m.group(1)):
-        return wrap("Як івритом сказати: {uk}?", "¿Cómo se dice {es} en hebreo?", "Comment dit-on {fr} en hébreu ?", _lookup(m.group(1)))
+        return wrap("Як івритом сказати: {uk}?", "¿Cómo se dice {es} en hebreo?", "Comment dit-on {fr} en hébreu\u00a0?", _lookup(m.group(1)))
     m = re.fullmatch(r"Type the final letter (.+)", en)
     if m and _lookup(m.group(1)):
         return wrap("Наберіть кінцеву літеру {uk}", "Escribe la letra final {es}", "Tapez la lettre finale {fr}", _lookup(m.group(1)))
@@ -449,10 +467,10 @@ def drafts_for(en: str) -> dict[str, str]:
         return wrap("Вправи з набору «{uk}».", "Usa el conjunto «{es}».", "Utilisez le jeu « {fr} ».", _lookup(m.group(1)))
     m = re.fullmatch(r"Handle a short (.+) exchange\.", en)
     if m and _lookup(m.group(1)):
-        return wrap("Короткий діалог: {uk}.", "Gestiona un diálogo corto: {es}.", "Gérez un échange court : {fr}.", _lookup(m.group(1)))
+        return wrap("Короткий діалог: {uk}.", "Practica un diálogo breve: {es}.", "Menez un échange court\u00a0: {fr}.", _lookup(m.group(1)))
     m = re.fullmatch(r"Order: (.+)", en)
     if m and _lookup(m.group(1)):
-        return wrap("Порядок: {uk}", "Ordena: {es}", "Ordre : {fr}", _lookup(m.group(1)))
+        return wrap("Порядок: {uk}", "Ordena: {es}", "Ordre\u00a0: {fr}", _lookup(m.group(1)))
     m = re.fullmatch(r"Type (.+)", en)
     if m and _lookup(m.group(1)):
         return wrap("Наберіть {uk}", "Escribe {es}", "Tapez {fr}", _lookup(m.group(1)))
@@ -464,6 +482,37 @@ def drafts_for(en: str) -> dict[str, str]:
     if m:
         span = m.group(1)
         return {"uk": f"Упізнати й набрати {span}.", "es": f"Reconocer y escribir {span}.", "fr": f"Reconnaître et taper {span}."}
+    m = re.fullmatch(r"(.+) step (\d+)", en)
+    if m and _lookup(m.group(1)):
+        inner = {**_lookup(m.group(1)), "n": m.group(2)}
+        return wrap(
+            "{uk} · крок {n}",
+            "{es} · paso {n}",
+            "{fr} · étape {n}",
+            inner,
+            ru="{ru} · шаг {n}",
+            he="{he} · {n}",
+        )
+    m = re.fullmatch(r"(.+) · (\d+)", en)
+    if m and _lookup(m.group(1)):
+        inner = {**_lookup(m.group(1)), "n": m.group(2)}
+        return wrap("{uk} · {n}", "{es} · {n}", "{fr} · {n}", inner, ru="{ru} · {n}", he="{he} · {n}")
+    m = re.fullmatch(r"Planned: (.+) \(lesson (\d+)/(\d+)\)\.", en)
+    if m:
+        theme, i, n = m.group(1), m.group(2), m.group(3)
+        loc = _lookup(theme)
+        ru_t = loc.get("ru") or theme
+        uk_t = loc.get("uk") or theme
+        es_t = loc.get("es") or theme
+        fr_t = loc.get("fr") or theme
+        he_t = loc.get("he") or theme
+        return {
+            "ru": f"Запланировано: {ru_t} (урок {i}/{n}).",
+            "uk": f"Заплановано: {uk_t} (урок {i}/{n}).",
+            "es": f"Planificado: {es_t} (lección {i}/{n}).",
+            "fr": f"Prévu\u00a0: {fr_t} (leçon {i}/{n}).",
+            "he": f"מתוכנן: {he_t} (שיעור {i}/{n}).",
+        }
     return {}
 
 
@@ -472,10 +521,12 @@ def fill_loc(record: dict[str, Any] | None) -> dict[str, str]:
         return {"en": "", "ru": "", "he": "", "uk": "", "es": "", "fr": ""}
     en = str(record.get("en") or "")
     draft = drafts_for(en)
+    ru = str(record.get("ru") or "")
+    he = str(record.get("he") or "")
     return {
         "en": en,
-        "ru": str(record.get("ru") or ""),
-        "he": str(record.get("he") or ""),
+        "ru": ru if ru and ru != en else str(draft.get("ru") or ru),
+        "he": he or str(draft.get("he") or ""),
         "uk": str(record.get("uk") or draft.get("uk") or ""),
         "es": str(record.get("es") or draft.get("es") or ""),
         "fr": str(record.get("fr") or draft.get("fr") or ""),
@@ -486,6 +537,9 @@ def fill_choice(choice: dict[str, Any]) -> dict[str, Any]:
     clone = dict(choice)
     en = str(clone.get("en") or "")
     draft = drafts_for(en)
+    ru = str(clone.get("ru") or "")
+    if (not ru or ru == en) and draft.get("ru"):
+        clone["ru"] = draft["ru"]
     for lang in ("uk", "es", "fr"):
         if not clone.get(lang) and draft.get(lang):
             clone[lang] = draft[lang]
@@ -496,6 +550,9 @@ def fill_vocab(item: dict[str, Any]) -> dict[str, Any]:
     clone = dict(item)
     en = str(clone.get("en") or "")
     draft = drafts_for(en)
+    ru = str(clone.get("ru") or "")
+    if (not ru or ru == en) and draft.get("ru"):
+        clone["ru"] = draft["ru"]
     for lang in ("uk", "es", "fr"):
         if not clone.get(lang) and draft.get(lang):
             clone[lang] = draft[lang]

@@ -35,11 +35,13 @@ export function LearningPath({
   currentSlug,
   lang,
   t,
+  tp,
 }: {
   stages: PathStage[];
   currentSlug: string | null;
   lang: UiLang;
   t: (k: string) => string;
+  tp: (k: string, count: number) => string;
 }) {
   const rtl = lang === "he";
   const scroller = useRef<HTMLDivElement>(null);
@@ -69,6 +71,7 @@ export function LearningPath({
           currentSlug={currentSlug}
           lang={lang}
           t={t}
+          tp={tp}
           rtl={rtl}
           width={width}
         />
@@ -82,6 +85,7 @@ function StageBlock({
   currentSlug,
   lang,
   t,
+  tp,
   rtl,
   width,
 }: {
@@ -89,6 +93,7 @@ function StageBlock({
   currentSlug: string | null;
   lang: UiLang;
   t: (k: string) => string;
+  tp: (k: string, count: number) => string;
   rtl: boolean;
   width: number;
 }) {
@@ -171,7 +176,7 @@ function StageBlock({
         ))}
         {stage.planned_count > 0 ? (
           <p className="absolute bottom-1 left-1/2 -translate-x-1/2 text-center text-xs text-ink-soft" data-testid={`stage-planned-${stage.id}`}>
-            ··· {stage.planned_count} {t("path.morePlanned")}
+            ··· {tp("path.morePlanned", stage.planned_count)}
           </p>
         ) : null}
       </div>
@@ -223,7 +228,7 @@ function PathNodeBubble({
     <div className="flex w-28 flex-col items-center" data-path-current={state === "current" ? "true" : "false"}>
       {state === "current" ? (
         <div data-testid="biti-on-current" className="-mb-2">
-          <BitiMascot size={52} mood="idle" />
+          <BitiMascot size={52} mood="idle" lang={lang} />
         </div>
       ) : (
         <div className="h-6" aria-hidden="true" />

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { api } from "@/lib/api";
+import { useT } from "@/lib/i18n";
 
 export default function ConversationPage() {
   return (
@@ -13,6 +14,7 @@ export default function ConversationPage() {
 }
 
 function TalkInner() {
+  const { t } = useT();
   const [status, setStatus] = useState<{ capability: string; reason?: string } | null>(null);
   const [text, setText] = useState("");
   const [log, setLog] = useState<string[]>([]);
@@ -24,16 +26,15 @@ function TalkInner() {
       method: "POST",
       body: JSON.stringify({ attempt_id: "-", exercise_id: "-", message: text }),
     });
-    setLog((l) => [...l, `You: ${text}`, `Biti: ${res.reply || res.capability}`]);
+    setLog((l) => [...l, `${t("conversation.you")}: ${text}`, `${t("conversation.biti")}: ${res.reply || res.capability}`]);
     setText("");
   }
   return (
     <section className="rounded-3xl bg-paper p-6">
-      <h1 className="text-3xl font-semibold">Conversation</h1>
+      <h1 className="text-3xl font-semibold">{t("nav.talk")}</h1>
       {status?.capability !== "ready" ? (
         <p className="mt-3 rounded-2xl bg-sand-deep p-3">
-          Conversation partner is unavailable. {status?.reason || "No OpenAI-compatible endpoint is configured."} Static
-          lesson chat still never awards XP.
+          {t("states.unavailable")} {status?.reason || t("lesson.speechUnavailable")} {t("checkpoint.xpNote")}
         </p>
       ) : null}
       <div className="mt-4 space-y-2">

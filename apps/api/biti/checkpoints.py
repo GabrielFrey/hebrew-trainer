@@ -38,7 +38,7 @@ STAGE_TITLES: dict[str, dict[str, str]] = {
         "en": "Pre-Aleph",
         "ru": "До алефа",
         "he": "טרום-אלף",
-        "uk": "До алефа",
+        "uk": "Перед алефом",
         "es": "Pre-Álef",
         "fr": "Pré-Alef",
     },
@@ -112,7 +112,7 @@ CHECKPOINT_COPY: dict[str, dict[str, Any]] = {
             "he": "80% פותחים את אלף. אפשר לדלג על שיעורים.",
             "uk": "80% відкривають алеф. Можна скласти без усіх уроків.",
             "es": "Un 80% abre Álef. Puedes examinarte sin cada lección.",
-            "fr": "80 % ouvre Alef. Vous pouvez passer sans chaque leçon.",
+            "fr": "80\u00a0% ouvre Alef. Vous pouvez passer sans chaque leçon.",
         },
     },
     "beginner": {
@@ -142,7 +142,7 @@ CHECKPOINT_COPY: dict[str, dict[str, Any]] = {
             "he": "80% פותחים את בית. אפשר לדלג על אלף.",
             "uk": "80% відкривають бет. Можна скласти алеф достроково.",
             "es": "Un 80% abre Bet. Puedes examinarte de Álef antes.",
-            "fr": "80 % ouvre Bet. Vous pouvez valider Alef plus tôt.",
+            "fr": "80\u00a0% ouvre Bet. Vous pouvez valider Alef plus tôt.",
         },
     },
     "elementary": {
@@ -172,7 +172,7 @@ CHECKPOINT_COPY: dict[str, dict[str, Any]] = {
             "he": "80% פותחים את גימל.",
             "uk": "80% відкривають ґімель.",
             "es": "Un 80% abre Guímel.",
-            "fr": "80 % ouvre Guimel.",
+            "fr": "80\u00a0% ouvre Guimel.",
         },
     },
     "intermediate": {
@@ -202,7 +202,7 @@ CHECKPOINT_COPY: dict[str, dict[str, Any]] = {
             "he": "80% פותחים את דלת.",
             "uk": "80% відкривають далет.",
             "es": "Un 80% abre Dálet.",
-            "fr": "80 % ouvre Dalet.",
+            "fr": "80\u00a0% ouvre Dalet.",
         },
     },
     "upper": {
@@ -232,7 +232,7 @@ CHECKPOINT_COPY: dict[str, dict[str, Any]] = {
             "he": "80% פותחים את הא.",
             "uk": "80% відкривають һе.",
             "es": "Un 80% abre He.",
-            "fr": "80 % ouvre Hé.",
+            "fr": "80\u00a0% ouvre Hé.",
         },
     },
     "advanced": {
@@ -262,7 +262,7 @@ CHECKPOINT_COPY: dict[str, dict[str, Any]] = {
             "he": "80% משלימים את המסלול.",
             "uk": "80% завершують мапу курсу.",
             "es": "Un 80% cierra el mapa del curso.",
-            "fr": "80 % clôt le parcours cartographié.",
+            "fr": "80\u00a0% clôt le parcours cartographié.",
         },
     },
 }

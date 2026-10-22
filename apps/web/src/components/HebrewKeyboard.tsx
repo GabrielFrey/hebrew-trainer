@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/lib/i18n";
+
 const ROWS = [
   ["ק", "ר", "א", "ט", "ו", "ן", "ם", "פ"],
   ["ש", "ד", "ג", "כ", "ע", "י", "ח", "ל", "ך", "ף"],
@@ -29,6 +31,7 @@ export function HebrewKeyboard({
   niqqud?: boolean;
   disabled?: boolean;
 }) {
+  const { t } = useT();
   return (
     <div data-testid="hebrew-keyboard" className="space-y-2" dir="rtl">
       <div data-testid="keyboard-preview" className="min-h-14 rounded-2xl border-2 border-line bg-paper px-4 py-2 he text-right">
@@ -77,13 +80,13 @@ export function HebrewKeyboard({
           className="flex-1 rounded-xl border border-line bg-paper py-2"
           onClick={() => onChange(value + " ")}
         >
-          Space
+          {t("keyboard.space")}
         </button>
-        <button type="button" data-testid="key-backspace" className="rounded-xl border border-line bg-sand-deep px-4" onClick={() => onChange(value.slice(0, -1))}>
+        <button type="button" data-testid="key-backspace" className="rounded-xl border border-line bg-sand-deep px-4" aria-label={t("keyboard.backspace")} onClick={() => onChange(value.slice(0, -1))}>
           ⌫
         </button>
         <button type="button" data-testid="key-clear" className="rounded-xl border border-line bg-sand-deep px-4" onClick={() => onChange("")}>
-          Clear
+          {t("keyboard.clear")}
         </button>
       </div>
     </div>

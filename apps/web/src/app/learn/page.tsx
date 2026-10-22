@@ -16,7 +16,7 @@ export default function LearnPage() {
 }
 
 function LearnInner() {
-  const { lang, t } = useT();
+  const { lang, t, tp } = useT();
   const [stages, setStages] = useState<PathStage[]>([]);
   const [nodes, setNodes] = useState<PathNode[]>([]);
   const [currentSlug, setCurrentSlug] = useState<string | null>(null);
@@ -40,7 +40,7 @@ function LearnInner() {
       <h1 className="mb-2 text-3xl font-semibold">{t("nav.learn")}</h1>
       <p className="mb-6 text-ink-soft">{t("path.intro")}</p>
       {stages.length ? (
-        <LearningPath stages={stages} currentSlug={currentSlug} lang={lang} t={t} />
+        <LearningPath stages={stages} currentSlug={currentSlug} lang={lang} t={t} tp={tp} />
       ) : (
         <ol className="grid gap-3 md:grid-cols-2">
           {nodes.map((node, i) => (

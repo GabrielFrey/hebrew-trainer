@@ -25,7 +25,7 @@ type CompleteResult = {
 export default function LessonPage() {
   return (
     <AppShell>
-      <Suspense fallback={<p className="p-8 text-ink-soft">Loading…</p>}>
+      <Suspense fallback={<p className="p-8 text-ink-soft">…</p>}>
         <Player />
       </Suspense>
     </AppShell>
@@ -186,7 +186,7 @@ function Player() {
     if (gate && done.passed) {
       return (
         <div data-testid="checkpoint-pass" className="rounded-3xl border-2 border-correct bg-correct-bg p-6">
-          <BitiMascot mood="happy" />
+          <BitiMascot lang={lang} mood="happy" />
           <p data-testid="feedback-result" className="text-xl font-semibold text-correct">
             <span aria-hidden="true" className="me-2">
               ✓
@@ -197,7 +197,7 @@ function Player() {
           {done.badge ? <p className="text-lg font-medium">{loc(done.badge.title, lang)}</p> : null}
           {done.next_stage_unlocked ? <p>{t("checkpoint.nextOpen")}</p> : null}
           <p>
-            Accuracy {Math.round(done.accuracy * 100)}% · +{done.xp_awarded} XP
+            {t("lesson.scoreLine", { percent: Math.round(done.accuracy * 100), xp: done.xp_awarded })}
           </p>
           <p className="mt-2 text-sm">{t("checkpoint.xpNote")}</p>
         </div>
@@ -206,7 +206,7 @@ function Player() {
     if (gate && !done.passed) {
       return (
         <div data-testid="checkpoint-fail" className="rounded-3xl border-2 border-incorrect bg-incorrect-bg p-6">
-          <BitiMascot mood="sad" />
+          <BitiMascot lang={lang} mood="sad" />
           <p data-testid="feedback-result" className="text-xl font-semibold text-incorrect">
             <span aria-hidden="true" className="me-2">
               ×
@@ -214,7 +214,7 @@ function Player() {
             {t("checkpoint.failed")}
           </p>
           <p>
-            Accuracy {Math.round(done.accuracy * 100)}%
+            {t("lesson.accuracy", { percent: Math.round(done.accuracy * 100) })}
           </p>
           <h2 className="mt-4 font-medium">{t("checkpoint.reviewThese")}</h2>
           <ul data-testid="checkpoint-review" className="mt-2 space-y-2">
@@ -237,10 +237,10 @@ function Player() {
     }
     return (
       <div data-testid="lesson-complete" className="rounded-3xl bg-paper p-6">
-        <BitiMascot mood="happy" />
+        <BitiMascot lang={lang} mood="happy" />
         <h1 className="text-3xl font-semibold">{t("lesson.finish")}</h1>
         <p data-testid="celebration">{t("lesson.celebrate")}</p>
-        <p>Accuracy {Math.round(done.accuracy * 100)}% · +{done.xp_awarded} XP</p>
+        <p>{t("lesson.scoreLine", { percent: Math.round(done.accuracy * 100), xp: done.xp_awarded })}</p>
       </div>
     );
   }
@@ -271,7 +271,7 @@ function Player() {
             className="rounded-full border border-line px-3 py-1 text-sm"
             onClick={() => setNiqqud((v) => !v)}
           >
-            {t("lesson.niqqud")}: {niqqud ? "on" : "off"}
+            {t("lesson.niqqud")}: {niqqud ? t("lesson.niqqudOn") : t("lesson.niqqudOff")}
           </button>
           <button
             type="button"
@@ -279,7 +279,7 @@ function Player() {
             className="rounded-full border border-line px-3 py-1 text-sm"
             onClick={() => setTranslit((v) => !v)}
           >
-            {t("lesson.translit")}: {translit ? "on" : "off"}
+            {t("lesson.translit")}: {translit ? t("lesson.niqqudOn") : t("lesson.niqqudOff")}
           </button>
         </div>
         {lesson.audio.capability === "unavailable" ? (
@@ -323,7 +323,7 @@ function Player() {
         </div>
       </div>
       <aside className="space-y-3">
-        <BitiMascot
+        <BitiMascot lang={lang}
           mood={
             combo > 1 && grade?.result === "correct"
               ? "streak"

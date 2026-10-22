@@ -171,7 +171,7 @@ function Player() {
     if (gate && done.passed) {
       return (
         <View testID="checkpoint-pass" style={{ backgroundColor: palette.correctBg, borderRadius: 24, padding: 20, gap: 8, borderWidth: 2, borderColor: palette.correct }}>
-          <BitiMascot mood="happy" />
+          <BitiMascot lang={lang} mood="happy" />
           <Text testID="feedback-result" style={{ fontSize: 22, fontWeight: "700", color: palette.correct }}>
             ✓ {t(lang, "checkpoint.passed")}
           </Text>
@@ -179,7 +179,7 @@ function Player() {
           {done.badge ? <Text style={{ fontSize: 18, fontWeight: "600" }}>{loc(done.badge.title, lang)}</Text> : null}
           {done.next_stage_unlocked ? <Text>{t(lang, "checkpoint.nextOpen")}</Text> : null}
           <Text>
-            Accuracy {Math.round(done.accuracy * 100)}% · +{done.xp_awarded} XP
+            {t(lang, "lesson.scoreLine", { percent: Math.round(done.accuracy * 100), xp: done.xp_awarded })}
           </Text>
         </View>
       );
@@ -187,11 +187,11 @@ function Player() {
     if (gate && !done.passed) {
       return (
         <View testID="checkpoint-fail" style={{ backgroundColor: palette.incorrectBg, borderRadius: 24, padding: 20, gap: 8, borderWidth: 2, borderColor: palette.incorrect }}>
-          <BitiMascot mood="sad" />
+          <BitiMascot lang={lang} mood="sad" />
           <Text testID="feedback-result" style={{ fontSize: 22, fontWeight: "700", color: palette.incorrect }}>
             × {t(lang, "checkpoint.failed")}
           </Text>
-          <Text>Accuracy {Math.round(done.accuracy * 100)}%</Text>
+          <Text>{t(lang, "lesson.accuracy", { percent: Math.round(done.accuracy * 100) })}</Text>
           <Text style={{ fontWeight: "600" }}>{t(lang, "checkpoint.reviewThese")}</Text>
           <View testID="checkpoint-review">
             {(done.review || []).map((item) => (
@@ -206,10 +206,10 @@ function Player() {
     }
     return (
       <View testID="lesson-complete" style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 20, gap: 8 }}>
-        <BitiMascot mood="happy" />
+        <BitiMascot lang={lang} mood="happy" />
         <Text style={{ fontSize: 28, fontWeight: "700", color: palette.ink }}>{t(lang, "lesson.finish")}</Text>
         <Text style={{ color: palette.ink }}>
-          Accuracy {Math.round(done.accuracy * 100)}% · +{done.xp_awarded} XP
+          {t(lang, "lesson.scoreLine", { percent: Math.round(done.accuracy * 100), xp: done.xp_awarded })}
         </Text>
       </View>
     );
@@ -232,12 +232,12 @@ function Player() {
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
           <Pressable testID="toggle-niqqud" onPress={() => setNiqqud((v) => !v)} style={chip(palette)}>
             <Text style={{ color: palette.ink }}>
-              {t(lang, "lesson.niqqud")}: {niqqud ? "on" : "off"}
+              {t(lang, "lesson.niqqud")}: {niqqud ? t(lang, "lesson.niqqudOn") : t(lang, "lesson.niqqudOff")}
             </Text>
           </Pressable>
           <Pressable testID="toggle-translit" onPress={() => setTranslit((v) => !v)} style={chip(palette)}>
             <Text style={{ color: palette.ink }}>
-              {t(lang, "lesson.translit")}: {translit ? "on" : "off"}
+              {t(lang, "lesson.translit")}: {translit ? t(lang, "lesson.niqqudOn") : t(lang, "lesson.niqqudOff")}
             </Text>
           </Pressable>
         </View>
@@ -279,7 +279,7 @@ function Player() {
         </View>
       </View>
       <View style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 16, gap: 8 }}>
-        <BitiMascot
+        <BitiMascot lang={lang}
           mood={
             grade?.result === "correct" ? "happy" : grade?.result === "almost" ? "think" : grade ? "sad" : "idle"
           }

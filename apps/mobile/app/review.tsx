@@ -36,7 +36,7 @@ function ReviewInner() {
     return (
       <View testID="review-empty" style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 20, gap: 8 }}>
         <Text style={{ fontSize: 28, fontWeight: "700", color: palette.ink }}>{t(lang, "nav.review")}</Text>
-        <Text style={{ color: palette.inkSoft }}>{t(lang, "states.empty")} SRS uses 1 / 3 / 7 / 14 / 30 days.</Text>
+        <Text style={{ color: palette.inkSoft }}>{t(lang, "states.empty")} {t(lang, "review.srsHint")}</Text>
       </View>
     );
   }

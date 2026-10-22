@@ -1,0 +1,14 @@
+Name: Biti Ivrit
+Subtitle: Hebreo moderno, del álef a la vida real
+Keywords: hebreo,hebreo moderno,ulpan,Israel,alfabeto,niqqud,aliyá
+
+Description:
+Biti Ivrit enseña hebreo israelí moderno en lecciones cortas, corregidas en el servidor. Sigue a Biti por un sendero que va de las primeras letras al habla cotidiana.
+
+Empiezas por el alfabeto, las primeras palabras y frases mínimas, y avanzas por los niveles de ulpán (pre-álef, álef, bet, guímel, dálet, he). Cada etapa termina en una puerta que también sirve para examinarte antes.
+
+Las lecciones mezclan escritura en hebreo, opción múltiple y emparejamiento. El corrector es determinista. El tutor de IA, opcional, explica errores y nunca da XP.
+
+El audio y la práctica oral aparecen solo si hay un servicio configurado. Hasta entonces, esos ejercicios quedan honestamente no disponibles, sin notas inventadas.
+
+El texto en español está en revisión hasta que lo firme un nativo.

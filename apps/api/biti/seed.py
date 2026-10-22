@@ -205,7 +205,7 @@ def _script_lessons() -> list[dict]:
             "title": title,
             "objective": _loc(
                 f"Recognize and type {letters[0][0]}–{letters[-1][0]}.",
-                f"Узнать и набрать {letters[0][0]}–{letters[-1][0]}.",
+                f"Распознать и набрать {letters[0][0]}–{letters[-1][0]}.",
                 f"לזהות ולהקליד {letters[0][0]}–{letters[-1][0]}.",
             ),
             "explanation": _loc(
@@ -218,14 +218,14 @@ def _script_lessons() -> list[dict]:
         }
 
     sofiyot = [
-        ("ך", "כ", "kaf sofit"),
-        ("ם", "מ", "mem sofit"),
-        ("ן", "נ", "nun sofit"),
-        ("ף", "פ", "pe sofit"),
-        ("ץ", "צ", "tsadi sofit"),
+        ("ך", "כ", "kaf sofit", "каф софит"),
+        ("ם", "מ", "mem sofit", "мем софит"),
+        ("ן", "נ", "nun sofit", "нун софит"),
+        ("ף", "פ", "pe sofit", "пе софит"),
+        ("ץ", "צ", "tsadi sofit", "цади софит"),
     ]
     sof_ex = []
-    for i, (fin, reg, name) in enumerate(sofiyot, 1):
+    for i, (fin, reg, name, ru_name) in enumerate(sofiyot, 1):
         sof_ex.append(
             _mc(
                 f"sofit-{i}",
@@ -237,7 +237,7 @@ def _script_lessons() -> list[dict]:
         sof_ex.append(
             _type(
                 f"type-sofit-{i}",
-                _loc(f"Type the final letter {name}", f"Наберите конечную {name}", f"הקלידו {fin}"),
+                _loc(f"Type the final letter {name}", f"Наберите конечную {ru_name}", f"הקלידו {fin}"),
                 [fin],
                 mode="strict_finals",
                 keyboard=True,
@@ -345,7 +345,7 @@ def _script_lessons() -> list[dict]:
                 "Пять букв меняют форму в конце слова. Проверка строгая: обычная форма не засчитывается.",
                 "חמש אותיות משנות צורה בסוף מילה.",
             ),
-            "vocabulary": [_vocab(f, f, n, n, n) for f, _r, n in sofiyot],
+            "vocabulary": [_vocab(f, f, en, ru, en) for f, _r, en, ru in sofiyot],
             "exercises": sof_ex,
         },
         look,
@@ -496,7 +496,7 @@ def _grammar_lessons() -> list[dict]:
                 _type("type-root", _loc("Type the root letters כתב", "Наберите корень כתב", "הקלידו כתב"), ["כתב"], mode="strict_root", keyboard=True),
                 _mc("related", _loc("Which word shares כ־ת־ב?", "Какое слово с корнем כ־ת־ב?", "איזו מילה עם כ־ת־ב?"), [{"id": "לכתוב", "he": "לכתוב"}, {"id": "כלב", "he": "כלב"}], "לכתוב"),
                 _type("miktav", _loc("Type letter (mail)", "Наберите «письмо»", "הקלידו מכתב"), ["מכתב"], keyboard=True),
-                _mc("three", _loc("A typical shoresh has…", "Обычный шореш состоит из…", "שורש טיפוסי"), [{"id": "3", "en": "3 letters", "ru": "3 букв"}, {"id": "1", "en": "1 letter", "ru": "1 буквы"}], "3"),
+                _mc("three", _loc("A typical shoresh has…", "Обычный шореш состоит из…", "שורש טיפוסי"), [{"id": "3", "en": "3 letters", "ru": "3 буквы"}, {"id": "1", "en": "1 letter", "ru": "1 буква"}], "3"),
                 _speak("say-ktv", _loc("Say the root", "Произнесите корень", "אמרו את השורש")),
             ],
         },
@@ -677,11 +677,11 @@ def _convo_lessons() -> list[dict]:
             30,
             "מה שמך",
             [
-                ("שלום, מה שמך", "שָׁלוֹם, מַה שִּׁמְךָ", "hello, what is your name (m)"),
-                ("קוראים לי", "קוֹרְאִים לִי", "my name is"),
-                ("נעים מאוד", "נָעִים מְאֹד", "nice to meet you"),
-                ("אני מרוסיה", "אֲנִי מֵרוּסְיָה", "I am from Russia"),
-                ("אני גר בתל אביב", "אֲנִי גָּר בְּתֵל אָבִיב", "I live in Tel Aviv (m)"),
+                ("שלום, מה שמך", "שָׁלוֹם, מַה שִּׁמְךָ", "shalom, ma shimkha", "привет, как тебя зовут (м.)", "hello, what is your name (m)"),
+                ("קוראים לי", "קוֹרְאִים לִי", "kor'im li", "меня зовут", "my name is"),
+                ("נעים מאוד", "נָעִים מְאֹד", "na'im me'od", "очень приятно", "nice to meet you"),
+                ("אני מרוסיה", "אֲנִי מֵרוּסְיָה", "ani me-rusya", "я из России", "I am from Russia"),
+                ("אני גר בתל אביב", "אֲנִי גָּר בְּתֵל אָבִיב", "ani gar be-tel aviv", "я живу в Тель-Авиве (м.)", "I live in Tel Aviv (m)"),
             ],
         ),
         (
@@ -691,11 +691,11 @@ def _convo_lessons() -> list[dict]:
             31,
             "כמה זה עולה",
             [
-                ("יש לך עגבניות", "יֵשׁ לְךָ עַגְבָנִיּוֹת", "do you have tomatoes"),
-                ("כמה זה עולה", "כַּמָּה זֶה עוֹלֶה", "how much is it"),
-                ("אפשר קילו", "אֶפְשָׁר קִילוֹ", "can I have a kilo"),
-                ("בבקשה", "בְּבַקָּשָׁה", "please"),
-                ("תודה רבה", "תּוֹדָה רַבָּה", "thank you very much"),
+                ("יש לך עגבניות", "יֵשׁ לְךָ עַגְבָנִיּוֹת", "yesh lekha agvaniyot", "у тебя есть помидоры", "do you have tomatoes"),
+                ("כמה זה עולה", "כַּמָּה זֶה עוֹלֶה", "kama ze ole", "сколько это стоит", "how much is it"),
+                ("אפשר קילו", "אֶפְשָׁר קִילוֹ", "efshar kilo", "можно кило", "can I have a kilo"),
+                ("בבקשה", "בְּבַקָּשָׁה", "bevakasha", "пожалуйста", "please"),
+                ("תודה רבה", "תּוֹדָה רַבָּה", "toda raba", "большое спасибо", "thank you very much"),
             ],
         ),
         (
@@ -705,11 +705,11 @@ def _convo_lessons() -> list[dict]:
             32,
             "איפה האוטובוס",
             [
-                ("איפה התחנה", "אֵיפֹה הַתַּחֲנָה", "where is the stop"),
-                ("אוטובוס", "אוֹטוֹבּוּס", "bus"),
-                ("רכבת", "רַכֶּבֶת", "train"),
-                ("כרטיס", "כַּרְטִיס", "ticket"),
-                ("מתי האוטובוס הבא", "מָתַי הָאוֹטוֹבּוּס הַבָּא", "when is the next bus"),
+                ("איפה התחנה", "אֵיפֹה הַתַּחֲנָה", "efo ha-tahana", "где остановка", "where is the stop"),
+                ("אוטובוס", "אוֹטוֹבּוּס", "otobus", "автобус", "bus"),
+                ("רכבת", "רַכֶּבֶת", "rakevet", "поезд", "train"),
+                ("כרטיס", "כַּרְטִיס", "kartis", "билет", "ticket"),
+                ("מתי האוטובוס הבא", "מָתַי הָאוֹטוֹבּוּס הַבָּא", "matai ha-otobus ha-ba", "когда следующий автобус", "when is the next bus"),
             ],
         ),
         (
@@ -719,11 +719,11 @@ def _convo_lessons() -> list[dict]:
             33,
             "אפשר קפה",
             [
-                ("אפשר קפה", "אֶפְשָׁר קָפֶה", "can I have a coffee"),
-                ("תה", "תֵּה", "tea"),
-                ("מים", "מַיִם", "water"),
-                ("חשבון", "חֶשְׁבּוֹן", "the bill"),
-                ("בלי סוכר", "בְּלִי סֻכָּר", "without sugar"),
+                ("אפשר קפה", "אֶפְשָׁר קָפֶה", "efshar kafe", "можно кофе", "can I have a coffee"),
+                ("תה", "תֵּה", "te", "чай", "tea"),
+                ("מים", "מַיִם", "mayim", "вода", "water"),
+                ("חשבון", "חֶשְׁבּוֹן", "heshbon", "счёт", "the bill"),
+                ("בלי סוכר", "בְּלִי סֻכָּר", "bli sukar", "без сахара", "without sugar"),
             ],
         ),
         (
@@ -733,11 +733,11 @@ def _convo_lessons() -> list[dict]:
             34,
             "הלו",
             [
-                ("הלו", "הָלוֹ", "hello (phone)"),
-                ("מי מדבר", "מִי מְדַבֵּר", "who is speaking"),
-                ("אפשר לדבר עם", "אֶפְשָׁר לְדַבֵּר עִם", "may I speak with"),
-                ("אני אתקשר אחר כך", "אֲנִי אֶתְקַשֵּׁר אַחַר כָּךְ", "I will call later"),
-                ("להתראות", "לְהִתְרָאוֹת", "goodbye"),
+                ("הלו", "הָלוֹ", "halo", "алло", "hello (phone)"),
+                ("מי מדבר", "מִי מְדַבֵּר", "mi medaber", "кто говорит", "who is speaking"),
+                ("אפשר לדבר עם", "אֶפְשָׁר לְדַבֵּר עִם", "efshar ledaber im", "можно поговорить с", "may I speak with"),
+                ("אני אתקשר אחר כך", "אֲנִי אֶתְקַשֵּׁר אַחַר כָּךְ", "ani etkasher ahar kakh", "я перезвоню потом", "I will call later"),
+                ("להתראות", "לְהִתְרָאוֹת", "lehitraot", "до свидания", "goodbye"),
             ],
         ),
         (
@@ -747,11 +747,11 @@ def _convo_lessons() -> list[dict]:
             35,
             "צריך עזרה",
             [
-                ("צריך עזרה", "צָרִיךְ עֶזְרָה", "I need help (m)"),
-                ("משטרה", "מִשְׁטָרָה", "police"),
-                ("אמבולנס", "אַמְבּוּלַנְס", "ambulance"),
-                ("אבדתי", "אָבַדְתִּי", "I am lost"),
-                ("לא מרגיש טוב", "לֹא מַרְגִּישׁ טוֹב", "I don't feel well (m)"),
+                ("צריך עזרה", "צָרִיךְ עֶזְרָה", "tsarikh ezra", "нужна помощь (м.)", "I need help (m)"),
+                ("משטרה", "מִשְׁטָרָה", "mishtara", "полиция", "police"),
+                ("אמבולנס", "אַמְבּוּלַנְס", "ambulans", "скорая", "ambulance"),
+                ("אבדתי", "אָבַדְתִּי", "avadeti", "я потерялся / потерялась", "I am lost"),
+                ("לא מרגיש טוב", "לֹא מַרְגִּישׁ טוֹב", "lo margish tov", "мне плохо (м.)", "I don't feel well (m)"),
             ],
         ),
     ]
@@ -760,9 +760,9 @@ def _convo_lessons() -> list[dict]:
         exercises = [
             _type("key-phrase", _loc("Type the key phrase", "Наберите ключевую фразу", "הקלידו את המשפט המפתח"), [key, lines[0][0]], keyboard=True),
         ]
-        for i, (he, pointed, en) in enumerate(lines[:4], 1):
-            exercises.append(_mc(f"mean-{i}", _loc(f"Meaning of {he}", f"Значение {he}", he), [{"id": en, "en": en}, {"id": "x", "en": "goodbye" if en != "goodbye" else "hello"}], en))
-            exercises.append(_type(f"type-{i}", _loc(f"Type: {en}", f"Наберите: {en}", "הקלידו"), [he], keyboard=True))
+        for i, (he, pointed, _tr, ru, en) in enumerate(lines[:4], 1):
+            exercises.append(_mc(f"mean-{i}", _loc(f"Meaning of {he}", f"Значение {he}", he), [{"id": en, "en": en, "ru": ru}, {"id": "x", "en": "goodbye" if en != "goodbye" else "hello", "ru": "до свидания" if en != "goodbye" else "привет"}], en))
+            exercises.append(_type(f"type-{i}", _loc(f"Type: {en}", f"Наберите: {ru}", f"הקלידו {he}"), [he], keyboard=True))
         exercises.append(_order("order", _loc("Order the greeting", "Соберите приветствие", "סדרו שלום"), ["שלום"], ["שלום"]))
         exercises.append(_listen("listen", _loc("Tap the phrase (audio optional)", "Нажмите фразу", "לחצו על המשפט"), lines[0][0]))
         exercises.append(_speak("say", _loc("Say the key phrase", "Скажите ключевую фразу", "אמרו את המשפט")))
@@ -781,7 +781,7 @@ def _convo_lessons() -> list[dict]:
                     "Как в ульпане: сначала целая реплика, потом части. Аудирование необязательно без TTS.",
                     "קודם משפט שלם, אחר כך החלקים.",
                 ),
-                "vocabulary": [_vocab(he, pointed, en, en, en) for he, pointed, en in lines],
+                "vocabulary": [_vocab(he, pointed, tr, ru, en) for he, pointed, tr, ru, en in lines],
                 "exercises": exercises[:10],
             }
         )

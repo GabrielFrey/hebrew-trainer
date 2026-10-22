@@ -51,7 +51,7 @@ export function Shell({ children }: { children: ReactNode }) {
       >
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-            <BitiMascot size={40} />
+            <BitiMascot size={40} lang={lang} />
             <View>
               <Text testID="brand-name" style={{ fontSize: 18, fontWeight: "700", color: palette.ink }}>
                 {t(lang, "brand.name")}

@@ -1,4 +1,6 @@
 import { Pressable, Text, View } from "react-native";
+import { useAuth } from "@/lib/auth";
+import { t } from "@/lib/i18n";
 import { usePalette } from "@/lib/theme";
 
 const ROWS = [
@@ -31,6 +33,7 @@ export function HebrewKeyboard({
   disabled?: boolean;
 }) {
   const palette = usePalette();
+  const { lang } = useAuth();
   const keyStyle = {
     minWidth: 40,
     minHeight: 44,
@@ -106,14 +109,14 @@ export function HebrewKeyboard({
         </View>
       ) : null}
       <View style={{ flexDirection: "row", gap: 8 }}>
-        <Pressable testID="key-space" accessibilityRole="button" accessibilityLabel="Space" onPress={() => onChange(value + " ")} style={[keyStyle, { flex: 1 }]}>
-          <Text>Space</Text>
+        <Pressable testID="key-space" accessibilityRole="button" accessibilityLabel={t(lang, "keyboard.space")} onPress={() => onChange(value + " ")} style={[keyStyle, { flex: 1 }]}>
+          <Text>{t(lang, "keyboard.space")}</Text>
         </Pressable>
-        <Pressable testID="key-backspace" accessibilityRole="button" accessibilityLabel="Backspace" onPress={() => onChange(value.slice(0, -1))} style={keyStyle}>
+        <Pressable testID="key-backspace" accessibilityRole="button" accessibilityLabel={t(lang, "keyboard.backspace")} onPress={() => onChange(value.slice(0, -1))} style={keyStyle}>
           <Text>⌫</Text>
         </Pressable>
-        <Pressable testID="key-clear" accessibilityRole="button" accessibilityLabel="Clear" onPress={() => onChange("")} style={keyStyle}>
-          <Text>Clear</Text>
+        <Pressable testID="key-clear" accessibilityRole="button" accessibilityLabel={t(lang, "keyboard.clear")} onPress={() => onChange("")} style={keyStyle}>
+          <Text>{t(lang, "keyboard.clear")}</Text>
         </Pressable>
       </View>
     </View>

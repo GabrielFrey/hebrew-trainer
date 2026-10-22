@@ -5,7 +5,7 @@ import { BitiMascot } from "@/components/BitiMascot";
 import { useShellScroll } from "@/components/Shell";
 import Svg, { Path } from "@/components/svg";
 import type { PathNode, PathStage, UiLang } from "@/lib/api";
-import { loc, t } from "@/lib/i18n";
+import { loc, t, tp } from "@/lib/i18n";
 import { usePalette } from "@/lib/theme";
 
 type NodeState = "locked" | "available" | "current" | "completed";
@@ -129,7 +129,7 @@ export function LearningPath({
               ))}
               {stage.planned_count > 0 ? (
                 <Text style={{ position: "absolute", bottom: 4, alignSelf: "center", color: palette.inkSoft, fontSize: 12 }}>
-                  ··· {stage.planned_count} {t(lang, "path.morePlanned")}
+                  ··· {tp(lang, "path.morePlanned", stage.planned_count)}
                 </Text>
               ) : null}
             </View>
@@ -168,7 +168,7 @@ function TrailNode({
     state === "completed" ? palette.gold : state === "current" || state === "available" ? (gate ? palette.pomegranate : palette.indigo) : palette.line;
   return (
     <View>
-      {state === "current" ? <BitiMascot size={48} mood="idle" /> : <View style={{ height: 20 }} />}
+      {state === "current" ? <BitiMascot size={48} mood="idle" lang={lang} /> : <View style={{ height: 20 }} />}
       <Pressable
         testID={`path-${node.slug}`}
         accessibilityRole="button"

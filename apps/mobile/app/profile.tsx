@@ -4,6 +4,7 @@ import { router } from "expo-router";
 import { Shell } from "@/components/Shell";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { t } from "@/lib/i18n";
 import { getQueue } from "@/lib/offline";
 import { usePalette } from "@/lib/theme";
 
@@ -17,7 +18,7 @@ export default function Profile() {
 
 function ProfileInner() {
   const palette = usePalette();
-  const { user, signOut, refresh } = useAuth();
+  const { user, signOut, refresh, lang } = useAuth();
   const [meta, setMeta] = useState<Record<string, unknown> | null>(null);
   const [queueBackend, setQueueBackend] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +29,7 @@ function ProfileInner() {
       .catch((e) => setError(String(e.message)));
     getQueue().then((q) => setQueueBackend(q.backend));
   }, [refresh]);
-  if (!user) return <Text>Loading…</Text>;
+  if (!user) return <Text>{t(lang, "states.loading")}</Text>;
   return (
     <View testID="profile" style={{ gap: 12 }}>
       <View style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 20, gap: 8 }}>
