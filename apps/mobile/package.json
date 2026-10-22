@@ -9,6 +9,7 @@
     "ios": "expo start --ios",
     "android": "expo start --android",
     "typecheck": "tsc --noEmit",
+    "test:offline": "node --experimental-strip-types --experimental-detect-module --test ../../packages/grading/test/offline-flow.test.ts",
     "export:web": "expo export --platform web",
     "export:ios": "expo export --platform ios",
     "export:android": "expo export --platform android",
@@ -16,6 +17,8 @@
   },
   "dependencies": {
     "@biti/design-tokens": "*",
+    "@biti/grading": "*",
+    "@biti/hebrew-text": "*",
     "@biti/i18n": "*",
     "@expo-google-fonts/noto-sans-hebrew": "^0.4.1",
     "expo": "^58.0.17",

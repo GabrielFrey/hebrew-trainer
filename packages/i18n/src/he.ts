@@ -32,6 +32,15 @@ export const he = {
     courseHeEn: "עברית–אנגלית",
     courseHeEs: "עברית–ספרדית",
     courseHeFr: "עברית–צרפתית",
+    retry: "לנסות שוב",
+    workingOffline: "עובדים בלי שרת. השיעורים במכשיר ויתואמו כש־{host} יהיה זמין.",
+    demoNote: "כניסת הדגמה לפיתוח בלבד. בייצור נדרש OIDC.",
+  },
+  placement: {
+    title: "מבחן שיבוץ קצר",
+    hint: "אפשר לדלג. מקלידים עברית — תעתיק לא נבדק.",
+    submit: "שליחה",
+    skip: "דילוג",
   },
   chrome: {
     skipToContent: "דלגו לתוכן",
@@ -108,6 +117,7 @@ export const he = {
     unavailable: "האפשרות אינה זמינה.",
     error: "משהו השתבש.",
     empty: "אין מה להציג.",
+    retry: "לנסות שוב",
   },
   keyboard: { space: "רווח", backspace: "מחיקה", niqqud: "ניקוד", clear: "ניקוי" },
   practice: {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { LearningPath } from "@/components/LearningPath";
 import { Shell } from "@/components/Shell";
 import { api, type PathNode, type PathStage } from "@/lib/api";
@@ -33,7 +33,30 @@ function LearnInner() {
       .catch((e) => setError(String(e.message)));
   }, []);
 
-  if (error) return <Text style={{ color: palette.incorrect }}>{error}</Text>;
+  if (error) {
+    return (
+      <View style={{ gap: 12 }}>
+        <Text testID="learn-error" style={{ color: palette.incorrect }}>
+          {error}
+        </Text>
+        <Pressable
+          testID="learn-retry"
+          onPress={() => {
+            setError(null);
+            api<{ stages?: PathStage[]; nodes: PathNode[]; current_slug?: string }>("/curriculum/path")
+              .then((d) => {
+                setStages(d.stages || []);
+                setNodes(d.nodes);
+                setCurrentSlug(d.current_slug || null);
+              })
+              .catch((e) => setError(String(e.message)));
+          }}
+        >
+          <Text style={{ color: palette.indigo, fontWeight: "600" }}>{t(lang, "onboarding.retry")}</Text>
+        </Pressable>
+      </View>
+    );
+  }
   if (!nodes.length && !stages.length) return <Text>{t(lang, "states.loading")}</Text>;
 
   return (

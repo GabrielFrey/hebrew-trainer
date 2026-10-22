@@ -32,6 +32,15 @@ export const es = {
     courseHeEn: "Hebreo–inglés",
     courseHeEs: "Hebreo–español",
     courseHeFr: "Hebreo–francés",
+    retry: "Reintentar",
+    workingOffline: "Sin servidor. Las lecciones están en el dispositivo y se sincronizarán cuando {host} esté disponible.",
+    demoNote: "El acceso de demostración es solo para desarrollo. En producción hace falta OIDC.",
+  },
+  placement: {
+    title: "Prueba corta de nivel",
+    hint: "Se puede omitir. Escribe hebreo: la transliteración no se evalúa.",
+    submit: "Enviar",
+    skip: "Omitir",
   },
   chrome: {
     skipToContent: "Saltar al contenido",
@@ -108,6 +117,7 @@ export const es = {
     unavailable: "Esta función no está disponible.",
     error: "Algo salió mal.",
     empty: "Nada por ahora.",
+    retry: "Reintentar",
   },
   keyboard: { space: "Espacio", backspace: "Borrar", niqqud: "Niqqud", clear: "Borrar todo" },
   practice: {

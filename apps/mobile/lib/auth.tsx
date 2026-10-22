@@ -1,5 +1,6 @@
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { api, clearToken, demoLogin, hydrateToken, replayOffline, type User } from "./api";
+import { api, clearToken, demoLogin, hydrateToken, peekSession, replayOffline, type User } from "./api";
+import { deviceUiLang } from "./device-lang";
 import { type UiLang } from "./i18n";
 
 type AuthCtx = {
@@ -28,8 +29,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(me);
       await replayOffline();
     } catch {
-      clearToken();
-      setUser(null);
+      const local = peekSession()?.user;
+      if (local) setUser(local);
+      else {
+        clearToken();
+        setUser(null);
+      }
     }
   }, []);
 
@@ -41,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       user,
       ready,
-      lang: user?.ui_language || "ru",
+      lang: user?.ui_language || deviceUiLang(),
       refresh,
       async enter(body) {
         const next = await demoLogin(body);

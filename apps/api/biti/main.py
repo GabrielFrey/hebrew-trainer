@@ -3,6 +3,10 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 from typing import Any
 
+from biti.compat import require_supported_python
+
+require_supported_python()
+
 from fastapi import Depends, FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field

@@ -16,19 +16,23 @@ The learn path is a winding trail of lesson nodes grouped into ulpan stages (Pre
 | Web | `npm --prefix apps/web run dev` | http://127.0.0.1:43181 |
 | Mobile (Expo SDK 58 / RN 0.88, Expo Go) | `npm --prefix apps/mobile install && EXPO_PUBLIC_API_URL=http://127.0.0.1:43180 npx --prefix apps/mobile expo start --web --port 43182` | Expo Go / emulator |
 
-Android emulator API URL: `http://10.0.2.2:43180`. iOS simulator: `http://127.0.0.1:43180`. Physical device: your LAN IP.
+Android emulator API URL: `http://10.0.2.2:43180`. iOS simulator: `http://127.0.0.1:43180`. Physical device: the app uses the Expo packager LAN IP automatically (for example `http://192.168.1.131:43180`). Do not point a phone at `127.0.0.1`.
 
 This workspace has **no Docker daemon**. Compose files are in `infra/compose/`. Locally the API uses **SQLite** (`BITI_DATABASE_URL=sqlite:///…`). SQLite is rejected when `BITI_ENV=production`.
 
 ## First-time setup
 
+Use **Python 3.12 or 3.13** for the API. Python 3.15 (including alphas) is not supported: `anyio`/`FastAPI` fail to import (`NameError: sentinel`). `requires-python` is `>=3.12,<3.15`.
+
 ```bash
-python3 -m venv apps/api/.venv
+python3.12 -m venv apps/api/.venv   # or python3.13
 apps/api/.venv/bin/pip install -r apps/api/requirements.txt
 cp .env.example .env
 npm --prefix apps/web install
 apps/api/.venv/bin/pytest apps/api/tests
 ```
+
+On a physical phone, Expo Go talks to Metro on your Mac’s LAN IP. The mobile app derives the API host from that packager address (port **43180**) instead of `127.0.0.1`. If the API is not running, onboarding, the placement test, and published lessons still work **offline** from the bundled catalog and sync later.
 
 Demo login is **development-only**. The process refuses to start if `BITI_DEMO_MODE=true` and `BITI_ENV=production`.
 
@@ -83,7 +87,9 @@ rm -f data/local/*.sqlite
 
 ## Tests / CI
 
-`apps/api/.venv/bin/pytest apps/api/tests` — grading vectors, answer non-leak, XP-once, AI-never-XP, seed ≥24 lessons, unpublishable drafts.
+`apps/api/.venv/bin/pytest apps/api/tests` — grading vectors, answer non-leak, XP-once, AI-never-XP, seed ≥24 lessons, unpublishable drafts, offline onboarding → placement → first lesson.
+
+`npm --prefix apps/mobile run test:offline` — on-device grading of the bundled catalog (API not required).
 
 CI: `.github/workflows/ci.yml` (ruff, pytest, OpenAPI export, web lint/build, Playwright + axe). Native device jobs are not wired — marked unverified.
 

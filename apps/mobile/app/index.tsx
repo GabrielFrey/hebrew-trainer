@@ -1,32 +1,41 @@
 import { router } from "expo-router";
-import { useState } from "react";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { useMemo, useState } from "react";
+import { Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { initialWindowMetrics, useSafeAreaInsets } from "react-native-safe-area-context";
 import { BitiMascot } from "@/components/BitiMascot";
+import { connectionState, lastApiHost } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { COURSE_FOR_LANG, deviceUiLang } from "@/lib/device-lang";
 import { t, type UiLang } from "@/lib/i18n";
 import { usePalette } from "@/lib/theme";
 
-const LANGS: { code: UiLang; label: string; course: string }[] = [
-  { code: "ru", label: "Русский", course: "he-ru" },
-  { code: "en", label: "English", course: "he-en" },
-  { code: "uk", label: "Українська", course: "he-uk" },
-  { code: "es", label: "Español", course: "he-es" },
-  { code: "fr", label: "Français", course: "he-fr" },
+const LANGS: { code: UiLang; label: string }[] = [
+  { code: "en", label: "English" },
+  { code: "ru", label: "Русский" },
+  { code: "uk", label: "Українська" },
+  { code: "es", label: "Español" },
+  { code: "fr", label: "Français" },
 ];
 
 export default function Onboarding() {
   const palette = usePalette();
+  const insets = useSafeAreaInsets();
+  const topInset = Math.max(insets.top, initialWindowMetrics?.insets.top ?? 0, Platform.OS === "ios" ? 54 : 0);
+  const bottomInset = Math.max(insets.bottom, initialWindowMetrics?.insets.bottom ?? 0);
   const { enter } = useAuth();
-  const [lang, setLang] = useState<UiLang>("ru");
-  const [course, setCourse] = useState("he-ru");
+  const initialLang = useMemo(() => deviceUiLang(), []);
+  const [lang, setLang] = useState<UiLang>(initialLang);
+  const [course, setCourse] = useState(COURSE_FOR_LANG[initialLang]);
   const [motivation, setMotivation] = useState("aliyah");
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [offlineNote, setOfflineNote] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   async function go(to: "/learn" | "/placement") {
     setBusy(true);
     setError(null);
+    setOfflineNote(null);
     try {
       await enter({
         ui_language: lang,
@@ -34,6 +43,9 @@ export default function Onboarding() {
         motivation,
         course_id: course,
       });
+      if (connectionState() === "offline") {
+        setOfflineNote(t(lang, "onboarding.workingOffline", { host: lastApiHost() }));
+      }
       router.replace(to);
     } catch (err) {
       setError(err instanceof Error ? err.message : t(lang, "onboarding.couldNotStart"));
@@ -52,22 +64,36 @@ export default function Onboarding() {
   });
 
   return (
-    <ScrollView testID="onboarding" contentContainerStyle={{ padding: 24, gap: 16, backgroundColor: palette.sand }}>
-      <BitiMascot mood="happy" size={96} lang={lang} />
+    <ScrollView
+      testID="onboarding"
+      contentContainerStyle={{
+        paddingTop: topInset + 20,
+        paddingBottom: bottomInset + 32,
+        paddingHorizontal: 24,
+        gap: 16,
+        backgroundColor: palette.sand,
+      }}
+    >
+      <View testID="onboarding-hero" style={{ alignItems: "flex-start", marginTop: 8 }}>
+        <BitiMascot mood="happy" size={96} lang={lang} />
+      </View>
       <Text testID="onboarding-title" style={{ fontSize: 32, fontWeight: "700", color: palette.ink }}>
         {t(lang, "onboarding.title")}
+      </Text>
+      <Text testID="brand-name-start" style={{ fontSize: 18, color: palette.inkSoft }}>
+        {t(lang, "brand.name")}
       </Text>
       <Text style={{ fontSize: 18, color: palette.inkSoft }}>{t(lang, "brand.tagline")}</Text>
       <Text style={{ fontWeight: "600", color: palette.ink }}>{t(lang, "onboarding.language")}</Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-        {LANGS.map(({ code, label, course: cid }) => (
+        {LANGS.map(({ code, label }) => (
           <Pressable
             key={code}
             testID={`lang-${code}`}
             accessibilityRole="button"
             onPress={() => {
               setLang(code);
-              setCourse(cid);
+              setCourse(COURSE_FOR_LANG[code]);
             }}
             style={chip(lang === code)}
           >
@@ -125,10 +151,25 @@ export default function Onboarding() {
           </Pressable>
         ))}
       </View>
-      {error ? (
-        <Text testID="onboarding-error" style={{ color: palette.incorrect }}>
-          {error}
+      {offlineNote ? (
+        <Text testID="onboarding-offline" style={{ color: palette.almost }}>
+          {offlineNote}
         </Text>
+      ) : null}
+      {error ? (
+        <View style={{ gap: 8 }}>
+          <Text testID="onboarding-error" style={{ color: palette.incorrect }}>
+            {error}
+          </Text>
+          <Pressable
+            testID="onboarding-retry"
+            accessibilityRole="button"
+            onPress={() => go("/learn")}
+            style={{ borderWidth: 1, borderColor: palette.line, padding: 12, borderRadius: 999 }}
+          >
+            <Text style={{ textAlign: "center", color: palette.ink }}>{t(lang, "onboarding.retry")}</Text>
+          </Pressable>
+        </View>
       ) : null}
       <Pressable
         testID="start-alef"
@@ -148,7 +189,7 @@ export default function Onboarding() {
       >
         <Text style={{ color: palette.ink, textAlign: "center" }}>{t(lang, "onboarding.placement")}</Text>
       </Pressable>
-      <Text style={{ fontSize: 13, color: palette.inkSoft }}>Demo sign-in is development-only. Production requires OIDC.</Text>
+      <Text style={{ fontSize: 13, color: palette.inkSoft }}>{t(lang, "onboarding.demoNote")}</Text>
     </ScrollView>
   );
 }

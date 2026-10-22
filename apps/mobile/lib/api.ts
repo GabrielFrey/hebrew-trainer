@@ -1,62 +1,31 @@
-import { Platform } from "react-native";
 import { drainQueue } from "./offline";
-import { loadToken, saveToken } from "./tokens";
+import { apiHostLabel, defaultApiBase } from "./api-host";
+import { canServeLocally, localHandle } from "./local-api";
+import { loadSession, loadToken, peekSession, saveSession, saveToken } from "./session";
 
-export const API =
-  process.env.EXPO_PUBLIC_API_URL ||
-  (Platform.OS === "android" ? "http://10.0.2.2:43180" : "http://127.0.0.1:43180");
+const FETCH_MS = 2500;
+
+export type Connection = "online" | "offline" | "unknown";
 
 let access = "";
+let lastConnection: Connection = "unknown";
+let lastReachableHost: string | null = null;
 
-export function setToken(token: string) {
-  access = token;
-  void saveToken(token);
+export function connectionState(): Connection {
+  return lastConnection;
 }
 
-export async function hydrateToken(): Promise<string | null> {
-  const stored = await loadToken();
-  if (stored) access = stored;
-  return stored;
-}
-
-export function clearToken() {
-  access = "";
-  void saveToken(null);
+export function lastApiHost(): string {
+  return lastReachableHost || apiHostLabel();
 }
 
 export class ApiError extends Error {
   constructor(
     public status: number,
     public detail: string,
+    public retryable = false,
   ) {
     super(detail);
-  }
-}
-
-export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const headers = new Headers(init.headers);
-  headers.set("Content-Type", "application/json");
-  if (access) headers.set("Authorization", `Bearer ${access}`);
-  const res = await fetch(`${API}${path}`, { ...init, headers });
-  if (!res.ok) {
-    let detail = res.statusText;
-    try {
-      const body = await res.json();
-      detail = typeof body.detail === "string" ? body.detail : JSON.stringify(body.detail);
-    } catch {
-      /* ignore */
-    }
-    throw new ApiError(res.status, detail);
-  }
-  if (res.status === 204) return undefined as T;
-  return res.json() as Promise<T>;
-}
-
-export async function replayOffline(): Promise<void> {
-  try {
-    await drainQueue((path, init) => api(path, init));
-  } catch {
-    /* stay queued */
   }
 }
 
@@ -139,20 +108,122 @@ export type PathStage = {
   checkpoint: PathNode;
 };
 
+function unreachableMessage(base: string, err: unknown): string {
+  const host = apiHostLabel(base);
+  const why = err instanceof Error ? err.message : "network error";
+  return `Could not reach the lesson server at ${host} (${why}). Start offline, or retry when the API is running on port 43180.`;
+}
+
+async function remoteFetch<T>(path: string, init: RequestInit, base: string): Promise<T> {
+  const headers = new Headers(init.headers);
+  headers.set("Content-Type", "application/json");
+  if (access) headers.set("Authorization", `Bearer ${access}`);
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), FETCH_MS);
+  try {
+    const res = await fetch(`${base}${path}`, { ...init, headers, signal: ctrl.signal });
+    if (!res.ok) {
+      let detail = res.statusText;
+      try {
+        const body = await res.json();
+        detail = typeof body.detail === "string" ? body.detail : JSON.stringify(body.detail);
+      } catch {
+        /* ignore */
+      }
+      throw new ApiError(res.status, detail, res.status >= 500);
+    }
+    if (res.status === 204) return undefined as T;
+    return (await res.json()) as T;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const method = (init.method || "GET").toUpperCase();
+  const base = defaultApiBase();
+  lastReachableHost = apiHostLabel(base);
+  try {
+    const data = await remoteFetch<T>(path, init, base);
+    lastConnection = "online";
+    return data;
+  } catch (err) {
+    if (canServeLocally(path, method)) {
+      lastConnection = "offline";
+      return localHandle<T>(path, init);
+    }
+    const detail = unreachableMessage(base, err);
+    throw new ApiError(err instanceof ApiError ? err.status : 0, detail, true);
+  }
+}
+
+export function setToken(token: string) {
+  access = token;
+  void saveToken(token);
+}
+
+export async function hydrateToken(): Promise<string | null> {
+  const session = await loadSession();
+  if (session?.token) {
+    access = session.token.startsWith("local:") ? "" : session.token;
+    return session.token;
+  }
+  const stored = await loadToken();
+  if (stored && !stored.startsWith("local:")) access = stored;
+  return stored;
+}
+
+export function clearToken() {
+  access = "";
+  void saveSession(null);
+}
+
+export async function replayOffline(): Promise<void> {
+  try {
+    await drainQueue((path, init) => api(path, init));
+  } catch {
+    /* stay queued */
+  }
+}
+
 export async function demoLogin(body: {
   ui_language: string;
   display_name: string;
   motivation: string;
   role?: string;
   course_id?: string;
-}) {
-  const data = await api<{ access_token: string; user: User }>("/auth/demo", {
-    method: "POST",
-    body: JSON.stringify({
-      ...body,
-      email: body.role === "editor" ? "demo-editor@biti.local" : `demo-${crypto.randomUUID()}@biti.local`,
-    }),
-  });
-  setToken(data.access_token);
-  return data.user;
+}): Promise<User> {
+  const payload = {
+    ...body,
+    email: body.role === "editor" ? "demo-editor@biti.local" : `demo-${crypto.randomUUID()}@biti.local`,
+  };
+  try {
+    const data = await remoteFetch<{ access_token: string; user: User }>(
+      "/auth/demo",
+      { method: "POST", body: JSON.stringify(payload) },
+      defaultApiBase(),
+    );
+    lastConnection = "online";
+    setToken(data.access_token);
+    await saveSession({
+      source: "remote",
+      token: data.access_token,
+      user: data.user,
+      done: {},
+      attempts: {},
+      badges: [],
+      apiBase: defaultApiBase(),
+    });
+    return data.user;
+  } catch {
+    lastConnection = "offline";
+    const data = await localHandle<{ access_token: string; user: User }>("/auth/demo", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    access = "";
+    return data.user;
+  }
 }
+
+export { peekSession };

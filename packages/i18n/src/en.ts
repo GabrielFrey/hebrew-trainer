@@ -32,6 +32,15 @@ export const en = {
     courseHeEn: "Hebrew–English",
     courseHeEs: "Hebrew–Spanish",
     courseHeFr: "Hebrew–French",
+    retry: "Try again",
+    workingOffline: "Working offline. Lessons are on this device and will sync when {host} is reachable.",
+    demoNote: "Demo sign-in is development-only. Production requires OIDC.",
+  },
+  placement: {
+    title: "Short placement test",
+    hint: "Skippable. Type Hebrew — transliteration is not graded.",
+    submit: "Submit",
+    skip: "Skip",
   },
   chrome: {
     skipToContent: "Skip to content",
@@ -108,6 +117,7 @@ export const en = {
     unavailable: "This feature is unavailable.",
     error: "Something went wrong.",
     empty: "Nothing here yet.",
+    retry: "Try again",
   },
   keyboard: { space: "Space", backspace: "Backspace", niqqud: "Niqqud", clear: "Clear" },
   practice: {

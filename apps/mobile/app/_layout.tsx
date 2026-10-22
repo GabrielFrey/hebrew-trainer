@@ -1,8 +1,9 @@
 import { NotoSansHebrew_400Regular, NotoSansHebrew_700Bold, useFonts } from "@expo-google-fonts/noto-sans-hebrew";
 import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { I18nManager, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider } from "@/lib/auth";
 import { usePalette } from "@/lib/theme";
 
@@ -25,7 +26,8 @@ export default function Layout() {
   if (!loaded) return <View style={{ flex: 1, backgroundColor: "#EEF2F7" }} />;
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <StatusBar style="dark" />
         <AuthProvider>
           <StackNav />
         </AuthProvider>

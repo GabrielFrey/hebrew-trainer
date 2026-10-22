@@ -8,6 +8,20 @@ from biti import BRAND_NAME
 ROOT = Path(__file__).resolve().parents[3]
 
 
+def test_mobile_expo_english_display_name() -> None:
+    import json
+
+    app = json.loads((ROOT / "apps/mobile/app.json").read_text(encoding="utf-8"))
+    expo = app["expo"]
+    assert expo["name"] == "Biti Hebrew"
+    assert expo["ios"]["infoPlist"]["CFBundleDisplayName"] == "Biti Hebrew"
+    assert expo["web"]["name"] == "Biti Hebrew"
+    locale_en = json.loads((ROOT / "apps/mobile/locales/en.json").read_text(encoding="utf-8"))
+    assert locale_en["ios"]["CFBundleDisplayName"] == "Biti Hebrew"
+    assert "ivrit" not in expo["name"].lower()
+    assert "ivrit" not in expo["ios"]["infoPlist"]["CFBundleDisplayName"].lower()
+
+
 def test_english_product_name_is_biti_hebrew() -> None:
     assert BRAND_NAME == "Biti Hebrew"
     en = (ROOT / "packages/i18n/src/en.ts").read_text(encoding="utf-8")

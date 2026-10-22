@@ -32,6 +32,15 @@ export const fr = {
     courseHeEn: "Hébreu–anglais",
     courseHeEs: "Hébreu–espagnol",
     courseHeFr: "Hébreu–français",
+    retry: "Réessayer",
+    workingOffline: "Hors ligne. Les leçons sont sur l’appareil et se synchroniseront lorsque {host} sera joignable.",
+    demoNote: "La connexion démo est réservée au développement. La production exige OIDC.",
+  },
+  placement: {
+    title: "Court test de niveau",
+    hint: "On peut passer. Tapez l’hébreu — la translittération n’est pas notée.",
+    submit: "Envoyer",
+    skip: "Passer",
   },
   chrome: {
     skipToContent: "Aller au contenu",
@@ -108,6 +117,7 @@ export const fr = {
     unavailable: "Cette fonction n’est pas disponible.",
     error: "Un problème est survenu.",
     empty: "Rien ici pour l’instant.",
+    retry: "Réessayer",
   },
   keyboard: { space: "Espace", backspace: "Effacer", niqqud: "Niqqud", clear: "Effacer tout" },
   practice: {

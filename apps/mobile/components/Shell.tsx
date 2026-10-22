@@ -1,7 +1,7 @@
 import { Link, usePathname, useRouter } from "expo-router";
 import { createContext, type ComponentRef, type ReactNode, type RefObject, useContext, useEffect, useRef } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Platform, Pressable, ScrollView, Text, View } from "react-native";
+import { initialWindowMetrics, useSafeAreaInsets } from "react-native-safe-area-context";
 import { BitiMascot } from "@/components/BitiMascot";
 import { useAuth } from "@/lib/auth";
 import { GlassSurface } from "@/lib/glass";
@@ -28,6 +28,7 @@ export function useShellScroll() {
 export function Shell({ children }: { children: ReactNode }) {
   const palette = usePalette();
   const insets = useSafeAreaInsets();
+  const topInset = Math.max(insets.top, initialWindowMetrics?.insets.top ?? 0, Platform.OS === "ios" ? 54 : 0);
   const path = usePathname();
   const router = useRouter();
   const { user, ready, lang } = useAuth();
@@ -46,7 +47,7 @@ export function Shell({ children }: { children: ReactNode }) {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: palette.sand, paddingTop: insets.top }}>
+    <View style={{ flex: 1, backgroundColor: palette.sand, paddingTop: topInset }}>
       <GlassSurface
         testID="mobile-chrome"
         style={{ marginHorizontal: 12, marginTop: 8, paddingHorizontal: 14, paddingVertical: 10 }}

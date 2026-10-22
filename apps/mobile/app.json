@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Biti Ivrit",
+    "name": "Biti Hebrew",
     "slug": "biti-ivrit",
     "scheme": "biti",
     "version": "0.1.0",
@@ -43,7 +43,7 @@
       },
       "infoPlist": {
         "CFBundleAllowMixedLocalizations": true,
-        "CFBundleDisplayName": "Biti Ivrit"
+        "CFBundleDisplayName": "Biti Hebrew"
       }
     },
     "android": {
