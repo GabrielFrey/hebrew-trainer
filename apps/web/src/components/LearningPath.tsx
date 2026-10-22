@@ -135,7 +135,14 @@ function StageBlock({
             </span>
           ) : null}
         </p>
-        <div className="mt-3 h-2 overflow-hidden rounded-full bg-sand-deep" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+        <div
+          className="mt-3 h-2 overflow-hidden rounded-full bg-sand-deep"
+          role="progressbar"
+          aria-label={`${loc(stage.title, lang)} ${done}/${stage.progress.published}`}
+          aria-valuenow={pct}
+          aria-valuemin={0}
+          aria-valuemax={100}
+        >
           <div className="h-full rounded-full bg-olive" style={{ width: `${pct}%` }} />
         </div>
       </header>
