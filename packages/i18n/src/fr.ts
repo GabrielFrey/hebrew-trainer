@@ -26,6 +26,11 @@ export const fr = {
     namePrompt: "Comment vous appeler ?",
     learner: "Apprenant",
     reviewFlag: "Le français est in_review jusqu’à validation par un locuteur natif.",
+    courseHeRu: "Hébreu–russe",
+    courseHeUk: "Hébreu–ukrainien",
+    courseHeEn: "Hébreu–anglais",
+    courseHeEs: "Hébreu–espagnol",
+    courseHeFr: "Hébreu–français",
   },
   lesson: {
     check: "Vérifier",

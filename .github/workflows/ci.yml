@@ -24,7 +24,7 @@ jobs:
           os.environ["BITI_ENV"] = "development"
           from biti.main import app
           data = app.openapi()
-          assert data["info"]["title"] == "Biti Ivrit"
+          assert data["info"]["title"] == "Biti Hebrew"
           print("openapi paths", len(data["paths"]))
           PY
       - name: Seed lesson count

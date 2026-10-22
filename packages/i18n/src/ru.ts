@@ -26,6 +26,11 @@ export const ru = {
     namePrompt: "Как вас зовут?",
     learner: "Ученик",
     reviewFlag: "Украинские, испанские и французские тексты ждут носителя — статус in_review.",
+    courseHeRu: "Иврит — русский",
+    courseHeUk: "Иврит — украинский",
+    courseHeEn: "Иврит — английский",
+    courseHeEs: "Иврит — испанский",
+    courseHeFr: "Иврит — французский",
   },
   lesson: {
     check: "Проверить",

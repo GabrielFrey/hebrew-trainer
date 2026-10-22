@@ -8,7 +8,7 @@ Five **courses** share this tree. Target language is always Modern Israeli Hebre
 | --- | --- | --- |
 | `he-ru` | Hebrew↔Russian | ru |
 | `he-uk` | Hebrew↔Ukrainian | uk |
-| `he-en` | Hebrew↔English | en |
+| `he-en` | Hebrew–English | en |
 | `he-es` | Hebrew↔Spanish | es |
 | `he-fr` | Hebrew↔French | fr |
 

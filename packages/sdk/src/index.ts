@@ -1,4 +1,4 @@
-/** Thin typed client for the Biti Ivrit OpenAPI surface. Generated snapshots live in openapi.json. */
+/** Thin typed client for the Biti Hebrew OpenAPI surface. Generated snapshots live in openapi.json. */
 
 export const defaultBaseUrl = "http://127.0.0.1:43180";
 

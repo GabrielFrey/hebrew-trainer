@@ -1,5 +1,5 @@
 export const brand = {
-  name: "Biti Ivrit",
+  name: "Biti Hebrew",
   nameHe: "ביתי עברית",
   mascot: "Biti",
 } as const;

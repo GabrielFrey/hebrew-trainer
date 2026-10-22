@@ -77,11 +77,23 @@ export default function Onboarding() {
       </View>
       <Text style={{ fontWeight: "600", color: palette.ink }}>{t(lang, "onboarding.course")}</Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-        {(["he-ru", "he-uk", "he-en", "he-es", "he-fr"] as const).map((id) => (
-          <Pressable key={id} testID={`course-${id}`} onPress={() => setCourse(id)} style={chip(course === id)}>
-            <Text style={{ color: course === id ? palette.paper : palette.ink }}>{id}</Text>
-          </Pressable>
-        ))}
+        {(["he-ru", "he-uk", "he-en", "he-es", "he-fr"] as const).map((id) => {
+          const key =
+            id === "he-ru"
+              ? "onboarding.courseHeRu"
+              : id === "he-uk"
+                ? "onboarding.courseHeUk"
+                : id === "he-en"
+                  ? "onboarding.courseHeEn"
+                  : id === "he-es"
+                    ? "onboarding.courseHeEs"
+                    : "onboarding.courseHeFr";
+          return (
+            <Pressable key={id} testID={`course-${id}`} onPress={() => setCourse(id)} style={chip(course === id)}>
+              <Text style={{ color: course === id ? palette.paper : palette.ink }}>{t(lang, key)}</Text>
+            </Pressable>
+          );
+        })}
       </View>
       <Text style={{ fontSize: 13, color: palette.inkSoft }}>{t(lang, "onboarding.reviewFlag")}</Text>
       <Text style={{ color: palette.ink }}>{t(lang, "onboarding.namePrompt")}</Text>

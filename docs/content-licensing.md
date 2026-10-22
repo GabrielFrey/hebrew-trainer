@@ -4,7 +4,7 @@ Every asset that ships or is fetched must have a row here (or in `content/source
 
 | Asset | License | Source | Notes |
 | --- | --- | --- | --- |
-| Brand name "Biti Ivrit", UI copy, original lessons, original vocabulary glosses | Proprietary © Biti Ivrit project | This repository | Original teaching text. Do not copy other course structures or brand assets. |
+| Brand name "Biti Hebrew" (English) / "Biti Ivrit" (other locales) / ביתי עברית, UI copy, original lessons, original vocabulary glosses | Proprietary © Biti Hebrew project | This repository | Original teaching text. Do not copy other course structures or brand assets. |
 | Biti mascot (SVG) | Proprietary | `packages/ui` / `apps/web` | Original house mark. Not derived from Duolingo, Mondly, or the legacy Gama mascot. |
 | Design tokens / palette | Proprietary | `packages/design-tokens` | Mediterranean ink/sand/pomegranate/olive. Not a competitor palette clone. |
 | Noto Sans Hebrew | SIL OFL 1.1 | Google Fonts via `next/font/google` | UI + niqqud-capable sans. |

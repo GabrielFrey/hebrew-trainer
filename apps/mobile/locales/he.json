@@ -1,0 +1,9 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "ביתי עברית",
+    "CFBundleName": "ביתי עברית"
+  },
+  "android": {
+    "app_name": "ביתי עברית"
+  }
+}

@@ -26,6 +26,11 @@ export const uk = {
     namePrompt: "Як вас звати?",
     learner: "Учень",
     reviewFlag: "Український текст — чернетка in_review, доки носій його не підпише.",
+    courseHeRu: "Іврит — російська",
+    courseHeUk: "Іврит — українська",
+    courseHeEn: "Іврит — англійська",
+    courseHeEs: "Іврит — іспанська",
+    courseHeFr: "Іврит — французька",
   },
   lesson: {
     check: "Перевірити",

@@ -53,7 +53,9 @@ export function Shell({ children }: { children: ReactNode }) {
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
             <BitiMascot size={40} />
             <View>
-              <Text style={{ fontSize: 18, fontWeight: "700", color: palette.ink }}>Biti Ivrit</Text>
+              <Text testID="brand-name" style={{ fontSize: 18, fontWeight: "700", color: palette.ink }}>
+                {t(lang, "brand.name")}
+              </Text>
               <Text style={{ fontSize: 12, color: palette.inkSoft }} {...({ lang: "he" } as object)}>
                 ביתי עברית
               </Text>

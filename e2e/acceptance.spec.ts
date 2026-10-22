@@ -30,7 +30,7 @@ async function onboard(page: Page, lang: "en" | "ru" = "en") {
   await expect(page.getByTestId("onboarding")).toBeVisible();
   await page.getByTestId(`lang-${lang}`).click();
   if (lang === "en") {
-    await expect(page.getByTestId("onboarding-title")).toContainText("Welcome to Biti Ivrit");
+    await expect(page.getByTestId("onboarding-title")).toContainText("Welcome to Biti Hebrew");
   } else {
     await expect(page.getByTestId("onboarding-title")).toContainText("Добро пожаловать");
   }
@@ -75,7 +75,7 @@ test.describe("acceptance", () => {
     await page.getByTestId("lang-fr").click();
     await expect(page.getByTestId("onboarding-title")).toContainText("Bienvenue dans Biti Ivrit");
     await page.getByTestId("lang-en").click();
-    await expect(page.getByTestId("onboarding-title")).toContainText("Welcome to Biti Ivrit");
+    await expect(page.getByTestId("onboarding-title")).toContainText("Welcome to Biti Hebrew");
     const bodies = lessonBodies(page);
     await page.getByTestId("start-alef").click();
     await expect(page.getByTestId("learn-path")).toBeVisible();

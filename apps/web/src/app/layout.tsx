@@ -16,8 +16,14 @@ const reading = Frank_Ruhl_Libre({
 });
 
 export const metadata: Metadata = {
-  title: "Biti Ivrit",
+  title: "Biti Hebrew",
   description: "Modern Hebrew from the first letter to everyday Israeli life.",
+  applicationName: "Biti Hebrew",
+  openGraph: {
+    title: "Biti Hebrew",
+    locale: "en_US",
+    description: "Modern Hebrew from the first letter to everyday Israeli life.",
+  },
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [

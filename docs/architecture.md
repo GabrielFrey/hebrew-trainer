@@ -1,6 +1,6 @@
-# Biti Ivrit architecture
+# Biti Hebrew architecture
 
-Biti Ivrit is a cross-platform Modern Hebrew learning system: short lessons, deterministic server grading, spaced repetition, ulpan-style conversation, and a native-speaker editorial pipeline. The product name is the configurable default brand constant `BITI_BRAND` / i18n key `brand.name`.
+Biti Hebrew is a cross-platform Modern Hebrew learning system: short lessons, deterministic server grading, spaced repetition, ulpan-style conversation, and a native-speaker editorial pipeline. In English the product name is **Biti Hebrew** (`brand.name` in the `en` locale). Other locales keep Biti Ivrit / ביתי עברית. Code identifiers and the `biti-ivrit` branch are unchanged.
 
 ## Shape
 

@@ -66,10 +66,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
         <header className="glass sticky top-3 z-20 mb-6 flex items-center justify-between rounded-3xl border border-line px-4 py-3">
           <Link href="/learn" className="flex items-center gap-3">
             <BitiMascot size={44} />
-            <div>
-              <p className="text-lg font-semibold">Biti Ivrit</p>
-              <p className="text-xs text-ink-soft">ביתי עברית</p>
-            </div>
+            <BrandMark />
           </Link>
           {user ? (
             <div className="flex items-center gap-3 text-sm">
@@ -85,6 +82,18 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
         </main>
       </div>
     </I18nProvider>
+  );
+}
+
+function BrandMark() {
+  const { t } = useT();
+  return (
+    <div>
+      <p data-testid="brand-name" className="text-lg font-semibold">
+        {t("brand.name")}
+      </p>
+      <p className="text-xs text-ink-soft">ביתי עברית</p>
+    </div>
   );
 }
 

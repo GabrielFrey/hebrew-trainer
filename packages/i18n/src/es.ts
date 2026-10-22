@@ -26,6 +26,11 @@ export const es = {
     namePrompt: "¿Cómo te llamamos?",
     learner: "Estudiante",
     reviewFlag: "El texto en español está in_review hasta que lo firme un nativo.",
+    courseHeRu: "Hebreo–ruso",
+    courseHeUk: "Hebreo–ucraniano",
+    courseHeEn: "Hebreo–inglés",
+    courseHeEs: "Hebreo–español",
+    courseHeFr: "Hebreo–francés",
   },
   lesson: {
     check: "Comprobar",

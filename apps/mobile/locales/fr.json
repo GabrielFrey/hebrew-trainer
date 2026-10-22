@@ -1,0 +1,9 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Biti Ivrit",
+    "CFBundleName": "Biti Ivrit"
+  },
+  "android": {
+    "app_name": "Biti Ivrit"
+  }
+}

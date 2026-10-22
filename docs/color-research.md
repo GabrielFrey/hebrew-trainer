@@ -1,4 +1,4 @@
-# Color research for Biti Ivrit
+# Color research for Biti Hebrew
 
 **Status:** decided. Tokens live in `packages/design-tokens/src/index.ts` and `apps/web/src/app/globals.css`.  
 **Audience:** adults and children learning Modern Hebrew, UI in RU / UK / EN / ES / FR.  

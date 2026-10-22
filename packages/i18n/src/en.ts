@@ -1,5 +1,5 @@
 export const en = {
-  brand: { name: "Biti Ivrit", tagline: "Modern Hebrew, from the first letter to real life." },
+  brand: { name: "Biti Hebrew", tagline: "Modern Hebrew, from the first letter to real life." },
   nav: {
     learn: "Learn",
     review: "Review",
@@ -11,7 +11,7 @@ export const en = {
     practice: "Practice",
   },
   onboarding: {
-    title: "Welcome to Biti Ivrit",
+    title: "Welcome to Biti Hebrew",
     language: "Interface language",
     goal: "Daily goal",
     motivation: "Why are you learning?",
@@ -26,6 +26,11 @@ export const en = {
     namePrompt: "What should we call you?",
     learner: "Learner",
     reviewFlag: "Ukrainian, Spanish and French copy is in review until a native speaker signs it.",
+    courseHeRu: "Hebrew–Russian",
+    courseHeUk: "Hebrew–Ukrainian",
+    courseHeEn: "Hebrew–English",
+    courseHeEs: "Hebrew–Spanish",
+    courseHeFr: "Hebrew–French",
   },
   lesson: {
     check: "Check",

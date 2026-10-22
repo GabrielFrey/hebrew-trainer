@@ -40,7 +40,7 @@ COURSES: list[dict[str, Any]] = [
         "id": "he-en",
         "source": "en",
         "target": "he",
-        "pair": "Hebrew↔English",
+        "pair": "Hebrew–English",
         "title": {
             "en": "Hebrew for English speakers",
             "ru": "Иврит для говорящих по-английски",

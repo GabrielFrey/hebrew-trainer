@@ -1,8 +1,8 @@
-# Biti Ivrit
+# Biti Hebrew
 
 Cross-platform Modern Hebrew from the first letter to everyday Israeli life. Short lessons, deterministic **server** grading, spaced repetition (1/3/7/14/30 days), ulpan-style conversation, and a native-speaker editorial gate.
 
-The brand string is configurable (`BITI_BRAND` / i18n `brand.name`). Default: **Biti Ivrit** / ביתי עברית.
+The English product name is **Biti Hebrew**. Other interface languages keep **Biti Ivrit** / ביתי עברית. The i18n key is `brand.name`. The branch and package identifiers stay `biti-ivrit`.
 
 The previous on-device trainer stays intact on `main`. This branch (`biti-ivrit`) is a new monorepo. Useful logic from that trainer (verb tables, keyboard layout, glass fallbacks) was reused, not shipped as the product.
 

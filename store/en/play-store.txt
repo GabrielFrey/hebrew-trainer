@@ -1,0 +1,13 @@
+Title: Biti Hebrew
+Short description: Modern Hebrew from the first letter to everyday Israeli life.
+
+Full description:
+Biti Hebrew is a Modern Israeli Hebrew course with short lessons, a visual learning path, and a checkpoint at the end of every stage.
+
+• Hebrew–English course for English speakers, plus other language pairs
+• Deterministic server grading — the tutor never awards XP
+• Spaced repetition on a 1 / 3 / 7 / 14 / 30 day ladder
+• Stage gates you can pass to unlock the next ulpan level
+• Honest unavailable states when audio or speech is not configured
+
+The English product name is Biti Hebrew. Native iOS and Android labels use that name in the English locale.

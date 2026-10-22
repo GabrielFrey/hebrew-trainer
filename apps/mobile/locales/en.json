@@ -1,0 +1,9 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Biti Hebrew",
+    "CFBundleName": "Biti Hebrew"
+  },
+  "android": {
+    "app_name": "Biti Hebrew"
+  }
+}

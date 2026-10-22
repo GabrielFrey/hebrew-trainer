@@ -1,4 +1,4 @@
-"""Biti Ivrit API package."""
+"""Biti Hebrew API package (identifiers remain `biti`)."""
 
 __version__ = "0.1.0"
-BRAND_NAME = "Biti Ivrit"
+BRAND_NAME = "Biti Hebrew"

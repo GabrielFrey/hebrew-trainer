@@ -1,0 +1,14 @@
+Name: Biti Hebrew
+Subtitle: Modern Hebrew, from Alef to real life
+Keywords: Hebrew,Modern Hebrew,learn Hebrew,ulpan,Israel,alphabet,nikud,aliyah
+
+Description:
+Biti Hebrew teaches Modern Israeli Hebrew in short, server-graded lessons. Follow Biti along a winding path from the first letters through everyday speech.
+
+You start with the alphabet, first words, and tiny phrases, then move through ulpan stages (Pre-Aleph, Aleph, Bet, Gimel, Dalet, Hey). Each stage ends with a checkpoint you can also use to test out.
+
+Lessons mix typing in Hebrew, multiple choice, and matching. The grader is deterministic. The optional AI tutor explains mistakes and never awards XP.
+
+Audio and speaking practice appear only when a provider is configured. Until then, those items stay honestly unavailable instead of faking scores.
+
+Biti Hebrew is the English name of the product. Other interface languages keep their existing names.

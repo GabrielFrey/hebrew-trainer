@@ -26,6 +26,11 @@ export const he = {
     namePrompt: "איך לקרוא לכם?",
     learner: "לומד",
     reviewFlag: "הטקסטים באוקראינית, ספרדית וצרפתית ממתינים לדובר יליד.",
+    courseHeRu: "עברית–רוסית",
+    courseHeUk: "עברית–אוקראינית",
+    courseHeEn: "עברית–אנגלית",
+    courseHeEs: "עברית–ספרדית",
+    courseHeFr: "עברית–צרפתית",
   },
   lesson: {
     check: "בדיקה",

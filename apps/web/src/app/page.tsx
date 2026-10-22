@@ -15,13 +15,14 @@ const LANGS: { code: UiLang; label: string; course: string }[] = [
   { code: "fr", label: "Français", course: "he-fr" },
 ];
 
-const COURSES = [
-  ["he-ru", "Hebrew↔Russian"],
-  ["he-uk", "Hebrew↔Ukrainian"],
-  ["he-en", "Hebrew↔English"],
-  ["he-es", "Hebrew↔Spanish"],
-  ["he-fr", "Hebrew↔French"],
-] as const;
+const COURSE_IDS = ["he-ru", "he-uk", "he-en", "he-es", "he-fr"] as const;
+const COURSE_KEYS = {
+  "he-ru": "onboarding.courseHeRu",
+  "he-uk": "onboarding.courseHeUk",
+  "he-en": "onboarding.courseHeEn",
+  "he-es": "onboarding.courseHeEs",
+  "he-fr": "onboarding.courseHeFr",
+} as const;
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -79,7 +80,7 @@ export default function OnboardingPage() {
       <fieldset className="space-y-2">
         <legend className="font-medium">{t(lang, "onboarding.course")}</legend>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {COURSES.map(([id, label]) => (
+          {COURSE_IDS.map((id) => (
             <button
               key={id}
               type="button"
@@ -87,7 +88,7 @@ export default function OnboardingPage() {
               onClick={() => setCourse(id)}
               className={`rounded-2xl border px-3 py-2 text-start ${course === id ? "border-indigo bg-paper" : "border-line bg-paper"}`}
             >
-              {label}
+              {t(lang, COURSE_KEYS[id])}
             </button>
           ))}
         </div>

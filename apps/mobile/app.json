@@ -25,7 +25,8 @@
         "tinted": "./assets/icon-tinted.png"
       },
       "infoPlist": {
-        "CFBundleAllowMixedLocalizations": true
+        "CFBundleAllowMixedLocalizations": true,
+        "CFBundleDisplayName": "Biti Ivrit"
       }
     },
     "android": {
@@ -38,10 +39,18 @@
       "bundler": "metro",
       "output": "single",
       "favicon": "./assets/favicon.png",
-      "name": "Biti Ivrit",
+      "name": "Biti Hebrew",
       "shortName": "Biti",
       "themeColor": "#184A82",
       "backgroundColor": "#EEF2F7"
+    },
+    "locales": {
+      "en": "./locales/en.json",
+      "ru": "./locales/ru.json",
+      "he": "./locales/he.json",
+      "uk": "./locales/uk.json",
+      "es": "./locales/es.json",
+      "fr": "./locales/fr.json"
     },
     "experiments": {
       "typedRoutes": true
