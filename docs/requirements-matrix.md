@@ -13,7 +13,7 @@ Status key: `done` · `partial` · `unverified` · `blocked` · `planned`
 | A7 | Compose stack | `infra/compose` | File present; Docker daemon missing | unverified |
 | A8 | CI lint/test/openapi/e2e | `.github/workflows/ci.yml` | Workflow present; GH runners unverified | partial |
 | B1 | Web vertical flow | `apps/web` | Playwright 1,3,5,6,7,15 + axe: 8 passed locally 2026-10-22 | done (GH runners unverified) |
-| B2 | Mobile vertical flow | `apps/mobile` | expo-doctor 18/18; `tsc --noEmit`; `expo export` ios/android/web; 390×844 light/dark screenshots | partial (native device unverified) |
+| B2 | Mobile vertical flow | `apps/mobile` | expo-doctor 20/20 (SDK 58); `tsc --noEmit`; `expo export` ios/android/web; 390×844 light/dark screenshots | partial (native device unverified) |
 | B3 | Deterministic grading + modes | `biti/grading.py` + vectors | pytest vectors | done |
 | B4 | Answers never leak | lesson serializer | pytest + Playwright 3 | done |
 | B5 | XP once under retry | ledger unique | pytest concurrency | done |

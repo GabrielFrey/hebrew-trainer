@@ -4,11 +4,11 @@ Biti Hebrew is a cross-platform Modern Hebrew learning system: short lessons, de
 
 ## Shape
 
-Modular monolith. One FastAPI process owns auth, curriculum, grading, progress, SRS, gamification, tutor, editorial, and the content pipeline. Celery worker + beat run in the same codebase. Web (Next.js App Router) and mobile (Expo SDK 54) are clients of the same OpenAPI contract.
+Modular monolith. One FastAPI process owns auth, curriculum, grading, progress, SRS, gamification, tutor, editorial, and the content pipeline. Celery worker + beat run in the same codebase. Web (Next.js App Router) and mobile (Expo SDK 58) are clients of the same OpenAPI contract.
 
 ```
 apps/web          Next.js 16 App Router, TypeScript strict, RTL-first
-apps/mobile       Expo SDK 54, Expo Router, TypeScript strict
+apps/mobile       Expo SDK 58, Expo Router, TypeScript strict
 apps/api          FastAPI + SQLAlchemy + Alembic + Celery
 packages/         hebrew-text, grading vectors, design-tokens, i18n, sdk
 content/          published seed lessons, vocabulary, source records

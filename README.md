@@ -14,7 +14,7 @@ The learn path is a winding trail of lesson nodes grouped into ulpan stages (Pre
 | --- | --- | --- |
 | API | `apps/api/.venv/bin/uvicorn biti.main:app --app-dir apps/api --host 127.0.0.1 --port 43180` | http://127.0.0.1:43180/docs |
 | Web | `npm --prefix apps/web run dev` | http://127.0.0.1:43181 |
-| Mobile | `npm --prefix apps/mobile install && EXPO_PUBLIC_API_URL=http://127.0.0.1:43180 npx --prefix apps/mobile expo start --web --port 43182` | Expo / emulator |
+| Mobile (Expo SDK 58 / RN 0.88, Expo Go) | `npm --prefix apps/mobile install && EXPO_PUBLIC_API_URL=http://127.0.0.1:43180 npx --prefix apps/mobile expo start --web --port 43182` | Expo Go / emulator |
 
 Android emulator API URL: `http://10.0.2.2:43180`. iOS simulator: `http://127.0.0.1:43180`. Physical device: your LAN IP.
 

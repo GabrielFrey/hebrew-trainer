@@ -7,16 +7,33 @@
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#EEF2F7",
-      "dark": {
-        "image": "./assets/splash.png",
-        "backgroundColor": "#101820"
-      }
-    },
-    "plugins": ["expo-router", "expo-secure-store", "expo-font", "expo-sqlite"],
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "asyncRoutes": {
+            "web": false
+          }
+        }
+      ],
+      "expo-secure-store",
+      "expo-font",
+      "expo-sqlite",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#EEF2F7",
+          "imageWidth": 200,
+          "dark": {
+            "image": "./assets/splash.png",
+            "backgroundColor": "#101820"
+          }
+        }
+      ],
+      "expo-status-bar"
+    ],
     "ios": {
       "supportsTablet": true,
       "icon": {

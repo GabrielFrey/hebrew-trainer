@@ -63,7 +63,7 @@ BITI_DEMO_MODE=true BITI_ENV=development \
 npm --prefix apps/web install
 NEXT_PUBLIC_API_URL=http://127.0.0.1:43180 npm --prefix apps/web run dev -- --port 43181 --hostname 127.0.0.1
 
-# Mobile (Expo SDK 54)
+# Mobile (Expo SDK 58)
 npm --prefix apps/mobile install
 EXPO_PUBLIC_API_URL=http://127.0.0.1:43180 npx --prefix apps/mobile expo start --web --port 43182
 

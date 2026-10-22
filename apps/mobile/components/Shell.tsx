@@ -1,5 +1,5 @@
 import { Link, usePathname, useRouter } from "expo-router";
-import { createContext, type ReactNode, type RefObject, useContext, useEffect, useRef } from "react";
+import { createContext, type ComponentRef, type ReactNode, type RefObject, useContext, useEffect, useRef } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BitiMascot } from "@/components/BitiMascot";
@@ -17,7 +17,9 @@ const LINKS = [
   ["/profile", "nav.profile"],
 ] as const;
 
-const ShellScrollCtx = createContext<RefObject<ScrollView | null> | null>(null);
+type ShellScrollView = ComponentRef<typeof ScrollView>;
+
+const ShellScrollCtx = createContext<RefObject<ShellScrollView | null> | null>(null);
 
 export function useShellScroll() {
   return useContext(ShellScrollCtx);
@@ -29,7 +31,7 @@ export function Shell({ children }: { children: ReactNode }) {
   const path = usePathname();
   const router = useRouter();
   const { user, ready, lang } = useAuth();
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<ShellScrollView>(null);
 
   useEffect(() => {
     if (ready && !user) router.replace("/");
