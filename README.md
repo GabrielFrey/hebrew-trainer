@@ -6,6 +6,8 @@ The brand string is configurable (`BITI_BRAND` / i18n `brand.name`). Default: **
 
 The previous on-device trainer stays intact on `main`. This branch (`biti-ivrit`) is a new monorepo. Useful logic from that trainer (verb tables, keyboard layout, glass fallbacks) was reused, not shipped as the product.
 
+The learn path is a winding trail of lesson nodes grouped into ulpan stages (Pre-Aleph → Hey). Each stage ends in a **checkpoint gate**: a deterministic mixed review of that stage’s vocabulary and grammar, 80% to pass, limited mistakes. Passing awards a stage badge and opens the next stage. You can **test out** by taking the gate without finishing every lesson. Failing lists the items to review and schedules them in SRS. Grading stays on the server; the AI tutor never awards XP.
+
 ## What runs here
 
 | Surface | Command | URL |

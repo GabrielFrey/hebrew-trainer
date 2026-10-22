@@ -386,7 +386,7 @@ def _fill_higher(level_id: str, track: str, rows: list[tuple], start_sort: int) 
         skill_id = "legendary" if is_boss else uid
         lessons = []
         for i in range(n):
-            kind = "legendary" if is_boss else "lesson"
+            kind = "checkpoint" if is_boss else "lesson"
             slug = _planned_slug(unit_id, skill_id, i)
             lessons.append(
                 {
@@ -446,12 +446,12 @@ def build_tree() -> list[dict[str, Any]]:
                     slug = published[pub_i]
                     pub_i += 1
                     status = "published"
-                    kind = "legendary" if slug.startswith("boss-") else "lesson"
+                    kind = "checkpoint" if slug.startswith("boss-") or slug.startswith("checkpoint-") else "lesson"
                     title = _loc(skill_en, skill_en, skill_en)
                 else:
                     slug = _planned_slug(unit_id, skill_id, i)
                     status = "planned"
-                    kind = "legendary" if skill_id == "legendary" else "lesson"
+                    kind = "checkpoint" if skill_id == "legendary" else "lesson"
                     title = _loc(f"{skill_en} · {i + 1}", f"{skill_en} · {i + 1}", skill_en)
                 spec = {
                     "slug": slug,

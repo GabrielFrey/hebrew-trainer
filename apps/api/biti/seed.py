@@ -1,4 +1,4 @@
-"""Idempotent seed of tracks, 24 published lessons, bosses, SRS-ready vocab."""
+"""Idempotent seed of tracks, published lessons, stage checkpoints, SRS-ready vocab."""
 
 from __future__ import annotations
 
@@ -788,55 +788,12 @@ def _convo_lessons() -> list[dict]:
     return out
 
 
-def _bosses() -> list[dict]:
-    return [
-        {
-            "slug": "boss-starter",
-            "track": "script",
-            "kind": "boss",
-            "level": "starter",
-            "cefr": "pre-A1",
-            "prerequisites": ["script-sofiyot", "vocab-greetings"],
-            "sort": 40,
-            "title": _loc("Starter checkpoint", "Контроль старта", "נקודת ביקורת"),
-            "objective": _loc("Read letters and say hello.", "Читать буквы и поздороваться.", "לקרוא אותיות ולהגיד שלום."),
-            "explanation": _loc("A short check before Aleph work.", "Короткая проверка перед уровнем алеф.", "בדיקה קצרה."),
-            "vocabulary": [],
-            "exercises": [
-                _type("hello", _loc("Type hello", "Наберите привет", "הקלידו שלום"), ["שלום"], keyboard=True),
-                _mc("final-mem", _loc("Final mem is…", "Конечная мем —", "ם"), [{"id": "ם", "he": "ם"}, {"id": "מ", "he": "מ"}], "ם"),
-                _type("alef", _loc("Type alef", "Наберите алеф", "הקלידו א"), ["א"], keyboard=True),
-                _mc("rtl", _loc("Hebrew is written…", "Иврит пишут…", "עברית נכתבת"), [{"id": "rtl", "en": "right to left", "ru": "справа налево"}, {"id": "ltr", "en": "left to right", "ru": "слева направо"}], "rtl"),
-                _type("toda", _loc("Type thank you", "Наберите спасибо", "הקלידו תודה"), ["תודה"], keyboard=True),
-            ],
-        },
-        {
-            "slug": "boss-beginner",
-            "track": "grammar",
-            "kind": "boss",
-            "level": "beginner",
-            "cefr": "A1",
-            "prerequisites": ["verbs-paal-present", "convo-introductions", "vocab-home"],
-            "sort": 41,
-            "title": _loc("Beginner checkpoint", "Контроль алеф", "נקודת ביקורת אלף"),
-            "objective": _loc("Combine script, a verb, and a greeting.", "Связать письмо, глагол и приветствие.", "לחבר כתב, פועל וברכה."),
-            "explanation": _loc("Boss node for Aleph.", "Контрольный узел уровня алеф.", "צומת בוס."),
-            "vocabulary": [],
-            "exercises": [
-                _type("i-write", _loc("Type: I write (m)", "Наберите: я пишу (м.)", "אני כותב"), ["אני כותב"], keyboard=True),
-                _type("the-house", _loc("Type: the house", "Наберите: дом (опред.)", "הבית"), ["הבית"], keyboard=True),
-                _type("name-q", _loc("Type: what is your name (m, unpointed מה שמך)", "Наберите מה שמך", "מה שמך"), ["מה שמך", "מה שמך?"], keyboard=True),
-                _mc("root", _loc("Root of כותב", "Корень כותב", "שורש"), [{"id": "כתב", "he": "כתב"}, {"id": "דבר", "he": "דבר"}], "כתב"),
-                _type("thanks", _loc("Type thank you", "Наберите спасибо", "תודה"), ["תודה"], keyboard=True),
-            ],
-        },
-    ]
-
-
 def all_lesson_specs() -> list[dict]:
+    from biti.checkpoints import checkpoint_lesson_specs
     from biti.lessons_extra import extra_published
 
-    return _script_lessons() + extra_published() + _grammar_lessons() + _vocab_lessons() + _convo_lessons() + _bosses()
+    core = _script_lessons() + extra_published() + _grammar_lessons() + _vocab_lessons() + _convo_lessons()
+    return core + checkpoint_lesson_specs(core)
 
 
 def validate_lesson(spec: dict) -> list[str]:
@@ -950,6 +907,9 @@ def seed(db: Session) -> None:
         else:
             lesson.prerequisites = spec.get("prerequisites") or []
             lesson.status = "published"
+            lesson.kind = spec.get("kind", lesson.kind)
+            lesson.level = spec.get("level") or lesson.level
+            lesson.cefr = spec.get("cefr") or lesson.cefr
             lesson.unit_id = spec.get("unit_id") or meta.get("unit_id") or lesson.unit_id
             lesson.skill_id = spec.get("skill_id") or meta.get("skill_id") or lesson.skill_id
         version = (

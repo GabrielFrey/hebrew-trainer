@@ -9,6 +9,7 @@ import { demoLogin } from "@/lib/api";
 const LANGS: { code: UiLang; label: string; course: string }[] = [
   { code: "ru", label: "Русский", course: "he-ru" },
   { code: "en", label: "English", course: "he-en" },
+  { code: "he", label: "עברית", course: "he-en" },
   { code: "uk", label: "Українська", course: "he-uk" },
   { code: "es", label: "Español", course: "he-es" },
   { code: "fr", label: "Français", course: "he-fr" },

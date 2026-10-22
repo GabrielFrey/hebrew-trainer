@@ -10,7 +10,20 @@ from sqlalchemy.orm import Session
 
 from biti import BRAND_NAME, __version__
 from biti.auth import demo_user, get_current_user, issue_token, require_role
-from biti.catalog import catalog_stats, build_tree
+from biti.catalog import LEVELS, catalog_stats, build_tree, all_catalog_lessons
+from biti.checkpoints import (
+    PASS_THRESHOLD,
+    STAGE_TITLES,
+    checkpoint_slug_for,
+    is_gate_kind,
+    mistake_limit,
+    next_stage_id,
+    pick_current_slug,
+    planned_checkpoint_node,
+    stage_open,
+    stage_passed,
+    trail_for_stage,
+)
 from biti.courses import COURSES, L10N_STATUS, course_or_default, source_lang
 from biti.draft_l10n import fill_loc
 from biti.config import get_settings
@@ -29,8 +42,10 @@ from biti.models import (
     Outbox,
     SRSCard,
     SRSReview,
+    StageBadge,
     Track,
     User,
+    new_id,
     utcnow,
 )
 from biti.pipeline import run_pipeline, validate_draft_payload
@@ -140,7 +155,11 @@ def _progress_map(db: Session, user: User, course_id: str | None = None) -> dict
         .filter(Attempt.user_id == user.id, Attempt.status == "completed", Attempt.course_id == cid)
         .all()
     )
-    done = {lesson.slug: attempt.accuracy for attempt, _v, lesson in rows}
+    done: dict[str, Any] = {}
+    for attempt, _v, lesson in rows:
+        prev = done.get(lesson.slug)
+        if prev is None or (attempt.accuracy or 0) > prev:
+            done[lesson.slug] = attempt.accuracy
     return done
 
 
@@ -149,7 +168,63 @@ def _unlocked(spec_slug: str, specs: list[dict], done: dict[str, Any]) -> bool:
     spec = by_slug.get(spec_slug)
     if not spec:
         return False
-    return all(p in done for p in spec.get("prerequisites") or [])
+    level = spec.get("level") or "starter"
+    if not stage_open(level, done):
+        return False
+    if is_gate_kind(spec.get("kind")):
+        return True
+    for prereq in spec.get("prerequisites") or []:
+        if prereq in done:
+            continue
+        prev = by_slug.get(prereq)
+        if prev and (prev.get("level") or "starter") != level and stage_open(level, done):
+            continue
+        return False
+    return True
+
+
+def _node_completed(spec: dict[str, Any], done: dict[str, Any]) -> bool:
+    slug = spec["slug"]
+    if slug not in done:
+        return False
+    if is_gate_kind(spec.get("kind")):
+        return stage_passed(slug, done)
+    return True
+
+
+def _award_stage_badge(db: Session, user: User, stage_id: str, checkpoint_slug: str) -> StageBadge:
+    cid = user.course_id or "he-ru"
+    existing = (
+        db.query(StageBadge)
+        .filter(StageBadge.user_id == user.id, StageBadge.course_id == cid, StageBadge.stage_id == stage_id)
+        .one_or_none()
+    )
+    if existing:
+        return existing
+    row = StageBadge(
+        user_id=user.id,
+        course_id=cid,
+        stage_id=stage_id,
+        checkpoint_slug=checkpoint_slug,
+    )
+    db.add(row)
+    nxt = next_stage_id(stage_id)
+    if nxt:
+        user.level = nxt
+    progress = (
+        db.query(CourseProgress)
+        .filter(CourseProgress.user_id == user.id, CourseProgress.course_id == cid)
+        .one_or_none()
+    )
+    if progress is None:
+        progress = CourseProgress(id=new_id(), user_id=user.id, course_id=cid)
+        db.add(progress)
+        db.flush()
+    if nxt:
+        progress.level = nxt
+    db.add(user)
+    db.flush()
+    return row
 
 
 @app.get("/health")
@@ -278,24 +353,34 @@ def path(user: User = Depends(get_current_user), db: Session = Depends(get_db)) 
     specs = all_lesson_specs()
     done = _progress_map(db, user)
     by_slug = {s["slug"]: s for s in specs}
+    cid = user.course_id or "he-ru"
+    badges = (
+        db.query(StageBadge)
+        .filter(StageBadge.user_id == user.id, StageBadge.course_id == cid)
+        .all()
+    )
+    badge_ids = {row.stage_id for row in badges}
     nodes = []
     for spec in specs:
         lesson = db.query(Lesson).filter(Lesson.slug == spec["slug"]).one()
+        kind = spec.get("kind", "lesson")
         nodes.append(
             {
                 "slug": spec["slug"],
                 "title": fill_loc(spec["title"]),
                 "track": spec["track"],
                 "level": spec["level"],
-                "kind": spec.get("kind", "lesson"),
+                "kind": kind,
                 "status": "published",
                 "prerequisites": spec.get("prerequisites") or [],
                 "unlocked": _unlocked(spec["slug"], specs, done),
                 "accuracy": done.get(spec["slug"]),
-                "completed": spec["slug"] in done,
+                "completed": _node_completed(spec, done),
                 "id": lesson.id,
                 "unit_id": lesson.unit_id,
                 "skill_id": lesson.skill_id,
+                "cefr": spec.get("cefr") or lesson.cefr,
+                "test_out": is_gate_kind(kind),
             }
         )
     units_out = []
@@ -312,10 +397,13 @@ def path(user: User = Depends(get_current_user), db: Session = Depends(get_db)) 
                     skill_nodes.append(
                         {
                             "slug": slug,
-                            "title": fill_loc(unit["title"] if False else (lesson_row and {"en": slug}) or {"en": slug, "ru": slug, "he": slug, "uk": "", "es": "", "fr": ""}),
+                            "title": fill_loc(
+                                (lesson_row and {"en": slug})
+                                or {"en": slug, "ru": slug, "he": slug, "uk": "", "es": "", "fr": ""}
+                            ),
                             "track": unit["track"],
                             "level": unit["level"],
-                            "kind": "lesson",
+                            "kind": "checkpoint" if skill["id"] == "legendary" else "lesson",
                             "status": "planned",
                             "prerequisites": [],
                             "unlocked": False,
@@ -325,8 +413,51 @@ def path(user: User = Depends(get_current_user), db: Session = Depends(get_db)) 
                         }
                     )
             skills_out.append({"id": skill["id"], "title": fill_loc(skill["title"]), "nodes": skill_nodes})
-        units_out.append({"id": unit["id"], "title": fill_loc(unit["title"]), "level": unit["level"], "track": unit["track"], "skills": skills_out})
-    return {"nodes": nodes, "units": units_out, "done": done, "course": course_or_default(user.course_id)}
+        units_out.append(
+            {"id": unit["id"], "title": fill_loc(unit["title"]), "level": unit["level"], "track": unit["track"], "skills": skills_out}
+        )
+    catalog = all_catalog_lessons()
+    stages = []
+    trail: list[dict[str, Any]] = []
+    for level in LEVELS:
+        lid = level["id"]
+        published = [n for n in nodes if n["level"] == lid]
+        lessons = [n for n in published if not is_gate_kind(n["kind"])]
+        gate = next((n for n in published if is_gate_kind(n["kind"])), None)
+        if gate is None:
+            gate = planned_checkpoint_node(lid)
+            gate["title"] = fill_loc(gate["title"])
+        planned_count = sum(1 for row in catalog if row["level"] == lid and row["status"] == "planned")
+        published_total = len(lessons) + (1 if gate.get("status") == "published" else 0)
+        completed_n = sum(1 for n in lessons if n["completed"]) + (1 if gate.get("completed") else 0)
+        stage_trail = trail_for_stage(lessons, gate)
+        trail.extend(stage_trail)
+        stages.append(
+            {
+                "id": lid,
+                "ulpan": level["ulpan"],
+                "cefr": level["cefr"],
+                "title": fill_loc(STAGE_TITLES[lid]),
+                "progress": {"completed": completed_n, "published": published_total},
+                "planned_count": planned_count,
+                "open": stage_open(lid, done),
+                "badge": lid in badge_ids,
+                "checkpoint_slug": checkpoint_slug_for(lid),
+                "nodes": lessons,
+                "checkpoint": gate,
+            }
+        )
+    current = pick_current_slug(trail)
+    return {
+        "nodes": nodes,
+        "units": units_out,
+        "stages": stages,
+        "current_slug": current,
+        "done": done,
+        "badges": [{"stage_id": b.stage_id, "checkpoint_slug": b.checkpoint_slug} for b in badges],
+        "course": course_or_default(user.course_id),
+        "pass_threshold": PASS_THRESHOLD,
+    }
 
 
 @app.get("/lessons/{slug}")
@@ -335,6 +466,10 @@ def get_lesson(slug: str, user: User = Depends(get_current_user), db: Session = 
     if not lesson:
         raise HTTPException(404, "not_found")
     version = _published_version(db, lesson)
+    mandatory = [e for e in version.exercises if not e.get("optional") and e.get("type") != "speak"]
+    if not settings.tts_api_key:
+        mandatory = [e for e in mandatory if not e.get("requires_audio")]
+    gate = is_gate_kind(lesson.kind)
     return {
         "id": lesson.id,
         "slug": lesson.slug,
@@ -351,6 +486,14 @@ def get_lesson(slug: str, user: User = Depends(get_current_user), db: Session = 
         "vocabulary": version.vocabulary,
         "exercises": public_exercises(version.exercises, source_lang(user.course_id)),
         "threshold": version.threshold,
+        "mistake_limit": mistake_limit(len(mandatory), version.threshold) if gate else None,
+        "test_out": gate,
+        "stage": {
+            "id": lesson.level,
+            "ulpan": next((row["ulpan"] for row in LEVELS if row["id"] == lesson.level), lesson.level),
+            "cefr": lesson.cefr,
+            "title": fill_loc(STAGE_TITLES.get(lesson.level, {"en": lesson.level})),
+        },
         "editorial": {
             k: version.editorial.get(k)
             for k in ("author", "native_reviewer", "license", "version", "l10n_status", "review_note")
@@ -440,6 +583,11 @@ def complete(
     if not attempt or attempt.user_id != user.id:
         raise HTTPException(404, "attempt_missing")
     version = db.get(LessonVersion, attempt.lesson_version_id)
+    if not version:
+        raise HTTPException(404, "version_missing")
+    lesson = db.get(Lesson, version.lesson_id)
+    if not lesson:
+        raise HTTPException(404, "lesson_missing")
     mandatory = [e for e in version.exercises if not e.get("optional") and e.get("type") != "speak"]
     if not settings.tts_api_key:
         mandatory = [e for e in mandatory if not e.get("requires_audio")]
@@ -451,21 +599,78 @@ def complete(
     attempt.accuracy = accuracy
     attempt.status = "completed"
     attempt.completed_at = utcnow()
+    passed = accuracy + 1e-9 >= version.threshold
     awarded = 0
-    if accuracy + 1e-9 >= version.threshold:
-        base = sum(xp_for_correct(attempt.hint_level, e.get("xp", 10)) for e in mandatory if attempt.results.get(e["id"], {}).get("result") == "correct")
+    review: list[dict[str, Any]] = []
+    badge = None
+    next_unlocked = None
+    from biti.draft_l10n import accepted_for
+
+    src = source_lang(user.course_id)
+    gate = is_gate_kind(lesson.kind)
+    if passed:
+        base = sum(
+            xp_for_correct(attempt.hint_level, e.get("xp", 10))
+            for e in mandatory
+            if attempt.results.get(e["id"], {}).get("result") == "correct"
+        )
         awarded += award_xp(db, user, attempt.id, "lesson", base)
         if accuracy == 1:
             awarded += award_xp(db, user, attempt.id, "perfect", 15)
         for e in version.exercises:
-            from biti.draft_l10n import accepted_for
-
-            acc = accepted_for(e, source_lang(user.course_id))
+            acc = accepted_for(e, src)
             if e.get("type") in {"type_he", "mc", "tiles", "order_rtl"} and acc:
                 he_form = acc[0] if acc else ""
                 schedule_card(db, user, "vocab", {"id": e["id"], "he": he_form, "prompt": e.get("prompt")}, acc, True)
+        if gate:
+            row = _award_stage_badge(db, user, lesson.level, lesson.slug)
+            badge = {
+                "stage_id": row.stage_id,
+                "checkpoint_slug": row.checkpoint_slug,
+                "title": fill_loc(STAGE_TITLES.get(row.stage_id, {"en": row.stage_id})),
+            }
+            next_unlocked = next_stage_id(lesson.level)
+    elif gate:
+        for e in mandatory:
+            grade = attempt.results.get(e["id"]) or {}
+            if grade.get("result") == "correct":
+                continue
+            acc = accepted_for(e, src)
+            he_form = acc[0] if acc else ""
+            card = schedule_card(
+                db,
+                user,
+                "vocab",
+                {
+                    "id": e["id"],
+                    "he": he_form,
+                    "prompt": e.get("prompt"),
+                    "source_slug": e.get("source_slug"),
+                },
+                acc or ([he_form] if he_form else []),
+                False,
+            )
+            card.due_day = user_today(user)
+            review.append(
+                {
+                    "id": e["id"],
+                    "source_slug": e.get("source_slug"),
+                    "prompt": fill_loc(e.get("prompt") or {}),
+                    "he": he_form,
+                }
+            )
     db.commit()
-    return {"accuracy": accuracy, "passed": accuracy >= version.threshold, "xp_awarded": awarded, "progress": _user_public(user)}
+    return {
+        "accuracy": accuracy,
+        "passed": passed,
+        "xp_awarded": awarded,
+        "progress": _user_public(user),
+        "kind": lesson.kind,
+        "review": review,
+        "badge": badge,
+        "next_stage_unlocked": next_unlocked,
+        "mistake_limit": mistake_limit(len(mandatory), version.threshold) if gate else None,
+    }
 
 
 @app.get("/progress/me")

@@ -1,5 +1,5 @@
 import { Link, usePathname, useRouter } from "expo-router";
-import { type ReactNode, useEffect } from "react";
+import { createContext, type ReactNode, type RefObject, useContext, useEffect, useRef } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BitiMascot } from "@/components/BitiMascot";
@@ -17,12 +17,19 @@ const LINKS = [
   ["/profile", "nav.profile"],
 ] as const;
 
+const ShellScrollCtx = createContext<RefObject<ScrollView | null> | null>(null);
+
+export function useShellScroll() {
+  return useContext(ShellScrollCtx);
+}
+
 export function Shell({ children }: { children: ReactNode }) {
   const palette = usePalette();
   const insets = useSafeAreaInsets();
   const path = usePathname();
   const router = useRouter();
   const { user, ready, lang } = useAuth();
+  const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     if (ready && !user) router.replace("/");
@@ -87,7 +94,11 @@ export function Shell({ children }: { children: ReactNode }) {
           );
         })}
       </ScrollView>
-      <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 48, gap: 12 }}>{children}</ScrollView>
+      <ShellScrollCtx.Provider value={scrollRef}>
+        <ScrollView ref={scrollRef} contentContainerStyle={{ padding: 16, paddingBottom: 48, gap: 12 }}>
+          {children}
+        </ScrollView>
+      </ShellScrollCtx.Provider>
     </View>
   );
 }

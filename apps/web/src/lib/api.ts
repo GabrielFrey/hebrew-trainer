@@ -71,6 +71,10 @@ export type Lesson = {
   level: string;
   cefr: string;
   track: string;
+  kind?: string;
+  test_out?: boolean;
+  mistake_limit?: number | null;
+  stage?: { id: string; ulpan: string; cefr: string; title: Record<string, string> };
   audio: { capability: string };
   speech: { capability: string };
 };
@@ -110,6 +114,20 @@ export type PathUnit = {
   level: string;
   track: string;
   skills: Array<{ id: string; title: Record<string, string>; nodes: PathNode[] }>;
+};
+
+export type PathStage = {
+  id: string;
+  ulpan: string;
+  cefr: string;
+  title: Record<string, string>;
+  progress: { completed: number; published: number };
+  planned_count: number;
+  open: boolean;
+  badge: boolean;
+  checkpoint_slug?: string | null;
+  nodes: PathNode[];
+  checkpoint: PathNode;
 };
 
 export async function demoLogin(body: {

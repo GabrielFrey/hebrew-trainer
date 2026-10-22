@@ -272,6 +272,17 @@ class Notification(Base):
     read: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
+class StageBadge(Base):
+    __tablename__ = "stage_badges"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
+    course_id: Mapped[str] = mapped_column(String(16), default="he-ru")
+    stage_id: Mapped[str] = mapped_column(String(32))
+    checkpoint_slug: Mapped[str] = mapped_column(String(80))
+    awarded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    __table_args__ = (UniqueConstraint("user_id", "course_id", "stage_id", name="uq_stage_badge"),)
+
+
 class PublishedChunk(Base):
     """RAG corpus — published lesson text only."""
 

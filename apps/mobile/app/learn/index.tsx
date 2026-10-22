@@ -1,10 +1,10 @@
-import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { LearningPath } from "@/components/LearningPath";
 import { Shell } from "@/components/Shell";
-import { api, type PathNode } from "@/lib/api";
+import { api, type PathNode, type PathStage } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
-import { loc, t } from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import { usePalette } from "@/lib/theme";
 
 export default function Learn() {
@@ -18,52 +18,29 @@ export default function Learn() {
 function LearnInner() {
   const { lang } = useAuth();
   const palette = usePalette();
+  const [stages, setStages] = useState<PathStage[]>([]);
   const [nodes, setNodes] = useState<PathNode[]>([]);
+  const [currentSlug, setCurrentSlug] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    api<{ nodes: PathNode[] }>("/curriculum/path")
-      .then((d) => setNodes(d.nodes))
+    api<{ stages?: PathStage[]; nodes: PathNode[]; current_slug?: string }>("/curriculum/path")
+      .then((d) => {
+        setStages(d.stages || []);
+        setNodes(d.nodes);
+        setCurrentSlug(d.current_slug || null);
+      })
       .catch((e) => setError(String(e.message)));
   }, []);
 
   if (error) return <Text style={{ color: palette.incorrect }}>{error}</Text>;
-  if (!nodes.length) return <Text>{t(lang, "states.loading")}</Text>;
+  if (!nodes.length && !stages.length) return <Text>{t(lang, "states.loading")}</Text>;
 
   return (
-    <View testID="learn-path" style={{ gap: 10 }}>
+    <View testID="learn-path" style={{ gap: 12 }}>
       <Text style={{ fontSize: 28, fontWeight: "700", color: palette.ink }}>{t(lang, "nav.learn")}</Text>
-      {nodes.map((node, i) => {
-        const open = node.unlocked || node.completed;
-        return (
-          <Pressable
-            key={node.slug}
-            testID={`path-${node.slug}`}
-            accessibilityRole="button"
-            accessibilityState={{ disabled: !open }}
-            disabled={!open}
-            onPress={() => open && router.push(`/learn/${node.slug}`)}
-            style={{
-              padding: 14,
-              borderRadius: 22,
-              borderWidth: 1,
-              borderColor: node.completed ? palette.olive : open ? palette.indigo : palette.line,
-              backgroundColor: open ? palette.paper : palette.sandDeep,
-            }}
-          >
-            <Text style={{ fontSize: 12, color: palette.inkSoft, textTransform: "uppercase" }}>
-              {node.kind === "boss" ? "Boss" : node.track} · {node.level}
-            </Text>
-            <Text style={{ fontSize: 18, fontWeight: "600", color: palette.ink }}>
-              {i + 1}. {loc(node.title, lang)}
-            </Text>
-            {!open ? <Text style={{ color: palette.inkSoft }}>{t(lang, "lesson.locked")}</Text> : null}
-            {node.completed ? (
-              <Text style={{ color: palette.correct }}>✓ {Math.round((node.accuracy || 0) * 100)}%</Text>
-            ) : null}
-          </Pressable>
-        );
-      })}
+      <Text style={{ color: palette.inkSoft }}>{t(lang, "path.intro")}</Text>
+      {stages.length ? <LearningPath stages={stages} currentSlug={currentSlug} lang={lang} /> : null}
     </View>
   );
 }

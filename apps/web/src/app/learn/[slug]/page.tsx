@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { AppShell } from "@/components/AppShell";
@@ -10,6 +11,16 @@ import { api, type Exercise, type Lesson } from "@/lib/api";
 import { loc, useT } from "@/lib/i18n";
 
 type Grade = { result: string; rule_ids: string[]; diff: Array<{ start: number; end: number; expected: string; got: string }> };
+
+type CompleteResult = {
+  accuracy: number;
+  xp_awarded: number;
+  passed: boolean;
+  kind?: string;
+  review?: Array<{ id: string; source_slug?: string; prompt?: Record<string, string>; he?: string }>;
+  badge?: { stage_id: string; title: Record<string, string> } | null;
+  next_stage_unlocked?: string | null;
+};
 
 export default function LessonPage() {
   return (
@@ -31,7 +42,8 @@ function Player() {
   const [pairs, setPairs] = useState<Record<string, string>>({});
   const [order, setOrder] = useState<string[]>([]);
   const [grade, setGrade] = useState<Grade | null>(null);
-  const [done, setDone] = useState<{ accuracy: number; xp_awarded: number } | null>(null);
+  const [done, setDone] = useState<CompleteResult | null>(null);
+  const [gateOpen, setGateOpen] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [niqqud, setNiqqud] = useState(true);
   const [translit, setTranslit] = useState(true);
@@ -55,10 +67,13 @@ function Player() {
     (async () => {
       try {
         const data = await api<Lesson>(`/lessons/${slug}`);
-        const started = await api<{ attempt_id: string }>(`/lessons/${slug}/start`, { method: "POST" });
-        if (!cancelled) {
-          setLesson(data);
-          setAttempt(started.attempt_id);
+        if (cancelled) return;
+        setLesson(data);
+        const gate = data.kind === "checkpoint" || data.kind === "boss" || data.kind === "legendary";
+        setGateOpen(gate);
+        if (!gate) {
+          const started = await api<{ attempt_id: string }>(`/lessons/${slug}/start`, { method: "POST" });
+          if (!cancelled) setAttempt(started.attempt_id);
         }
       } catch (err) {
         if (!cancelled) setError(err instanceof Error ? err.message : "error");
@@ -68,6 +83,13 @@ function Player() {
       cancelled = true;
     };
   }, [slug]);
+
+  async function beginGate() {
+    if (!slug) return;
+    const started = await api<{ attempt_id: string }>(`/lessons/${slug}/start`, { method: "POST" });
+    setAttempt(started.attempt_id);
+    setGateOpen(false);
+  }
 
   const exercises = useMemo(
     () => (lesson?.exercises || []).filter((e) => !(e.requires_audio && lesson?.audio.capability === "unavailable")),
@@ -105,7 +127,7 @@ function Player() {
       return;
     }
     if (!attempt) return;
-    const res = await api<{ accuracy: number; xp_awarded: number; passed: boolean }>(`/attempts/${attempt}/complete`, {
+    const res = await api<CompleteResult>(`/attempts/${attempt}/complete`, {
       method: "POST",
     });
     setDone(res);
@@ -121,8 +143,98 @@ function Player() {
   }
 
   if (error && !lesson) return <p className="text-incorrect">{t("lesson.error")} {error}</p>;
-  if (!lesson || !current) return <p>{t("states.loading")}</p>;
+  if (!lesson) return <p>{t("states.loading")}</p>;
+  if (gateOpen && (lesson.kind === "checkpoint" || lesson.kind === "boss" || lesson.kind === "legendary")) {
+    return (
+      <div data-testid="checkpoint-start" className="rounded-3xl bg-paper p-6">
+        <p className="text-5xl" aria-hidden="true">
+          🏆
+        </p>
+        <p className="mt-2 text-xs uppercase tracking-wide text-ink-soft">
+          {lesson.stage?.ulpan} · {lesson.cefr}
+        </p>
+        <h1 className="text-3xl font-semibold">{t("checkpoint.startTitle")}</h1>
+        <p className="mt-2 text-ink-soft">{t("checkpoint.startBody")}</p>
+        <p className="mt-3 font-medium">
+          <span aria-hidden="true" className="me-1">
+            ✓
+          </span>
+          {t("checkpoint.passNeed")}
+        </p>
+        <p className="font-medium">
+          <span aria-hidden="true" className="me-1">
+            ×
+          </span>
+          {t("checkpoint.mistakes")}
+          {lesson.mistake_limit != null ? ` · ${lesson.mistake_limit}` : ""}
+        </p>
+        <p className="mt-2 text-sm text-ink-soft">{t("checkpoint.xpNote")}</p>
+        <button
+          type="button"
+          data-testid="checkpoint-begin"
+          onClick={beginGate}
+          className="mt-5 rounded-full bg-pomegranate px-5 py-2 text-paper"
+        >
+          {t("checkpoint.begin")}
+        </button>
+      </div>
+    );
+  }
+  if (!current) return <p>{t("states.loading")}</p>;
   if (done) {
+    const gate = done.kind === "checkpoint" || lesson.kind === "checkpoint";
+    if (gate && done.passed) {
+      return (
+        <div data-testid="checkpoint-pass" className="rounded-3xl border-2 border-correct bg-correct-bg p-6">
+          <BitiMascot mood="happy" />
+          <p data-testid="feedback-result" className="text-xl font-semibold text-correct">
+            <span aria-hidden="true" className="me-2">
+              ✓
+            </span>
+            {t("checkpoint.passed")}
+          </p>
+          <p data-testid="celebration">{t("checkpoint.badgeAwarded")}</p>
+          {done.badge ? <p className="text-lg font-medium">{loc(done.badge.title, lang)}</p> : null}
+          {done.next_stage_unlocked ? <p>{t("checkpoint.nextOpen")}</p> : null}
+          <p>
+            Accuracy {Math.round(done.accuracy * 100)}% · +{done.xp_awarded} XP
+          </p>
+          <p className="mt-2 text-sm">{t("checkpoint.xpNote")}</p>
+        </div>
+      );
+    }
+    if (gate && !done.passed) {
+      return (
+        <div data-testid="checkpoint-fail" className="rounded-3xl border-2 border-incorrect bg-incorrect-bg p-6">
+          <BitiMascot mood="sad" />
+          <p data-testid="feedback-result" className="text-xl font-semibold text-incorrect">
+            <span aria-hidden="true" className="me-2">
+              ×
+            </span>
+            {t("checkpoint.failed")}
+          </p>
+          <p>
+            Accuracy {Math.round(done.accuracy * 100)}%
+          </p>
+          <h2 className="mt-4 font-medium">{t("checkpoint.reviewThese")}</h2>
+          <ul data-testid="checkpoint-review" className="mt-2 space-y-2">
+            {(done.review || []).map((item) => (
+              <li key={item.id} className="rounded-2xl bg-paper px-3 py-2">
+                <p>{item.prompt ? loc(item.prompt, lang) : item.id}</p>
+                {item.he ? (
+                  <p lang="he" dir="rtl" className="he">
+                    {item.he}
+                  </p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+          <Link href={`/learn/${slug}`} className="mt-4 inline-block rounded-full bg-indigo px-5 py-2 text-paper">
+            {t("checkpoint.tryAgain")}
+          </Link>
+        </div>
+      );
+    }
     return (
       <div data-testid="lesson-complete" className="rounded-3xl bg-paper p-6">
         <BitiMascot mood="happy" />

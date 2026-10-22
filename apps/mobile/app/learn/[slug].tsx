@@ -17,6 +17,16 @@ type Grade = {
   diff: Array<{ start: number; end: number; expected: string; got: string }>;
 };
 
+type CompleteResult = {
+  accuracy: number;
+  xp_awarded: number;
+  passed?: boolean;
+  kind?: string;
+  review?: Array<{ id: string; source_slug?: string; prompt?: Record<string, string>; he?: string }>;
+  badge?: { stage_id: string; title: Record<string, string> } | null;
+  next_stage_unlocked?: string | null;
+};
+
 export default function LessonScreen() {
   return (
     <Shell>
@@ -36,8 +46,9 @@ function Player() {
   const [pairs, setPairs] = useState<Record<string, string>>({});
   const [order, setOrder] = useState<string[]>([]);
   const [grade, setGrade] = useState<Grade | null>(null);
-  const [done, setDone] = useState<{ accuracy: number; xp_awarded: number } | null>(null);
+  const [done, setDone] = useState<CompleteResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [gateOpen, setGateOpen] = useState(true);
   const [niqqud, setNiqqud] = useState(true);
   const [translit, setTranslit] = useState(true);
   const [explain, setExplain] = useState<string | null>(null);
@@ -48,10 +59,13 @@ function Player() {
     (async () => {
       try {
         const data = await api<Lesson>(`/lessons/${slug}`);
-        const started = await api<{ attempt_id: string }>(`/lessons/${slug}/start`, { method: "POST" });
-        if (!cancelled) {
-          setLesson(data);
-          setAttempt(started.attempt_id);
+        if (cancelled) return;
+        setLesson(data);
+        const gate = data.kind === "checkpoint" || data.kind === "boss" || data.kind === "legendary";
+        setGateOpen(gate);
+        if (!gate) {
+          const started = await api<{ attempt_id: string }>(`/lessons/${slug}/start`, { method: "POST" });
+          if (!cancelled) setAttempt(started.attempt_id);
         }
       } catch (err) {
         if (!cancelled) setError(err instanceof Error ? err.message : "error");
@@ -99,8 +113,15 @@ function Player() {
       return;
     }
     if (!attempt) return;
-    const res = await api<{ accuracy: number; xp_awarded: number }>(`/attempts/${attempt}/complete`, { method: "POST" });
+    const res = await api<CompleteResult>(`/attempts/${attempt}/complete`, { method: "POST" });
     setDone(res);
+  }
+
+  async function beginGate() {
+    if (!slug) return;
+    const started = await api<{ attempt_id: string }>(`/lessons/${slug}/start`, { method: "POST" });
+    setAttempt(started.attempt_id);
+    setGateOpen(false);
   }
 
   async function askExplain() {
@@ -119,8 +140,70 @@ function Player() {
       </Text>
     );
   }
-  if (!lesson || !current) return <Text>{t(lang, "states.loading")}</Text>;
+  if (!lesson) return <Text>{t(lang, "states.loading")}</Text>;
+  if (gateOpen && (lesson.kind === "checkpoint" || lesson.kind === "boss" || lesson.kind === "legendary")) {
+    return (
+      <View testID="checkpoint-start" style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 20, gap: 8 }}>
+        <Text style={{ fontSize: 40 }}>🏆</Text>
+        <Text style={{ color: palette.inkSoft, textTransform: "uppercase" }}>
+          {lesson.stage?.ulpan} · {lesson.cefr}
+        </Text>
+        <Text style={{ fontSize: 28, fontWeight: "700", color: palette.ink }}>{t(lang, "checkpoint.startTitle")}</Text>
+        <Text style={{ color: palette.inkSoft }}>{t(lang, "checkpoint.startBody")}</Text>
+        <Text style={{ color: palette.ink }}>✓ {t(lang, "checkpoint.passNeed")}</Text>
+        <Text style={{ color: palette.ink }}>
+          × {t(lang, "checkpoint.mistakes")}
+          {lesson.mistake_limit != null ? ` · ${lesson.mistake_limit}` : ""}
+        </Text>
+        <Pressable
+          testID="checkpoint-begin"
+          onPress={beginGate}
+          style={{ backgroundColor: palette.pomegranate, borderRadius: 999, paddingVertical: 10, paddingHorizontal: 18, alignSelf: "flex-start" }}
+        >
+          <Text style={{ color: palette.paper, fontWeight: "600" }}>{t(lang, "checkpoint.begin")}</Text>
+        </Pressable>
+      </View>
+    );
+  }
+  if (!current) return <Text>{t(lang, "states.loading")}</Text>;
   if (done) {
+    const gate = done.kind === "checkpoint" || lesson.kind === "checkpoint";
+    if (gate && done.passed) {
+      return (
+        <View testID="checkpoint-pass" style={{ backgroundColor: palette.correctBg, borderRadius: 24, padding: 20, gap: 8, borderWidth: 2, borderColor: palette.correct }}>
+          <BitiMascot mood="happy" />
+          <Text testID="feedback-result" style={{ fontSize: 22, fontWeight: "700", color: palette.correct }}>
+            ✓ {t(lang, "checkpoint.passed")}
+          </Text>
+          <Text>{t(lang, "checkpoint.badgeAwarded")}</Text>
+          {done.badge ? <Text style={{ fontSize: 18, fontWeight: "600" }}>{loc(done.badge.title, lang)}</Text> : null}
+          {done.next_stage_unlocked ? <Text>{t(lang, "checkpoint.nextOpen")}</Text> : null}
+          <Text>
+            Accuracy {Math.round(done.accuracy * 100)}% · +{done.xp_awarded} XP
+          </Text>
+        </View>
+      );
+    }
+    if (gate && !done.passed) {
+      return (
+        <View testID="checkpoint-fail" style={{ backgroundColor: palette.incorrectBg, borderRadius: 24, padding: 20, gap: 8, borderWidth: 2, borderColor: palette.incorrect }}>
+          <BitiMascot mood="sad" />
+          <Text testID="feedback-result" style={{ fontSize: 22, fontWeight: "700", color: palette.incorrect }}>
+            × {t(lang, "checkpoint.failed")}
+          </Text>
+          <Text>Accuracy {Math.round(done.accuracy * 100)}%</Text>
+          <Text style={{ fontWeight: "600" }}>{t(lang, "checkpoint.reviewThese")}</Text>
+          <View testID="checkpoint-review">
+            {(done.review || []).map((item) => (
+              <View key={item.id} style={{ backgroundColor: palette.paper, borderRadius: 16, padding: 10, marginBottom: 8 }}>
+                <Text>{item.prompt ? loc(item.prompt, lang) : item.id}</Text>
+                {item.he ? <Text {...({ lang: "he" } as object)}>{item.he}</Text> : null}
+              </View>
+            ))}
+          </View>
+        </View>
+      );
+    }
     return (
       <View testID="lesson-complete" style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 20, gap: 8 }}>
         <BitiMascot mood="happy" />
