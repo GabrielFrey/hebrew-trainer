@@ -2,20 +2,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" role="img" aria-label="Biti the robot">
   <title>Biti</title>
   
-  <circle cx="32" cy="52" r="10" fill="#1B3A5F"/>
-  <circle cx="88" cy="52" r="10" fill="#1B3A5F"/>
-  <ellipse cx="60" cy="92" rx="28" ry="20" fill="#F6F0E4"/>
-  <path d="M34 86 Q28 100 38 108" fill="#1B3A5F"/>
-  <path d="M86 86 Q92 100 82 108" fill="#1B3A5F"/>
-  <circle cx="60" cy="52" r="34" fill="#F6F0E4"/>
-  <line x1="60" y1="22" x2="48" y2="10" stroke="#1B3A5F" stroke-width="4" stroke-linecap="round"/>
-  <circle cx="46" cy="8" r="6" fill="#B45309"/>
+  <circle cx="28" cy="58" r="12.4" fill="#F6F0E4"/>
+  <circle cx="92" cy="58" r="12.4" fill="#F6F0E4"/>
+  <circle cx="28" cy="58" r="10.6" fill="#0A1628"/>
+  <circle cx="92" cy="58" r="10.6" fill="#0A1628"/>
+  <circle cx="28" cy="58" r="4.4" fill="#1A2C44"/>
+  <circle cx="92" cy="58" r="4.4" fill="#1A2C44"/>
+  <ellipse cx="60" cy="90.5" rx="20" ry="12.2" fill="#142033"/>
+  <ellipse cx="60" cy="90.5" rx="17.8" ry="10.4" fill="#F6F0E4"/>
+  <path d="M42 84 Q32 93 40 101" fill="none" stroke="#0A1628" stroke-width="10.4" stroke-linecap="round"/>
+  <path d="M78 84 Q88 93 80 101" fill="none" stroke="#0A1628" stroke-width="10.4" stroke-linecap="round"/>
+  <circle cx="60" cy="58" r="31.2" fill="#142033"/>
+  <circle cx="60" cy="58" r="28.6" fill="#F6F0E4"/>
+  <path d="M39 48 Q60 41.5 81 48" fill="none" stroke="#E7DCC8" stroke-width="2.4" stroke-linecap="round"/>
+  <ellipse cx="41" cy="68.5" rx="6.4" ry="3.8" fill="#E8C4B0"/>
+  <ellipse cx="79" cy="68.5" rx="6.4" ry="3.8" fill="#E8C4B0"/>
+  <line x1="60" y1="29.5" x2="51" y2="22" stroke="#0A1628" stroke-width="4.6" stroke-linecap="round"/>
+  <circle cx="49" cy="21" r="5.4" fill="#B45309" stroke="#142033" stroke-width="1.8"/>
   
-  <circle cx="46" cy="56" r="11" fill="#FFFFFF"/>
-  <circle cx="74" cy="56" r="11" fill="#FFFFFF"/>
-  <circle cx="48" cy="58" r="5.5" fill="#142033"/>
-  <circle cx="76" cy="58" r="5.5" fill="#142033"/>
-  <circle cx="50" cy="56" r="1.6" fill="#FFFFFF"/>
-  <circle cx="78" cy="56" r="1.6" fill="#FFFFFF"/>
-  <path d="M48 86 Q60 76 72 86" fill="none" stroke="#142033" stroke-width="3.2" stroke-linecap="round"/>
+  <circle cx="45.5" cy="55" r="12.4" fill="#142033"/>
+  <circle cx="74.5" cy="55" r="12.4" fill="#142033"/>
+  <circle cx="45.5" cy="55" r="9.7" fill="#FFFFFF"/>
+  <circle cx="74.5" cy="55" r="9.7" fill="#FFFFFF"/>
+  <circle cx="46.9" cy="56.6" r="7.3" fill="#142033"/>
+  <circle cx="75.9" cy="56.6" r="7.3" fill="#142033"/>
+  <circle cx="49.3" cy="54.0" r="2.7" fill="#FFFFFF"/>
+  <circle cx="78.30000000000001" cy="54.0" r="2.7" fill="#FFFFFF"/>
+  <circle cx="44.3" cy="59.0" r="1.15" fill="#FFFFFF"/>
+  <circle cx="73.30000000000001" cy="59.0" r="1.15" fill="#FFFFFF"/>
+  <path d="M48 80 Q60 73 72 80" fill="none" stroke="#142033" stroke-width="4.2" stroke-linecap="round"/>
 </svg>

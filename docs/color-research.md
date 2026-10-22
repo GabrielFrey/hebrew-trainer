@@ -308,7 +308,7 @@ Not Duolingo green (`#58CC02` and relatives). Primary is **Mediterranean indigo*
 | Incorrect sheet | `incorrectBg` | `#7C2D12` |
 | Almost sheet | `almostBg` | `#78350F` |
 
-Mascot paints (not theme roles): cream `#F6F0E4`, ear navy `#1B3A5F`, antenna `#B45309`, streak gold `#FCD34D`.
+Mascot paints (not theme roles): cream `#F6F0E4`, outline/ink `#142033`, limbs/ears `#0A1628` (darker than brand `#184A82` so they do not blend on the icon), face-plate `#E7DCC8`, cheek `#E8C4B0`, antenna `#B45309`, streak gold `#FCD34D`. Character sits in the center ~80% of the 1024 icon so iOS corner masking does not crop the antenna.
 
 ### Contrast table (WCAG 2.2, unrounded)
 
