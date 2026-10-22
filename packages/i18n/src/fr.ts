@@ -113,6 +113,7 @@ export const fr = {
     goal: "Objectif du jour",
   },
   states: {
+    offlineBadge: "Hors ligne",
     loading: "Chargement…",
     unavailable: "Cette fonction n’est pas disponible.",
     error: "Un problème est survenu.",

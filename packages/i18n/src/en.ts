@@ -113,6 +113,7 @@ export const en = {
     goal: "Daily goal",
   },
   states: {
+    offlineBadge: "Offline",
     loading: "Loading…",
     unavailable: "This feature is unavailable.",
     error: "Something went wrong.",

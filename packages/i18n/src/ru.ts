@@ -113,6 +113,7 @@ export const ru = {
     goal: "Цель дня",
   },
   states: {
+    offlineBadge: "Офлайн",
     loading: "Загрузка…",
     unavailable: "Раздел недоступен.",
     error: "Что-то пошло не так.",

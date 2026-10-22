@@ -1,5 +1,7 @@
 import { acceptedFor, gradeExercise, gradePlacement } from "@biti/grading";
 import catalog from "@/content/published.json";
+import verbsData from "@/content/verbs.json";
+import { dueCards, offlineAlphabet, offlinePractice, scheduleCard, today, type SrsCard } from "./offline-content";
 import type { Exercise, Lesson, PathNode, PathStage, User } from "./api";
 import { newId, peekSession, saveSession, type LocalAttempt, type LocalSession } from "./session";
 
@@ -206,6 +208,8 @@ export function canServeLocally(path: string, method: string): boolean {
   if (m === "POST" && /\/lessons\/[^/]+\/start$/.test(path)) return true;
   if (m === "POST" && /\/attempts\/[^/]+\/(submit|complete)$/.test(path)) return true;
   if (m === "POST" && path === "/tutor/explain") return true;
+  if (m === "GET" && (path === "/alphabet" || path === "/verbs" || path === "/practice" || path === "/srs/due")) return true;
+  if (m === "POST" && /^\/srs\/[^/]+\/review$/.test(path)) return true;
   return false;
 }
 
@@ -282,6 +286,12 @@ export async function localHandle<T>(path: string, init: RequestInit = {}): Prom
     } else {
       grade = gradeExercise(exercise, { value: body.value, pairs: body.pairs as Record<string, string> }, sourceLang(session.user.course_id));
       if (grade.result !== "correct") {
+        const acc = acceptedFor(exercise, sourceLang(session.user.course_id));
+        if (acc.length && exercise.type === "type_he") {
+          const id = `${attempt.slug}:${String(body.exercise_id)}`;
+          session.srs = session.srs || {};
+          session.srs[id] = { id, kind: "exercise", prompt: { id, he: acc[0], ...((exercise.prompt as object) || {}) }, accepted: acc, step: 0, due_day: today() };
+        }
         session.user = { ...session.user, hearts: Math.max(0, session.user.hearts - 1) };
         attempt.combo = 0;
       } else {
@@ -341,6 +351,31 @@ export async function localHandle<T>(path: string, init: RequestInit = {}): Prom
       badge,
       next_stage_unlocked: nextStage,
     } as T;
+  }
+
+  if (method === "GET" && path === "/alphabet") return offlineAlphabet() as T;
+  if (method === "GET" && path === "/verbs") return verbsData as T;
+  if (method === "GET" && path === "/practice") {
+    const session = sessionOrThrow();
+    return offlinePractice(session.done, session.srs || {}, session.user.hearts) as T;
+  }
+  if (method === "GET" && path === "/srs/due") {
+    const cards: SrsCard[] = dueCards(sessionOrThrow().srs || {});
+    return { today: today(), cards: cards.map(({ accepted: _a, ...rest }) => rest) } as T;
+  }
+  const srsReview = path.match(/^\/srs\/([^/]+)\/review$/);
+  if (method === "POST" && srsReview) {
+    const session = sessionOrThrow();
+    const id = decodeURIComponent(srsReview[1]);
+    const card = session.srs?.[id];
+    if (!card) throw new Error("card_missing");
+    const grade = gradeExercise({ type: "type_he", accepted: card.accepted, mode: "relaxed" }, { value: body.value }, "en");
+    const correct = grade.result === "correct";
+    const next = scheduleCard(card, correct);
+    session.srs = { ...session.srs, [id]: next };
+    if (correct) session.user = { ...session.user, xp_total: session.user.xp_total + 5 };
+    await saveSession(session);
+    return { grade, next_due: next.due_day, step: next.step, intervals: [1, 3, 7, 14, 30] } as T;
   }
 
   if (method === "POST" && path === "/tutor/explain") {

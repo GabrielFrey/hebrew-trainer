@@ -36,8 +36,8 @@ function LearnInner() {
   if (error) {
     return (
       <View style={{ gap: 12 }}>
-        <Text testID="learn-error" style={{ color: palette.incorrect }}>
-          {error}
+        <Text testID="learn-error" style={{ color: palette.inkSoft }}>
+          {t(lang, "states.error")}
         </Text>
         <Pressable
           testID="learn-retry"

@@ -3,6 +3,8 @@ import { Text, View } from "react-native";
 import { HebrewText } from "@/components/HebrewText";
 import { Shell } from "@/components/Shell";
 import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
+import { t } from "@/lib/i18n";
 import { usePalette } from "@/lib/theme";
 
 type Letter = { glyph: string; name: string; final?: string };
@@ -16,6 +18,7 @@ export default function Alphabet() {
 }
 
 function AlphaInner() {
+  const { lang } = useAuth();
   const palette = usePalette();
   const [print, setPrint] = useState<Letter[]>([]);
   const [look, setLook] = useState<string[][]>([]);
@@ -28,9 +31,9 @@ function AlphaInner() {
         setLook(d.lookalikes);
         setNote(d.cursive_note);
       })
-      .catch((e) => setError(String(e.message)));
+      .catch(() => setError("unavailable"));
   }, []);
-  if (error) return <Text style={{ color: palette.incorrect }}>{error}</Text>;
+  if (error) return <Text testID="screen-unavailable" style={{ color: palette.inkSoft }}>{t(lang, "states.unavailable")}</Text>;
   return (
     <View testID="alphabet" style={{ gap: 12 }}>
       <Text style={{ fontSize: 28, fontWeight: "700", color: palette.ink }}>Alphabet</Text>

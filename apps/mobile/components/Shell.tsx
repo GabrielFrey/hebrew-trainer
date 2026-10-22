@@ -1,8 +1,9 @@
 import { Link, usePathname, useRouter } from "expo-router";
-import { createContext, type ComponentRef, type ReactNode, type RefObject, useContext, useEffect, useRef } from "react";
+import { createContext, type ComponentRef, type ReactNode, type RefObject, useContext, useEffect, useRef, useState } from "react";
 import { Platform, Pressable, ScrollView, Text, View } from "react-native";
 import { initialWindowMetrics, useSafeAreaInsets } from "react-native-safe-area-context";
 import { BitiMascot } from "@/components/BitiMascot";
+import { connectionState } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { GlassSurface } from "@/lib/glass";
 import { t } from "@/lib/i18n";
@@ -33,6 +34,14 @@ export function Shell({ children }: { children: ReactNode }) {
   const router = useRouter();
   const { user, ready, lang } = useAuth();
   const scrollRef = useRef<ShellScrollView>(null);
+  const [offline, setOffline] = useState(connectionState() === "offline");
+
+  useEffect(() => {
+    const tick = () => setOffline(connectionState() === "offline");
+    tick();
+    const id = setInterval(tick, 1500);
+    return () => clearInterval(id);
+  }, [path]);
 
   useEffect(() => {
     if (ready && !user) router.replace("/");
@@ -64,7 +73,16 @@ export function Shell({ children }: { children: ReactNode }) {
               </Text>
             </View>
           </View>
-          <View style={{ flexDirection: "row", gap: 8 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexShrink: 1, flexWrap: "wrap", justifyContent: "flex-end" }}>
+            {offline ? (
+              <Text
+                testID="offline-badge"
+                accessibilityLabel={t(lang, "states.offlineBadge")}
+                style={{ color: palette.ink, fontSize: 11, borderWidth: 1, borderColor: palette.line, borderRadius: 999, paddingHorizontal: 8, paddingVertical: 2 }}
+              >
+                {t(lang, "states.offlineBadge")}
+              </Text>
+            ) : null}
             <Text accessibilityLabel="XP" style={{ color: palette.ink, fontSize: 12 }}>
               {user.xp_total} XP
             </Text>
@@ -77,7 +95,12 @@ export function Shell({ children }: { children: ReactNode }) {
           </View>
         </View>
       </GlassSurface>
-      <ScrollView horizontal contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 10, gap: 8 }}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{ flexGrow: 0, flexShrink: 0 }}
+        contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 10, gap: 8, alignItems: "center" }}
+      >
         {LINKS.map(([href, key]) => {
           const active = path === href || (href !== "/learn" && path.startsWith(href));
           return (
@@ -85,15 +108,20 @@ export function Shell({ children }: { children: ReactNode }) {
               <Pressable
                 accessibilityRole="link"
                 style={{
-                  borderRadius: 999,
-                  paddingHorizontal: 12,
-                  paddingVertical: 8,
+                  height: 40,
+                  borderRadius: 20,
+                  paddingHorizontal: 14,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  alignSelf: "center",
+                  flexGrow: 0,
+                  flexShrink: 0,
                   backgroundColor: active ? palette.indigo : palette.paper,
                   borderWidth: 1,
                   borderColor: palette.line,
                 }}
               >
-                <Text style={{ color: active ? palette.paper : palette.ink, fontSize: 14 }}>{t(lang, key)}</Text>
+                <Text numberOfLines={1} style={{ color: active ? palette.paper : palette.ink, fontSize: 14, lineHeight: 20 }}>{t(lang, key)}</Text>
               </Pressable>
             </Link>
           );

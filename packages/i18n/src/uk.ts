@@ -113,6 +113,7 @@ export const uk = {
     goal: "Ціль дня",
   },
   states: {
+    offlineBadge: "Офлайн",
     loading: "Завантаження…",
     unavailable: "Розділ недоступний.",
     error: "Сталася помилка.",

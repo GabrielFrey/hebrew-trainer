@@ -113,6 +113,7 @@ export const es = {
     goal: "Meta del día",
   },
   states: {
+    offlineBadge: "Sin conexión",
     loading: "Cargando…",
     unavailable: "Esta función no está disponible.",
     error: "Algo salió mal.",

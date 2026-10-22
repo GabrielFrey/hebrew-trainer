@@ -28,10 +28,10 @@ function ReviewInner() {
   useEffect(() => {
     api<{ cards: Card[] }>("/srs/due")
       .then((d) => setCards(d.cards))
-      .catch((e) => setError(String(e.message)));
+      .catch(() => setError("unavailable"));
   }, []);
 
-  if (error) return <Text style={{ color: palette.incorrect }}>{error}</Text>;
+  if (error) return <Text testID="screen-unavailable" style={{ color: palette.inkSoft }}>{t(lang, "states.unavailable")}</Text>;
   if (!cards.length) {
     return (
       <View testID="review-empty" style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 20, gap: 8 }}>

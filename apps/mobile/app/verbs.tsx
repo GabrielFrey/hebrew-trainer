@@ -3,6 +3,8 @@ import { Pressable, Text, View } from "react-native";
 import { HebrewText } from "@/components/HebrewText";
 import { Shell } from "@/components/Shell";
 import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
+import { t } from "@/lib/i18n";
 import { usePalette } from "@/lib/theme";
 
 type Paradigm = {
@@ -23,6 +25,7 @@ export default function Verbs() {
 }
 
 function VerbsInner() {
+  const { lang } = useAuth();
   const palette = usePalette();
   const [items, setItems] = useState<Paradigm[]>([]);
   const [open, setOpen] = useState<string | null>(null);
@@ -30,9 +33,9 @@ function VerbsInner() {
   useEffect(() => {
     api<{ paradigms: Paradigm[] }>("/verbs")
       .then((d) => setItems(d.paradigms))
-      .catch((e) => setError(String(e.message)));
+      .catch(() => setError("unavailable"));
   }, []);
-  if (error) return <Text style={{ color: palette.incorrect }}>{error}</Text>;
+  if (error) return <Text testID="screen-unavailable" style={{ color: palette.inkSoft }}>{t(lang, "states.unavailable")}</Text>;
   return (
     <View testID="verbs" style={{ gap: 10 }}>
       <Text style={{ fontSize: 28, fontWeight: "700", color: palette.ink }}>Verb explorer</Text>

@@ -23,6 +23,7 @@ export type LocalSession = {
   done: Record<string, number>;
   attempts: Record<string, LocalAttempt>;
   badges: string[];
+  srs?: Record<string, import("./offline-content").SrsCard>;
   apiBase?: string;
 };
 

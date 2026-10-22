@@ -241,11 +241,6 @@ function Player() {
             </Text>
           </Pressable>
         </View>
-        {lesson.audio.capability === "unavailable" ? (
-          <Text testID="audio-unavailable" style={{ backgroundColor: palette.sandDeep, borderRadius: 16, padding: 10 }}>
-            {t(lang, "lesson.audioUnavailable")}
-          </Text>
-        ) : null}
         {offline ? <Text style={{ color: palette.almost }}>{t(lang, "lesson.offline")}</Text> : null}
         <Text testID="exercise-prompt" style={{ fontSize: 18, color: palette.ink }}>
           {loc(current.prompt, lang)}

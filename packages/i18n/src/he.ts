@@ -113,6 +113,7 @@ export const he = {
     goal: "יעד יומי",
   },
   states: {
+    offlineBadge: "לא מקוון",
     loading: "טוען…",
     unavailable: "האפשרות אינה זמינה.",
     error: "משהו השתבש.",
