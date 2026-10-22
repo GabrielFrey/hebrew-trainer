@@ -89,6 +89,7 @@ def demo_user(
     if role not in ROLES:
         role = "learner"
     email = email or f"demo-{role}@biti.local"
+    allowed = {"ru", "uk", "en", "es", "fr", "he"}
     user = db.query(User).filter(User.email == email).one_or_none()
     if user is None:
         user = User(
@@ -96,13 +97,13 @@ def demo_user(
             email=email,
             display_name=display_name or "Biti learner",
             role=role,
-            ui_language=ui_language if ui_language in {"ru", "en", "he"} else "ru",
+            ui_language=ui_language if ui_language in allowed else "ru",
         )
         db.add(user)
         db.commit()
         db.refresh(user)
     else:
-        user.ui_language = ui_language if ui_language in {"ru", "en", "he"} else user.ui_language
+        user.ui_language = ui_language if ui_language in allowed else user.ui_language
         if display_name:
             user.display_name = display_name
         db.commit()

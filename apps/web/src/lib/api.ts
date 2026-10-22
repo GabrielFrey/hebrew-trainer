@@ -121,7 +121,10 @@ export async function demoLogin(body: {
 }) {
   const data = await api<{ access_token: string; user: User }>("/auth/demo", {
     method: "POST",
-    body: JSON.stringify(body),
+    body: JSON.stringify({
+      ...body,
+      email: body.role === "editor" ? "demo-editor@biti.local" : `demo-${crypto.randomUUID()}@biti.local`,
+    }),
   });
   setToken(data.access_token);
   return data.user;

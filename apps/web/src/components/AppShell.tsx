@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { BitiMascot } from "@/components/BitiMascot";
 import { api, token, type User } from "@/lib/api";
 import { I18nProvider, useT } from "@/lib/i18n";
@@ -19,6 +19,14 @@ const LINKS = [
 ] as const;
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={<p className="p-8 text-ink-soft">Loading…</p>}>
+      <AppShellInner>{children}</AppShellInner>
+    </Suspense>
+  );
+}
+
+function AppShellInner({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
   const router = useRouter();
@@ -50,7 +58,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className="relative mx-auto flex min-h-full max-w-6xl flex-col px-4 pb-24 pt-4 md:px-8">
         <a
           href="#main"
-          className="absolute start-4 top-0 z-50 -translate-y-[120%] rounded-full bg-indigo px-4 py-2 text-paper focus:translate-y-3"
+          data-testid="skip-content"
+          className="sr-only z-50 rounded-full bg-indigo px-4 py-2 text-paper focus:not-sr-only focus:absolute focus:start-4 focus:top-3"
         >
           Skip to content
         </a>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { BitiMascot } from "@/components/BitiMascot";
 import { HebrewKeyboard } from "@/components/HebrewKeyboard";
@@ -14,7 +14,9 @@ type Grade = { result: string; rule_ids: string[]; diff: Array<{ start: number; 
 export default function LessonPage() {
   return (
     <AppShell>
-      <Player />
+      <Suspense fallback={<p className="p-8 text-ink-soft">Loading…</p>}>
+        <Player />
+      </Suspense>
     </AppShell>
   );
 }

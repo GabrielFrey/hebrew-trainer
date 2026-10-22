@@ -54,7 +54,24 @@ function ProfileInner() {
       </div>
       <div className="rounded-3xl bg-paper p-5">
         <h2 className="text-xl font-medium">Capabilities</h2>
-        <pre className="mt-3 overflow-auto text-sm text-ink-soft">{JSON.stringify(meta, null, 2)}</pre>
+        {meta ? (
+          <ul className="mt-3 space-y-1 text-sm text-ink-soft">
+            <li>Auth: {String((meta.auth as { mode?: string } | undefined)?.mode || "unknown")}</li>
+            <li>Audio: {String((meta.audio as { capability?: string } | undefined)?.capability || "unknown")}</li>
+            <li>Speech: {String((meta.speech as { capability?: string } | undefined)?.capability || "unknown")}</li>
+            <li>
+              Tutor: {String((meta.tutor as { capability?: string } | undefined)?.capability || "unknown")} — never
+              awards XP
+            </li>
+            <li>
+              Catalog: {String((meta.catalog as { published?: number } | undefined)?.published ?? "?")} published /{" "}
+              {String((meta.catalog as { lessons?: number } | undefined)?.lessons ?? "?")} mapped
+            </li>
+            <li>uk / es / fr copy: in_review until a native reviewer signs off</li>
+          </ul>
+        ) : (
+          <p className="mt-3 text-sm text-ink-soft">Loading capabilities…</p>
+        )}
         <p className="mt-3 text-sm">
           Achievements: Alef-Bet master, All seven binyanim, and First conversation unlock from server progress — they
           never come from the tutor.

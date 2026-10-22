@@ -169,8 +169,12 @@ test.describe("acceptance", () => {
     await onboard(page);
     await page.getByTestId("path-script-alef-he").click();
     await expect(page.getByTestId("lesson-player")).toBeVisible();
+    await page.evaluate(() => {
+      document.body.setAttribute("tabindex", "-1");
+      document.body.focus();
+    });
     await page.keyboard.press("Tab");
-    const skip = page.getByRole("link", { name: "Skip to content" });
+    const skip = page.getByTestId("skip-content").first();
     await expect(skip).toBeFocused();
     const key = page.getByTestId("choice-א");
     await key.focus();

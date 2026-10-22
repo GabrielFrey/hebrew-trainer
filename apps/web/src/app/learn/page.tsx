@@ -49,7 +49,9 @@ function LearnInner() {
                   <h3 className="mb-3 font-medium">{loc(skill.title, lang)}</h3>
                   <ol className="flex flex-wrap items-center gap-3">
                     {skill.nodes.map((node) => (
-                      <NodeBubble key={node.slug} node={node} lang={lang} t={t} />
+                      <li key={node.slug}>
+                        <NodeBubble node={node} lang={lang} t={t} />
+                      </li>
                     ))}
                   </ol>
                 </div>
