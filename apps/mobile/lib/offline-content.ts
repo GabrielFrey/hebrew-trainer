@@ -11,21 +11,32 @@ export type SrsCard = {
 
 export const SRS_STEPS = [1, 3, 7, 14, 30];
 
-const PRINT = "אבגדהוזחטיכלמנסעפצקרשת".split("");
-const FINALS: Record<string, string> = { כ: "ך", מ: "ם", נ: "ן", פ: "ף", צ: "ץ" };
-const NAMES = [
-  "alef", "bet", "gimel", "dalet", "he", "vav", "zayin", "het", "tet", "yod", "kaf",
-  "lamed", "mem", "nun", "samekh", "ayin", "pe", "tsadi", "qof", "resh", "shin", "tav",
-];
+export type AlphabetData = {
+  letters: Array<{
+    id: string;
+    glyph: string;
+    final: string | null;
+    name_he: string;
+    name: Record<string, string>;
+    translit: string;
+    sound: Record<string, string>;
+    example: { he: string; translit: string; gloss: Record<string, string> };
+    l10n_status: Record<string, string>;
+  }>;
+  finals: Array<{ glyph: string; base: string; id: string }>;
+  variants: Array<{ id: string; pair: string[]; sound: Record<string, string>; translit: string[] }>;
+};
 
-export function offlineAlphabet() {
+/** Full alphabet: 22 letters, 5 final forms, dagesh/shin-sin variants (data from the legacy gold layer). */
+export function offlineAlphabet(data: AlphabetData) {
   return {
-    print: PRINT.map((glyph, i) => ({ glyph, name: NAMES[i], final: FINALS[glyph] })),
-    cursive_note: "OFL cursive webfont is not vendored yet; strokes are print-first.",
+    print: data.letters.map((l) => ({ ...l, name_en: l.name.en })),
+    finals: data.finals,
+    variants: data.variants,
+    cursive_note: "Cursive forms: font not bundled yet, print forms shown.",
     lookalikes: [["ב", "כ"], ["ד", "ר"], ["ה", "ח", "ת"], ["ו", "ז", "ן"], ["ס", "ם"]],
   };
 }
-
 
 export function today(now: Date = new Date()): string {
   const y = now.getFullYear();

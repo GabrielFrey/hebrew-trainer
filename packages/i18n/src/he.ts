@@ -41,6 +41,9 @@ export const he = {
     hint: "אפשר לדלג. מקלידים עברית — תעתיק לא נבדק.",
     submit: "שליחה",
     skip: "דילוג",
+    resultTitle: "הרמה שלך",
+    resultBody: "{score} מתוך {total} נכונות. מתחילים בשלב «{stage}».",
+    continue: "למסלול שלי",
   },
   chrome: {
     skipToContent: "דלגו לתוכן",

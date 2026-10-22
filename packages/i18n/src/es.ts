@@ -41,6 +41,9 @@ export const es = {
     hint: "Se puede omitir. Escribe hebreo: la transliteración no se evalúa.",
     submit: "Enviar",
     skip: "Omitir",
+    resultTitle: "Tu nivel",
+    resultBody: "{score} de {total} correctas. Empiezas en «{stage}».",
+    continue: "Ir a mi camino",
   },
   chrome: {
     skipToContent: "Saltar al contenido",

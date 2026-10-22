@@ -41,6 +41,9 @@ export const fr = {
     hint: "On peut passer. Tapez l’hébreu — la translittération n’est pas notée.",
     submit: "Envoyer",
     skip: "Passer",
+    resultTitle: "Votre niveau",
+    resultBody: "{score} sur {total} correctes. Vous commencez à « {stage} ».",
+    continue: "Vers mon parcours",
   },
   chrome: {
     skipToContent: "Aller au contenu",

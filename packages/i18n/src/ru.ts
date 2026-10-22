@@ -41,6 +41,9 @@ export const ru = {
     hint: "Можно пропустить. Вводите иврит — транслит не проверяется.",
     submit: "Отправить",
     skip: "Пропустить",
+    resultTitle: "Ваш уровень",
+    resultBody: "Верно {score} из {total}. Вы начинаете с этапа «{stage}».",
+    continue: "К моему пути",
   },
   chrome: {
     skipToContent: "К содержанию",

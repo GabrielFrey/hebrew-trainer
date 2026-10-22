@@ -41,6 +41,9 @@ export const en = {
     hint: "Skippable. Type Hebrew — transliteration is not graded.",
     submit: "Submit",
     skip: "Skip",
+    resultTitle: "Your level",
+    resultBody: "{score} of {total} correct. You start at {stage}.",
+    continue: "Go to my path",
   },
   chrome: {
     skipToContent: "Skip to content",

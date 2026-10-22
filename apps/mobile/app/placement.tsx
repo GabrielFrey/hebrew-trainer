@@ -8,6 +8,13 @@ import { useAuth } from "@/lib/auth";
 import { loc, t } from "@/lib/i18n";
 import { usePalette } from "@/lib/theme";
 
+type PlacementResult = {
+  score: number;
+  level: string;
+  total?: number;
+  stage?: { id: string; ulpan: string; cefr: string; title: Record<string, string> };
+};
+
 export default function Placement() {
   return (
     <Shell>
@@ -23,6 +30,7 @@ function PlaceInner() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [result, setResult] = useState<PlacementResult | null>(null);
 
   const load = useCallback(() => {
     setError(null);
@@ -39,13 +47,29 @@ function PlaceInner() {
     setBusy(true);
     setError(null);
     try {
-      await api("/placement", { method: "POST", body: JSON.stringify({ answers }) });
-      router.replace("/learn");
+      const res = await api<PlacementResult>("/placement", { method: "POST", body: JSON.stringify({ answers }) });
+      setResult(res);
     } catch (err) {
       setError(err instanceof Error ? err.message : t(lang, "states.error"));
     } finally {
       setBusy(false);
     }
+  }
+
+  if (result) {
+    const stage = result.stage ? `${loc(result.stage.title, lang) || result.stage.ulpan} (${result.stage.cefr})` : result.level;
+    return (
+      <View testID="placement-result" style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 20, gap: 12 }}>
+        <Text style={{ fontSize: 28, fontWeight: "700", color: palette.ink }}>{t(lang, "placement.resultTitle")}</Text>
+        <Text testID="placement-level" style={{ fontSize: 22, color: palette.indigo, fontWeight: "600" }}>{stage}</Text>
+        <Text style={{ color: palette.inkSoft }}>
+          {t(lang, "placement.resultBody", { score: result.score, total: result.total ?? items.length, stage })}
+        </Text>
+        <Pressable testID="placement-continue" onPress={() => router.replace("/learn")} style={{ backgroundColor: palette.indigo, padding: 12, borderRadius: 999 }}>
+          <Text style={{ color: palette.paper, textAlign: "center" }}>{t(lang, "placement.continue")}</Text>
+        </Pressable>
+      </View>
+    );
   }
 
   return (

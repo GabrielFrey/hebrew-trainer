@@ -1,0 +1,842 @@
+{
+ "source": "legacy/ivrit-s-nulya/data/hebrew.json (hand-verified gold layer)",
+ "letters": [
+  {
+   "id": "alef",
+   "order": 1,
+   "glyph": "א",
+   "final": null,
+   "name_he": "אָלֶף",
+   "name": {
+    "ru": "алеф",
+    "en": "alef",
+    "uk": "alef",
+    "es": "alef",
+    "fr": "alef"
+   },
+   "translit": "alef",
+   "sound": {
+    "ru": "Своего звука нет: буква несёт огласовку",
+    "en": "Silent on its own: the letter carries a vowel"
+   },
+   "example": {
+    "he": "אַבָּא",
+    "translit": "aba",
+    "gloss": {
+     "ru": "папа",
+     "en": "dad"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "bet",
+   "order": 2,
+   "glyph": "ב",
+   "final": null,
+   "name_he": "בֵּית",
+   "name": {
+    "ru": "бет",
+    "en": "bet",
+    "uk": "bet",
+    "es": "bet",
+    "fr": "bet"
+   },
+   "translit": "bet",
+   "sound": {
+    "ru": "«б» с дагешем (בּ), «в» без дагеша (ב)",
+    "en": "“b” with dagesh (בּ), “v” without (ב)"
+   },
+   "example": {
+    "he": "בַּיִת",
+    "translit": "bayit",
+    "gloss": {
+     "ru": "дом",
+     "en": "house"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "gimel",
+   "order": 3,
+   "glyph": "ג",
+   "final": null,
+   "name_he": "גִּימֶל",
+   "name": {
+    "ru": "гимель",
+    "en": "gimel",
+    "uk": "gimel",
+    "es": "gimel",
+    "fr": "gimel"
+   },
+   "translit": "gimel",
+   "sound": {
+    "ru": "«г»",
+    "en": "“g”"
+   },
+   "example": {
+    "he": "גָּדוֹל",
+    "translit": "gadol",
+    "gloss": {
+     "ru": "большой",
+     "en": "big"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "dalet",
+   "order": 4,
+   "glyph": "ד",
+   "final": null,
+   "name_he": "דָּלֶת",
+   "name": {
+    "ru": "далет",
+    "en": "dalet",
+    "uk": "dalet",
+    "es": "dalet",
+    "fr": "dalet"
+   },
+   "translit": "dalet",
+   "sound": {
+    "ru": "«д»",
+    "en": "“d”"
+   },
+   "example": {
+    "he": "דֶּלֶת",
+    "translit": "delet",
+    "gloss": {
+     "ru": "дверь",
+     "en": "door"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "he",
+   "order": 5,
+   "glyph": "ה",
+   "final": null,
+   "name_he": "הֵא",
+   "name": {
+    "ru": "хей",
+    "en": "he",
+    "uk": "he",
+    "es": "he",
+    "fr": "he"
+   },
+   "translit": "he",
+   "sound": {
+    "ru": "Лёгкий «х» на выдохе, часто не слышен в конце слова",
+    "en": "A light “h” on the breath, often unheard at the end of a word"
+   },
+   "example": {
+    "he": "הַר",
+    "translit": "har",
+    "gloss": {
+     "ru": "гора",
+     "en": "mountain"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "vav",
+   "order": 6,
+   "glyph": "ו",
+   "final": null,
+   "name_he": "וָו",
+   "name": {
+    "ru": "вав",
+    "en": "vav",
+    "uk": "vav",
+    "es": "vav",
+    "fr": "vav"
+   },
+   "translit": "vav",
+   "sound": {
+    "ru": "«в»; с огласовкой — «о» (וֹ) или «у» (וּ)",
+    "en": "“v”; with a vowel — “o” (וֹ) or “u” (וּ)"
+   },
+   "example": {
+    "he": "וֶרֶד",
+    "translit": "vered",
+    "gloss": {
+     "ru": "роза",
+     "en": "rose"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "zayin",
+   "order": 7,
+   "glyph": "ז",
+   "final": null,
+   "name_he": "זַיִן",
+   "name": {
+    "ru": "заин",
+    "en": "zayin",
+    "uk": "zayin",
+    "es": "zayin",
+    "fr": "zayin"
+   },
+   "translit": "zayin",
+   "sound": {
+    "ru": "«з»",
+    "en": "“z”"
+   },
+   "example": {
+    "he": "זְמַן",
+    "translit": "zman",
+    "gloss": {
+     "ru": "время",
+     "en": "time"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "het",
+   "order": 8,
+   "glyph": "ח",
+   "final": null,
+   "name_he": "חֵית",
+   "name": {
+    "ru": "хет",
+    "en": "het",
+    "uk": "het",
+    "es": "het",
+    "fr": "het"
+   },
+   "translit": "het",
+   "sound": {
+    "ru": "Горловой «х»",
+    "en": "A guttural “kh”"
+   },
+   "example": {
+    "he": "חַלּוֹן",
+    "translit": "khalon",
+    "gloss": {
+     "ru": "окно",
+     "en": "window"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "tet",
+   "order": 9,
+   "glyph": "ט",
+   "final": null,
+   "name_he": "טֵית",
+   "name": {
+    "ru": "тет",
+    "en": "tet",
+    "uk": "tet",
+    "es": "tet",
+    "fr": "tet"
+   },
+   "translit": "tet",
+   "sound": {
+    "ru": "«т»",
+    "en": "“t”"
+   },
+   "example": {
+    "he": "טוֹב",
+    "translit": "tov",
+    "gloss": {
+     "ru": "хороший",
+     "en": "good"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "yod",
+   "order": 10,
+   "glyph": "י",
+   "final": null,
+   "name_he": "יוֹד",
+   "name": {
+    "ru": "йуд",
+    "en": "yod",
+    "uk": "yod",
+    "es": "yod",
+    "fr": "yod"
+   },
+   "translit": "yod",
+   "sound": {
+    "ru": "«й»; в сочетаниях даёт «и»",
+    "en": "“y”; in combinations it makes “i”"
+   },
+   "example": {
+    "he": "יוֹם",
+    "translit": "yom",
+    "gloss": {
+     "ru": "день",
+     "en": "day"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "kaf",
+   "order": 11,
+   "glyph": "כ",
+   "final": "ך",
+   "name_he": "כַּף",
+   "name": {
+    "ru": "каф",
+    "en": "kaf",
+    "uk": "kaf",
+    "es": "kaf",
+    "fr": "kaf"
+   },
+   "translit": "kaf",
+   "sound": {
+    "ru": "«к» с дагешем (כּ), «х» без дагеша (כ)",
+    "en": "“k” with dagesh (כּ), “kh” without (כ)"
+   },
+   "example": {
+    "he": "כֶּלֶב",
+    "translit": "kelev",
+    "gloss": {
+     "ru": "собака",
+     "en": "dog"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "lamed",
+   "order": 12,
+   "glyph": "ל",
+   "final": null,
+   "name_he": "לָמֶד",
+   "name": {
+    "ru": "ламед",
+    "en": "lamed",
+    "uk": "lamed",
+    "es": "lamed",
+    "fr": "lamed"
+   },
+   "translit": "lamed",
+   "sound": {
+    "ru": "«л»",
+    "en": "“l”"
+   },
+   "example": {
+    "he": "לֶחֶם",
+    "translit": "lekhem",
+    "gloss": {
+     "ru": "хлеб",
+     "en": "bread"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "mem",
+   "order": 13,
+   "glyph": "מ",
+   "final": "ם",
+   "name_he": "מֵם",
+   "name": {
+    "ru": "мем",
+    "en": "mem",
+    "uk": "mem",
+    "es": "mem",
+    "fr": "mem"
+   },
+   "translit": "mem",
+   "sound": {
+    "ru": "«м»",
+    "en": "“m”"
+   },
+   "example": {
+    "he": "מַיִם",
+    "translit": "mayim",
+    "gloss": {
+     "ru": "вода",
+     "en": "water"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "nun",
+   "order": 14,
+   "glyph": "נ",
+   "final": "ן",
+   "name_he": "נוּן",
+   "name": {
+    "ru": "нун",
+    "en": "nun",
+    "uk": "nun",
+    "es": "nun",
+    "fr": "nun"
+   },
+   "translit": "nun",
+   "sound": {
+    "ru": "«н»",
+    "en": "“n”"
+   },
+   "example": {
+    "he": "נָכוֹן",
+    "translit": "nakhon",
+    "gloss": {
+     "ru": "верно",
+     "en": "correct"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "samekh",
+   "order": 15,
+   "glyph": "ס",
+   "final": null,
+   "name_he": "סָמֶךְ",
+   "name": {
+    "ru": "самех",
+    "en": "samekh",
+    "uk": "samekh",
+    "es": "samekh",
+    "fr": "samekh"
+   },
+   "translit": "samekh",
+   "sound": {
+    "ru": "«с»",
+    "en": "“s”"
+   },
+   "example": {
+    "he": "סֵפֶר",
+    "translit": "sefer",
+    "gloss": {
+     "ru": "книга",
+     "en": "book"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "ayin",
+   "order": 16,
+   "glyph": "ע",
+   "final": null,
+   "name_he": "עַיִן",
+   "name": {
+    "ru": "аин",
+    "en": "ayin",
+    "uk": "ayin",
+    "es": "ayin",
+    "fr": "ayin"
+   },
+   "translit": "ayin",
+   "sound": {
+    "ru": "В современном иврите звука почти нет, как алеф",
+    "en": "Almost silent in modern Hebrew, like alef"
+   },
+   "example": {
+    "he": "עִיר",
+    "translit": "ir",
+    "gloss": {
+     "ru": "город",
+     "en": "city"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "pe",
+   "order": 17,
+   "glyph": "פ",
+   "final": "ף",
+   "name_he": "פֵּא",
+   "name": {
+    "ru": "пей",
+    "en": "pe",
+    "uk": "pe",
+    "es": "pe",
+    "fr": "pe"
+   },
+   "translit": "pe",
+   "sound": {
+    "ru": "«п» с дагешем (פּ), «ф» без дагеша (פ)",
+    "en": "“p” with dagesh (פּ), “f” without (פ)"
+   },
+   "example": {
+    "he": "פֶּה",
+    "translit": "pe",
+    "gloss": {
+     "ru": "рот",
+     "en": "mouth"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "tsadi",
+   "order": 18,
+   "glyph": "צ",
+   "final": "ץ",
+   "name_he": "צָדִי",
+   "name": {
+    "ru": "цади",
+    "en": "tsadi",
+    "uk": "tsadi",
+    "es": "tsadi",
+    "fr": "tsadi"
+   },
+   "translit": "tsadi",
+   "sound": {
+    "ru": "«ц»",
+    "en": "“ts”"
+   },
+   "example": {
+    "he": "צָהוֹב",
+    "translit": "tsahov",
+    "gloss": {
+     "ru": "жёлтый",
+     "en": "yellow"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "qof",
+   "order": 19,
+   "glyph": "ק",
+   "final": null,
+   "name_he": "קוֹף",
+   "name": {
+    "ru": "куф",
+    "en": "qof",
+    "uk": "qof",
+    "es": "qof",
+    "fr": "qof"
+   },
+   "translit": "qof",
+   "sound": {
+    "ru": "«к»",
+    "en": "“k”"
+   },
+   "example": {
+    "he": "קָטָן",
+    "translit": "katan",
+    "gloss": {
+     "ru": "маленький",
+     "en": "small"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "resh",
+   "order": 20,
+   "glyph": "ר",
+   "final": null,
+   "name_he": "רֵישׁ",
+   "name": {
+    "ru": "реш",
+    "en": "resh",
+    "uk": "resh",
+    "es": "resh",
+    "fr": "resh"
+   },
+   "translit": "resh",
+   "sound": {
+    "ru": "«р», картавое, ближе к французскому",
+    "en": "“r”, uvular, closer to French"
+   },
+   "example": {
+    "he": "רֹאשׁ",
+    "translit": "rosh",
+    "gloss": {
+     "ru": "голова",
+     "en": "head"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "shin",
+   "order": 21,
+   "glyph": "ש",
+   "final": null,
+   "name_he": "שִׁין",
+   "name": {
+    "ru": "шин",
+    "en": "shin",
+    "uk": "shin",
+    "es": "shin",
+    "fr": "shin"
+   },
+   "translit": "shin",
+   "sound": {
+    "ru": "«ш» с точкой справа (שׁ), «с» с точкой слева (שׂ)",
+    "en": "“sh” with a dot on the right (שׁ), “s” with a dot on the left (שׂ)"
+   },
+   "example": {
+    "he": "שָׁלוֹם",
+    "translit": "shalom",
+    "gloss": {
+     "ru": "мир / привет",
+     "en": "peace; hello"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  },
+  {
+   "id": "tav",
+   "order": 22,
+   "glyph": "ת",
+   "final": null,
+   "name_he": "תָּו",
+   "name": {
+    "ru": "тав",
+    "en": "tav",
+    "uk": "tav",
+    "es": "tav",
+    "fr": "tav"
+   },
+   "translit": "tav",
+   "sound": {
+    "ru": "«т»",
+    "en": "“t”"
+   },
+   "example": {
+    "he": "תּוֹדָה",
+    "translit": "toda",
+    "gloss": {
+     "ru": "спасибо",
+     "en": "thank you"
+    }
+   },
+   "l10n_status": {
+    "ru": "approved",
+    "en": "approved",
+    "uk": "in_review",
+    "es": "in_review",
+    "fr": "in_review"
+   }
+  }
+ ],
+ "finals": [
+  {
+   "glyph": "ך",
+   "base": "כ",
+   "id": "kaf"
+  },
+  {
+   "glyph": "ם",
+   "base": "מ",
+   "id": "mem"
+  },
+  {
+   "glyph": "ן",
+   "base": "נ",
+   "id": "nun"
+  },
+  {
+   "glyph": "ף",
+   "base": "פ",
+   "id": "pe"
+  },
+  {
+   "glyph": "ץ",
+   "base": "צ",
+   "id": "tsadi"
+  }
+ ],
+ "variants": [
+  {
+   "id": "bet",
+   "pair": [
+    "בּ",
+    "ב"
+   ],
+   "sound": {
+    "ru": "«б» / «в»",
+    "en": "“b” / “v”"
+   },
+   "translit": [
+    "b",
+    "v"
+   ]
+  },
+  {
+   "id": "kaf",
+   "pair": [
+    "כּ",
+    "כ"
+   ],
+   "sound": {
+    "ru": "«к» / «х»",
+    "en": "“k” / “kh”"
+   },
+   "translit": [
+    "k",
+    "kh"
+   ]
+  },
+  {
+   "id": "pe",
+   "pair": [
+    "פּ",
+    "פ"
+   ],
+   "sound": {
+    "ru": "«п» / «ф»",
+    "en": "“p” / “f”"
+   },
+   "translit": [
+    "p",
+    "f"
+   ]
+  },
+  {
+   "id": "shin",
+   "pair": [
+    "שׁ",
+    "שׂ"
+   ],
+   "sound": {
+    "ru": "«ш» / «с»",
+    "en": "“sh” / “s”"
+   },
+   "translit": [
+    "sh",
+    "s"
+   ]
+  }
+ ]
+}

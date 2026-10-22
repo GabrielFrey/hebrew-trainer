@@ -41,6 +41,9 @@ export const uk = {
     hint: "Можна пропустити. Вводьте іврит — трансліт не перевіряється.",
     submit: "Надіслати",
     skip: "Пропустити",
+    resultTitle: "Ваш рівень",
+    resultBody: "Правильно {score} з {total}. Ви починаєте з етапу «{stage}».",
+    continue: "До мого шляху",
   },
   chrome: {
     skipToContent: "До змісту",
