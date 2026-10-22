@@ -23,6 +23,8 @@ export const ru = {
     skip: "Начать с алефа",
     continue: "Дальше",
     course: "Ваш курс",
+    namePrompt: "Как вас зовут?",
+    learner: "Ученик",
     reviewFlag: "Украинские, испанские и французские тексты ждут носителя — статус in_review.",
   },
   lesson: {

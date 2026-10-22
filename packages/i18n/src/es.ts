@@ -23,6 +23,8 @@ export const es = {
     skip: "Empezar desde álef",
     continue: "Continuar",
     course: "Tu curso",
+    namePrompt: "¿Cómo te llamamos?",
+    learner: "Estudiante",
     reviewFlag: "El texto en español está in_review hasta que lo firme un nativo.",
   },
   lesson: {

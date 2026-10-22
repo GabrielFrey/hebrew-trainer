@@ -2,35 +2,34 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { l10nStatus, t, type UiLang } from "@biti/i18n";
 import { BitiMascot } from "@/components/BitiMascot";
 import { demoLogin } from "@/lib/api";
 
+const LANGS: { code: UiLang; label: string; course: string }[] = [
+  { code: "ru", label: "Русский", course: "he-ru" },
+  { code: "en", label: "English", course: "he-en" },
+  { code: "uk", label: "Українська", course: "he-uk" },
+  { code: "es", label: "Español", course: "he-es" },
+  { code: "fr", label: "Français", course: "he-fr" },
+];
+
+const COURSES = [
+  ["he-ru", "Hebrew↔Russian"],
+  ["he-uk", "Hebrew↔Ukrainian"],
+  ["he-en", "Hebrew↔English"],
+  ["he-es", "Hebrew↔Spanish"],
+  ["he-fr", "Hebrew↔French"],
+] as const;
+
 export default function OnboardingPage() {
   const router = useRouter();
-  const [lang, setLang] = useState<"ru" | "en" | "uk" | "es" | "fr">("ru");
+  const [lang, setLang] = useState<UiLang>("ru");
   const [course, setCourse] = useState("he-ru");
   const [motivation, setMotivation] = useState("aliyah");
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const copy =
-    lang === "ru"
-      ? {
-          title: "Добро пожаловать в Biti Ivrit",
-          tag: "Современный иврит — от первой буквы до живой израильской речи.",
-          name: "Как вас зовут?",
-          why: "Зачем вы учите иврит?",
-          go: "Начать с алефа",
-          place: "Короткий тест уровня",
-        }
-      : {
-          title: "Welcome to Biti Ivrit",
-          tag: "Modern Hebrew — from the first letter to everyday Israeli life.",
-          name: "What should we call you?",
-          why: "Why are you learning?",
-          go: "Start from Alef",
-          place: "Short placement",
-        };
 
   async function enter(to: string) {
     setBusy(true);
@@ -38,7 +37,7 @@ export default function OnboardingPage() {
     try {
       await demoLogin({
         ui_language: lang,
-        display_name: name || (lang === "ru" ? "Ученик" : "Learner"),
+        display_name: name || t(lang, "onboarding.learner"),
         motivation,
         course_id: course,
       });
@@ -54,28 +53,20 @@ export default function OnboardingPage() {
     <div data-testid="onboarding" className="mx-auto flex min-h-full max-w-xl flex-col gap-6 px-4 py-10">
       <BitiMascot mood="happy" size={96} />
       <h1 data-testid="onboarding-title" className="text-4xl font-semibold">
-        {copy.title}
+        {t(lang, "onboarding.title")}
       </h1>
-      <p className="text-lg text-ink-soft">{copy.tag}</p>
+      <p className="text-lg text-ink-soft">{t(lang, "brand.tagline")}</p>
       <fieldset className="space-y-2">
-        <legend className="font-medium">Interface</legend>
+        <legend className="font-medium">{t(lang, "onboarding.language")}</legend>
         <div className="flex flex-wrap gap-2">
-          {(
-            [
-              ["ru", "Русский"],
-              ["en", "English"],
-              ["uk", "Українська"],
-              ["es", "Español"],
-              ["fr", "Français"],
-            ] as const
-          ).map(([code, label]) => (
+          {LANGS.map(({ code, label, course: cid }) => (
             <button
               key={code}
               type="button"
               data-testid={`lang-${code}`}
               onClick={() => {
                 setLang(code);
-                setCourse(`he-${code === "en" ? "en" : code}`);
+                setCourse(cid);
               }}
               className={`rounded-full px-4 py-2 ${lang === code ? "bg-indigo text-paper" : "bg-paper border border-line"}`}
             >
@@ -85,17 +76,9 @@ export default function OnboardingPage() {
         </div>
       </fieldset>
       <fieldset className="space-y-2">
-        <legend className="font-medium">{lang === "ru" ? "Курс" : "Course"}</legend>
+        <legend className="font-medium">{t(lang, "onboarding.course")}</legend>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {(
-            [
-              ["he-ru", "Hebrew↔Russian"],
-              ["he-uk", "Hebrew↔Ukrainian"],
-              ["he-en", "Hebrew↔English"],
-              ["he-es", "Hebrew↔Spanish"],
-              ["he-fr", "Hebrew↔French"],
-            ] as const
-          ).map(([id, label]) => (
+          {COURSES.map(([id, label]) => (
             <button
               key={id}
               type="button"
@@ -107,10 +90,13 @@ export default function OnboardingPage() {
             </button>
           ))}
         </div>
-        <p className="text-sm text-ink-soft">uk / es / fr strings are in_review until a native reviewer approves them.</p>
+        <p className="text-sm text-ink-soft">
+          {t(lang, "onboarding.reviewFlag")}{" "}
+          {(["uk", "es", "fr"] as const).map((code) => `${code}: ${l10nStatus[code]}`).join(" · ")}
+        </p>
       </fieldset>
       <label className="block space-y-1">
-        <span>{copy.name}</span>
+        <span>{t(lang, "onboarding.namePrompt")}</span>
         <input
           data-testid="onboarding-name"
           value={name}
@@ -119,14 +105,9 @@ export default function OnboardingPage() {
         />
       </label>
       <fieldset className="space-y-2">
-        <legend>{copy.why}</legend>
+        <legend>{t(lang, "onboarding.motivation")}</legend>
         <div className="grid grid-cols-2 gap-2">
-          {[
-            ["aliyah", lang === "ru" ? "Репатриация" : "Aliyah"],
-            ["work", lang === "ru" ? "Работа" : "Work"],
-            ["travel", lang === "ru" ? "Поездки" : "Travel"],
-            ["family", lang === "ru" ? "Семья" : "Family"],
-          ].map(([id, label]) => (
+          {(["aliyah", "work", "travel", "family"] as const).map((id) => (
             <button
               key={id}
               type="button"
@@ -136,7 +117,7 @@ export default function OnboardingPage() {
                 motivation === id ? "border-indigo bg-paper" : "border-line bg-paper"
               }`}
             >
-              {label}
+              {t(lang, `onboarding.${id}`)}
             </button>
           ))}
         </div>
@@ -149,7 +130,7 @@ export default function OnboardingPage() {
           onClick={() => enter("/learn")}
           className="rounded-full bg-pomegranate px-5 py-3 text-paper disabled:opacity-50"
         >
-          {copy.go}
+          {t(lang, "onboarding.skip")}
         </button>
         <button
           data-testid="start-placement"
@@ -157,7 +138,7 @@ export default function OnboardingPage() {
           onClick={() => enter("/placement")}
           className="rounded-full border border-line bg-paper px-5 py-3"
         >
-          {copy.place}
+          {t(lang, "onboarding.placement")}
         </button>
       </div>
       <p className="text-sm text-ink-soft">Demo sign-in is development-only. Production requires OIDC.</p>

@@ -1,7 +1,7 @@
 import { useColorScheme } from "react-native";
 import { color, radius, space } from "@biti/design-tokens";
 
-export type Palette = (typeof color)["light"];
+export type Palette = (typeof color)["light"] | (typeof color)["dark"];
 
 export function usePalette(): Palette {
   const scheme = useColorScheme();

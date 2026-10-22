@@ -36,15 +36,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       .finally(() => setReady(true));
   }, [path, router]);
 
-  if (!ready) {
-    return <p className="p-8 text-ink-soft">Loading…</p>;
-  }
-
   const lang = user?.ui_language || "ru";
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === "he" ? "rtl" : "ltr";
   }, [lang]);
+
+  if (!ready) {
+    return <p className="p-8 text-ink-soft">Loading…</p>;
+  }
   return (
     <I18nProvider lang={lang}>
       <div className="relative mx-auto flex min-h-full max-w-6xl flex-col px-4 pb-24 pt-4 md:px-8">

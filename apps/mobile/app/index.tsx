@@ -3,35 +3,26 @@ import { useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { BitiMascot } from "@/components/BitiMascot";
 import { useAuth } from "@/lib/auth";
+import { t, type UiLang } from "@/lib/i18n";
 import { usePalette } from "@/lib/theme";
+
+const LANGS: { code: UiLang; label: string; course: string }[] = [
+  { code: "ru", label: "Русский", course: "he-ru" },
+  { code: "en", label: "English", course: "he-en" },
+  { code: "uk", label: "Українська", course: "he-uk" },
+  { code: "es", label: "Español", course: "he-es" },
+  { code: "fr", label: "Français", course: "he-fr" },
+];
 
 export default function Onboarding() {
   const palette = usePalette();
   const { enter } = useAuth();
-  const [lang, setLang] = useState<"ru" | "en" | "uk" | "es" | "fr">("ru");
+  const [lang, setLang] = useState<UiLang>("ru");
   const [course, setCourse] = useState("he-ru");
   const [motivation, setMotivation] = useState("aliyah");
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const copy =
-    lang === "ru"
-      ? {
-          title: "Добро пожаловать в Biti Ivrit",
-          tag: "Современный иврит — от первой буквы до живой израильской речи.",
-          name: "Как вас зовут?",
-          why: "Зачем вы учите иврит?",
-          go: "Начать с алефа",
-          place: "Короткий тест уровня",
-        }
-      : {
-          title: "Welcome to Biti Ivrit",
-          tag: "Modern Hebrew — from the first letter to everyday Israeli life.",
-          name: "What should we call you?",
-          why: "Why are you learning?",
-          go: "Start from Alef",
-          place: "Short placement",
-        };
 
   async function go(to: "/learn" | "/placement") {
     setBusy(true);
@@ -39,7 +30,7 @@ export default function Onboarding() {
     try {
       await enter({
         ui_language: lang,
-        display_name: name || (lang === "ru" ? "Ученик" : "Learner"),
+        display_name: name || t(lang, "onboarding.learner"),
         motivation,
         course_id: course,
       });
@@ -64,20 +55,12 @@ export default function Onboarding() {
     <ScrollView testID="onboarding" contentContainerStyle={{ padding: 24, gap: 16, backgroundColor: palette.sand }}>
       <BitiMascot mood="happy" size={96} />
       <Text testID="onboarding-title" style={{ fontSize: 32, fontWeight: "700", color: palette.ink }}>
-        {copy.title}
+        {t(lang, "onboarding.title")}
       </Text>
-      <Text style={{ fontSize: 18, color: palette.inkSoft }}>{copy.tag}</Text>
-      <Text style={{ fontWeight: "600", color: palette.ink }}>Interface</Text>
+      <Text style={{ fontSize: 18, color: palette.inkSoft }}>{t(lang, "brand.tagline")}</Text>
+      <Text style={{ fontWeight: "600", color: palette.ink }}>{t(lang, "onboarding.language")}</Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-        {(
-          [
-            ["ru", "Русский", "he-ru"],
-            ["en", "English", "he-en"],
-            ["uk", "Українська", "he-uk"],
-            ["es", "Español", "he-es"],
-            ["fr", "Français", "he-fr"],
-          ] as const
-        ).map(([code, label, cid]) => (
+        {LANGS.map(({ code, label, course: cid }) => (
           <Pressable
             key={code}
             testID={`lang-${code}`}
@@ -92,7 +75,7 @@ export default function Onboarding() {
           </Pressable>
         ))}
       </View>
-      <Text style={{ fontWeight: "600", color: palette.ink }}>Course</Text>
+      <Text style={{ fontWeight: "600", color: palette.ink }}>{t(lang, "onboarding.course")}</Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
         {(["he-ru", "he-uk", "he-en", "he-es", "he-fr"] as const).map((id) => (
           <Pressable key={id} testID={`course-${id}`} onPress={() => setCourse(id)} style={chip(course === id)}>
@@ -100,12 +83,13 @@ export default function Onboarding() {
           </Pressable>
         ))}
       </View>
-      <Text style={{ color: palette.ink }}>{copy.name}</Text>
+      <Text style={{ fontSize: 13, color: palette.inkSoft }}>{t(lang, "onboarding.reviewFlag")}</Text>
+      <Text style={{ color: palette.ink }}>{t(lang, "onboarding.namePrompt")}</Text>
       <TextInput
         testID="onboarding-name"
         value={name}
         onChangeText={setName}
-        accessibilityLabel={copy.name}
+        accessibilityLabel={t(lang, "onboarding.namePrompt")}
         style={{
           borderWidth: 1,
           borderColor: palette.line,
@@ -115,16 +99,9 @@ export default function Onboarding() {
           color: palette.ink,
         }}
       />
-      <Text style={{ color: palette.ink }}>{copy.why}</Text>
+      <Text style={{ color: palette.ink }}>{t(lang, "onboarding.motivation")}</Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-        {(
-          [
-            ["aliyah", lang === "ru" ? "Репатриация" : "Aliyah"],
-            ["work", lang === "ru" ? "Работа" : "Work"],
-            ["travel", lang === "ru" ? "Поездки" : "Travel"],
-            ["family", lang === "ru" ? "Семья" : "Family"],
-          ] as const
-        ).map(([id, label]) => (
+        {(["aliyah", "work", "travel", "family"] as const).map((id) => (
           <Pressable
             key={id}
             testID={`motivation-${id}`}
@@ -132,7 +109,7 @@ export default function Onboarding() {
             onPress={() => setMotivation(id)}
             style={[chip(motivation === id), { borderRadius: 16 }]}
           >
-            <Text style={{ color: motivation === id ? palette.paper : palette.ink }}>{label}</Text>
+            <Text style={{ color: motivation === id ? palette.paper : palette.ink }}>{t(lang, `onboarding.${id}`)}</Text>
           </Pressable>
         ))}
       </View>
@@ -148,7 +125,7 @@ export default function Onboarding() {
         onPress={() => go("/learn")}
         style={{ backgroundColor: palette.pomegranate, padding: 14, borderRadius: 999, opacity: busy ? 0.5 : 1 }}
       >
-        <Text style={{ color: palette.paper, textAlign: "center", fontWeight: "600" }}>{copy.go}</Text>
+        <Text style={{ color: palette.paper, textAlign: "center", fontWeight: "600" }}>{t(lang, "onboarding.skip")}</Text>
       </Pressable>
       <Pressable
         testID="start-placement"
@@ -157,7 +134,7 @@ export default function Onboarding() {
         onPress={() => go("/placement")}
         style={{ borderWidth: 1, borderColor: palette.line, backgroundColor: palette.paper, padding: 14, borderRadius: 999 }}
       >
-        <Text style={{ color: palette.ink, textAlign: "center" }}>{copy.place}</Text>
+        <Text style={{ color: palette.ink, textAlign: "center" }}>{t(lang, "onboarding.placement")}</Text>
       </Pressable>
       <Text style={{ fontSize: 13, color: palette.inkSoft }}>Demo sign-in is development-only. Production requires OIDC.</Text>
     </ScrollView>

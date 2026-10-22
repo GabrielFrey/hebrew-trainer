@@ -23,6 +23,8 @@ export const he = {
     skip: "להתחיל מאלף",
     continue: "המשך",
     course: "הקורס שלכם",
+    namePrompt: "איך לקרוא לכם?",
+    learner: "לומד",
     reviewFlag: "הטקסטים באוקראינית, ספרדית וצרפתית ממתינים לדובר יליד.",
   },
   lesson: {

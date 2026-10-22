@@ -47,9 +47,21 @@ Path of **units → skills → nodes**. Bite-size lessons (5–12 items). XP, he
 
 ## Published vs planned
 
-Counts come from `catalog_stats()` plus `all_lesson_specs()` (playable). Re-run after seed changes.
+Counts from `catalog_stats()` plus `all_lesson_specs()` (playable). Shared Hebrew tree; five source languages.
 
-Playable published lessons (all five courses; same Hebrew, localized prompts):
+| Level | Ulpan | Mapped nodes | Published playable | Planned |
+| --- | --- | ---: | ---: | ---: |
+| Starter | pre-Aleph | 134 | 19 | 115 |
+| Beginner | Aleph | 170 | 14 | 156 |
+| Elementary | Bet | 162 | 0 | 162 |
+| Intermediate | Gimel | 144 | 0 | 144 |
+| Upper | Dalet | 102 | 0 | 102 |
+| Advanced | Hey | 96 | 0 | 96 |
+| **Total** | | **808** | **33** | **775** |
+
+Per language pair (`he-ru`, `he-uk`, `he-en`, `he-es`, `he-fr`): the same 33 published lessons are playable; remaining nodes are titled/sequenced `planned` (not empty placeholders). uk / es / fr prompts are authored drafts with `l10n_status: in_review`.
+
+Playable published slugs:
 
 **pre-Aleph / Starter:** `script-alef-he`, `drill-alef-he`, `script-vav-lamed`, `drill-vav-lamed`, `script-mem-tav`, `drill-mem-tav`, `script-sofiyot`, `script-lookalikes`, `script-dagesh-ktav`, `vocab-greetings`, `tiles-greetings`, `match-greetings`, `words-yes-no`, `vocab-family`, `words-ima-aba`, `vocab-home`, `vocab-numbers`, `vocab-colors`, `boss-starter`
 

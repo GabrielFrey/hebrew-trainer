@@ -68,6 +68,12 @@ test.describe("acceptance", () => {
     await page.goto("/");
     await page.getByTestId("lang-ru").click();
     await expect(page.getByTestId("onboarding-title")).toContainText("Добро пожаловать в Biti Ivrit");
+    await page.getByTestId("lang-uk").click();
+    await expect(page.getByTestId("onboarding-title")).toContainText("Ласкаво просимо до Biti Ivrit");
+    await page.getByTestId("lang-es").click();
+    await expect(page.getByTestId("onboarding-title")).toContainText("Bienvenido a Biti Ivrit");
+    await page.getByTestId("lang-fr").click();
+    await expect(page.getByTestId("onboarding-title")).toContainText("Bienvenue dans Biti Ivrit");
     await page.getByTestId("lang-en").click();
     await expect(page.getByTestId("onboarding-title")).toContainText("Welcome to Biti Ivrit");
     const bodies = lessonBodies(page);

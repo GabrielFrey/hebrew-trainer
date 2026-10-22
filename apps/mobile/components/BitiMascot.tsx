@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import Svg, { Circle, Path, Rect, Title } from "./svg";
+import Svg, { Circle, Path, Rect } from "./svg";
 
 export function BitiMascot({
   mood = "idle",
@@ -12,7 +12,6 @@ export function BitiMascot({
   return (
     <View accessible accessibilityRole="image" accessibilityLabel="Biti, a small house mascot">
       <Svg width={size} height={size} viewBox="0 0 120 120">
-        <Title>Biti</Title>
         <Path d="M16 54 L60 18 L104 54 V104 H16 Z" fill="#2C3D6B" />
         <Path d="M28 52 L60 26 L92 52 V96 H28 Z" fill="#F6F1E8" />
         <Rect x="46" y="58" width="28" height="28" rx="6" fill={window} />

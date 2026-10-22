@@ -6,7 +6,7 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "plugins": ["expo-router", "expo-secure-store", "expo-font", "expo-sqlite", "expo-glass-effect"],
+    "plugins": ["expo-router", "expo-secure-store", "expo-font", "expo-sqlite"],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {

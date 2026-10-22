@@ -12,10 +12,12 @@ from biti.models import Course, Lesson, LessonVersion, PublishedChunk, Track, Un
 
 EDITORIAL = {
     "author": "Biti curriculum",
-    "native_reviewer": "seed-native",
+    "native_reviewer": None,
     "sources": ["original"],
     "license": "proprietary",
     "version": 1,
+    "l10n_status": dict(L10N_STATUS),
+    "review_note": "en/ru/he seed copy is approved; uk/es/fr are authored drafts in_review until a native reviewer signs off.",
 }
 
 

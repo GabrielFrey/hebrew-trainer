@@ -7,7 +7,7 @@ import { HebrewText } from "@/components/HebrewText";
 import { Shell } from "@/components/Shell";
 import { api, type Exercise, type Lesson } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
-import { loc, t } from "@/lib/i18n";
+import { loc, t, type UiLang } from "@/lib/i18n";
 import { enqueueSubmit } from "@/lib/offline";
 import { usePalette } from "@/lib/theme";
 
@@ -216,7 +216,7 @@ function chip(palette: { line: string; paper: string }) {
   return { borderWidth: 1, borderColor: palette.line, backgroundColor: palette.paper, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 6 };
 }
 
-function gradeLabel(result: string, lang: "en" | "ru" | "he") {
+function gradeLabel(result: string, lang: UiLang) {
   if (result === "correct") return t(lang, "lesson.correct");
   if (result === "almost") return t(lang, "lesson.almost");
   return t(lang, "lesson.incorrect");

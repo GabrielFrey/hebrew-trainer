@@ -23,6 +23,8 @@ export const en = {
     skip: "Start from Alef",
     continue: "Continue",
     course: "Your course",
+    namePrompt: "What should we call you?",
+    learner: "Learner",
     reviewFlag: "Ukrainian, Spanish and French copy is in review until a native speaker signs it.",
   },
   lesson: {

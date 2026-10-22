@@ -42,6 +42,34 @@ def test_catalog_has_hundreds_of_mapped_lessons() -> None:
     assert len(COURSES) == 5
 
 
+def test_published_prompts_have_five_source_langs() -> None:
+    from biti.draft_l10n import fill_choice, fill_loc, fill_vocab
+
+    missing: list[str] = []
+    for spec in all_lesson_specs():
+        for rec in (spec.get("title"), spec.get("objective"), spec.get("explanation")):
+            filled = fill_loc(rec)
+            en = filled.get("en") or ""
+            if en and not (filled.get("uk") and filled.get("es") and filled.get("fr")):
+                missing.append(en)
+        for ex in spec.get("exercises") or []:
+            filled = fill_loc(ex.get("prompt"))
+            en = filled.get("en") or ""
+            if en and not (filled.get("uk") and filled.get("es") and filled.get("fr")):
+                missing.append(en)
+            for ch in ex.get("choices") or []:
+                ch = fill_choice(ch)
+                en = ch.get("en") or ""
+                if en and not (ch.get("uk") and ch.get("es") and ch.get("fr")):
+                    missing.append(en)
+        for item in spec.get("vocabulary") or []:
+            item = fill_vocab(item)
+            en = item.get("en") or ""
+            if en and not (item.get("uk") and item.get("es") and item.get("fr")):
+                missing.append(en)
+    assert missing == [], missing[:20]
+
+
 def test_uk_prompt_present_on_extra_lesson(client: TestClient) -> None:
     headers = login(client, email="uk-course@biti.local")
     client.patch("/auth/me", headers=headers, json={"course_id": "he-uk", "ui_language": "uk"})

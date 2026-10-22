@@ -81,4 +81,6 @@ rm -f data/local/*.sqlite
 
 `apps/api/.venv/bin/pytest apps/api/tests` — grading vectors, answer non-leak, XP-once, AI-never-XP, seed ≥24 lessons, unpublishable drafts.
 
-CI: `.github/workflows/ci.yml` (lint, pytest, OpenAPI export, web build). Playwright/axe and native device jobs are not wired — marked unverified.
+CI: `.github/workflows/ci.yml` (ruff, pytest, OpenAPI export, web lint/build, Playwright + axe). Native device jobs are not wired — marked unverified.
+
+E2E locally: `npx playwright install chromium && npm run test:e2e` (API on :43180, web on :43181).

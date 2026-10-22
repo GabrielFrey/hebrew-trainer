@@ -23,6 +23,8 @@ export const uk = {
     skip: "Почати з алефа",
     continue: "Далі",
     course: "Ваш курс",
+    namePrompt: "Як вас звати?",
+    learner: "Учень",
     reviewFlag: "Український текст — чернетка in_review, доки носій його не підпише.",
   },
   lesson: {

@@ -23,6 +23,8 @@ export const fr = {
     skip: "Commencer à alef",
     continue: "Continuer",
     course: "Votre cours",
+    namePrompt: "Comment vous appeler ?",
+    learner: "Apprenant",
     reviewFlag: "Le français est in_review jusqu’à validation par un locuteur natif.",
   },
   lesson: {
