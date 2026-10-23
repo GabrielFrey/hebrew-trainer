@@ -51,9 +51,9 @@ function publicLesson(spec: CatalogLesson, courseId?: string): Lesson {
   const titles = catalog.stageTitles as Record<string, Record<string, string>>;
   return {
     slug: spec.slug,
-    title: spec.title,
-    objective: spec.objective,
-    explanation: spec.explanation,
+    title: spec.title as Record<string, string>,
+    objective: spec.objective as Record<string, string>,
+    explanation: spec.explanation as Record<string, string>,
     vocabulary: spec.vocabulary as Lesson["vocabulary"],
     exercises,
     threshold: spec.threshold,
@@ -162,7 +162,11 @@ export async function localHandle<T>(path: string, init: RequestInit = {}): Prom
   if (method === "POST" && path === "/placement") {
     const session = sessionOrThrow();
     const answers = (body.answers as Record<string, string>) || {};
-    const result = gradePlacement(answers, catalog.placement.accepted);
+    const result = gradePlacement(answers, catalog.placement.accepted, {
+      levels: catalog.placement.levels,
+      passRatio: catalog.placement.passRatio,
+      maxLevel: catalog.placement.maxLevel,
+    });
     const placed = applyPlacement(session, result.level);
     await saveSession(session);
     return { ...result, total: Object.keys(catalog.placement.accepted).length, stage: placed } as T;

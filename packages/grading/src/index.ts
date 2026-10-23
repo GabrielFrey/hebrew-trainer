@@ -142,13 +142,36 @@ export function gradeExercise(
   return gradeText(String(payload.value ?? ""), accepted, mode);
 }
 
+export const PLACEMENT_ORDER = ["starter", "beginner", "elementary", "intermediate"] as const;
+
+/**
+ * Graded placement. With a per-item `levels` map, stages are checked in order: a stage is passed
+ * when at least `passRatio` of its items are correct; the learner lands on the stage after the last
+ * consecutively passed one (capped at `maxLevel`). Without a map, the legacy 3-item rule applies.
+ */
 export function gradePlacement(
   answers: Record<string, string>,
   accepted: Record<string, string[]>,
-): { score: number; level: "starter" | "beginner"; skipped: boolean } {
+  opts: { levels?: Record<string, string>; passRatio?: number; maxLevel?: string } = {},
+): { score: number; level: string; skipped: boolean; passed: string[] } {
   let score = 0;
+  const right: Record<string, boolean> = {};
   for (const [id, forms] of Object.entries(accepted)) {
-    if (gradeText(answers[id] || "", forms).result === "correct") score += 1;
+    right[id] = gradeText(answers[id] || "", forms).result === "correct";
+    if (right[id]) score += 1;
   }
-  return { score, level: score <= 1 ? "starter" : "beginner", skipped: false };
+  if (!opts.levels) return { score, level: score <= 1 ? "starter" : "beginner", skipped: false, passed: [] };
+  const ratio = opts.passRatio ?? 0.75;
+  const order: string[] = [...PLACEMENT_ORDER];
+  const cap = Math.max(0, order.indexOf(opts.maxLevel || "intermediate"));
+  const passed: string[] = [];
+  for (const stage of order) {
+    const ids = Object.keys(accepted).filter((id) => opts.levels![id] === stage);
+    if (!ids.length) break;
+    const ok = ids.filter((id) => right[id]).length;
+    if (ok + 1e-9 < Math.ceil(ids.length * ratio - 1e-9)) break;
+    passed.push(stage);
+  }
+  const level = order[Math.min(passed.length, cap)];
+  return { score, level, skipped: false, passed };
 }

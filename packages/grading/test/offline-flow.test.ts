@@ -23,7 +23,7 @@ test("placement then first lesson grade on device without an API", () => {
     catalog.placement.accepted,
   );
   assert.equal(placed.score, 3);
-  assert.equal(placed.level, "beginner");
+  assert.equal(placed.level, "beginner"); // legacy 3-item rule without a levels map
 
   const first = catalog.lessons[0];
   assert.equal(first.slug, "script-alef-he");
