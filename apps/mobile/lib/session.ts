@@ -24,6 +24,7 @@ export type LocalSession = {
   attempts: Record<string, LocalAttempt>;
   badges: string[];
   srs?: Record<string, import("./offline-content").SrsCard>;
+  daily?: import("./offline-content").DailyXp;
   apiBase?: string;
 };
 

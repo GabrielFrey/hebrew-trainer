@@ -75,3 +75,29 @@ export function offlinePractice(
     hearts,
   };
 }
+
+export type DailyXp = { day: string; xp: number };
+
+/** Daily goal bookkeeping (main-branch pattern): XP resets when the calendar day changes. */
+export function addDailyXp(state: DailyXp | undefined, xp: number, day = today()): DailyXp {
+  const base = state && state.day === day ? state.xp : 0;
+  return { day, xp: base + Math.max(0, xp) };
+}
+
+export function dailyXp(state: DailyXp | undefined, day = today()): number {
+  return state && state.day === day ? state.xp : 0;
+}
+
+/** Human-readable correct answer for the feedback sheet (main-branch pattern). */
+export function expectedAnswer(exercise: Record<string, unknown>, accepted: string[], lang: string): string | null {
+  if (!accepted.length) return null;
+  const type = String(exercise.type || "");
+  if (type === "order_rtl" || type === "tiles") return accepted.join(accepted.every((x) => [...x].length === 1) ? "" : " ");
+  const choices = exercise.choices as Array<Record<string, string>> | undefined;
+  if (choices) {
+    const c = choices.find((row) => row.id === accepted[0]);
+    if (c) return c[lang] || c.en || c.he || c.id;
+  }
+  if (type === "match" || type === "match_tap") return null;
+  return accepted[0];
+}

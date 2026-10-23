@@ -2,7 +2,7 @@ import { acceptedFor, gradeExercise, gradePlacement } from "@biti/grading";
 import catalog from "@/content/published.json";
 import verbsData from "@/content/verbs.json";
 import alphabetData from "@/content/alphabet.json";
-import { dueCards, offlineAlphabet, type AlphabetData, offlinePractice, scheduleCard, today, type SrsCard } from "./offline-content";
+import { addDailyXp, dailyXp, dueCards, expectedAnswer, offlineAlphabet, type AlphabetData, offlinePractice, scheduleCard, today, type SrsCard } from "./offline-content";
 import type { Exercise, Lesson, PathNode, PathStage, User } from "./api";
 import { makePath, type PathCatalog } from "./path-core";
 import { newId, peekSession, saveSession, type LocalAttempt, type LocalSession } from "./session";
@@ -25,6 +25,8 @@ function lessonBySlug(slug: string): CatalogLesson | undefined {
 
 function publicExercise(ex: Record<string, unknown>): Exercise {
   const clone = { ...ex };
+  // Tracing shows the model letter anyway; the handwriting pad needs it to recognise strokes.
+  if (ex.type === "trace" && Array.isArray(ex.accepted)) clone.glyph = ex.accepted[0];
   delete clone.accepted;
   delete clone.pairs;
   delete clone.pairs_by_lang;
@@ -173,7 +175,8 @@ export async function localHandle<T>(path: string, init: RequestInit = {}): Prom
   }
 
   if (method === "GET" && path === "/curriculum/path") {
-    return buildPath(sessionOrThrow()) as T;
+    const session = sessionOrThrow();
+    return { ...buildPath(session), daily: { xp: dailyXp(session.daily), goal: session.user.daily_goal_xp || 20 } } as T;
   }
 
   const lessonGet = path.match(/^\/lessons\/([^/]+)$/);
@@ -208,12 +211,14 @@ export async function localHandle<T>(path: string, init: RequestInit = {}): Prom
     const existing = attempt.results[String(body.exercise_id)];
     if (existing) return { grade: existing, replayed: true, hearts: session.user.hearts } as T;
     let grade;
+    let expected: string | null = null;
     if (exercise.type === "speak" || exercise.requires_audio) {
       grade = { result: "skipped", score: 0, rule_ids: ["optional_unavailable"], diff: [] };
     } else {
       grade = gradeExercise(exercise, { value: body.value, pairs: body.pairs as Record<string, string> }, sourceLang(session.user.course_id));
       if (grade.result !== "correct") {
         const acc = acceptedFor(exercise, sourceLang(session.user.course_id));
+        expected = expectedAnswer(exercise, acc, sourceLang(session.user.course_id));
         if (acc.length && exercise.type === "type_he") {
           const id = `${attempt.slug}:${String(body.exercise_id)}`;
           session.srs = session.srs || {};
@@ -227,7 +232,7 @@ export async function localHandle<T>(path: string, init: RequestInit = {}): Prom
     }
     attempt.results[String(body.exercise_id)] = grade;
     await saveSession(session);
-    return { grade, replayed: false, hearts: session.user.hearts, combo: attempt.combo } as T;
+    return { grade, replayed: false, hearts: session.user.hearts, combo: attempt.combo, expected } as T;
   }
 
   const complete = path.match(/^\/attempts\/([^/]+)\/complete$/);
@@ -253,6 +258,7 @@ export async function localHandle<T>(path: string, init: RequestInit = {}): Prom
     if (passed) {
       xp = correct * 10;
       session.user = { ...session.user, xp_total: session.user.xp_total + xp };
+      session.daily = addDailyXp(session.daily, xp);
       if (isGate(spec.kind)) {
         if (!session.badges.includes(spec.level)) session.badges.push(spec.level);
         const titles = catalog.stageTitles as Record<string, Record<string, string>>;

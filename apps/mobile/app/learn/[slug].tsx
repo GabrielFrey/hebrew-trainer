@@ -3,11 +3,14 @@ import { useEffect, useMemo, useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import { BitiMascot } from "@/components/BitiMascot";
 import { HebrewKeyboard } from "@/components/HebrewKeyboard";
+import { HandwritingCanvas } from "@/components/HandwritingCanvas";
 import { HebrewText } from "@/components/HebrewText";
+import { LessonHud } from "@/components/LessonHud";
 import { Shell } from "@/components/Shell";
 import { api, type Exercise, type Lesson } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { loc, t, type UiLang } from "@/lib/i18n";
+import { glyphForChar, recognise, type Stroke } from "@/lib/handwriting";
 import { enqueueSubmit } from "@/lib/offline";
 import { usePalette } from "@/lib/theme";
 
@@ -53,6 +56,9 @@ function Player() {
   const [translit, setTranslit] = useState(true);
   const [explain, setExplain] = useState<string | null>(null);
   const [offline, setOffline] = useState(false);
+  const [hearts, setHearts] = useState<number | null>(null);
+  const [combo, setCombo] = useState(0);
+  const [expected, setExpected] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -89,11 +95,14 @@ function Player() {
     else if (current.type === "order_rtl" || current.type === "tiles") payload.value = order;
     else payload.value = value;
     try {
-      const res = await api<{ grade: Grade }>(`/attempts/${attempt}/submit`, {
+      const res = await api<{ grade: Grade; hearts?: number; combo?: number; expected?: string | null }>(`/attempts/${attempt}/submit`, {
         method: "POST",
         body: JSON.stringify(payload),
       });
       setGrade(res.grade);
+      if (typeof res.hearts === "number") setHearts(res.hearts);
+      setCombo(res.combo || 0);
+      setExpected(res.expected || null);
       setOffline(false);
     } catch (err) {
       await enqueueSubmit(attempt, payload);
@@ -104,6 +113,7 @@ function Player() {
 
   async function next() {
     setGrade(null);
+    setExpected(null);
     setValue("");
     setPairs({});
     setOrder([]);
@@ -218,6 +228,7 @@ function Player() {
   return (
     <View testID="lesson-player" style={{ gap: 12 }}>
       <View style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 16, gap: 10 }}>
+        <LessonHud lang={lang} index={idx + (grade ? 1 : 0)} total={exercises.length} hearts={hearts} combo={combo} />
         <Text style={{ color: palette.inkSoft, fontSize: 13 }}>
           {lesson.level} · {lesson.cefr} · {idx + 1}/{exercises.length}
         </Text>
@@ -255,7 +266,7 @@ function Player() {
           setOrder={setOrder}
           niqqud={niqqud}
         />
-        {grade ? <Feedback grade={grade} label={gradeLabel(grade.result, lang)} /> : null}
+        {grade ? <Feedback grade={grade} label={gradeLabel(grade.result, lang)} expected={expected} lang={lang} niqqud={niqqud} /> : null}
         {explain ? <Text style={{ backgroundColor: palette.sandDeep, padding: 10, borderRadius: 16 }}>{explain}</Text> : null}
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
           <Pressable testID="check-answer" accessibilityRole="button" onPress={check} style={{ backgroundColor: palette.indigo, paddingHorizontal: 18, paddingVertical: 10, borderRadius: 999 }}>
@@ -394,12 +405,7 @@ function ExerciseBody({
     );
   }
   if (exercise.type === "trace") {
-    return (
-      <View style={{ backgroundColor: palette.sandDeep, borderRadius: 16, padding: 12, gap: 8 }}>
-        <Text>Tracing canvas fallback: type the letter. A dedicated cursive OFL font is not vendored yet.</Text>
-        <HebrewKeyboard value={value} onChange={setValue} />
-      </View>
-    );
+    return <TracePad exercise={exercise} value={value} setValue={setValue} />;
   }
   if (exercise.type === "speak") {
     return (
@@ -437,7 +443,80 @@ function ExerciseBody({
   );
 }
 
-function Feedback({ grade, label }: { grade: Grade; label: string }) {
+/** Handwriting pad with on-device recognition (ported from main), keyboard as fallback. */
+function TracePad({ exercise, value, setValue }: { exercise: Exercise; value: string; setValue: (v: string) => void }) {
+  const palette = usePalette();
+  const { lang } = useAuth();
+  const [keyboard, setKeyboard] = useState(false);
+  const [note, setNote] = useState<string | null>(null);
+  const [reset, setReset] = useState(0);
+  const target = typeof (exercise as { glyph?: unknown }).glyph === "string" ? String((exercise as { glyph?: string }).glyph) : "";
+  const glyph = target ? glyphForChar(target) : undefined;
+  const onStrokes = (strokes: Stroke[]) => {
+    if (!glyph) return;
+    const r = recognise(strokes, glyph.id);
+    if (r.verdict === "match") {
+      setValue(glyph.char);
+      setNote(t(lang, "lesson.writeMatch"));
+    } else if (r.verdict === "mismatch" && r.best) {
+      setValue(r.best.char);
+      setNote(t(lang, "lesson.writeWrong", { char: r.best.char }));
+    } else {
+      setValue("");
+      setNote(t(lang, "lesson.writeUnsure"));
+    }
+  };
+  if (!glyph || keyboard) {
+    return (
+      <View style={{ backgroundColor: palette.sandDeep, borderRadius: 16, padding: 12, gap: 8 }}>
+        <HebrewKeyboard value={value} onChange={setValue} />
+      </View>
+    );
+  }
+  return (
+    <View testID="trace-pad" style={{ gap: 8 }}>
+      <Text style={{ color: palette.inkSoft, textAlign: "center", fontSize: 48 }} {...({ lang: "he" } as object)}>
+        {glyph.char}
+      </Text>
+      <HandwritingCanvas onChange={onStrokes} hint={t(lang, "lesson.writeHint")} resetKey={`${exercise.id}-${reset}`} />
+      {note ? (
+        <Text testID="trace-note" style={{ color: value === glyph.char ? palette.correct : palette.almost, textAlign: "center" }}>
+          {note}
+        </Text>
+      ) : null}
+      <View style={{ flexDirection: "row", gap: 8, justifyContent: "center" }}>
+        <Pressable
+          testID="trace-clear"
+          onPress={() => {
+            setReset((n) => n + 1);
+            setValue("");
+            setNote(null);
+          }}
+          style={chip(palette)}
+        >
+          <Text style={{ color: palette.ink }}>{t(lang, "lesson.clear")}</Text>
+        </Pressable>
+        <Pressable testID="trace-keyboard" onPress={() => setKeyboard(true)} style={chip(palette)}>
+          <Text style={{ color: palette.ink }}>{t(lang, "lesson.useKeyboard")}</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+
+function Feedback({
+  grade,
+  label,
+  expected,
+  lang,
+  niqqud,
+}: {
+  grade: Grade;
+  label: string;
+  expected?: string | null;
+  lang: UiLang;
+  niqqud: boolean;
+}) {
   const palette = usePalette();
   const kind = grade.result === "correct" ? "correct" : grade.result === "almost" ? "almost" : "incorrect";
   const icon = kind === "correct" ? "✓" : kind === "almost" ? "~" : "×";
@@ -459,6 +538,16 @@ function Feedback({ grade, label }: { grade: Grade; label: string }) {
             </Text>
           ))
         : null}
+      {kind !== "correct" && expected ? (
+        <View testID="feedback-answer" style={{ marginTop: 8, backgroundColor: palette.paper, borderRadius: 12, padding: 10, alignItems: "center", gap: 2 }}>
+          <Text style={{ color: palette.inkSoft, fontSize: 13 }}>{t(lang, "lesson.correctAnswer")}</Text>
+          {/[\u0590-\u05FF]/.test(expected) ? (
+            <HebrewText showNiqqud={niqqud}>{expected}</HebrewText>
+          ) : (
+            <Text style={{ color: palette.ink, fontSize: 18, fontWeight: "600" }}>{expected}</Text>
+          )}
+        </View>
+      ) : null}
     </View>
   );
 }
