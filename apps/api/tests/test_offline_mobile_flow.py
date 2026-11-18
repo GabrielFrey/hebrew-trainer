@@ -43,7 +43,12 @@ def _unlocked(slug: str, done: dict[str, float]) -> bool:
 
 
 def test_bundle_has_placement_and_first_lesson() -> None:
-    assert [item["id"] for item in CATALOG["placement"]["items"]] == ["p1", "p2", "p3"]
+    placement = CATALOG["placement"]
+    ids = [item["id"] for item in placement["items"]]
+    assert ids[:3] == ["p1", "p2", "p3"]
+    assert 15 <= len(ids) <= 20
+    assert set(ids) == set(placement["accepted"]) == set(placement["levels"])
+    assert all(placement["accepted"][pid] for pid in ids)
     first = CATALOG["lessons"][0]
     assert first["slug"] == "script-alef-he"
     assert first["kind"] == "lesson"
@@ -70,7 +75,7 @@ def test_offline_onboarding_placement_first_lesson_without_api() -> None:
     answers = {"p1": "שלום", "p2": "הספר", "p3": "כותב"}
     score = 0
     for pid, accepted in CATALOG["placement"]["accepted"].items():
-        if grade_text(answers[pid], accepted).result == "correct":
+        if grade_text(answers.get(pid, ""), accepted).result == "correct":
             score += 1
     assert score == 3
     session["user"]["level"] = "beginner" if score > 1 else "starter"
