@@ -5,7 +5,8 @@ import type { LocalSession } from "./session";
 export type PathCatalog = {
   gateKinds: string[];
   lessons: Array<{ slug: string; title: Record<string, string>; track: string; level: string; kind: string; prerequisites: string[] }>;
-  levels: Array<{ id: string; ulpan: string; cefr: string }>;
+  /** `opensAfter` names the stage whose gate opens this one (default: the previous main stage). Sections are side tracks. */
+  levels: Array<{ id: string; ulpan: string; cefr: string; opensAfter?: string; section?: boolean }>;
   stageTitles: unknown;
   checkpointSlugs: unknown;
 };
@@ -15,23 +16,37 @@ const GATE = new Set(catalog.gateKinds);
 const PASS = 0.8;
 
 type CatalogLesson = PathCatalog["lessons"][number];
+const bySlug = new Map(catalog.lessons.map((row) => [row.slug, row]));
 
 function isGate(kind?: string): boolean {
   return GATE.has(kind || "lesson");
 }
 
 function lessonBySlug(slug: string): CatalogLesson | undefined {
-  return catalog.lessons.find((row) => row.slug === slug);
+  return bySlug.get(slug);
+}
+
+function opener(stageId: string): string | null {
+  const idx = catalog.levels.findIndex((row) => row.id === stageId);
+  if (idx <= 0) return null;
+  const level = catalog.levels[idx];
+  if (level.opensAfter) return level.opensAfter;
+  for (let i = idx - 1; i >= 0; i--) if (!catalog.levels[i].section) return catalog.levels[i].id;
+  return null;
 }
 
 function stageOpen(stageId: string, done: Record<string, number>): boolean {
-  const ids = catalog.levels.map((row) => row.id);
-  const idx = ids.indexOf(stageId);
+  const idx = catalog.levels.findIndex((row) => row.id === stageId);
   if (idx <= 0) return true;
-  const prev = ids[idx - 1];
-  const gate = (catalog.checkpointSlugs as Record<string, string>)[prev];
+  const prev = opener(stageId);
+  const gate = prev ? (catalog.checkpointSlugs as Record<string, string>)[prev] : undefined;
   if (!gate) return false;
   return (done[gate] || 0) + 1e-9 >= PASS;
+}
+
+/** Stages whose gate-keeper is `stageId` (what passing its gate opens). */
+function opensNext(stageId: string): string[] {
+  return catalog.levels.filter((row) => opener(row.id) === stageId).map((row) => row.id);
 }
 
 function unlocked(slug: string, done: Record<string, number>): boolean {
@@ -80,6 +95,7 @@ function buildPath(session: LocalSession): { nodes: PathNode[]; stages: PathStag
     };
     const publishedTotal = lessons.length + (checkpoint.status === "published" ? 1 : 0);
     const completedN = lessons.filter((n) => n.completed).length + (checkpoint.completed ? 1 : 0);
+    const opensAfter = opener(level.id);
     return {
       id: level.id,
       ulpan: level.ulpan,
@@ -91,23 +107,29 @@ function buildPath(session: LocalSession): { nodes: PathNode[]; stages: PathStag
       badge: session.badges.includes(level.id),
       nodes: lessons,
       checkpoint,
+      ...(level.section ? { section: true } : {}),
+      ...(opensAfter ? { opens_after: opensAfter } : {}),
     };
   });
-  const trail = stages.flatMap((s) => [...s.nodes, s.checkpoint]);
+  const trailOf = (list: PathStage[]) => list.flatMap((s) => [...s.nodes, s.checkpoint]);
+  const main = trailOf(stages.filter((s) => !s.section));
+  const all = trailOf(stages);
   const current =
-    trail.find((n) => n.status !== "planned" && n.unlocked && !n.completed)?.slug ||
-    [...trail].reverse().find((n) => n.completed)?.slug ||
-    trail.find((n) => n.status !== "planned")?.slug ||
+    main.find((n) => n.status !== "planned" && n.unlocked && !n.completed)?.slug ||
+    all.find((n) => n.status !== "planned" && n.unlocked && !n.completed)?.slug ||
+    [...main].reverse().find((n) => n.completed)?.slug ||
+    main.find((n) => n.status !== "planned")?.slug ||
     null;
   return { nodes, stages, current_slug: current };
 }
 
 /**
- * Deterministic test-out: every stage before `level` is marked passed (lessons + gate, badge),
- * so the path's current node lands on the first lesson of the placed stage.
+ * Deterministic test-out: every main stage before `level` is marked passed (lessons + gate, badge),
+ * so the path's current node lands on the first lesson of the placed stage. Sections stay untouched.
  */
 function applyPlacement(session: LocalSession, level: string) {
-  const ids = catalog.levels.map((row) => row.id);
+  const main = catalog.levels.filter((row) => !row.section);
+  const ids = main.map((row) => row.id);
   const idx = Math.max(0, ids.indexOf(level));
   const titles = catalog.stageTitles as Record<string, Record<string, string>>;
   const gates = catalog.checkpointSlugs as Record<string, string>;
@@ -118,10 +140,10 @@ function applyPlacement(session: LocalSession, level: string) {
     if (gates[stageId] && !((session.done[gates[stageId]] || 0) >= PASS)) session.done[gates[stageId]] = 1;
     if (!session.badges.includes(stageId)) session.badges.push(stageId);
   }
-  const meta = catalog.levels[idx];
+  const meta = main[idx];
   session.user = { ...session.user, level: meta.id as User["level"] };
   return { id: meta.id, ulpan: meta.ulpan, cefr: meta.cefr, title: titles[meta.id] || { en: meta.ulpan } };
 }
 
-  return { PASS, isGate, lessonBySlug, stageOpen, unlocked, buildPath, applyPlacement };
+  return { PASS, isGate, lessonBySlug, stageOpen, opensNext, unlocked, buildPath, applyPlacement };
 }

@@ -63,7 +63,9 @@ export type Lesson = {
   kind?: string;
   test_out?: boolean;
   mistake_limit?: number | null;
-  stage?: { id: string; ulpan: string; cefr: string; title: Record<string, string> };
+  stage?: { id: string; ulpan: string; cefr: string; title: Record<string, string>; section?: boolean };
+  /** Course languages whose glosses are missing here and fall back to English. */
+  l10n_fallback?: string[];
   audio: { capability: string };
   speech: { capability: string };
 };
@@ -80,6 +82,8 @@ export type Exercise = {
   optional?: boolean;
   requires_audio?: boolean;
   honest_fallback?: string;
+  /** Lines shown above the prompt (dialogue turns, a verse). Sentences are always pointed. */
+  context?: Array<{ speaker?: string; he: string; tr?: Record<string, string>; source?: Record<string, string> }>;
 };
 
 export type PathNode = {
@@ -106,6 +110,9 @@ export type PathStage = {
   badge: boolean;
   nodes: PathNode[];
   checkpoint: PathNode;
+  /** Optional side track (slang, idioms, literary) that does not block the main path. */
+  section?: boolean;
+  opens_after?: string;
 };
 
 function unreachableMessage(base: string, err: unknown): string {
