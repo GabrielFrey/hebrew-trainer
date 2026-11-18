@@ -1,6 +1,7 @@
 import { drainQueue } from "./offline";
 import { apiHostLabel, defaultApiBase } from "./api-host";
 import { canServeLocally, localHandle } from "./local-api";
+import { t } from "./i18n";
 import { loadSession, loadToken, peekSession, saveSession, saveToken, newId } from "./session";
 
 const FETCH_MS = 2500;
@@ -17,6 +18,24 @@ export function connectionState(): Connection {
 
 export function lastApiHost(): string {
   return lastReachableHost || apiHostLabel();
+}
+
+/** A release build with no API URL keeps every lesson on the device and does not call loopback. */
+export function remoteEnabled(): boolean {
+  if (process.env.EXPO_PUBLIC_API_URL) return true;
+  return typeof __DEV__ !== "undefined" && __DEV__;
+}
+
+function uiLang(): UiLang {
+  const raw = peekSession()?.user?.ui_language;
+  if (raw === "en" || raw === "ru" || raw === "he" || raw === "uk" || raw === "es" || raw === "fr") return raw;
+  return "en";
+}
+
+export function userFacingError(err: unknown, lang: UiLang): string {
+  if (err instanceof ApiError && err.detail) return err.detail;
+  if (typeof __DEV__ !== "undefined" && __DEV__ && err instanceof Error && err.message) return err.message;
+  return t(lang, "states.error");
 }
 
 export class ApiError extends Error {
@@ -115,10 +134,8 @@ export type PathStage = {
   opens_after?: string;
 };
 
-function unreachableMessage(base: string, err: unknown): string {
-  const host = apiHostLabel(base);
-  const why = err instanceof Error ? err.message : "network error";
-  return `Could not reach the lesson server at ${host} (${why}). Start offline, or retry when the API is running on port 43180.`;
+function unreachableMessage(): string {
+  return t(uiLang(), "states.unreachable");
 }
 
 async function remoteFetch<T>(path: string, init: RequestInit, base: string): Promise<T> {
@@ -150,6 +167,13 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   const method = (init.method || "GET").toUpperCase();
   const base = defaultApiBase();
   lastReachableHost = apiHostLabel(base);
+  if (!remoteEnabled()) {
+    if (canServeLocally(path, method)) {
+      lastConnection = "offline";
+      return localHandle<T>(path, init);
+    }
+    throw new ApiError(0, unreachableMessage(), true);
+  }
   try {
     const data = await remoteFetch<T>(path, init, base);
     lastConnection = "online";
@@ -159,8 +183,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
       lastConnection = "offline";
       return localHandle<T>(path, init);
     }
-    const detail = unreachableMessage(base, err);
-    throw new ApiError(err instanceof ApiError ? err.status : 0, detail, true);
+    throw new ApiError(err instanceof ApiError ? err.status : 0, unreachableMessage(), true);
   }
 }
 
@@ -204,6 +227,16 @@ export async function demoLogin(body: {
     ...body,
     email: body.role === "editor" ? "demo-editor@biti.local" : `demo-${newId("demo")}@biti.local`,
   };
+  const startLocal = async (): Promise<User> => {
+    lastConnection = "offline";
+    const data = await localHandle<{ access_token: string; user: User }>("/auth/demo", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    access = "";
+    return data.user;
+  };
+  if (!remoteEnabled()) return startLocal();
   try {
     const data = await remoteFetch<{ access_token: string; user: User }>(
       "/auth/demo",
@@ -223,13 +256,7 @@ export async function demoLogin(body: {
     });
     return data.user;
   } catch {
-    lastConnection = "offline";
-    const data = await localHandle<{ access_token: string; user: User }>("/auth/demo", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
-    access = "";
-    return data.user;
+    return startLocal();
   }
 }
 

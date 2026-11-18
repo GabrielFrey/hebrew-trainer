@@ -7,6 +7,7 @@ import { addDailyXp, dailyXp, dueCards, expectedAnswer, offlineAlphabet, type Al
 import type { Exercise, Lesson, PathNode, PathStage, User } from "./api";
 import { mergeCatalog, type Catalog, type CatalogLesson, type Curriculum } from "./curriculum";
 import { makePath, type PathCatalog } from "./path-core";
+import { t, type UiLang } from "./i18n";
 import { newId, peekSession, saveSession, type LocalAttempt, type LocalSession } from "./session";
 
 type Placement = { items: unknown[]; accepted: Record<string, string[]>; levels: Record<string, string>; passRatio: number; maxLevel: string };
@@ -315,7 +316,9 @@ export async function localHandle<T>(path: string, init: RequestInit = {}): Prom
   }
 
   if (method === "POST" && path === "/tutor/explain") {
-    return { summary: "The tutor is unavailable offline." } as T;
+    const raw = sessionOrThrow().user.ui_language;
+    const lang: UiLang = raw === "en" || raw === "ru" || raw === "he" || raw === "uk" || raw === "es" || raw === "fr" ? raw : "en";
+    return { summary: t(lang, "states.unavailable") } as T;
   }
 
   throw new Error("offline_unsupported");
