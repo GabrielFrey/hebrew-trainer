@@ -20,7 +20,7 @@ export function ErrorBoundary({ error, retry }: { error: Error; retry: () => Pro
       <BitiMascot lang={lang} mood="sad" />
       <Text style={{ fontSize: 22, fontWeight: "700", color: "#142033", textAlign: "center" }}>{t(lang, "lesson.errorTitle")}</Text>
       <Text style={{ color: "#3A4A5E", textAlign: "center" }}>{t(lang, "lesson.errorBody")}</Text>
-      {__DEV__ ? <Text style={{ color: "#6B7787", fontSize: 12, textAlign: "center" }}>{error.message}</Text> : null}
+      {__DEV__ ? <Text style={{ color: "#5C6674", fontSize: 12, textAlign: "center" }}>{error.message}</Text> : null}
       <Pressable
         testID="error-retry"
         accessibilityRole="button"
