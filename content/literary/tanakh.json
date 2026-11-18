@@ -1,0 +1,983 @@
+{
+ "_meta": {
+  "description": "Public-domain Tanakh verses for the literary section.",
+  "fetched_from": "https://api.getbible.net/v2",
+  "editions": {
+   "he": {
+    "code": "codex",
+    "name": "Westminster Leningrad Codex",
+    "license": "public domain"
+   },
+   "ru": {
+    "code": "synodal",
+    "name": "Синодальный перевод (1876)",
+    "license": "public domain"
+   },
+   "uk": {
+    "code": "ukrogienko",
+    "name": "Переклад Івана Огієнка (1930-ті)",
+    "license": "public domain"
+   },
+   "en": {
+    "code": "web",
+    "name": "World English Bible",
+    "license": "public domain"
+   },
+   "es": {
+    "code": "valera",
+    "name": "Reina-Valera (1909)",
+    "license": "public domain (published 1909)"
+   },
+   "fr": {
+    "code": "ls1910",
+    "name": "Louis Segond (1910)",
+    "license": "public domain (published 1910)"
+   }
+  },
+  "lessons": {
+   "beginnings": {
+    "en": "Beginnings and Kohelet",
+    "ru": "Начало и Коэлет",
+    "he": "בראשית וקהלת",
+    "uk": "Початок і Когелет",
+    "es": "Principios y Cohélet",
+    "fr": "Commencements et Qohélet"
+   },
+   "seasons": {
+    "en": "A time for everything",
+    "ru": "Всему своё время",
+    "he": "לכל זמן",
+    "uk": "Усьому свій час",
+    "es": "Todo tiene su tiempo",
+    "fr": "Un temps pour tout"
+   },
+   "proverbs": {
+    "en": "Proverbs",
+    "ru": "Притчи",
+    "he": "משלי",
+    "uk": "Приповісті",
+    "es": "Proverbios",
+    "fr": "Proverbes"
+   },
+   "psalms": {
+    "en": "Psalms",
+    "ru": "Псалмы",
+    "he": "תהלים",
+    "uk": "Псалми",
+    "es": "Salmos",
+    "fr": "Psaumes"
+   },
+   "song": {
+    "en": "Song of Songs, Ruth, Isaiah",
+    "ru": "Песнь песней, Руфь, Исаия",
+    "he": "שיר השירים, רות, ישעיהו",
+    "uk": "Пісня над піснями, Рут, Ісая",
+    "es": "Cantares, Rut, Isaías",
+    "fr": "Cantique, Ruth, Ésaïe"
+   }
+  },
+  "notes": "Cantillation, meteg, paseq and sof pasuq removed from the Hebrew; vowels, maqaf and the combining grapheme joiner of יְרוּשָׁלָ͏ִם kept. Ukrainian stress marks and bracketed Synodal additions removed."
+ },
+ "verses": [
+  {
+   "id": "tanakh-1-1-1",
+   "lesson": "beginnings",
+   "ref": {
+    "en": "Genesis 1:1",
+    "ru": "Бытие 1:1",
+    "uk": "Буття 1:1",
+    "es": "Génesis 1:1",
+    "fr": "Genèse 1:1",
+    "he": "בראשית 1:1"
+   },
+   "text": {
+    "he": "בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ",
+    "ru": "В начале сотворил Бог небо и землю.",
+    "uk": "На початку Бог створив небо та землю.",
+    "en": "In the beginning, God created the heavens and the earth.",
+    "es": "En el principio crió Dios los cielos y la tierra.",
+    "fr": "Au commencement, Dieu créa les cieux et la terre."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Genesis 1:1",
+    "ru": "Синодальный перевод (1876), Genesis 1:1",
+    "uk": "Переклад Івана Огієнка (1930-ті), Genesis 1:1",
+    "en": "World English Bible, Genesis 1:1",
+    "es": "Reina-Valera (1909), Genesis 1:1",
+    "fr": "Louis Segond (1910), Genesis 1:1"
+   }
+  },
+  {
+   "id": "tanakh-1-1-3",
+   "lesson": "beginnings",
+   "ref": {
+    "en": "Genesis 1:3",
+    "ru": "Бытие 1:3",
+    "uk": "Буття 1:3",
+    "es": "Génesis 1:3",
+    "fr": "Genèse 1:3",
+    "he": "בראשית 1:3"
+   },
+   "text": {
+    "he": "וַיֹּאמֶר אֱלֹהִים יְהִי אוֹר וַיְהִי־אוֹר",
+    "ru": "И сказал Бог: да будет свет. И стал свет.",
+    "uk": "І сказав Бог: „Хай станеться світло!“ І сталося світло.",
+    "en": "God said, “Let there be light,” and there was light.",
+    "es": "Y dijo Dios: Sea la luz: y fué la luz.",
+    "fr": "Dieu dit : Que la lumière soit ! Et la lumière fut."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Genesis 1:3",
+    "ru": "Синодальный перевод (1876), Genesis 1:3",
+    "uk": "Переклад Івана Огієнка (1930-ті), Genesis 1:3",
+    "en": "World English Bible, Genesis 1:3",
+    "es": "Reina-Valera (1909), Genesis 1:3",
+    "fr": "Louis Segond (1910), Genesis 1:3"
+   }
+  },
+  {
+   "id": "tanakh-21-1-2",
+   "lesson": "beginnings",
+   "ref": {
+    "en": "Ecclesiastes 1:2",
+    "ru": "Екклесиаст 1:2",
+    "uk": "Екклезіяст 1:2",
+    "es": "Eclesiastés 1:2",
+    "fr": "Ecclésiaste 1:2",
+    "he": "קהלת 1:2"
+   },
+   "text": {
+    "he": "הֲבֵל הֲבָלִים אָמַר קֹהֶלֶת הֲבֵל הֲבָלִים הַכֹּל הָבֶל",
+    "ru": "Суета сует, сказал Екклесиаст, суета сует, - все суета!",
+    "uk": "Наймарніша марнота, сказав Проповідник, наймарніша марнота, — марнота усе!",
+    "en": "“Vanity of vanities,” says the Preacher; “Vanity of vanities, all is vanity.”",
+    "es": "Vanidad de vanidades, dijo el Predicador; vanidad de vanidades, todo vanidad.",
+    "fr": "Vanité des vanités, dit l’Ecclésiaste, vanité des vanités, tout est vanité."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Ecclesiastes 1:2",
+    "ru": "Синодальный перевод (1876), Ecclesiastes 1:2",
+    "uk": "Переклад Івана Огієнка (1930-ті), Ecclesiastes 1:2",
+    "en": "World English Bible, Ecclesiastes 1:2",
+    "es": "Reina-Valera (1909), Ecclesiastes 1:2",
+    "fr": "Louis Segond (1910), Ecclesiastes 1:2"
+   },
+   "note": {
+    "en": "Today «הבל הבלים» means utter futility.",
+    "ru": "Сегодня «הבל הבלים» значит «полная бессмыслица, тщета»."
+   }
+  },
+  {
+   "id": "tanakh-21-1-4",
+   "lesson": "beginnings",
+   "ref": {
+    "en": "Ecclesiastes 1:4",
+    "ru": "Екклесиаст 1:4",
+    "uk": "Екклезіяст 1:4",
+    "es": "Eclesiastés 1:4",
+    "fr": "Ecclésiaste 1:4",
+    "he": "קהלת 1:4"
+   },
+   "text": {
+    "he": "דּוֹר הֹלֵךְ וְדוֹר בָּא וְהָאָרֶץ לְעוֹלָם עֹמָדֶת",
+    "ru": "Род проходит, и род приходит, а земля пребывает во веки.",
+    "uk": "Покоління відходить, й покоління приходить, а земля віковічно стоїть!",
+    "en": "One generation goes, and another generation comes; but the earth remains forever.",
+    "es": "Generación va, y generación viene: mas la tierra siempre permanece.",
+    "fr": "Une génération s’en va, une autre vient, et la terre subsiste toujours."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Ecclesiastes 1:4",
+    "ru": "Синодальный перевод (1876), Ecclesiastes 1:4",
+    "uk": "Переклад Івана Огієнка (1930-ті), Ecclesiastes 1:4",
+    "en": "World English Bible, Ecclesiastes 1:4",
+    "es": "Reina-Valera (1909), Ecclesiastes 1:4",
+    "fr": "Louis Segond (1910), Ecclesiastes 1:4"
+   }
+  },
+  {
+   "id": "tanakh-21-1-9",
+   "lesson": "beginnings",
+   "ref": {
+    "en": "Ecclesiastes 1:9",
+    "ru": "Екклесиаст 1:9",
+    "uk": "Екклезіяст 1:9",
+    "es": "Eclesiastés 1:9",
+    "fr": "Ecclésiaste 1:9",
+    "he": "קהלת 1:9"
+   },
+   "text": {
+    "he": "מַה־שֶּׁהָיָה הוּא שֶׁיִּהְיֶה וּמַה־שֶׁנַּעֲשָׂה הוּא שֶׁיֵּעָשֶׂה וְאֵין כָּל־חָדָשׁ תַּחַת הַשָּׁמֶשׁ",
+    "ru": "Что было, то и будет; и что делалось, то и будет делаться, и нет ничего нового под солнцем.",
+    "uk": "Що було, воно й буде, і що робилося, буде робитись воно, — і немає нічого нового під сонцем!",
+    "en": "That which has been is that which shall be; and that which has been done is that which shall be done: and there is no new thing under the sun.",
+    "es": "¿Qué es lo que fué? Lo mismo que será. ¿Qué es lo que ha sido hecho? Lo mismo que se hará: y nada hay nuevo debajo del sol.",
+    "fr": "Ce qui a été, c’est ce qui sera, et ce qui s’est fait, c’est ce qui se fera, il n’y a rien de nouveau sous le soleil."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Ecclesiastes 1:9",
+    "ru": "Синодальный перевод (1876), Ecclesiastes 1:9",
+    "uk": "Переклад Івана Огієнка (1930-ті), Ecclesiastes 1:9",
+    "en": "World English Bible, Ecclesiastes 1:9",
+    "es": "Reina-Valera (1909), Ecclesiastes 1:9",
+    "fr": "Louis Segond (1910), Ecclesiastes 1:9"
+   },
+   "note": {
+    "en": "«אין חדש תחת השמש» is an everyday saying: nothing new under the sun.",
+    "ru": "«אין חדש תחת השמש» — ходовая поговорка: ничто не ново под солнцем."
+   }
+  },
+  {
+   "id": "tanakh-21-3-1",
+   "lesson": "beginnings",
+   "ref": {
+    "en": "Ecclesiastes 3:1",
+    "ru": "Екклесиаст 3:1",
+    "uk": "Екклезіяст 3:1",
+    "es": "Eclesiastés 3:1",
+    "fr": "Ecclésiaste 3:1",
+    "he": "קהלת 3:1"
+   },
+   "text": {
+    "he": "לַכֹּל זְמָן וְעֵת לְכָל־חֵפֶץ תַּחַת הַשָּׁמָיִם",
+    "ru": "Всему свое время, и время всякой вещи под небом:",
+    "uk": "Для всього свій час, і година своя кожній справі під небом:",
+    "en": "For everything there is a season, and a time for every purpose under heaven:",
+    "es": "Para todas las cosas hay sazón, y todo lo que se quiere debajo del cielo, tiene su tiempo:",
+    "fr": "Il y a un temps pour tout, un temps pour toute chose sous les cieux :"
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Ecclesiastes 3:1",
+    "ru": "Синодальный перевод (1876), Ecclesiastes 3:1",
+    "uk": "Переклад Івана Огієнка (1930-ті), Ecclesiastes 3:1",
+    "en": "World English Bible, Ecclesiastes 3:1",
+    "es": "Reina-Valera (1909), Ecclesiastes 3:1",
+    "fr": "Louis Segond (1910), Ecclesiastes 3:1"
+   }
+  },
+  {
+   "id": "tanakh-21-3-2",
+   "lesson": "seasons",
+   "ref": {
+    "en": "Ecclesiastes 3:2",
+    "ru": "Екклесиаст 3:2",
+    "uk": "Екклезіяст 3:2",
+    "es": "Eclesiastés 3:2",
+    "fr": "Ecclésiaste 3:2",
+    "he": "קהלת 3:2"
+   },
+   "text": {
+    "he": "עֵת לָלֶדֶת וְעֵת לָמוּת עֵת לָטַעַת וְעֵת לַעֲקוֹר נָטוּעַ",
+    "ru": "время рождаться, и время умирать; время насаждать, и время вырывать посаженное;",
+    "uk": "час родитись і час помирати, час садити і час виривати посаджене,",
+    "en": "a time to be born, and a time to die; a time to plant, and a time to pluck up that which is planted;",
+    "es": "Tiempo de nacer, y tiempo de morir; tiempo de plantar, y tiempo de arrancar lo plantado;",
+    "fr": "un temps pour naître, et un temps pour mourir ; un temps pour planter, et un temps pour arracher ce qui a été planté ;"
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Ecclesiastes 3:2",
+    "ru": "Синодальный перевод (1876), Ecclesiastes 3:2",
+    "uk": "Переклад Івана Огієнка (1930-ті), Ecclesiastes 3:2",
+    "en": "World English Bible, Ecclesiastes 3:2",
+    "es": "Reina-Valera (1909), Ecclesiastes 3:2",
+    "fr": "Louis Segond (1910), Ecclesiastes 3:2"
+   }
+  },
+  {
+   "id": "tanakh-21-3-4",
+   "lesson": "seasons",
+   "ref": {
+    "en": "Ecclesiastes 3:4",
+    "ru": "Екклесиаст 3:4",
+    "uk": "Екклезіяст 3:4",
+    "es": "Eclesiastés 3:4",
+    "fr": "Ecclésiaste 3:4",
+    "he": "קהלת 3:4"
+   },
+   "text": {
+    "he": "עֵת לִבְכּוֹת וְעֵת לִשְׂחוֹק עֵת סְפוֹד וְעֵת רְקוֹד",
+    "ru": "время плакать, и время смеяться; время сетовать, и время плясать;",
+    "uk": "час плакати й час реготати, час ридати і час танцювати,",
+    "en": "a time to weep, and a time to laugh; a time to mourn, and a time to dance;",
+    "es": "Tiempo de llorar, y tiempo de reir; tiempo de endechar, y tiempo de bailar;",
+    "fr": "un temps pour pleurer, et un temps pour rire ; un temps pour se lamenter, et un temps pour danser ;"
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Ecclesiastes 3:4",
+    "ru": "Синодальный перевод (1876), Ecclesiastes 3:4",
+    "uk": "Переклад Івана Огієнка (1930-ті), Ecclesiastes 3:4",
+    "en": "World English Bible, Ecclesiastes 3:4",
+    "es": "Reina-Valera (1909), Ecclesiastes 3:4",
+    "fr": "Louis Segond (1910), Ecclesiastes 3:4"
+   }
+  },
+  {
+   "id": "tanakh-21-7-1",
+   "lesson": "seasons",
+   "ref": {
+    "en": "Ecclesiastes 7:1",
+    "ru": "Екклесиаст 7:1",
+    "uk": "Екклезіяст 7:1",
+    "es": "Eclesiastés 7:1",
+    "fr": "Ecclésiaste 7:1",
+    "he": "קהלת 7:1"
+   },
+   "text": {
+    "he": "טוֹב שֵׁם מִשֶּׁמֶן טוֹב וְיוֹם הַמָּוֶת מִיּוֹם הִוָּלְדוֹ",
+    "ru": "Доброе имя лучше дорогой масти, и день смерти - дня рождения.",
+    "uk": "Краще добре ім'я від оливи хорошої, а день смерти людини — від дня її вродження!",
+    "en": "A good name is better than fine perfume; and the day of death better than the day of one’s birth.",
+    "es": "Mejor es la buena fama que el buen ungüento; y el día de la muerte que el día del nacimiento.",
+    "fr": "Une bonne réputation vaut mieux que le bon parfum, et le jour de la mort que le jour de la naissance."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Ecclesiastes 7:1",
+    "ru": "Синодальный перевод (1876), Ecclesiastes 7:1",
+    "uk": "Переклад Івана Огієнка (1930-ті), Ecclesiastes 7:1",
+    "en": "World English Bible, Ecclesiastes 7:1",
+    "es": "Reina-Valera (1909), Ecclesiastes 7:1",
+    "fr": "Louis Segond (1910), Ecclesiastes 7:1"
+   }
+  },
+  {
+   "id": "tanakh-21-11-1",
+   "lesson": "seasons",
+   "ref": {
+    "en": "Ecclesiastes 11:1",
+    "ru": "Екклесиаст 11:1",
+    "uk": "Екклезіяст 11:1",
+    "es": "Eclesiastés 11:1",
+    "fr": "Ecclésiaste 11:1",
+    "he": "קהלת 11:1"
+   },
+   "text": {
+    "he": "שַׁלַּח לַחְמְךָ עַל־פְּנֵי הַמָּיִם כִּי־בְרֹב הַיָּמִים תִּמְצָאֶנּוּ",
+    "ru": "Отпускай хлеб твой по водам, потому что по прошествии многих дней опять найдешь его.",
+    "uk": "Хліб свій пускай по воді, бо по багатьох днях знов знайдеш його.",
+    "en": "Cast your bread on the waters; for you shall find it after many days.",
+    "es": "Echa tu pan sobre las aguas; que después de muchos días lo hallarás.",
+    "fr": "Jette ton pain sur la face des eaux, car avec le temps tu le retrouveras ;"
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Ecclesiastes 11:1",
+    "ru": "Синодальный перевод (1876), Ecclesiastes 11:1",
+    "uk": "Переклад Івана Огієнка (1930-ті), Ecclesiastes 11:1",
+    "en": "World English Bible, Ecclesiastes 11:1",
+    "es": "Reina-Valera (1909), Ecclesiastes 11:1",
+    "fr": "Louis Segond (1910), Ecclesiastes 11:1"
+   }
+  },
+  {
+   "id": "tanakh-20-1-8",
+   "lesson": "seasons",
+   "ref": {
+    "en": "Proverbs 1:8",
+    "ru": "Притчи 1:8",
+    "uk": "Приповісті 1:8",
+    "es": "Proverbios 1:8",
+    "fr": "Proverbes 1:8",
+    "he": "משלי 1:8"
+   },
+   "text": {
+    "he": "שְׁמַע בְּנִי מוּסַר אָבִיךָ וְאַל־תִּטֹּשׁ תּוֹרַת אִמֶּךָ",
+    "ru": "Слушай, сын мой, наставление отца твоего и не отвергай завета матери твоей,",
+    "uk": "Послухай, мій сину, напучення батька свого, і не відкидай науки матері своєї, —",
+    "en": "My son, listen to your father’s instruction, and don’t forsake your mother’s teaching:",
+    "es": "Oye, hijo mío, la doctrina de tu padre, y no desprecies la dirección de tu madre:",
+    "fr": "Écoute, mon fils, l’instruction de ton père, Et ne rejette pas l’enseignement de ta mère ;"
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Proverbs 1:8",
+    "ru": "Синодальный перевод (1876), Proverbs 1:8",
+    "uk": "Переклад Івана Огієнка (1930-ті), Proverbs 1:8",
+    "en": "World English Bible, Proverbs 1:8",
+    "es": "Reina-Valera (1909), Proverbs 1:8",
+    "fr": "Louis Segond (1910), Proverbs 1:8"
+   }
+  },
+  {
+   "id": "tanakh-20-6-6",
+   "lesson": "seasons",
+   "ref": {
+    "en": "Proverbs 6:6",
+    "ru": "Притчи 6:6",
+    "uk": "Приповісті 6:6",
+    "es": "Proverbios 6:6",
+    "fr": "Proverbes 6:6",
+    "he": "משלי 6:6"
+   },
+   "text": {
+    "he": "לֵךְ־אֶל־נְמָלָה עָצֵל רְאֵה דְרָכֶיהָ וַחֲכָם",
+    "ru": "Пойди к муравью, ленивец, посмотри на действия его, и будь мудрым.",
+    "uk": "Іди до мурашки, лінюху, поглянь на дороги її — й помудрій:",
+    "en": "Go to the ant, you sluggard. Consider her ways, and be wise;",
+    "es": "Ve á la hormiga, oh perezoso, mira sus caminos, y sé sabio;",
+    "fr": "Va vers la fourmi, paresseux ; Considère ses voies, et deviens sage."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Proverbs 6:6",
+    "ru": "Синодальный перевод (1876), Proverbs 6:6",
+    "uk": "Переклад Івана Огієнка (1930-ті), Proverbs 6:6",
+    "en": "World English Bible, Proverbs 6:6",
+    "es": "Reina-Valera (1909), Proverbs 6:6",
+    "fr": "Louis Segond (1910), Proverbs 6:6"
+   }
+  },
+  {
+   "id": "tanakh-20-15-1",
+   "lesson": "proverbs",
+   "ref": {
+    "en": "Proverbs 15:1",
+    "ru": "Притчи 15:1",
+    "uk": "Приповісті 15:1",
+    "es": "Proverbios 15:1",
+    "fr": "Proverbes 15:1",
+    "he": "משלי 15:1"
+   },
+   "text": {
+    "he": "מַעֲנֶה־רַּךְ יָשִׁיב חֵמָה וּדְבַר־עֶצֶב יַעֲלֶה־אָף",
+    "ru": "Кроткий ответ отвращает гнев, а оскорбительное слово возбуждает ярость.",
+    "uk": "Лагідна відповідь гнів відвертає, а слово вразливе гнів підіймає.",
+    "en": "A gentle answer turns away wrath, but a harsh word stirs up anger.",
+    "es": "La blanda respuesta quita la ira: mas la palabra áspera hace subir el furor.",
+    "fr": "Une réponse douce calme la fureur, Mais une parole dure excite la colère."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Proverbs 15:1",
+    "ru": "Синодальный перевод (1876), Proverbs 15:1",
+    "uk": "Переклад Івана Огієнка (1930-ті), Proverbs 15:1",
+    "en": "World English Bible, Proverbs 15:1",
+    "es": "Reina-Valera (1909), Proverbs 15:1",
+    "fr": "Louis Segond (1910), Proverbs 15:1"
+   }
+  },
+  {
+   "id": "tanakh-20-18-21",
+   "lesson": "proverbs",
+   "ref": {
+    "en": "Proverbs 18:21",
+    "ru": "Притчи 18:21",
+    "uk": "Приповісті 18:21",
+    "es": "Proverbios 18:21",
+    "fr": "Proverbes 18:21",
+    "he": "משלי 18:21"
+   },
+   "text": {
+    "he": "מָוֶת וְחַיִּים בְּיַד־לָשׁוֹן וְאֹהֲבֶיהָ יֹאכַל פִּרְיָהּ",
+    "ru": "Смерть и жизнь - во власти языка, и любящие его вкусят от плодов его.",
+    "uk": "Смерть та життя — у владі язика, хто ж кохає його, його плід поїдає.",
+    "en": "Death and life are in the power of the tongue; those who love it will eat its fruit.",
+    "es": "La muerte y la vida están en poder de la lengua; y el que la ama comerá de sus frutos.",
+    "fr": "La mort et la vie sont au pouvoir de la langue ; Quiconque l’aime en mangera les fruits."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Proverbs 18:21",
+    "ru": "Синодальный перевод (1876), Proverbs 18:22",
+    "uk": "Переклад Івана Огієнка (1930-ті), Proverbs 18:21",
+    "en": "World English Bible, Proverbs 18:21",
+    "es": "Reina-Valera (1909), Proverbs 18:21",
+    "fr": "Louis Segond (1910), Proverbs 18:21"
+   }
+  },
+  {
+   "id": "tanakh-20-22-6",
+   "lesson": "proverbs",
+   "ref": {
+    "en": "Proverbs 22:6",
+    "ru": "Притчи 22:6",
+    "uk": "Приповісті 22:6",
+    "es": "Proverbios 22:6",
+    "fr": "Proverbes 22:6",
+    "he": "משלי 22:6"
+   },
+   "text": {
+    "he": "חֲנֹךְ לַנַּעַר עַל־פִּי דַרְכּוֹ גַּם כִּי־יַזְקִין לֹא־יָסוּר מִמֶּנָּה",
+    "ru": "Наставь юношу при начале пути его: он не уклонится от него, когда и состарится.",
+    "uk": "Привчай юнака до дороги його, і він, як постаріється, не уступиться з неї.",
+    "en": "Train up a child in the way he should go, and when he is old he will not depart from it.",
+    "es": "Instruye al niño en su carrera: aun cuando fuere viejo no se apartará de ella.",
+    "fr": "Instruis l’enfant selon la voie qu’il doit suivre ; Et quand il sera vieux, il ne s’en détournera pas."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Proverbs 22:6",
+    "ru": "Синодальный перевод (1876), Proverbs 22:6",
+    "uk": "Переклад Івана Огієнка (1930-ті), Proverbs 22:6",
+    "en": "World English Bible, Proverbs 22:6",
+    "es": "Reina-Valera (1909), Proverbs 22:6",
+    "fr": "Louis Segond (1910), Proverbs 22:6"
+   }
+  },
+  {
+   "id": "tanakh-20-26-27",
+   "lesson": "proverbs",
+   "ref": {
+    "en": "Proverbs 26:27",
+    "ru": "Притчи 26:27",
+    "uk": "Приповісті 26:27",
+    "es": "Proverbios 26:27",
+    "fr": "Proverbes 26:27",
+    "he": "משלי 26:27"
+   },
+   "text": {
+    "he": "כֹּרֶה־שַּׁחַת בָּהּ יִפֹּל וְגֹלֵל אֶבֶן אֵלָיו תָּשׁוּב",
+    "ru": "Кто роет яму, тот упадет в нее, и кто покатит вверх камень, к тому он воротится.",
+    "uk": "Хто яму копає, той в неї впаде, а хто котить каміння — на нього воно повертається.",
+    "en": "Whoever digs a pit shall fall into it. Whoever rolls a stone, it will come back on him.",
+    "es": "El que cavare sima, caerá en ella: y el que revuelva la piedra, á él volverá.",
+    "fr": "Celui qui creuse une fosse y tombe, Et la pierre revient sur celui qui la roule."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Proverbs 26:27",
+    "ru": "Синодальный перевод (1876), Proverbs 26:27",
+    "uk": "Переклад Івана Огієнка (1930-ті), Proverbs 26:27",
+    "en": "World English Bible, Proverbs 26:27",
+    "es": "Reina-Valera (1909), Proverbs 26:27",
+    "fr": "Louis Segond (1910), Proverbs 26:27"
+   },
+   "note": {
+    "en": "«כורה שחת בה יפול» is a common proverb: he who digs a pit falls into it.",
+    "ru": "«כורה שחת בה יפול» — распространённая пословица: не рой другому яму."
+   }
+  },
+  {
+   "id": "tanakh-20-31-10",
+   "lesson": "proverbs",
+   "ref": {
+    "en": "Proverbs 31:10",
+    "ru": "Притчи 31:10",
+    "uk": "Приповісті 31:10",
+    "es": "Proverbios 31:10",
+    "fr": "Proverbes 31:10",
+    "he": "משלי 31:10"
+   },
+   "text": {
+    "he": "אֵשֶׁת־חַיִל מִי יִמְצָא וְרָחֹק מִפְּנִינִים מִכְרָהּ",
+    "ru": "Кто найдет добродетельную жену? цена ее выше жемчугов;",
+    "uk": "Хто жінку чеснотну знайде? а ціна її більша від перел:",
+    "en": "Who can find a worthy woman? For her price is far above rubies.",
+    "es": "Mujer fuerte, ¿quién la hallará? porque su estima sobrepuja largamente á la de piedras preciosas.",
+    "fr": "Qui peut trouver une femme vertueuse ? Elle a bien plus de valeur que les perles."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Proverbs 31:10",
+    "ru": "Синодальный перевод (1876), Proverbs 31:10",
+    "uk": "Переклад Івана Огієнка (1930-ті), Proverbs 31:10",
+    "en": "World English Bible, Proverbs 31:10",
+    "es": "Reina-Valera (1909), Proverbs 31:10",
+    "fr": "Louis Segond (1910), Proverbs 31:10"
+   },
+   "note": {
+    "en": "«אשת חיל» today praises a capable, accomplished woman.",
+    "ru": "«אשת חיל» сегодня — похвала деятельной, достойной женщине."
+   }
+  },
+  {
+   "id": "tanakh-19-34-15",
+   "lesson": "proverbs",
+   "ref": {
+    "en": "Psalms 34:15",
+    "ru": "Псалтирь 34:15",
+    "uk": "Псалми 34:15",
+    "es": "Salmos 34:15",
+    "fr": "Psaumes 34:15",
+    "he": "תהלים 34:15"
+   },
+   "text": {
+    "he": "סוּר מֵרָע וַעֲשֵׂה־טוֹב בַּקֵּשׁ שָׁלוֹם וְרָדְפֵהוּ",
+    "ru": "Уклоняйся от зла и делай добро; ищи мира и следуй за ним.",
+    "uk": "Відступися від злого і добре чини, миру шукай і женися за ним!",
+    "en": "Depart from evil, and do good. seek peace, and pursue it.",
+    "es": "Apártate del mal, y haz el bien; busca la paz, y síguela.",
+    "fr": "Éloigne-toi du mal, et fais le bien ; Recherche et poursuis la paix."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Psalms 34:15",
+    "ru": "Синодальный перевод (1876), Psalms 33:15",
+    "uk": "Переклад Івана Огієнка (1930-ті), Psalms 33:15",
+    "en": "World English Bible, Psalms 34:14",
+    "es": "Reina-Valera (1909), Psalms 34:14",
+    "fr": "Louis Segond (1910), Psalms 34:15"
+   }
+  },
+  {
+   "id": "tanakh-19-19-2",
+   "lesson": "psalms",
+   "ref": {
+    "en": "Psalms 19:2",
+    "ru": "Псалтирь 19:2",
+    "uk": "Псалми 19:2",
+    "es": "Salmos 19:2",
+    "fr": "Psaumes 19:2",
+    "he": "תהלים 19:2"
+   },
+   "text": {
+    "he": "הַשָּׁמַיִם מְסַפְּרִים כְּבוֹד־אֵל וּמַעֲשֵׂה יָדָיו מַגִּיד הָרָקִיעַ",
+    "ru": "Небеса проповедуют славу Божию, и о делах рук Его вещает твердь.",
+    "uk": "Небо звіщає про Божую славу, а про чин Його рук розказує небозвід.",
+    "en": "The heavens declare the glory of God. The expanse shows his handiwork.",
+    "es": "Los cielos cuentan la gloria de Dios, y la expansión denuncia la obra de sus manos.",
+    "fr": "Les cieux racontent la gloire de Dieu, Et l’étendue manifeste l’œuvre de ses mains."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Psalms 19:2",
+    "ru": "Синодальный перевод (1876), Psalms 18:2",
+    "uk": "Переклад Івана Огієнка (1930-ті), Psalms 18:2",
+    "en": "World English Bible, Psalms 19:1",
+    "es": "Reina-Valera (1909), Psalms 19:1",
+    "fr": "Louis Segond (1910), Psalms 19:2"
+   }
+  },
+  {
+   "id": "tanakh-19-90-12",
+   "lesson": "psalms",
+   "ref": {
+    "en": "Psalms 90:12",
+    "ru": "Псалтирь 90:12",
+    "uk": "Псалми 90:12",
+    "es": "Salmos 90:12",
+    "fr": "Psaumes 90:12",
+    "he": "תהלים 90:12"
+   },
+   "text": {
+    "he": "לִמְנוֹת יָמֵינוּ כֵּן הוֹדַע וְנָבִא לְבַב חָכְמָה",
+    "ru": "Научи нас так счислять дни наши, чтобы нам приобрести сердце мудрое.",
+    "uk": "Навчи нас лічити отак наші дні, щоб ми набули серце мудре!",
+    "en": "So teach us to number our days, that we may gain a heart of wisdom.",
+    "es": "Enséñanos de tal modo á contar nuestros días, que traigamos al corazón sabiduría.",
+    "fr": "Enseigne-nous à bien compter nos jours, Afin que nous appliquions notre cœur à la sagesse."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Psalms 90:12",
+    "ru": "Синодальный перевод (1876), Psalms 89:12",
+    "uk": "Переклад Івана Огієнка (1930-ті), Psalms 89:12",
+    "en": "World English Bible, Psalms 90:12",
+    "es": "Reina-Valera (1909), Psalms 90:12",
+    "fr": "Louis Segond (1910), Psalms 90:12"
+   }
+  },
+  {
+   "id": "tanakh-19-121-1",
+   "lesson": "psalms",
+   "ref": {
+    "en": "Psalms 121:1",
+    "ru": "Псалтирь 121:1",
+    "uk": "Псалми 121:1",
+    "es": "Salmos 121:1",
+    "fr": "Psaumes 121:1",
+    "he": "תהלים 121:1"
+   },
+   "text": {
+    "he": "שִׁיר לַמַּעֲלוֹת אֶשָּׂא עֵינַי אֶל־הֶהָרִים מֵאַיִן יָבֹא עֶזְרִי",
+    "ru": "Возвожу очи мои к горам, откуда придет помощь моя.",
+    "uk": "Свої очі я зводжу на гори, звідки прийде мені допомога, —",
+    "en": "I will lift up my eyes to the hills. Where does my help come from?",
+    "es": "Alzaré mis ojos á los montes, de donde vendrá mi socorro.",
+    "fr": "Cantique des degrés. Je lève mes yeux vers les montagnes… D’où me viendra le secours ?"
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Psalms 121:1",
+    "ru": "Синодальный перевод (1876), Psalms 120:1",
+    "uk": "Переклад Івана Огієнка (1930-ті), Psalms 120:1",
+    "en": "World English Bible, Psalms 121:1",
+    "es": "Reina-Valera (1909), Psalms 121:1",
+    "fr": "Louis Segond (1910), Psalms 121:1"
+   }
+  },
+  {
+   "id": "tanakh-19-121-4",
+   "lesson": "psalms",
+   "ref": {
+    "en": "Psalms 121:4",
+    "ru": "Псалтирь 121:4",
+    "uk": "Псалми 121:4",
+    "es": "Salmos 121:4",
+    "fr": "Psaumes 121:4",
+    "he": "תהלים 121:4"
+   },
+   "text": {
+    "he": "הִנֵּה לֹא־יָנוּם וְלֹא יִישָׁן שׁוֹמֵר יִשְׂרָאֵל",
+    "ru": "не дремлет и не спит хранящий Израиля.",
+    "uk": "оце не дрімає й не спить Сторож Ізраїлів!",
+    "en": "Behold, he who keeps Israel will neither slumber nor sleep.",
+    "es": "He aquí, no se adormecerá ni dormirá el que guarda á Israel.",
+    "fr": "Voici, il ne sommeille ni ne dort, Celui qui garde Israël."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Psalms 121:4",
+    "ru": "Синодальный перевод (1876), Psalms 120:4",
+    "uk": "Переклад Івана Огієнка (1930-ті), Psalms 120:4",
+    "en": "World English Bible, Psalms 121:4",
+    "es": "Reina-Valera (1909), Psalms 121:4",
+    "fr": "Louis Segond (1910), Psalms 121:4"
+   }
+  },
+  {
+   "id": "tanakh-19-126-5",
+   "lesson": "psalms",
+   "ref": {
+    "en": "Psalms 126:5",
+    "ru": "Псалтирь 126:5",
+    "uk": "Псалми 126:5",
+    "es": "Salmos 126:5",
+    "fr": "Psaumes 126:5",
+    "he": "תהלים 126:5"
+   },
+   "text": {
+    "he": "הַזֹּרְעִים בְּדִמְעָה בְּרִנָּה יִקְצֹרוּ",
+    "ru": "Сеявшие со слезами будут пожинать с радостью.",
+    "uk": "Хто сіє з слізьми, зо співом той жне:",
+    "en": "Those who sow in tears will reap in joy.",
+    "es": "Los que sembraron con lágrimas, con regocijo segarán.",
+    "fr": "Ceux qui sèment avec larmes Moissonneront avec chants d’allégresse."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Psalms 126:5",
+    "ru": "Синодальный перевод (1876), Psalms 125:5",
+    "uk": "Переклад Івана Огієнка (1930-ті), Psalms 125:5",
+    "en": "World English Bible, Psalms 126:5",
+    "es": "Reina-Valera (1909), Psalms 126:5",
+    "fr": "Louis Segond (1910), Psalms 126:5"
+   }
+  },
+  {
+   "id": "tanakh-19-133-1",
+   "lesson": "psalms",
+   "ref": {
+    "en": "Psalms 133:1",
+    "ru": "Псалтирь 133:1",
+    "uk": "Псалми 133:1",
+    "es": "Salmos 133:1",
+    "fr": "Psaumes 133:1",
+    "he": "תהלים 133:1"
+   },
+   "text": {
+    "he": "שִׁיר הַמַּעֲלוֹת לְדָוִד הִנֵּה מַה־טּוֹב וּמַה־נָּעִים שֶׁבֶת אַחִים גַּם־יָחַד",
+    "ru": "Как хорошо и как приятно жить братьям вместе!",
+    "uk": "Оце яке добре та гарне яке, — щоб жити братам однокупно!",
+    "en": "See how good and how pleasant it is for brothers to live together in unity!",
+    "es": "¡mirad cuán bueno y cuán delicioso es habitar los hermanos igualmente en uno!",
+    "fr": "Cantique des degrés. De David. Voici, oh ! qu’il est agréable, qu’il est doux Pour des frères de demeurer ensemble !"
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Psalms 133:1",
+    "ru": "Синодальный перевод (1876), Psalms 132:1",
+    "uk": "Переклад Івана Огієнка (1930-ті), Psalms 132:1",
+    "en": "World English Bible, Psalms 133:1",
+    "es": "Reina-Valera (1909), Psalms 133:1",
+    "fr": "Louis Segond (1910), Psalms 133:1"
+   },
+   "note": {
+    "en": "The opening words are a well-known Israeli song.",
+    "ru": "Начало стиха — известная израильская песня."
+   }
+  },
+  {
+   "id": "tanakh-19-137-5",
+   "lesson": "song",
+   "ref": {
+    "en": "Psalms 137:5",
+    "ru": "Псалтирь 137:5",
+    "uk": "Псалми 137:5",
+    "es": "Salmos 137:5",
+    "fr": "Psaumes 137:5",
+    "he": "תהלים 137:5"
+   },
+   "text": {
+    "he": "אִם־אֶשְׁכָּחֵךְ יְרוּשָׁלִָם תִּשְׁכַּח יְמִינ͏ִי",
+    "ru": "Если я забуду тебя, Иерусалим, — забудь меня десница моя;",
+    "uk": "Якщо я забуду за тебе, о Єрусалиме, — хай забуде за мене правиця моя!",
+    "en": "If I forget you, Jerusalem, let my right hand forget its skill.",
+    "es": "Si me olvidare de ti, oh Jerusalem, mi diestra sea olvidada.",
+    "fr": "Si je t’oublie, Jérusalem, Que ma droite m’oublie !"
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Psalms 137:5",
+    "ru": "Синодальный перевод (1876), Psalms 136:5",
+    "uk": "Переклад Івана Огієнка (1930-ті), Psalms 136:5",
+    "en": "World English Bible, Psalms 137:5",
+    "es": "Reina-Valera (1909), Psalms 137:5",
+    "fr": "Louis Segond (1910), Psalms 137:5"
+   },
+   "note": {
+    "en": "Recited at Jewish weddings before the glass is broken.",
+    "ru": "Произносят на еврейской свадьбе перед тем, как разбить бокал."
+   }
+  },
+  {
+   "id": "tanakh-22-2-12",
+   "lesson": "song",
+   "ref": {
+    "en": "Song of Songs 2:12",
+    "ru": "Песнь песней 2:12",
+    "uk": "Пісня над піснями 2:12",
+    "es": "Cantares 2:12",
+    "fr": "Cantique des cantiques 2:12",
+    "he": "שיר השירים 2:12"
+   },
+   "text": {
+    "he": "הַנִּצָּנִים נִרְאוּ בָאָרֶץ עֵת הַזָּמִיר הִגִּיעַ וְקוֹל הַתּוֹר נִשְׁמַע בְּאַרְצֵנוּ",
+    "ru": "цветы показались на земле; время пения настало, и голос горлицы слышен в стране нашей;",
+    "uk": "Показались квітки на землі, пора соловейка настала, і голос горлиці в нашому краї лунає!",
+    "en": "The flowers appear on the earth. The time of the singing has come, and the voice of the turtledove is heard in our land.",
+    "es": "Hanse mostrado las flores en la tierra, el tiempo de la canción es venido, y en nuestro país se ha oído la voz de la tórtola;",
+    "fr": "Les fleurs paraissent sur la terre, Le temps de chanter est arrivé, Et la voix de la tourterelle se fait entendre dans nos campagnes."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Song of Songs 2:12",
+    "ru": "Синодальный перевод (1876), Song of Songs 2:12",
+    "uk": "Переклад Івана Огієнка (1930-ті), Song of Songs 2:12",
+    "en": "World English Bible, Song of Songs 2:12",
+    "es": "Reina-Valera (1909), Song of Songs 2:12",
+    "fr": "Louis Segond (1910), Song of Songs 2:12"
+   }
+  },
+  {
+   "id": "tanakh-22-6-3",
+   "lesson": "song",
+   "ref": {
+    "en": "Song of Songs 6:3",
+    "ru": "Песнь песней 6:3",
+    "uk": "Пісня над піснями 6:3",
+    "es": "Cantares 6:3",
+    "fr": "Cantique des cantiques 6:3",
+    "he": "שיר השירים 6:3"
+   },
+   "text": {
+    "he": "אֲנִי לְדוֹדִי וְדוֹדִי לִי הָרֹעֶה בַּשׁוֹשַׁנִּים",
+    "ru": "Я принадлежу возлюбленному моему, а возлюбленный мой - мне; он пасет между лилиями.",
+    "uk": "Я належу своєму коханому, а мені — мій коханий, що пасе між лілеями!“",
+    "en": "I am my beloved’s, and my beloved is mine. He browses among the lilies,",
+    "es": "Yo soy de mi amado, y mi amado es mío: él apacienta entre los lirios.",
+    "fr": "Je suis à mon bien-aimé, et mon bien-aimé est à moi ; Il fait paître son troupeau parmi les lis. -"
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Song of Songs 6:3",
+    "ru": "Синодальный перевод (1876), Song of Songs 6:3",
+    "uk": "Переклад Івана Огієнка (1930-ті), Song of Songs 6:3",
+    "en": "World English Bible, Song of Songs 6:3",
+    "es": "Reina-Valera (1909), Song of Songs 6:3",
+    "fr": "Louis Segond (1910), Song of Songs 6:3"
+   },
+   "note": {
+    "en": "«אני לדודי ודודי לי» is often engraved on wedding rings.",
+    "ru": "«אני לדודי ודודי לי» часто гравируют на обручальных кольцах."
+   }
+  },
+  {
+   "id": "tanakh-22-8-7",
+   "lesson": "song",
+   "ref": {
+    "en": "Song of Songs 8:7",
+    "ru": "Песнь песней 8:7",
+    "uk": "Пісня над піснями 8:7",
+    "es": "Cantares 8:7",
+    "fr": "Cantique des cantiques 8:7",
+    "he": "שיר השירים 8:7"
+   },
+   "text": {
+    "he": "מַיִם רַבִּים לֹא יוּכְלוּ לְכַבּוֹת אֶת־הָאַהֲבָה וּנְהָרוֹת לֹא יִשְׁטְפוּהָ אִם־יִתֵּן אִישׁ אֶת־כָּל־הוֹן בֵּיתוֹ בָּאַהֲבָה בּוֹז יָבוּזוּ לוֹ",
+    "ru": "Большие воды не могут потушить любви, и реки не зальют ее. Если бы кто давал все богатство дома своего за любовь, то он был бы отвергнут с презреньем.",
+    "uk": "Води великі не зможуть згасити кохання, ані ріки його не заллють! Коли б хто давав за любов маєток увесь свого дому, то ним погордили б зовсім!“",
+    "en": "Many waters can’t quench love, neither can floods drown it. If a man would give all the wealth of his house for love, he would be utterly scorned. Friends",
+    "es": "Las muchas aguas no podrán apagar el amor, ni lo ahogarán los ríos. Si diese el hombre toda la hacienda de su casa por este amor, de cierto lo menospreciaran.",
+    "fr": "Les grandes eaux ne peuvent éteindre l’amour, Et les fleuves ne le submergeraient pas ; Quand un homme offrirait tous les biens de sa maison contre l’amour, Il ne s’attirerait que le mépris."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Song of Songs 8:7",
+    "ru": "Синодальный перевод (1876), Song of Songs 8:7",
+    "uk": "Переклад Івана Огієнка (1930-ті), Song of Songs 8:7",
+    "en": "World English Bible, Song of Songs 8:7",
+    "es": "Reina-Valera (1909), Song of Songs 8:7",
+    "fr": "Louis Segond (1910), Song of Songs 8:7"
+   }
+  },
+  {
+   "id": "tanakh-8-1-16",
+   "lesson": "song",
+   "ref": {
+    "en": "Ruth 1:16",
+    "ru": "Руфь 1:16",
+    "uk": "Рут 1:16",
+    "es": "Rut 1:16",
+    "fr": "Ruth 1:16",
+    "he": "רות 1:16"
+   },
+   "text": {
+    "he": "וַתֹּאמֶר רוּת אַל־תִּפְגְּעִי־בִי לְעָזְבֵךְ לָשׁוּב מֵאַחֲרָיִךְ כִּי אֶל־אֲשֶׁר תֵּלְכִי אֵלֵךְ וּבַאֲשֶׁר תָּלִינִי אָלִין עַמֵּךְ עַמִּי וֵאלֹהַיִךְ אֱלֹהָי",
+    "ru": "Но Руфь сказала: не принуждай меня оставить тебя и возвратиться от тебя; но куда ты пойдешь, туда и я пойду, и где ты жить будешь, там и я буду жить; народ твой будет моим народом, и твой Бог — моим Богом;",
+    "uk": "А Рут відказала: „Не силуй мене, щоб я покинула тебе, щоб я вернулася від тебе, бо куди підеш ти, туди піду й я, а де житимеш ти, там житиму й я. Народ твій буде мій народ, а Бог твій — мій Бог.",
+    "en": "Ruth said, “Don’t entreat me to leave you, and to return from following after you, for where you go, I will go; and where you lodge, I will lodge; your people shall be my people, and your God my God;",
+    "es": "Y Ruth respondió: No me ruegues que te deje, y me aparte de ti: porque donde quiera que tú fueres, iré yo; y donde quiera que vivieres, viviré. Tu pueblo será mi pueblo, y tu Dios mi Dios.",
+    "fr": "Ruth répondit : Ne me presse pas de te laisser, de retourner loin de toi ! Où tu iras j’irai, où tu demeureras je demeurerai ; ton peuple sera mon peuple, et ton Dieu sera mon Dieu ;"
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Ruth 1:16",
+    "ru": "Синодальный перевод (1876), Ruth 1:16",
+    "uk": "Переклад Івана Огієнка (1930-ті), Ruth 1:16",
+    "en": "World English Bible, Ruth 1:16",
+    "es": "Reina-Valera (1909), Ruth 1:16",
+    "fr": "Louis Segond (1910), Ruth 1:16"
+   }
+  },
+  {
+   "id": "tanakh-23-2-4",
+   "lesson": "song",
+   "ref": {
+    "en": "Isaiah 2:4",
+    "ru": "Исаия 2:4",
+    "uk": "Ісая 2:4",
+    "es": "Isaías 2:4",
+    "fr": "Ésaïe 2:4",
+    "he": "ישעיהו 2:4"
+   },
+   "text": {
+    "he": "וְשָׁפַט בֵּין הַגּוֹיִם וְהוֹכִיחַ לְעַמִּים רַבִּים וְכִתְּתוּ חַרְבוֹתָם לְאִתִּים וַחֲנִיתוֹתֵיהֶם לְמַזְמֵרוֹת לֹא־יִשָּׂא גוֹי אֶל־גּוֹי חֶרֶב וְלֹא־יִלְמְדוּ עוֹד מִלְחָמָה",
+    "ru": "И будет Он судить народы, и обличит многие племена; и перекуют мечи свои на орала, и копья свои - на серпы: не поднимет народ на народ меча, и не будут более учиться воевать.",
+    "uk": "І Він буде судити між людьми, і буде численні народи розсуджувати. І мечі свої перекують вони на лемеші, а списи свої — на серпи. Не підійме меча народ проти народу, і більше не будуть навчатись війни!",
+    "en": "He will judge between the nations, and will decide concerning many peoples; and they shall beat their swords into plowshares, and their spears into pruning hooks. Nation shall not lift up sword against nation, neither shall they learn war any more.",
+    "es": "Y juzgará entre las gentes, y reprenderá á muchos pueblos; y volverán sus espadas en rejas de arado, y sus lanzas en hoces: no alzará espada gente contra gente, ni se ensayarán más para la guerra.",
+    "fr": "Il sera le juge des nations, L’arbitre d’un grand nombre de peuples. De leurs glaives ils forgeront des hoyaux, Et de leurs lances des serpes : Une nation ne tirera plus l’épée contre une autre , Et l’on n’apprendra plus la guerre."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Isaiah 2:4",
+    "ru": "Синодальный перевод (1876), Isaiah 2:4",
+    "uk": "Переклад Івана Огієнка (1930-ті), Isaiah 2:4",
+    "en": "World English Bible, Isaiah 2:4",
+    "es": "Reina-Valera (1909), Isaiah 2:4",
+    "fr": "Louis Segond (1910), Isaiah 2:4"
+   },
+   "note": {
+    "en": "«לא ישא גוי אל גוי חרב» is a classic call for peace.",
+    "ru": "«לא ישא גוי אל גוי חרב» — классический призыв к миру."
+   }
+  },
+  {
+   "id": "tanakh-23-11-6",
+   "lesson": "song",
+   "ref": {
+    "en": "Isaiah 11:6",
+    "ru": "Исаия 11:6",
+    "uk": "Ісая 11:6",
+    "es": "Isaías 11:6",
+    "fr": "Ésaïe 11:6",
+    "he": "ישעיהו 11:6"
+   },
+   "text": {
+    "he": "וְגָר זְאֵב עִם־כֶּבֶשׂ וְנָמֵר עִם־גְּדִי יִרְבָּץ וְעֵגֶל וּכְפִיר וּמְרִיא יַחְדָּו וְנַעַר קָטֹן נֹהֵג בָּם",
+    "ru": "Тогда волк будет жить вместе с ягненком, и барс будет лежать вместе с козленком; и теленок, и молодой лев, и вол будут вместе, и малое дитя будет водить их.",
+    "uk": "І замешкає вовк із вівцею, і буде лежати пантера з козлям, і будуть разом телятко й левчук, та теля відгодоване, а дитина мала їх водитиме!",
+    "en": "The wolf will live with the lamb, and the leopard will lie down with the young goat; The calf, the young lion, and the fattened calf together; and a little child will lead them.",
+    "es": "Morará el lobo con el cordero, y el tigre con el cabrito se acostará: el becerro y el león y la bestia doméstica andarán juntos, y un niño los pastoreará.",
+    "fr": "Le loup habitera avec l’agneau, Et la panthère se couchera avec le chevreau ; Le veau, le lionceau, et le bétail qu’on engraisse, seront ensemble, Et un petit enfant les conduira."
+   },
+   "source": {
+    "he": "Westminster Leningrad Codex, Isaiah 11:6",
+    "ru": "Синодальный перевод (1876), Isaiah 11:6",
+    "uk": "Переклад Івана Огієнка (1930-ті), Isaiah 11:6",
+    "en": "World English Bible, Isaiah 11:6",
+    "es": "Reina-Valera (1909), Isaiah 11:6",
+    "fr": "Louis Segond (1910), Isaiah 11:6"
+   }
+  }
+ ]
+}
