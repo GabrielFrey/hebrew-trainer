@@ -43,17 +43,20 @@ function VerbsInner() {
   if (error) return <Text testID="screen-unavailable" style={{ color: palette.inkSoft }}>{t(lang, "states.unavailable")}</Text>;
   return (
     <View testID="verbs" style={{ gap: 10 }}>
-      <Text style={{ fontSize: 28, fontWeight: "700", color: palette.ink }}>Verb explorer</Text>
-      <Text testID="verbs-count" style={{ color: palette.inkSoft }}>{`${items.length} verbs · root → binyan → present, past, future`}</Text>
+      <Text style={{ fontSize: 28, fontWeight: "700", color: palette.ink }}>{t(lang, "verbs.title")}</Text>
+      <Text testID="verbs-count" style={{ color: palette.inkSoft }}>{t(lang, "verbs.count", { count: items.length })}</Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
         {BINYANIM.map((b) => (
           <Pressable
             key={b}
             testID={`binyan-${b}`}
+            accessibilityRole="button"
+            accessibilityState={{ selected: binyan === b }}
+            accessibilityLabel={b === "all" ? t(lang, "verbs.all") : b}
             onPress={() => setBinyan(b)}
-            style={{ borderRadius: 999, paddingHorizontal: 12, paddingVertical: 6, borderWidth: 1, borderColor: palette.line, backgroundColor: binyan === b ? palette.indigo : palette.paper }}
+            style={{ minHeight: 44, justifyContent: "center", borderRadius: 999, paddingHorizontal: 14, borderWidth: 1, borderColor: palette.line, backgroundColor: binyan === b ? palette.indigo : palette.paper }}
           >
-            <Text style={{ color: binyan === b ? palette.paper : palette.ink }}>{b}</Text>
+            <Text style={{ color: binyan === b ? palette.paper : palette.ink }}>{b === "all" ? t(lang, "verbs.all") : b}</Text>
           </Pressable>
         ))}
       </View>
@@ -61,7 +64,13 @@ function VerbsInner() {
         const key = `${p.root}-${p.binyan}-${p.infinitive_pointed}`;
         return (
           <View key={key} style={{ backgroundColor: palette.paper, borderRadius: 22, padding: 14, gap: 6 }}>
-            <Pressable testID={`verb-${p.root}`} onPress={() => setOpen(open === key ? null : key)} style={{ flexDirection: "row", justifyContent: "space-between" }}>
+            <Pressable
+              testID={`verb-${p.root}`}
+              accessibilityRole="button"
+              accessibilityLabel={p.root}
+              onPress={() => setOpen(open === key ? null : key)}
+              style={{ minHeight: 44, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}
+            >
               <Text accessibilityLanguage="he" style={{ fontSize: 22 }} {...({ lang: "he", dir: "rtl" } as object)}>
                 {p.root}
               </Text>
@@ -71,7 +80,7 @@ function VerbsInner() {
             {open === key
               ? Object.entries(p.present).map(([slot, forms]) => (
                   <View key={slot} style={{ flexDirection: "row", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: palette.line, paddingTop: 6 }}>
-                    <Text style={{ color: palette.inkSoft }}>{slot}</Text>
+                    <Text style={{ color: palette.inkSoft }}>{`${t(lang, "verbs.present")} · ${slot}`}</Text>
                     <HebrewText pointed={forms.pointed}>{forms.plain}</HebrewText>
                   </View>
                 ))
@@ -80,7 +89,7 @@ function VerbsInner() {
               ? (["past", "future"] as const).flatMap((tense) =>
                   Object.entries(p[tense] || {}).map(([slot, forms]) => (
                     <View key={`${tense}-${slot}`} style={{ flexDirection: "row", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: palette.line, paddingTop: 6 }}>
-                      <Text style={{ color: palette.inkSoft }}>{`${tense} ${slot}`}</Text>
+                      <Text style={{ color: palette.inkSoft }}>{`${t(lang, tense === "past" ? "verbs.past" : "verbs.future")} · ${slot}`}</Text>
                       <HebrewText pointed={forms.pointed}>{forms.plain}</HebrewText>
                     </View>
                   )),
@@ -88,7 +97,7 @@ function VerbsInner() {
               : null}
             {open === key && p.infinitive ? (
               <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                <Text style={{ color: palette.inkSoft }}>inf.</Text>
+                <Text style={{ color: palette.inkSoft }}>{t(lang, "verbs.infinitive")}</Text>
                 <HebrewText pointed={p.infinitive_pointed}>{p.infinitive}</HebrewText>
               </View>
             ) : null}

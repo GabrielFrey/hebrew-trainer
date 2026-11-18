@@ -7,7 +7,7 @@ import { HandwritingCanvas } from "@/components/HandwritingCanvas";
 import { HebrewText } from "@/components/HebrewText";
 import { LessonHud } from "@/components/LessonHud";
 import { Shell } from "@/components/Shell";
-import { api, type Exercise, type Lesson } from "@/lib/api";
+import { api, connectionState, userFacingError, type Exercise, type Lesson } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { loc, t, type UiLang } from "@/lib/i18n";
 import { glyphForChar, recognise, type Stroke } from "@/lib/handwriting";
@@ -30,6 +30,8 @@ type CompleteResult = {
   next_stage_unlocked?: string | null;
 };
 
+const COURSE_LANG: Record<string, string> = { "he-ru": "ru", "he-uk": "uk", "he-en": "en", "he-es": "es", "he-fr": "fr" };
+
 export default function LessonScreen() {
   return (
     <Shell>
@@ -40,7 +42,7 @@ export default function LessonScreen() {
 
 function Player() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
-  const { lang } = useAuth();
+  const { lang, user } = useAuth();
   const palette = usePalette();
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [attempt, setAttempt] = useState<string | null>(null);
@@ -59,6 +61,7 @@ function Player() {
   const [hearts, setHearts] = useState<number | null>(null);
   const [combo, setCombo] = useState(0);
   const [expected, setExpected] = useState<string | null>(null);
+  const [nonce, setNonce] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -74,19 +77,21 @@ function Player() {
           if (!cancelled) setAttempt(started.attempt_id);
         }
       } catch (err) {
-        if (!cancelled) setError(err instanceof Error ? err.message : "error");
+        if (!cancelled) setError(userFacingError(err, lang));
       }
     })();
     return () => {
       cancelled = true;
     };
-  }, [slug]);
+  }, [slug, nonce, lang]);
 
   const exercises = useMemo(
     () => (lesson?.exercises || []).filter((e) => !(e.requires_audio && lesson?.audio.capability === "unavailable")),
     [lesson],
   );
   const current = exercises[idx];
+  const courseLang = COURSE_LANG[user?.course_id || ""] || "en";
+  const glossFallback = Boolean(lesson?.l10n_fallback?.includes(courseLang));
 
   async function check() {
     if (!attempt || !current) return;
@@ -104,10 +109,9 @@ function Player() {
       setCombo(res.combo || 0);
       setExpected(res.expected || null);
       setOffline(false);
-    } catch (err) {
+    } catch {
       await enqueueSubmit(attempt, payload);
       setOffline(true);
-      setError(err instanceof Error ? err.message : "offline");
     }
   }
 
@@ -145,18 +149,33 @@ function Player() {
 
   if (error && !lesson) {
     return (
-      <Text style={{ color: palette.incorrect }}>
-        {t(lang, "lesson.error")} {error}
-      </Text>
+      <View style={{ gap: 12 }}>
+        <Text testID="lesson-error" style={{ color: palette.incorrect }}>
+          {error}
+        </Text>
+        <Pressable
+          testID="lesson-retry"
+          accessibilityRole="button"
+          accessibilityLabel={t(lang, "states.retry")}
+          onPress={() => {
+            setError(null);
+            setNonce((n) => n + 1);
+          }}
+          style={pill(palette, false)}
+        >
+          <Text style={{ color: palette.ink, textAlign: "center" }}>{t(lang, "states.retry")}</Text>
+        </Pressable>
+      </View>
     );
   }
   if (!lesson) return <Text>{t(lang, "states.loading")}</Text>;
+  const stageTitle = lesson.stage ? loc(lesson.stage.title, lang) : lesson.level;
   if (gateOpen && (lesson.kind === "checkpoint" || lesson.kind === "boss" || lesson.kind === "legendary")) {
     return (
       <View testID="checkpoint-start" style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 20, gap: 8 }}>
         <Text style={{ fontSize: 40 }}>🏆</Text>
         <Text style={{ color: palette.inkSoft, textTransform: "uppercase" }}>
-          {lesson.stage?.ulpan} · {lesson.cefr}
+          {stageTitle} · {lesson.cefr}
         </Text>
         <Text style={{ fontSize: 28, fontWeight: "700", color: palette.ink }}>{t(lang, "checkpoint.startTitle")}</Text>
         <Text style={{ color: palette.inkSoft }}>{t(lang, "checkpoint.startBody")}</Text>
@@ -167,8 +186,10 @@ function Player() {
         </Text>
         <Pressable
           testID="checkpoint-begin"
+          accessibilityRole="button"
+          accessibilityLabel={t(lang, "checkpoint.begin")}
           onPress={beginGate}
-          style={{ backgroundColor: palette.pomegranate, borderRadius: 999, paddingVertical: 10, paddingHorizontal: 18, alignSelf: "flex-start" }}
+          style={[pill(palette, true), { backgroundColor: palette.pomegranate, alignSelf: "flex-start" }]}
         >
           <Text style={{ color: palette.paper, fontWeight: "600" }}>{t(lang, "checkpoint.begin")}</Text>
         </Pressable>
@@ -225,34 +246,65 @@ function Player() {
     );
   }
 
+  const tutorOffline = offline || connectionState() === "offline";
+
   return (
     <View testID="lesson-player" style={{ gap: 12 }}>
       <View style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 16, gap: 10 }}>
         <LessonHud lang={lang} index={idx + (grade ? 1 : 0)} total={exercises.length} hearts={hearts} combo={combo} />
         <Text style={{ color: palette.inkSoft, fontSize: 13 }}>
-          {lesson.level} · {lesson.cefr} · {idx + 1}/{exercises.length}
+          {stageTitle} · {lesson.cefr}
         </Text>
         <Text style={{ fontSize: 26, fontWeight: "700", color: palette.ink }}>{loc(lesson.title, lang)}</Text>
         <Text style={{ color: palette.inkSoft }}>{loc(lesson.explanation, lang)}</Text>
-        <View testID="bidi-mix" style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
-          <HebrewText testID="niqqud-sample" pointed="שָׁלוֹם" showNiqqud={niqqud}>
-            שלום
-          </HebrewText>
-          <Text style={{ color: palette.ink }}>Biti 42</Text>
-        </View>
+        {glossFallback ? (
+          <Text testID="l10n-fallback" style={{ color: palette.inkSoft }}>
+            {t(lang, "lesson.enFallback")}
+          </Text>
+        ) : null}
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-          <Pressable testID="toggle-niqqud" onPress={() => setNiqqud((v) => !v)} style={chip(palette)}>
+          <Pressable
+            testID="toggle-niqqud"
+            accessibilityRole="button"
+            accessibilityLabel={t(lang, "lesson.niqqud")}
+            onPress={() => setNiqqud((v) => !v)}
+            style={chip(palette)}
+          >
             <Text style={{ color: palette.ink }}>
               {t(lang, "lesson.niqqud")}: {niqqud ? t(lang, "lesson.niqqudOn") : t(lang, "lesson.niqqudOff")}
             </Text>
           </Pressable>
-          <Pressable testID="toggle-translit" onPress={() => setTranslit((v) => !v)} style={chip(palette)}>
+          <Pressable
+            testID="toggle-translit"
+            accessibilityRole="button"
+            accessibilityLabel={t(lang, "lesson.translit")}
+            onPress={() => setTranslit((v) => !v)}
+            style={chip(palette)}
+          >
             <Text style={{ color: palette.ink }}>
               {t(lang, "lesson.translit")}: {translit ? t(lang, "lesson.niqqudOn") : t(lang, "lesson.niqqudOff")}
             </Text>
           </Pressable>
         </View>
         {offline ? <Text style={{ color: palette.almost }}>{t(lang, "lesson.offline")}</Text> : null}
+        {current.context?.length ? (
+          <View style={{ gap: 8 }}>
+            {current.context.map((line, i) => (
+              <View key={`${line.he}-${i}`} style={{ gap: 2 }}>
+                {line.speaker ? (
+                  <Text style={{ color: palette.inkSoft }}>{t(lang, "lesson.speaker", { name: line.speaker })}</Text>
+                ) : null}
+                <HebrewText showNiqqud={niqqud}>{line.he}</HebrewText>
+                {grade && line.tr ? <Text style={{ color: palette.ink }}>{loc(line.tr, lang)}</Text> : null}
+                {line.source ? (
+                  <Text style={{ color: palette.inkSoft }}>
+                    {t(lang, "lesson.source")}: {loc(line.source, lang)}
+                  </Text>
+                ) : null}
+              </View>
+            ))}
+          </View>
+        ) : null}
         <Text testID="exercise-prompt" style={{ fontSize: 18, color: palette.ink }}>
           {loc(current.prompt, lang)}
         </Text>
@@ -269,50 +321,163 @@ function Player() {
         {grade ? <Feedback grade={grade} label={gradeLabel(grade.result, lang)} expected={expected} lang={lang} niqqud={niqqud} /> : null}
         {explain ? <Text style={{ backgroundColor: palette.sandDeep, padding: 10, borderRadius: 16 }}>{explain}</Text> : null}
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-          <Pressable testID="check-answer" accessibilityRole="button" onPress={check} style={{ backgroundColor: palette.indigo, paddingHorizontal: 18, paddingVertical: 10, borderRadius: 999 }}>
+          <Pressable
+            testID="check-answer"
+            accessibilityRole="button"
+            accessibilityLabel={t(lang, "lesson.check")}
+            onPress={check}
+            style={[pill(palette, true), { backgroundColor: palette.indigo }]}
+          >
             <Text style={{ color: palette.paper }}>{t(lang, "lesson.check")}</Text>
           </Pressable>
           {grade ? (
-            <Pressable testID="next-exercise" accessibilityRole="button" onPress={next} style={{ backgroundColor: palette.olive, paddingHorizontal: 18, paddingVertical: 10, borderRadius: 999 }}>
+            <Pressable
+              testID="next-exercise"
+              accessibilityRole="button"
+              accessibilityLabel={idx + 1 < exercises.length ? t(lang, "lesson.next") : t(lang, "lesson.finish")}
+              onPress={next}
+              style={[pill(palette, true), { backgroundColor: palette.olive }]}
+            >
               <Text style={{ color: palette.paper }}>{idx + 1 < exercises.length ? t(lang, "lesson.next") : t(lang, "lesson.finish")}</Text>
             </Pressable>
           ) : null}
-          {grade && grade.result !== "correct" ? (
-            <Pressable onPress={askExplain} style={{ borderWidth: 1, borderColor: palette.line, paddingHorizontal: 16, paddingVertical: 10, borderRadius: 999 }}>
+          {grade && grade.result !== "correct" && !tutorOffline ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t(lang, "lesson.explain")}
+              onPress={askExplain}
+              style={pill(palette, false)}
+            >
               <Text style={{ color: palette.ink }}>{t(lang, "lesson.explain")}</Text>
             </Pressable>
           ) : null}
         </View>
       </View>
-      <View style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 16, gap: 8 }}>
-        <BitiMascot lang={lang}
-          mood={
-            grade?.result === "correct" ? "happy" : grade?.result === "almost" ? "think" : grade ? "sad" : "idle"
-          }
-        />
-        <Text style={{ fontWeight: "600", color: palette.ink }}>Vocabulary</Text>
-        {lesson.vocabulary.map((v) => (
-          <View key={String(v.lemma)} style={{ borderBottomWidth: 1, borderBottomColor: palette.line, paddingBottom: 8 }}>
+      <VocabPanel
+        lesson={lesson}
+        lang={lang}
+        niqqud={niqqud}
+        translit={translit}
+        mood={grade?.result === "correct" ? "happy" : grade?.result === "almost" ? "think" : grade ? "sad" : "idle"}
+      />
+    </View>
+  );
+}
+
+function VocabPanel({
+  lesson,
+  lang,
+  niqqud,
+  translit,
+  mood,
+}: {
+  lesson: Lesson;
+  lang: UiLang;
+  niqqud: boolean;
+  translit: boolean;
+  mood: "happy" | "think" | "sad" | "idle";
+}) {
+  const palette = usePalette();
+  const kind = lesson.vocabulary[0]?.kind;
+  const heading = kind === "line" ? t(lang, "lesson.lines") : kind === "verse" ? t(lang, "lesson.verses") : t(lang, "lesson.vocabulary");
+  return (
+    <View style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 16, gap: 8 }}>
+      <BitiMascot lang={lang} mood={mood} />
+      <Text style={{ fontWeight: "600", color: palette.ink }}>{heading}</Text>
+      {lesson.vocabulary.map((v, i) => {
+        const gloss = String((lang === "ru" ? v.ru : v[lang]) || v.en || v.ru || "");
+        const exampleHe = v.example_he || "";
+        const exampleGloss = lang === "ru" ? v.example_ru || v.example_en || "" : v.example_en || v.example_ru || "";
+        const usage = lang === "ru" ? v.usage_ru || v.usage_en || "" : v.usage_en || v.usage_ru || "";
+        const literal = lang === "ru" ? v.literal_ru || v.literal_en || "" : v.literal_en || v.literal_ru || "";
+        const citation = v[`source_${lang}`] || v.source_en || "";
+        const ref = v[`ref_${lang}`] || v.ref_en || "";
+        return (
+          <View key={`${v.lemma}-${i}`} style={{ borderBottomWidth: 1, borderBottomColor: palette.line, paddingBottom: 8, gap: 2 }}>
             <HebrewText pointed={v.pointed} showNiqqud={niqqud}>
-              {String(v.lemma)}
+              {String(v.lemma || "")}
             </HebrewText>
-            {translit ? <Text style={{ color: palette.inkSoft }}>{String(v.translit || "")}</Text> : null}
-            <Text style={{ color: palette.ink }}>{String(v[lang] || v.en || v.ru || "")}</Text>
+            {translit && v.translit ? <Text style={{ color: palette.inkSoft }}>{v.translit}</Text> : null}
+            {gloss ? <Text style={{ color: palette.ink }}>{gloss}</Text> : null}
+            {exampleHe ? (
+              <View style={{ gap: 2 }}>
+                <Text style={{ color: palette.inkSoft }}>{t(lang, "lesson.example")}</Text>
+                <HebrewText showNiqqud={niqqud}>{exampleHe}</HebrewText>
+                {exampleGloss ? <Text style={{ color: palette.ink }}>{exampleGloss}</Text> : null}
+              </View>
+            ) : null}
+            {usage ? (
+              <Text style={{ color: palette.inkSoft }}>
+                {t(lang, "lesson.usage")}: {usage}
+              </Text>
+            ) : null}
+            {literal ? (
+              <Text style={{ color: palette.inkSoft }}>
+                {t(lang, "lesson.literal")}: {literal}
+              </Text>
+            ) : null}
+            {ref || citation ? (
+              <Text style={{ color: palette.inkSoft }}>
+                {t(lang, "lesson.source")}
+                {ref ? `: ${ref}` : ""}
+                {citation ? ` · ${citation}` : ""}
+              </Text>
+            ) : null}
+            {v.review === "1" ? <Text style={{ color: palette.almost }}>{t(lang, "lesson.needsReview")}</Text> : null}
           </View>
-        ))}
-      </View>
+        );
+      })}
     </View>
   );
 }
 
 function chip(palette: { line: string; paper: string }) {
-  return { borderWidth: 1, borderColor: palette.line, backgroundColor: palette.paper, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 6 };
+  return {
+    minHeight: 44,
+    justifyContent: "center" as const,
+    borderWidth: 1,
+    borderColor: palette.line,
+    backgroundColor: palette.paper,
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+  };
+}
+
+function pill(palette: { line: string }, filled: boolean) {
+  return {
+    minHeight: 44,
+    justifyContent: "center" as const,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 999,
+    borderWidth: filled ? 0 : 1,
+    borderColor: palette.line,
+  };
 }
 
 function gradeLabel(result: string, lang: UiLang) {
   if (result === "correct") return t(lang, "lesson.correct");
   if (result === "almost") return t(lang, "lesson.almost");
   return t(lang, "lesson.incorrect");
+}
+
+function shuffleStable(items: string[], seed: string): string[] {
+  const out = [...items];
+  let h = 2166136261;
+  for (let i = 0; i < seed.length; i++) h = Math.imul(h ^ seed.charCodeAt(i), 16777619);
+  for (let i = out.length - 1; i > 0; i--) {
+    h = Math.imul(h ^ (h >>> 16), 2246822507) >>> 0;
+    const j = h % (i + 1);
+    const tmp = out[i];
+    out[i] = out[j];
+    out[j] = tmp;
+  }
+  if (out.length > 1 && out.every((item, i) => item === items[i])) {
+    const first = out.shift();
+    if (first) out.push(first);
+  }
+  return out;
 }
 
 function ExerciseBody({
@@ -335,20 +500,25 @@ function ExerciseBody({
   niqqud: boolean;
 }) {
   const palette = usePalette();
+  const { lang } = useAuth();
   if (exercise.type === "mc" || exercise.type === "identify_root" || exercise.type === "identify_binyan" || exercise.type === "listen_mc") {
     return (
       <View style={{ gap: 8 }}>
         {(exercise.choices || []).map((c) => {
           const id = c.id;
-          const label = c.he || c.en || c.ru || id;
+          const text = c[lang] || c.en || c.ru || "";
           const selected = value === id;
           return (
             <Pressable
               key={id}
               testID={`choice-${id}`}
               accessibilityRole="button"
+              accessibilityLabel={c.he || text || id}
+              accessibilityState={{ selected }}
               onPress={() => setValue(id)}
               style={{
+                minHeight: 44,
+                justifyContent: "center",
                 borderWidth: 1,
                 borderColor: selected ? palette.indigo : palette.line,
                 backgroundColor: selected ? palette.sand : palette.paper,
@@ -356,7 +526,7 @@ function ExerciseBody({
                 padding: 12,
               }}
             >
-              {c.he ? <HebrewText showNiqqud={niqqud}>{c.he}</HebrewText> : <Text style={{ color: palette.ink }}>{label}</Text>}
+              {c.he ? <HebrewText pointed={c.pointed} showNiqqud={niqqud}>{c.he}</HebrewText> : <Text style={{ color: palette.ink }}>{text || id}</Text>}
             </Pressable>
           );
         })}
@@ -364,30 +534,20 @@ function ExerciseBody({
     );
   }
   if (exercise.type === "match" || exercise.type === "match_tap") {
-    return (
-      <View style={{ gap: 8 }}>
-        {(exercise.left || []).map((item, i) => (
-          <View key={item} style={{ gap: 4 }}>
-            <HebrewText>{item}</HebrewText>
-            <TextInput
-              testID={`match-${item}`}
-              accessibilityLabel={exercise.right?.[i] || item}
-              value={pairs[item] || ""}
-              onChangeText={(v) => setPairs({ ...pairs, [item]: v })}
-              placeholder={exercise.right?.[i] || ""}
-              style={{ borderWidth: 1, borderColor: palette.line, borderRadius: 12, padding: 10, color: palette.ink }}
-            />
-          </View>
-        ))}
-      </View>
-    );
+    return <MatchTap exercise={exercise} pairs={pairs} setPairs={setPairs} niqqud={niqqud} />;
   }
   if (exercise.type === "order_rtl" || exercise.type === "tiles") {
     return (
       <View {...({ dir: "rtl" } as object)} style={{ gap: 10 }}>
         <View style={{ minHeight: 48, flexDirection: "row", flexWrap: "wrap", gap: 8, borderWidth: 1, borderColor: palette.line, borderRadius: 16, padding: 8 }}>
           {order.map((tok, i) => (
-            <Pressable key={`${tok}-${i}`} onPress={() => setOrder(order.filter((_, j) => j !== i))} style={{ backgroundColor: palette.indigo, borderRadius: 12, paddingHorizontal: 10, paddingVertical: 4 }}>
+            <Pressable
+              key={`${tok}-${i}`}
+              accessibilityRole="button"
+              accessibilityLabel={tok}
+              onPress={() => setOrder(order.filter((_, j) => j !== i))}
+              style={{ minHeight: 44, justifyContent: "center", backgroundColor: palette.indigo, borderRadius: 12, paddingHorizontal: 10 }}
+            >
               <Text style={{ color: palette.paper }} {...({ lang: "he" } as object)}>
                 {tok}
               </Text>
@@ -396,7 +556,14 @@ function ExerciseBody({
         </View>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
           {(exercise.tokens || []).map((tok) => (
-            <Pressable key={tok} testID={`token-${tok}`} onPress={() => setOrder([...order, tok])} style={{ borderWidth: 1, borderColor: palette.line, borderRadius: 12, paddingHorizontal: 10, paddingVertical: 4 }}>
+            <Pressable
+              key={tok}
+              testID={`token-${tok}`}
+              accessibilityRole="button"
+              accessibilityLabel={tok}
+              onPress={() => setOrder([...order, tok])}
+              style={{ minHeight: 44, justifyContent: "center", borderWidth: 1, borderColor: palette.line, borderRadius: 12, paddingHorizontal: 10 }}
+            >
               <Text {...({ lang: "he" } as object)}>{tok}</Text>
             </Pressable>
           ))}
@@ -410,7 +577,7 @@ function ExerciseBody({
   if (exercise.type === "speak") {
     return (
       <Text testID="speech-unavailable" style={{ backgroundColor: palette.sandDeep, borderRadius: 16, padding: 12 }}>
-        Speaking is unavailable without a speech provider.
+        {t(lang, "lesson.speechUnavailable")}
       </Text>
     );
   }
@@ -418,7 +585,7 @@ function ExerciseBody({
     <View style={{ gap: 10 }}>
       <TextInput
         testID="hebrew-input"
-        accessibilityLabel="Hebrew answer"
+        accessibilityLabel={loc(exercise.prompt, lang)}
         accessibilityLanguage="he"
         value={value}
         onChangeText={setValue}
@@ -439,6 +606,101 @@ function ExerciseBody({
         {...({ lang: "he", dir: "rtl" } as object)}
       />
       <HebrewKeyboard value={value} onChange={setValue} niqqud={niqqud} />
+    </View>
+  );
+}
+
+function MatchTap({
+  exercise,
+  pairs,
+  setPairs,
+  niqqud,
+}: {
+  exercise: Exercise;
+  pairs: Record<string, string>;
+  setPairs: (v: Record<string, string>) => void;
+  niqqud: boolean;
+}) {
+  const palette = usePalette();
+  const { lang } = useAuth();
+  const [picked, setPicked] = useState<string | null>(null);
+  const left = exercise.left || [];
+  const right = useMemo(() => shuffleStable(exercise.right || [], exercise.id), [exercise.id, exercise.right]);
+  const used = new Set(Object.values(pairs));
+  return (
+    <View style={{ gap: 10 }}>
+      <Text style={{ color: palette.inkSoft }}>{t(lang, "lesson.matchHint")}</Text>
+      <View style={{ gap: 8 }}>
+        {left.map((item) => {
+          const selected = picked === item;
+          const paired = pairs[item];
+          return (
+            <Pressable
+              key={item}
+              testID={`match-${item}`}
+              accessibilityRole="button"
+              accessibilityLabel={paired ? `${item} ${paired}` : item}
+              accessibilityState={{ selected }}
+              onPress={() => {
+                if (paired) {
+                  const next = { ...pairs };
+                  delete next[item];
+                  setPairs(next);
+                  setPicked(null);
+                  return;
+                }
+                setPicked(item);
+              }}
+              style={{
+                minHeight: 44,
+                justifyContent: "center",
+                borderWidth: 1,
+                borderColor: selected ? palette.indigo : palette.line,
+                borderRadius: 12,
+                paddingHorizontal: 12,
+                paddingVertical: 8,
+                backgroundColor: selected ? palette.sand : palette.paper,
+              }}
+            >
+              <HebrewText showNiqqud={niqqud}>{item}</HebrewText>
+              {paired ? <Text style={{ color: palette.inkSoft }}>{paired}</Text> : null}
+            </Pressable>
+          );
+        })}
+      </View>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+        {right.map((gloss, i) => {
+          const taken = used.has(gloss);
+          return (
+            <Pressable
+              key={`${gloss}-${i}`}
+              accessibilityRole="button"
+              accessibilityLabel={gloss}
+              accessibilityState={{ disabled: !picked || taken }}
+              disabled={!picked || taken}
+              onPress={() => {
+                if (!picked) return;
+                const next = { ...pairs };
+                next[picked] = gloss;
+                setPairs(next);
+                setPicked(null);
+              }}
+              style={{
+                minHeight: 44,
+                justifyContent: "center",
+                opacity: taken ? 0.4 : 1,
+                borderWidth: 1,
+                borderColor: palette.line,
+                borderRadius: 12,
+                paddingHorizontal: 12,
+                backgroundColor: palette.paper,
+              }}
+            >
+              <Text style={{ color: palette.ink }}>{gloss}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
     </View>
   );
 }
@@ -487,6 +749,8 @@ function TracePad({ exercise, value, setValue }: { exercise: Exercise; value: st
       <View style={{ flexDirection: "row", gap: 8, justifyContent: "center" }}>
         <Pressable
           testID="trace-clear"
+          accessibilityRole="button"
+          accessibilityLabel={t(lang, "lesson.clear")}
           onPress={() => {
             setReset((n) => n + 1);
             setValue("");
@@ -496,7 +760,13 @@ function TracePad({ exercise, value, setValue }: { exercise: Exercise; value: st
         >
           <Text style={{ color: palette.ink }}>{t(lang, "lesson.clear")}</Text>
         </Pressable>
-        <Pressable testID="trace-keyboard" onPress={() => setKeyboard(true)} style={chip(palette)}>
+        <Pressable
+          testID="trace-keyboard"
+          accessibilityRole="button"
+          accessibilityLabel={t(lang, "lesson.useKeyboard")}
+          onPress={() => setKeyboard(true)}
+          style={chip(palette)}
+        >
           <Text style={{ color: palette.ink }}>{t(lang, "lesson.useKeyboard")}</Text>
         </Pressable>
       </View>

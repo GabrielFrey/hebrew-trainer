@@ -44,8 +44,8 @@ function AlphaInner() {
   const card = { backgroundColor: palette.paper, borderRadius: 18, padding: 12, gap: 4 } as const;
   return (
     <View testID="alphabet" style={{ gap: 12 }}>
-      <Text style={{ fontSize: 28, fontWeight: "700", color: palette.ink }}>Alphabet</Text>
-      <Text style={{ color: palette.inkSoft }}>{data.cursive_note}</Text>
+      <Text style={{ fontSize: 28, fontWeight: "700", color: palette.ink }}>{t(lang, "nav.alphabet")}</Text>
+      <Text style={{ color: palette.inkSoft }}>{t(lang, "alphabet.cursiveNote")}</Text>
       {data.print.map((l) => (
         <View key={l.glyph} testID={`letter-${l.glyph}`} style={card}>
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
@@ -72,7 +72,7 @@ function AlphaInner() {
       ))}
       {data.finals?.length ? (
         <>
-          <Text style={{ fontSize: 20, fontWeight: "600", color: palette.ink }}>Final forms</Text>
+          <Text style={{ fontSize: 20, fontWeight: "600", color: palette.ink }}>{t(lang, "alphabet.finals")}</Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
             {data.finals.map((f) => (
               <View key={f.glyph} testID={`final-${f.glyph}`} style={{ ...card, width: "30%", alignItems: "center" }}>
@@ -84,7 +84,7 @@ function AlphaInner() {
       ) : null}
       {data.variants?.length ? (
         <>
-          <Text style={{ fontSize: 20, fontWeight: "600", color: palette.ink }}>Dagesh · שׁ / שׂ</Text>
+          <Text style={{ fontSize: 20, fontWeight: "600", color: palette.ink }}>{t(lang, "alphabet.dagesh")}</Text>
           {data.variants.map((v) => (
             <View key={v.id} testID={`variant-${v.id}`} style={{ ...card, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <Text style={{ color: palette.inkSoft }}>
@@ -95,7 +95,7 @@ function AlphaInner() {
           ))}
         </>
       ) : null}
-      <Text style={{ fontSize: 20, fontWeight: "600", color: palette.ink }}>Lookalikes</Text>
+      <Text style={{ fontSize: 20, fontWeight: "600", color: palette.ink }}>{t(lang, "alphabet.lookalikes")}</Text>
       {data.lookalikes.map((g) => (
         <Text key={g.join()} accessibilityLanguage="he" style={{ backgroundColor: palette.paper, borderRadius: 16, padding: 12, fontSize: 24 }} {...({ lang: "he", dir: "rtl" } as object)}>
           {g.join(" · ")}
