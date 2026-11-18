@@ -1,5 +1,8 @@
+import path from "node:path";
 import { defineConfig, devices } from "@playwright/test";
 
+// Playwright loads this file as CommonJS, so __dirname is the e2e directory.
+const root = path.resolve(__dirname, "..");
 const api = process.env.E2E_API_URL || "http://127.0.0.1:43180";
 const web = process.env.E2E_WEB_URL || "http://127.0.0.1:43181";
 const python = process.env.E2E_PYTHON || "apps/api/.venv/bin/python";
@@ -22,6 +25,7 @@ export default defineConfig({
   webServer: [
     {
       command: `${python} -m uvicorn biti.main:app --app-dir apps/api --host 127.0.0.1 --port 43180`,
+      cwd: root,
       url: `${api}/health`,
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
@@ -35,6 +39,7 @@ export default defineConfig({
     },
     {
       command: "npm --prefix apps/web run dev",
+      cwd: root,
       url: web,
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,

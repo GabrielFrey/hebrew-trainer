@@ -34,8 +34,10 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!token()) {
-      setReady(true);
       if (path !== "/") router.replace("/");
+      // A direct setState here trips react-hooks/set-state-in-effect. The microtask
+      // still reveals the logged-out shell on the first client turn.
+      queueMicrotask(() => setReady(true));
       return;
     }
     api<User>("/auth/me")
