@@ -1,17 +1,22 @@
 import { acceptedFor, gradeExercise, gradePlacement } from "@biti/grading";
-import catalog from "@/content/published.json";
+import published from "@/content/published.json";
+import curriculumData from "@/content/curriculum.json";
 import verbsData from "@/content/verbs.json";
 import alphabetData from "@/content/alphabet.json";
 import { addDailyXp, dailyXp, dueCards, expectedAnswer, offlineAlphabet, type AlphabetData, offlinePractice, scheduleCard, today, type SrsCard } from "./offline-content";
 import type { Exercise, Lesson, PathNode, PathStage, User } from "./api";
+import { mergeCatalog, type Catalog, type CatalogLesson, type Curriculum } from "./curriculum";
 import { makePath, type PathCatalog } from "./path-core";
+import { t, type UiLang } from "./i18n";
 import { newId, peekSession, saveSession, type LocalAttempt, type LocalSession } from "./session";
 
+type Placement = { items: unknown[]; accepted: Record<string, string[]>; levels: Record<string, string>; passRatio: number; maxLevel: string };
+const merged = mergeCatalog(published as unknown as Catalog & { placement: Placement }, curriculumData as unknown as Curriculum);
+const catalog = merged.catalog;
 const core = makePath(catalog as unknown as PathCatalog);
 const { PASS, isGate, unlocked } = core;
 export const buildPath = core.buildPath;
 export const applyPlacement = core.applyPlacement;
-type CatalogLesson = (typeof catalog.lessons)[number];
 
 function sourceLang(courseId?: string): string {
   const map: Record<string, string> = { "he-ru": "ru", "he-uk": "uk", "he-en": "en", "he-es": "es", "he-fr": "fr" };
@@ -19,7 +24,7 @@ function sourceLang(courseId?: string): string {
 }
 
 function lessonBySlug(slug: string): CatalogLesson | undefined {
-  return catalog.lessons.find((row) => row.slug === slug);
+  return merged.lesson(slug);
 }
 
 
@@ -50,7 +55,7 @@ function publicLesson(spec: CatalogLesson, courseId?: string): Lesson {
   );
   const gate = isGate(spec.kind);
   const levelMeta = catalog.levels.find((row) => row.id === spec.level);
-  const titles = catalog.stageTitles as Record<string, Record<string, string>>;
+  const titles = catalog.stageTitles;
   return {
     slug: spec.slug,
     title: spec.title as Record<string, string>,
@@ -58,7 +63,7 @@ function publicLesson(spec: CatalogLesson, courseId?: string): Lesson {
     explanation: spec.explanation as Record<string, string>,
     vocabulary: spec.vocabulary as Lesson["vocabulary"],
     exercises,
-    threshold: spec.threshold,
+    threshold: spec.threshold ?? PASS,
     level: spec.level,
     cefr: spec.cefr,
     track: spec.track,
@@ -70,7 +75,9 @@ function publicLesson(spec: CatalogLesson, courseId?: string): Lesson {
       ulpan: levelMeta?.ulpan || spec.level,
       cefr: spec.cefr,
       title: titles[spec.level] || { en: spec.level },
+      ...(levelMeta?.section ? { section: true } : {}),
     },
+    ...(spec.l10n_fallback?.length ? { l10n_fallback: spec.l10n_fallback } : {}),
     audio: { capability: "unavailable" },
     speech: { capability: "unavailable" },
   };
@@ -261,11 +268,8 @@ export async function localHandle<T>(path: string, init: RequestInit = {}): Prom
       session.daily = addDailyXp(session.daily, xp);
       if (isGate(spec.kind)) {
         if (!session.badges.includes(spec.level)) session.badges.push(spec.level);
-        const titles = catalog.stageTitles as Record<string, Record<string, string>>;
-        badge = { stage_id: spec.level, title: titles[spec.level] || { en: spec.level } };
-        const ids = catalog.levels.map((row) => row.id);
-        const idx = ids.indexOf(spec.level);
-        nextStage = idx >= 0 && idx + 1 < ids.length ? ids[idx + 1] : null;
+        badge = { stage_id: spec.level, title: catalog.stageTitles[spec.level] || { en: spec.level } };
+        nextStage = core.opensNext(spec.level)[0] || null;
       }
     } else if (isGate(spec.kind)) {
       for (const e of mandatory) {
@@ -312,7 +316,9 @@ export async function localHandle<T>(path: string, init: RequestInit = {}): Prom
   }
 
   if (method === "POST" && path === "/tutor/explain") {
-    return { summary: "The tutor is unavailable offline." } as T;
+    const raw = sessionOrThrow().user.ui_language;
+    const lang: UiLang = raw === "en" || raw === "ru" || raw === "he" || raw === "uk" || raw === "es" || raw === "fr" ? raw : "en";
+    return { summary: t(lang, "states.unavailable") } as T;
   }
 
   throw new Error("offline_unsupported");

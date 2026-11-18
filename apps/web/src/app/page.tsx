@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { l10nStatus, t, type UiLang } from "@biti/i18n";
@@ -143,7 +144,10 @@ export default function OnboardingPage() {
           {t(lang, "onboarding.placement")}
         </button>
       </div>
-      <p className="text-sm text-ink-soft">Demo sign-in is development-only. Production requires OIDC.</p>
+      {process.env.NODE_ENV !== "production" ? <p className="text-sm text-ink-soft">{t(lang, "onboarding.demoNote")}</p> : null}
+      <Link href="/privacy" className="text-sm text-indigo underline">
+        {t(lang, "onboarding.privacy")}
+      </Link>
     </div>
   );
 }

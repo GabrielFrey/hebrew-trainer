@@ -83,13 +83,13 @@ export function Shell({ children }: { children: ReactNode }) {
                 {t(lang, "states.offlineBadge")}
               </Text>
             ) : null}
-            <Text accessibilityLabel="XP" style={{ color: palette.ink, fontSize: 12 }}>
+            <Text accessibilityLabel={`${user.xp_total} ${t(lang, "progress.xp")}`} style={{ color: palette.ink, fontSize: 12 }}>
               {user.xp_total} XP
             </Text>
-            <Text accessibilityLabel="Streak" style={{ color: palette.ink, fontSize: 12 }}>
+            <Text accessibilityLabel={`${user.streak} ${t(lang, "progress.streak")}`} style={{ color: palette.ink, fontSize: 12 }}>
               🔥 {user.streak}
             </Text>
-            <Text accessibilityLabel="Hearts" style={{ color: palette.ink, fontSize: 12 }}>
+            <Text accessibilityLabel={`${user.hearts} ${t(lang, "progress.hearts")}`} style={{ color: palette.ink, fontSize: 12 }}>
               ❤ {user.hearts}
             </Text>
           </View>
@@ -107,9 +107,10 @@ export function Shell({ children }: { children: ReactNode }) {
             <Link key={href} href={href} asChild>
               <Pressable
                 accessibilityRole="link"
+                accessibilityLabel={t(lang, key)}
                 style={{
-                  height: 40,
-                  borderRadius: 20,
+                  height: 44,
+                  borderRadius: 22,
                   paddingHorizontal: 14,
                   justifyContent: "center",
                   alignItems: "center",

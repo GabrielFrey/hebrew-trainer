@@ -281,7 +281,7 @@ Not Duolingo green (`#58CC02` and relatives). Primary is **Mediterranean indigo*
 | CTA / error | `error` / `pomegranate` | `#9A3412` | Warm, not brand-green; 7.31:1 with white |
 | Success | `success` / `olive` | `#0C5F58` | Teal (Okabe–Ito-ish), 7.52:1 with white |
 | Warning | `warning` / `gold` | `#854D0E` | 6.85:1 with white |
-| Outline | `line` | `#6B7787` | 4.05:1 on sand (UI 3:1) |
+| Outline | `line` | `#5C6674` | 5.18:1 on sand (UI 3:1, also AA if read as text) |
 | Glass | `glass` | `rgba(255,255,255,0.86)` | Composite ~`#FDFDFE` |
 | Correct sheet | `correctBg` | `#D7EDEA` | Success text 6.15:1 |
 | Incorrect sheet | `incorrectBg` | `#FFEDD5` | Error text 6.38:1 |
@@ -329,8 +329,8 @@ Mascot paints (not theme roles): cream `#F6F0E4`, outline/ink `#142033`, limbs/e
 | error on incorrectBg `#FFEDD5` | 6.38:1 | 4.5 | Pass |
 | warning on almostBg `#FEF3C7` | 6.15:1 | 4.5 | Pass |
 | ink on correct / incorrect / almost sheets | 13.39 / 14.27 / 14.69:1 | 4.5 | Pass |
-| line `#6B7787` on sand | 4.05:1 | 3.0 UI | Pass |
-| line on paper | 4.55:1 | 3.0 UI | Pass |
+| line `#5C6674` on sand | 5.18:1 | 3.0 UI | Pass |
+| line on paper | 5.82:1 | 3.0 UI | Pass |
 | ink on glass composite `#FDFDFE` | 16.09:1 | 4.5 | Pass |
 | **Dark** | | | |
 | ink `#E8EEF6` on sand `#101820` | 15.33:1 | 4.5 | Pass |

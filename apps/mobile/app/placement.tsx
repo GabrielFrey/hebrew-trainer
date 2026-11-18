@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { HebrewKeyboard } from "@/components/HebrewKeyboard";
 import { Shell } from "@/components/Shell";
-import { api } from "@/lib/api";
+import { api, userFacingError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { loc, t } from "@/lib/i18n";
 import { usePalette } from "@/lib/theme";
@@ -36,7 +36,7 @@ function PlaceInner() {
     setError(null);
     api<{ items: Array<{ id: string; prompt: Record<string, string> }> }>("/placement")
       .then((d) => setItems(d.items))
-      .catch((e) => setError(e instanceof Error ? e.message : t(lang, "states.error")));
+      .catch((e) => setError(userFacingError(e, lang)));
   }, [lang]);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ function PlaceInner() {
       const res = await api<PlacementResult>("/placement", { method: "POST", body: JSON.stringify({ answers }) });
       setResult(res);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t(lang, "states.error"));
+      setError(userFacingError(err, lang));
     } finally {
       setBusy(false);
     }
@@ -65,7 +65,13 @@ function PlaceInner() {
         <Text style={{ color: palette.inkSoft }}>
           {t(lang, "placement.resultBody", { score: result.score, total: result.total ?? items.length, stage })}
         </Text>
-        <Pressable testID="placement-continue" onPress={() => router.replace("/learn")} style={{ backgroundColor: palette.indigo, padding: 12, borderRadius: 999 }}>
+        <Pressable
+          testID="placement-continue"
+          accessibilityRole="button"
+          accessibilityLabel={t(lang, "placement.continue")}
+          onPress={() => router.replace("/learn")}
+          style={{ minHeight: 44, justifyContent: "center", backgroundColor: palette.indigo, padding: 12, borderRadius: 999 }}
+        >
           <Text style={{ color: palette.paper, textAlign: "center" }}>{t(lang, "placement.continue")}</Text>
         </Pressable>
       </View>
@@ -81,7 +87,13 @@ function PlaceInner() {
           <Text testID="placement-error" style={{ color: palette.incorrect }}>
             {error}
           </Text>
-          <Pressable testID="placement-retry" onPress={load} style={{ borderWidth: 1, borderColor: palette.line, padding: 12, borderRadius: 999 }}>
+          <Pressable
+            testID="placement-retry"
+            accessibilityRole="button"
+            accessibilityLabel={t(lang, "onboarding.retry")}
+            onPress={load}
+            style={{ minHeight: 44, justifyContent: "center", borderWidth: 1, borderColor: palette.line, padding: 12, borderRadius: 999 }}
+          >
             <Text style={{ textAlign: "center" }}>{t(lang, "onboarding.retry")}</Text>
           </Pressable>
         </View>
@@ -94,13 +106,21 @@ function PlaceInner() {
       ))}
       <Pressable
         testID="placement-submit"
+        accessibilityRole="button"
+        accessibilityLabel={t(lang, "placement.submit")}
         disabled={busy}
         onPress={submit}
-        style={{ backgroundColor: palette.indigo, padding: 12, borderRadius: 999, opacity: busy ? 0.5 : 1 }}
+        style={{ minHeight: 44, justifyContent: "center", backgroundColor: palette.indigo, padding: 12, borderRadius: 999, opacity: busy ? 0.5 : 1 }}
       >
         <Text style={{ color: palette.paper, textAlign: "center" }}>{t(lang, "placement.submit")}</Text>
       </Pressable>
-      <Pressable testID="placement-skip" onPress={() => router.replace("/learn")} style={{ borderWidth: 1, borderColor: palette.line, padding: 12, borderRadius: 999 }}>
+      <Pressable
+        testID="placement-skip"
+        accessibilityRole="button"
+        accessibilityLabel={t(lang, "placement.skip")}
+        onPress={() => router.replace("/learn")}
+        style={{ minHeight: 44, justifyContent: "center", borderWidth: 1, borderColor: palette.line, padding: 12, borderRadius: 999 }}
+      >
         <Text style={{ textAlign: "center" }}>{t(lang, "placement.skip")}</Text>
       </Pressable>
     </View>

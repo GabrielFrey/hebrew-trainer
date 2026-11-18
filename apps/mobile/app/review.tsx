@@ -4,7 +4,7 @@ import { HebrewKeyboard } from "@/components/HebrewKeyboard";
 import { Shell } from "@/components/Shell";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
-import { t } from "@/lib/i18n";
+import { t, type UiLang } from "@/lib/i18n";
 import { usePalette } from "@/lib/theme";
 
 type Card = { id: string; kind: string; prompt: Record<string, unknown>; step: number; due_day: string };
@@ -47,7 +47,8 @@ function ReviewInner() {
       method: "POST",
       body: JSON.stringify({ value, client_key: `srs-${card.id}` }),
     });
-    setMsg(`${res.grade.result} · next ${res.next_due}`);
+    const label = gradeLabel(res.grade.result, lang);
+    setMsg(`${label} · ${t(lang, "review.next", { date: res.next_due })}`);
     setCards(cards.slice(1));
     setValue("");
   }
@@ -55,15 +56,27 @@ function ReviewInner() {
   return (
     <View testID="review-card" style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 20, gap: 12 }}>
       <Text style={{ fontSize: 28, fontWeight: "700", color: palette.ink }}>{t(lang, "nav.review")}</Text>
-      <Text style={{ color: palette.inkSoft }}>{cards.length} due</Text>
+      <Text style={{ color: palette.inkSoft }}>{t(lang, "review.due", { count: cards.length })}</Text>
       <Text accessibilityLanguage="he" style={{ fontSize: 32, lineHeight: 48, writingDirection: "rtl", textAlign: "right" }} {...({ lang: "he", dir: "rtl" } as object)}>
         {String(card.prompt.he || card.prompt.id)}
       </Text>
       <HebrewKeyboard value={value} onChange={setValue} />
-      <Pressable testID="check-answer" onPress={send} style={{ backgroundColor: palette.indigo, padding: 12, borderRadius: 999 }}>
+      <Pressable
+        testID="check-answer"
+        accessibilityRole="button"
+        accessibilityLabel={t(lang, "lesson.check")}
+        onPress={send}
+        style={{ minHeight: 44, justifyContent: "center", backgroundColor: palette.indigo, padding: 12, borderRadius: 999 }}
+      >
         <Text style={{ color: palette.paper, textAlign: "center" }}>{t(lang, "lesson.check")}</Text>
       </Pressable>
       {msg ? <Text>{msg}</Text> : null}
     </View>
   );
+}
+
+function gradeLabel(result: string, lang: UiLang) {
+  if (result === "correct") return t(lang, "lesson.correct");
+  if (result === "almost") return t(lang, "lesson.almost");
+  return t(lang, "lesson.incorrect");
 }

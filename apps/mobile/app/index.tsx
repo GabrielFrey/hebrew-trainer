@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { initialWindowMetrics, useSafeAreaInsets } from "react-native-safe-area-context";
 import { BitiMascot } from "@/components/BitiMascot";
-import { connectionState, lastApiHost } from "@/lib/api";
+import { connectionState, userFacingError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { COURSE_FOR_LANG, deviceUiLang } from "@/lib/device-lang";
 import { t, type UiLang } from "@/lib/i18n";
@@ -44,17 +44,19 @@ export default function Onboarding() {
         course_id: course,
       });
       if (connectionState() === "offline") {
-        setOfflineNote(t(lang, "onboarding.workingOffline", { host: lastApiHost() }));
+        setOfflineNote(t(lang, "onboarding.workingOffline"));
       }
       router.replace(to);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t(lang, "onboarding.couldNotStart"));
+      setError(userFacingError(err, lang));
     } finally {
       setBusy(false);
     }
   }
 
   const chip = (active: boolean) => ({
+    minHeight: 44,
+    justifyContent: "center" as const,
     borderRadius: 999,
     paddingHorizontal: 16,
     paddingVertical: 10,
@@ -115,13 +117,25 @@ export default function Onboarding() {
                     ? "onboarding.courseHeEs"
                     : "onboarding.courseHeFr";
           return (
-            <Pressable key={id} testID={`course-${id}`} onPress={() => setCourse(id)} style={chip(course === id)}>
+            <Pressable
+              key={id}
+              testID={`course-${id}`}
+              accessibilityRole="button"
+              accessibilityState={{ selected: course === id }}
+              onPress={() => setCourse(id)}
+              style={chip(course === id)}
+            >
               <Text style={{ color: course === id ? palette.paper : palette.ink }}>{t(lang, key)}</Text>
             </Pressable>
           );
         })}
       </View>
       <Text style={{ fontSize: 13, color: palette.inkSoft }}>{t(lang, "onboarding.reviewFlag")}</Text>
+      {course === "he-uk" || course === "he-es" || course === "he-fr" ? (
+        <Text testID="course-beta" style={{ fontSize: 13, color: palette.inkSoft }}>
+          {t(lang, "onboarding.betaCourse")}
+        </Text>
+      ) : null}
       <Text style={{ color: palette.ink }}>{t(lang, "onboarding.namePrompt")}</Text>
       <TextInput
         testID="onboarding-name"
@@ -165,7 +179,7 @@ export default function Onboarding() {
             testID="onboarding-retry"
             accessibilityRole="button"
             onPress={() => go("/learn")}
-            style={{ borderWidth: 1, borderColor: palette.line, padding: 12, borderRadius: 999 }}
+            style={{ minHeight: 44, justifyContent: "center", borderWidth: 1, borderColor: palette.line, padding: 12, borderRadius: 999 }}
           >
             <Text style={{ textAlign: "center", color: palette.ink }}>{t(lang, "onboarding.retry")}</Text>
           </Pressable>
@@ -176,7 +190,7 @@ export default function Onboarding() {
         accessibilityRole="button"
         disabled={busy}
         onPress={() => go("/learn")}
-        style={{ backgroundColor: palette.pomegranate, padding: 14, borderRadius: 999, opacity: busy ? 0.5 : 1 }}
+        style={{ minHeight: 44, justifyContent: "center", backgroundColor: palette.pomegranate, padding: 14, borderRadius: 999, opacity: busy ? 0.5 : 1 }}
       >
         <Text style={{ color: palette.paper, textAlign: "center", fontWeight: "600" }}>{t(lang, "onboarding.skip")}</Text>
       </Pressable>
@@ -185,11 +199,20 @@ export default function Onboarding() {
         accessibilityRole="button"
         disabled={busy}
         onPress={() => go("/placement")}
-        style={{ borderWidth: 1, borderColor: palette.line, backgroundColor: palette.paper, padding: 14, borderRadius: 999 }}
+        style={{ minHeight: 44, justifyContent: "center", borderWidth: 1, borderColor: palette.line, backgroundColor: palette.paper, padding: 14, borderRadius: 999 }}
       >
         <Text style={{ color: palette.ink, textAlign: "center" }}>{t(lang, "onboarding.placement")}</Text>
       </Pressable>
-      <Text style={{ fontSize: 13, color: palette.inkSoft }}>{t(lang, "onboarding.demoNote")}</Text>
+      {__DEV__ ? <Text style={{ fontSize: 13, color: palette.inkSoft }}>{t(lang, "onboarding.demoNote")}</Text> : null}
+      <Pressable
+        testID="privacy-link"
+        accessibilityRole="link"
+        accessibilityLabel={t(lang, "onboarding.privacy")}
+        onPress={() => router.push("/privacy")}
+        style={{ minHeight: 44, justifyContent: "center" }}
+      >
+        <Text style={{ color: palette.indigo, textAlign: "center" }}>{t(lang, "onboarding.privacy")}</Text>
+      </Pressable>
     </ScrollView>
   );
 }

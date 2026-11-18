@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { I18nManager, Pressable, Text, View } from "react-native";
 import { BitiMascot } from "@/components/BitiMascot";
 import { useShellScroll } from "@/components/Shell";
@@ -42,12 +42,17 @@ export function LearningPath({
   const palette = usePalette();
   const rtl = I18nManager.isRTL || lang === "he";
   const scroll = useShellScroll();
+  const [forced, setForced] = useState<Record<string, boolean>>({});
+  const containsCurrent = (stage: PathStage) =>
+    Boolean(currentSlug && (stage.nodes.some((n) => n.slug === currentSlug) || stage.checkpoint?.slug === currentSlug));
+  const expanded = (stage: PathStage) => forced[stage.id] ?? containsCurrent(stage);
   const width = 320;
   let offset = 0;
   const layout = stages.map((stage) => {
-    const items = [...stage.nodes, stage.checkpoint].filter(Boolean);
+    const all = [...stage.nodes, stage.checkpoint].filter(Boolean);
+    const items = expanded(stage) ? all : [];
     const step = 118;
-    const height = items.length * step + 88 + (stage.planned_count ? 28 : 0);
+    const height = items.length ? items.length * step + 88 + (stage.planned_count ? 28 : 0) : 0;
     const y0 = offset;
     offset += height + 24;
     const points = items.map((_, i) => {
@@ -75,6 +80,9 @@ export function LearningPath({
         const done = stage.progress.completed;
         const total = Math.max(1, stage.progress.published);
         const pct = Math.round((done / total) * 100);
+        const openTrail = expanded(stage);
+        const count = stage.nodes.length + (stage.checkpoint ? 1 : 0);
+        const opener = stage.opens_after ? stages.find((row) => row.id === stage.opens_after) : undefined;
         return (
           <View key={stage.id} testID={`stage-${stage.id}`}>
             <View
@@ -85,10 +93,11 @@ export function LearningPath({
                 padding: 16,
                 borderWidth: 1,
                 borderColor: palette.line,
+                gap: 4,
               }}
             >
               <Text style={{ color: palette.inkSoft, fontSize: 12, textTransform: "uppercase" }}>
-                {stage.ulpan} · {stage.cefr}
+                {stage.section ? t(lang, "path.section") : stage.ulpan} · {stage.cefr}
               </Text>
               <Text style={{ color: palette.ink, fontSize: 22, fontWeight: "700" }}>{loc(stage.title, lang)}</Text>
               <Text style={{ color: palette.inkSoft, fontSize: 18 }} {...({ lang: "he" } as object)}>
@@ -98,11 +107,27 @@ export function LearningPath({
                 {done}/{stage.progress.published} · {pct}%
                 {stage.badge ? ` · ♛ ${t(lang, "path.badge")}` : ""}
               </Text>
+              {stage.section && stage.opens_after ? (
+                <Text style={{ color: palette.inkSoft }}>
+                  {t(lang, "path.opensAfter", { stage: loc(opener?.title, lang) || stage.opens_after })}
+                </Text>
+              ) : null}
               <View style={{ height: 8, borderRadius: 99, backgroundColor: palette.sandDeep, marginTop: 10, overflow: "hidden" }}>
                 <View style={{ width: `${pct}%`, height: "100%", backgroundColor: palette.olive }} />
               </View>
+              <Pressable
+                testID={`stage-toggle-${stage.id}`}
+                accessibilityRole="button"
+                accessibilityLabel={openTrail ? t(lang, "path.hideLessons") : t(lang, "path.showLessons", { count })}
+                onPress={() => setForced((prev) => ({ ...prev, [stage.id]: !openTrail }))}
+                style={{ minHeight: 44, justifyContent: "center" }}
+              >
+                <Text style={{ color: palette.indigo, fontWeight: "600" }}>
+                  {openTrail ? t(lang, "path.hideLessons") : t(lang, "path.showLessons", { count })}
+                </Text>
+              </Pressable>
             </View>
-            <View style={{ height, marginTop: 8 }}>
+            <View style={{ height, marginTop: openTrail ? 8 : 0 }}>
               <Svg width={width} height={height} style={{ position: "absolute", inset: 0 }}>
                 <Path
                   d={trailD(points)}

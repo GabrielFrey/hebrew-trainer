@@ -4,7 +4,8 @@ Source: the hand-verified "gold layer" of the main-branch app «Иврит с н
 (data/hebrew.json on branch main, mirrored at legacy/ivrit-s-nulya/data/hebrew.json):
 words of level "basic" -> Bet, level "intermediate" -> Gimel, plus the matching phrases.
 Latin transliteration comes from legacy/ivrit-s-nulya/data/lexicon/words-*.json (same ids).
-No Hebrew or ru/en text is invented here. uk/es/fr fall back to en and are marked in_review.
+No Hebrew or ru/en text is invented here. uk/es/fr come from content/l10n/bet-gimel.json
+(machine-assisted drafts, l10n_status "machine" until a native speaker signs them).
 Idempotent: re-running replaces previously generated Bet/Gimel rows and placement.
 """
 from __future__ import annotations
@@ -17,31 +18,52 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 GOLD = ROOT / "legacy/ivrit-s-nulya/data/hebrew.json"
 LEX = ROOT / "legacy/ivrit-s-nulya/data/lexicon"
+L10N = ROOT / "content/l10n/bet-gimel.json"
 OUT = ROOT / "apps/mobile/content/published.json"
-FALLBACK = ("uk", "es", "fr")
-STATUS = {"en": "approved", "ru": "approved", "he": "approved", "uk": "in_review", "es": "in_review", "fr": "in_review"}
+DRAFT = ("uk", "es", "fr")
+STATUS = {"en": "approved", "ru": "approved", "he": "approved", "uk": "machine", "es": "machine", "fr": "machine"}
+TR = json.loads(L10N.read_text(encoding="utf-8"))
 
 
-def loc(en: str, ru: str, he: str | None = None) -> dict:
+def loc(en: str, ru: str, he: str | None = None, draft: list[str] | None = None) -> dict:
+    if draft is None or len(draft) != len(DRAFT):
+        raise ValueError(f"missing uk/es/fr for {en!r}")
     row = {"en": en, "ru": ru}
     if he:
         row["he"] = he
-    for k in FALLBACK:
-        row[k] = en
+    row.update(dict(zip(DRAFT, draft)))
     return row
 
 
-def choice(cid: str, en: str, ru: str) -> dict:
-    return {"id": cid, **{k: v for k, v in loc(en, ru).items()}}
+def gloss(w: dict) -> list[str]:
+    table = TR["phrases"] if w["id"].startswith("ph-") else TR["words"]
+    return table[w["id"]]
+
+
+def fill(template: str, **values: str) -> str:
+    return template.format(**values)
+
+
+def tpl(key: str, **values: str) -> list[str]:
+    return [fill(t, **values) for t in TR["templates"][key]]
+
+
+def tpl_g(key: str, w: dict) -> list[str]:
+    return [fill(t, g=g) for t, g in zip(TR["templates"][key], gloss(w))]
+
+
+def choice(w: dict) -> dict:
+    return {"id": w["id"], **loc(w["en"], w["ru"], draft=gloss(w))}
 
 
 def vocab_row(w: dict, lat: dict) -> dict:
     root = (w.get("root") or "").replace("־", "") or None
+    uk, es, fr = gloss(w)
     return {
         "lemma": w["hebrew"], "pointed": w["nikud"], "unpointed": w["hebrew"],
         "translit": lat.get(w["id"], ""), "ru": w["ru"], "en": w["en"],
         "gender": None, "number": "sg", "root": root, "binyan": None, "audio": None,
-        "uk": w["en"], "es": w["en"], "fr": w["en"], "l10n_status": dict(STATUS),
+        "uk": uk, "es": es, "fr": fr, "l10n_status": dict(STATUS),
         "source": "main:data/hebrew.json#" + w["id"],
     }
 
@@ -56,21 +78,26 @@ def word_exercises(words: list[dict], pool: list[dict], slug: str) -> list[dict]
         opts = opts[i % 4:] + opts[: i % 4]
         ex.append({
             "id": f"mean-{i + 1}", "type": "mc",
-            "prompt": loc(f"What does {w['hebrew']} mean?", f"Что значит {w['hebrew']}?", w["nikud"]),
-            "choices": [choice(o["id"], o["en"], o["ru"]) for o in opts],
+            "prompt": loc(f"What does {w['hebrew']} mean?", f"Что значит {w['hebrew']}?", w["nikud"], tpl("mean", he=w["hebrew"])),
+            "choices": [choice(o) for o in opts],
             "accepted": [w["id"]], "mode": "relaxed", "xp": 10,
         })
     for i, w in enumerate(words[3:6]):
         ex.append({
             "id": f"type-{i + 1}", "type": "type_he",
-            "prompt": loc(f"Type: {w['en']}", f"Наберите: {w['ru']}"),
+            "prompt": loc(f"Type: {w['en']}", f"Наберите: {w['ru']}", draft=tpl_g("type", w)),
             "accepted": [w["hebrew"], w["nikud"]], "mode": "relaxed", "xp": 10, "keyboard": True,
         })
     pair = words[-4:] if n >= 4 else words
-    by = {lang: {p["hebrew"]: (p["ru"] if lang == "ru" else p["en"]) for p in pair} for lang in ("en", "ru", *FALLBACK)}
+    by: dict[str, dict[str, str]] = {"en": {}, "ru": {}, **{lang: {} for lang in DRAFT}}
+    for p in pair:
+        by["en"][p["hebrew"]] = p["en"]
+        by["ru"][p["hebrew"]] = p["ru"]
+        for lang, text in zip(DRAFT, gloss(p)):
+            by[lang][p["hebrew"]] = text
     ex.append({
         "id": "match-1", "type": "match_tap",
-        "prompt": loc("Match the pair", "Сопоставьте пару", "התאימו"),
+        "prompt": loc("Match the pair", "Сопоставьте пару", "התאימו", TR["templates"]["match"]),
         "left": list(by["en"].keys()), "right": list(by["en"].values()), "pairs": by["en"],
         "pairs_by_lang": by, "xp": 10,
     })
@@ -82,7 +109,7 @@ def word_exercises(words: list[dict], pool: list[dict], slug: str) -> list[dict]
         wrong = [x for x in all_roots if x != r][:2]
         ex.append({
             "id": "root-1", "type": "identify_root",
-            "prompt": loc(f"Root of {w['hebrew']}", f"Корень {w['hebrew']}", f"השורש של {w['hebrew']}"),
+            "prompt": loc(f"Root of {w['hebrew']}", f"Корень {w['hebrew']}", f"השורש של {w['hebrew']}", tpl("root", he=w["hebrew"])),
             "choices": [{"id": x, "he": x} for x in sorted([r, *wrong])],
             "accepted": [r], "mode": "strict_root", "xp": 10,
         })
@@ -95,7 +122,7 @@ def phrase_exercises(phrases: list[dict]) -> list[dict]:
         tokens = re.sub(r"[.,!?־—]", " ", p["hebrew"]).split()
         ex.append({
             "id": f"order-{i + 1}", "type": "order_rtl",
-            "prompt": loc(f"Build: {p['en']}", f"Соберите: {p['ru']}"),
+            "prompt": loc(f"Build: {p['en']}", f"Соберите: {p['ru']}", draft=tpl_g("build", p)),
             "tokens": tokens, "accepted": tokens, "mode": "relaxed", "xp": 10,
         })
     return ex[:10]
@@ -133,6 +160,18 @@ def lesson(slug, level, cefr, track, title, objective, vocab, exercises, prereq,
     }
 
 
+def numbered(titles: list[str], p: int) -> list[str]:
+    return [f"{t} · {p}" for t in titles]
+
+
+def learn_objective(chunk: list[dict]) -> list[str]:
+    out = []
+    for i, template in enumerate(TR["templates"]["learn"]):
+        names = ", ".join(gloss(w)[i] for w in chunk[:3])
+        out.append(fill(template, n=str(len(chunk)), list=names))
+    return out
+
+
 def main() -> None:
     gold = json.loads(GOLD.read_text())
     lat: dict[str, str] = {}
@@ -155,17 +194,18 @@ def main() -> None:
             for p in range(parts):
                 chunk = dw[p * size:(p + 1) * size]
                 slug = f"{cfg['prefix']}-{deck}-{p + 1}"
-                title = loc(f"{en} · {p + 1}", f"{ru} · {p + 1}")
+                title = loc(f"{en} · {p + 1}", f"{ru} · {p + 1}", draft=numbered(TR["titles"][deck], p + 1))
                 obj = loc(f"Learn {len(chunk)} words: {', '.join(w['en'] for w in chunk[:3])}…",
-                          f"Выучите {len(chunk)} слов: {', '.join(w['ru'] for w in chunk[:3])}…")
+                          f"Выучите {len(chunk)} слов: {', '.join(w['ru'] for w in chunk[:3])}…",
+                          draft=learn_objective(chunk))
                 row = lesson(slug, level, cfg["cefr"], cfg["track"][deck], title, obj,
                              [vocab_row(w, lat) for w in chunk], word_exercises(chunk, dw, slug), [prev], sort)
                 stage_lessons.append(row); prev = slug; sort += 1
         phrases = [p for p in gold["phrases"] if p["level"] == cfg["src"]]
         slug = f"{cfg['prefix']}-phrases"
         pt = cfg["phrases_title"]
-        stage_lessons.append(lesson(slug, level, cfg["cefr"], "conversation", loc(pt[0], pt[1]),
-                                    loc("Put whole sentences together.", "Собирайте целые фразы."), [],
+        stage_lessons.append(lesson(slug, level, cfg["cefr"], "conversation", loc(pt[0], pt[1], draft=TR["titles"][f"{level}-phrases"]),
+                                    loc("Put whole sentences together.", "Собирайте целые фразы.", draft=TR["templates"]["phrases"]), [],
                                     phrase_exercises(phrases), [prev], sort))
         prev = slug
         # checkpoint: one exercise from each lesson, round-robin, max 8, no speak/listen
@@ -177,10 +217,12 @@ def main() -> None:
                     e = dict(l["exercises"][k]); e["id"] = f"cp-{level}-{l['slug']}-{e['id']}"; mix.append(e)
             k += 1
         g = GATE_META[level]
+        gt = TR["gates"][level]
         gate_slug = cat["checkpointSlugs"][level]
-        stage_lessons.append(lesson(gate_slug, level, cfg["cefr"], "grammar", loc(g[0], g[1]), loc(g[2], g[3]), [], mix, [],
+        stage_lessons.append(lesson(gate_slug, level, cfg["cefr"], "grammar", loc(g[0], g[1], draft=gt["title"]),
+                                    loc(g[2], g[3], draft=gt["objective"]), [], mix, [],
                                     sort + 1, kind="checkpoint", unit=f"{cfg['prefix']}-boss"))
-        stage_lessons[-1]["explanation"] = loc(g[4], g[5])
+        stage_lessons[-1]["explanation"] = loc(g[4], g[5], draft=gt["explanation"])
         new += stage_lessons
     cat["lessons"] += new
     if "checkpoint" not in cat["gateKinds"]:
@@ -205,7 +247,7 @@ def main() -> None:
         for wid in ids:
             w = next(x for x in stage_words[level] if x["id"] == wid)
             pid = f"p{n}"; n += 1
-            items.append({"id": pid, "prompt": loc(f"Type in Hebrew: {w['en']}", f"Наберите на иврите: {w['ru']}"),
+            items.append({"id": pid, "prompt": loc(f"Type in Hebrew: {w['en']}", f"Наберите на иврите: {w['ru']}", draft=tpl_g("typeHe", w)),
                           "level": level, "l10n_status": dict(STATUS)})
             accepted[pid] = [w["hebrew"], w["nikud"]]
     for it in items:

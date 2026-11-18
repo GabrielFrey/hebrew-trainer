@@ -1,12 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Pressable, Text, View } from "react-native";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
+import Constants from "expo-constants";
 import { Shell } from "@/components/Shell";
-import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { t } from "@/lib/i18n";
-import { getQueue } from "@/lib/offline";
 import { usePalette } from "@/lib/theme";
+
+const COURSE_KEY: Record<string, string> = {
+  "he-ru": "onboarding.courseHeRu",
+  "he-uk": "onboarding.courseHeUk",
+  "he-en": "onboarding.courseHeEn",
+  "he-es": "onboarding.courseHeEs",
+  "he-fr": "onboarding.courseHeFr",
+};
 
 export default function Profile() {
   return (
@@ -19,46 +26,66 @@ export default function Profile() {
 function ProfileInner() {
   const palette = usePalette();
   const { user, signOut, refresh, lang } = useAuth();
-  const [meta, setMeta] = useState<Record<string, unknown> | null>(null);
-  const [queueBackend, setQueueBackend] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     refresh().catch(() => undefined);
-    api<Record<string, unknown>>("/meta")
-      .then(setMeta)
-      .catch((e) => setError(String(e.message)));
-    getQueue().then((q) => setQueueBackend(q.backend));
   }, [refresh]);
   if (!user) return <Text>{t(lang, "states.loading")}</Text>;
+  const version = Constants.expoConfig?.version || "0.1.0";
+  const courseKey = COURSE_KEY[user.course_id || "he-en"] || "onboarding.courseHeEn";
   return (
     <View testID="profile" style={{ gap: 12 }}>
       <View style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 20, gap: 8 }}>
         <Text style={{ fontSize: 28, fontWeight: "700", color: palette.ink }}>{user.display_name}</Text>
-        <Text>XP {user.xp_total}</Text>
-        <Text>Streak {user.streak}</Text>
-        <Text>Hearts {user.hearts}</Text>
-        <Text>League {user.league}</Text>
-        <Text>Level {user.level}</Text>
-        <Text>Daily goal {user.daily_goal_xp} XP</Text>
-        <Text>Language {user.ui_language}</Text>
-        <Text testID="queue-backend">Offline queue: {queueBackend || "…"}</Text>
-      </View>
-      <View style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 20, gap: 8 }}>
-        <Text style={{ fontSize: 20, fontWeight: "600" }}>Capabilities</Text>
-        {error ? <Text style={{ color: palette.incorrect }}>{error}</Text> : null}
-        <Text style={{ color: palette.inkSoft }}>{JSON.stringify(meta, null, 2)}</Text>
-        <Text>
-          Achievements: Alef-Bet master, All seven binyanim, and First conversation unlock from server progress — they never come from the tutor.
+        <Text style={{ color: palette.ink }}>
+          {t(lang, "progress.xp")}: {user.xp_total}
         </Text>
+        <Text style={{ color: palette.ink }}>
+          {t(lang, "progress.streak")}: {user.streak}
+        </Text>
+        <Text style={{ color: palette.ink }}>
+          {t(lang, "progress.hearts")}: {user.hearts}
+        </Text>
+        <Text style={{ color: palette.ink }}>
+          {t(lang, "progress.league")}: {user.league}
+        </Text>
+        <Text style={{ color: palette.ink }}>
+          {t(lang, "profile.level")}: {user.level}
+        </Text>
+        <Text style={{ color: palette.ink }}>
+          {t(lang, "progress.goal")}: {user.daily_goal_xp} {t(lang, "progress.xp")}
+        </Text>
+        <Text style={{ color: palette.ink }}>
+          {t(lang, "onboarding.language")}: {user.ui_language}
+        </Text>
+        <Text style={{ color: palette.ink }}>
+          {t(lang, "profile.course")}: {t(lang, courseKey)}
+        </Text>
+        <Text style={{ color: palette.inkSoft }}>{t(lang, "profile.offline")}</Text>
+        <Text style={{ color: palette.inkSoft }}>{t(lang, "profile.version", { version })}</Text>
+      </View>
+      <Link href="/privacy" asChild>
+        <Pressable
+          testID="privacy-link"
+          accessibilityRole="link"
+          accessibilityLabel={t(lang, "onboarding.privacy")}
+          style={{ minHeight: 44, justifyContent: "center", backgroundColor: palette.paper, borderRadius: 999, paddingHorizontal: 18 }}
+        >
+          <Text style={{ textAlign: "center", color: palette.indigo, fontWeight: "600" }}>{t(lang, "onboarding.privacy")}</Text>
+        </Pressable>
+      </Link>
+      <View style={{ backgroundColor: palette.paper, borderRadius: 24, padding: 20, gap: 8 }}>
+        <Text style={{ color: palette.inkSoft }}>{t(lang, "profile.signOutNote")}</Text>
         <Pressable
           testID="sign-out"
+          accessibilityRole="button"
+          accessibilityLabel={t(lang, "profile.signOut")}
           onPress={() => {
             signOut();
             router.replace("/");
           }}
-          style={{ borderWidth: 1, borderColor: palette.line, borderRadius: 999, padding: 12 }}
+          style={{ minHeight: 44, justifyContent: "center", borderWidth: 1, borderColor: palette.line, borderRadius: 999, paddingHorizontal: 12 }}
         >
-          <Text style={{ textAlign: "center" }}>Sign out</Text>
+          <Text style={{ textAlign: "center", color: palette.ink }}>{t(lang, "profile.signOut")}</Text>
         </Pressable>
       </View>
     </View>

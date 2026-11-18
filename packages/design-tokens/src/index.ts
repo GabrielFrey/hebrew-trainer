@@ -20,7 +20,7 @@ export const color = {
     olive: "#0C5F58",
     indigo: "#184A82",
     gold: "#854D0E",
-    line: "#6B7787",
+    line: "#5C6674",
     glass: "rgba(255, 255, 255, 0.86)",
     correct: "#0C5F58",
     incorrect: "#9A3412",

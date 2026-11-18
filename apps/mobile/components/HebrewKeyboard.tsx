@@ -35,7 +35,7 @@ export function HebrewKeyboard({
   const palette = usePalette();
   const { lang } = useAuth();
   const keyStyle = {
-    minWidth: 40,
+    minWidth: 44,
     minHeight: 44,
     borderRadius: 12,
     borderWidth: 1,
