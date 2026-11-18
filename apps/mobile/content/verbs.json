@@ -73,11 +73,11 @@
     },
     "2mp": {
      "plain": "כתבתם",
-     "pointed": "כְתַבְתֶּם"
+     "pointed": "כְּתַבְתֶּם"
     },
     "2fp": {
      "plain": "כתבתן",
-     "pointed": "כְתַבְתֶּן"
+     "pointed": "כְּתַבְתֶּן"
     },
     "3pl": {
      "plain": "כתבו",
@@ -1140,7 +1140,7 @@
     },
     "2mp": {
      "plain": "תעשו",
-     "pointed": "תַעֲשׂוּ"
+     "pointed": "תַּעֲשׂוּ"
     },
     "2fp": {
      "plain": "תעשהנה",
@@ -1509,7 +1509,7 @@
     },
     "2mp": {
      "plain": "תראו",
-     "pointed": "תִרְאוּ"
+     "pointed": "תִּרְאוּ"
     },
     "2fp": {
      "plain": "תראהנה",
@@ -2001,7 +2001,7 @@
     },
     "2mp": {
      "plain": "תרצו",
-     "pointed": "תִרְצוּ"
+     "pointed": "תִּרְצוּ"
     },
     "2fp": {
      "plain": "תרצהנה",
@@ -2247,7 +2247,7 @@
     },
     "2mp": {
      "plain": "תשתו",
-     "pointed": "תִשְׁתּוּ"
+     "pointed": "תִּשְׁתּוּ"
     },
     "2fp": {
      "plain": "תשתהנה",
@@ -3477,7 +3477,7 @@
     },
     "2mp": {
      "plain": "תקנו",
-     "pointed": "תִקְנוּ"
+     "pointed": "תִּקְנוּ"
     },
     "2fp": {
      "plain": "תקנהנה",
@@ -4746,108 +4746,108 @@
     "fr": "missing"
    },
    "infinitive": "לבקש",
-   "infinitive_pointed": "לְבַקֵשׁ",
+   "infinitive_pointed": "לְבַקֵּשׁ",
    "present": {
     "ms": {
      "plain": "מבקש",
-     "pointed": "מְבַקֵשׁ"
+     "pointed": "מְבַקֵּשׁ"
     },
     "fs": {
      "plain": "מבקשת",
-     "pointed": "מְבַקֶשֶׁת"
+     "pointed": "מְבַקֶּשֶׁת"
     },
     "mp": {
      "plain": "מבקשים",
-     "pointed": "מְבַקְשִׁים"
+     "pointed": "מְבַקְּשִׁים"
     },
     "fp": {
      "plain": "מבקשות",
-     "pointed": "מְבַקְשׁוֹת"
+     "pointed": "מְבַקְּשׁוֹת"
     }
    },
    "past": {
     "1sg": {
      "plain": "בקשתי",
-     "pointed": "בִּקַשְׁתִּי"
+     "pointed": "בִּקַּשְׁתִּי"
     },
     "2ms": {
      "plain": "בקשת",
-     "pointed": "בִּקַשְׁתָּ"
+     "pointed": "בִּקַּשְׁתָּ"
     },
     "2fs": {
      "plain": "בקשת",
-     "pointed": "בִּקַשְׁתְּ"
+     "pointed": "בִּקַּשְׁתְּ"
     },
     "3ms": {
      "plain": "בקש",
-     "pointed": "בִּקֵשׁ"
+     "pointed": "בִּקֵּשׁ"
     },
     "3fs": {
      "plain": "בקשה",
-     "pointed": "בִּקְשָׁה"
+     "pointed": "בִּקְּשָׁה"
     },
     "1pl": {
      "plain": "בקשנו",
-     "pointed": "בִּקַשְׁנוּ"
+     "pointed": "בִּקַּשְׁנוּ"
     },
     "2mp": {
      "plain": "בקשתם",
-     "pointed": "בִּקַשְׁתֶּם"
+     "pointed": "בִּקַּשְׁתֶּם"
     },
     "2fp": {
      "plain": "בקשתן",
-     "pointed": "בִּקַשְׁתֶּן"
+     "pointed": "בִּקַּשְׁתֶּן"
     },
     "3pl": {
      "plain": "בקשו",
-     "pointed": "בִּקְשׁוּ"
+     "pointed": "בִּקְּשׁוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אבקש",
-     "pointed": "אֲבַקֵשׁ"
+     "pointed": "אֲבַקֵּשׁ"
     },
     "2ms": {
      "plain": "תבקש",
-     "pointed": "תְּבַקֵשׁ"
+     "pointed": "תְּבַקֵּשׁ"
     },
     "2fs": {
      "plain": "תבקשי",
-     "pointed": "תְּבַקְשִׁי"
+     "pointed": "תְּבַקְּשִׁי"
     },
     "3ms": {
      "plain": "יבקש",
-     "pointed": "יְבַקֵשׁ"
+     "pointed": "יְבַקֵּשׁ"
     },
     "3fs": {
      "plain": "תבקש",
-     "pointed": "תְּבַקֵשׁ"
+     "pointed": "תְּבַקֵּשׁ"
     },
     "1pl": {
      "plain": "נבקש",
-     "pointed": "נְבַקֵשׁ"
+     "pointed": "נְבַקֵּשׁ"
     },
     "2mp": {
      "plain": "תבקשו",
-     "pointed": "תְּבַקְשׁוּ"
+     "pointed": "תְּבַקְּשׁוּ"
     },
     "2fp": {
      "plain": "תבקשנה",
-     "pointed": "תְּבַקֵשְׁנָה"
+     "pointed": "תְּבַקֵּשְׁנָה"
     },
     "3pl": {
      "plain": "יבקשו",
-     "pointed": "יְבַקְשׁוּ"
+     "pointed": "יְבַקְּשׁוּ"
     }
    },
    "past_3ms": {
     "plain": "בקש",
-    "pointed": "בִּקֵשׁ"
+    "pointed": "בִּקֵּשׁ"
    },
    "future_3ms": {
     "plain": "יבקש",
-    "pointed": "יְבַקֵשׁ"
+    "pointed": "יְבַקֵּשׁ"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -4992,108 +4992,108 @@
     "fr": "missing"
    },
    "infinitive": "לשלם",
-   "infinitive_pointed": "לְשַׁלֵם",
+   "infinitive_pointed": "לְשַׁלֵּם",
    "present": {
     "ms": {
      "plain": "משלם",
-     "pointed": "מְשַׁלֵם"
+     "pointed": "מְשַׁלֵּם"
     },
     "fs": {
-     "plain": "משלםת",
-     "pointed": "מְשַׁלֶםֶת"
+     "plain": "משלמת",
+     "pointed": "מְשַׁלֶּמֶת"
     },
     "mp": {
-     "plain": "משלםים",
-     "pointed": "מְשַׁלְםִים"
+     "plain": "משלמים",
+     "pointed": "מְשַׁלְּמִים"
     },
     "fp": {
-     "plain": "משלםות",
-     "pointed": "מְשַׁלְםוֹת"
+     "plain": "משלמות",
+     "pointed": "מְשַׁלְּמוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "שלםתי",
-     "pointed": "שִׁלַםְתִּי"
+     "plain": "שלמתי",
+     "pointed": "שִׁלַּמְתִּי"
     },
     "2ms": {
-     "plain": "שלםת",
-     "pointed": "שִׁלַםְתָּ"
+     "plain": "שלמת",
+     "pointed": "שִׁלַּמְתָּ"
     },
     "2fs": {
-     "plain": "שלםת",
-     "pointed": "שִׁלַםְתְּ"
+     "plain": "שלמת",
+     "pointed": "שִׁלַּמְתְּ"
     },
     "3ms": {
      "plain": "שלם",
-     "pointed": "שִׁלֵם"
+     "pointed": "שִׁלֵּם"
     },
     "3fs": {
-     "plain": "שלםה",
-     "pointed": "שִׁלְםָה"
+     "plain": "שלמה",
+     "pointed": "שִׁלְּמָה"
     },
     "1pl": {
-     "plain": "שלםנו",
-     "pointed": "שִׁלַםְנוּ"
+     "plain": "שלמנו",
+     "pointed": "שִׁלַּמְנוּ"
     },
     "2mp": {
-     "plain": "שלםתם",
-     "pointed": "שִׁלַםְתֶּם"
+     "plain": "שלמתם",
+     "pointed": "שִׁלַּמְתֶּם"
     },
     "2fp": {
-     "plain": "שלםתן",
-     "pointed": "שִׁלַםְתֶּן"
+     "plain": "שלמתן",
+     "pointed": "שִׁלַּמְתֶּן"
     },
     "3pl": {
-     "plain": "שלםו",
-     "pointed": "שִׁלְםוּ"
+     "plain": "שלמו",
+     "pointed": "שִׁלְּמוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אשלם",
-     "pointed": "אֲשַׁלֵם"
+     "pointed": "אֲשַׁלֵּם"
     },
     "2ms": {
      "plain": "תשלם",
-     "pointed": "תְּשַׁלֵם"
+     "pointed": "תְּשַׁלֵּם"
     },
     "2fs": {
-     "plain": "תשלםי",
-     "pointed": "תְּשַׁלְםִי"
+     "plain": "תשלמי",
+     "pointed": "תְּשַׁלְּמִי"
     },
     "3ms": {
      "plain": "ישלם",
-     "pointed": "יְשַׁלֵם"
+     "pointed": "יְשַׁלֵּם"
     },
     "3fs": {
      "plain": "תשלם",
-     "pointed": "תְּשַׁלֵם"
+     "pointed": "תְּשַׁלֵּם"
     },
     "1pl": {
      "plain": "נשלם",
-     "pointed": "נְשַׁלֵם"
+     "pointed": "נְשַׁלֵּם"
     },
     "2mp": {
-     "plain": "תשלםו",
-     "pointed": "תְּשַׁלְםוּ"
+     "plain": "תשלמו",
+     "pointed": "תְּשַׁלְּמוּ"
     },
     "2fp": {
-     "plain": "תשלםנה",
-     "pointed": "תְּשַׁלֵםְנָה"
+     "plain": "תשלמנה",
+     "pointed": "תְּשַׁלֵּמְנָה"
     },
     "3pl": {
-     "plain": "ישלםו",
-     "pointed": "יְשַׁלְםוּ"
+     "plain": "ישלמו",
+     "pointed": "יְשַׁלְּמוּ"
     }
    },
    "past_3ms": {
     "plain": "שלם",
-    "pointed": "שִׁלֵם"
+    "pointed": "שִׁלֵּם"
    },
    "future_3ms": {
     "plain": "ישלם",
-    "pointed": "יְשַׁלֵם"
+    "pointed": "יְשַׁלֵּם"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -5568,7 +5568,7 @@
     },
     "2mp": {
      "plain": "תענו",
-     "pointed": "תַעֲנוּ"
+     "pointed": "תַּעֲנוּ"
     },
     "2fp": {
      "plain": "תענהנה",
@@ -5730,108 +5730,108 @@
     "fr": "missing"
    },
    "infinitive": "ללמד",
-   "infinitive_pointed": "לְלַמֵד",
+   "infinitive_pointed": "לְלַמֵּד",
    "present": {
     "ms": {
      "plain": "מלמד",
-     "pointed": "מְלַמֵד"
+     "pointed": "מְלַמֵּד"
     },
     "fs": {
      "plain": "מלמדת",
-     "pointed": "מְלַמֶדֶת"
+     "pointed": "מְלַמֶּדֶת"
     },
     "mp": {
      "plain": "מלמדים",
-     "pointed": "מְלַמְדִים"
+     "pointed": "מְלַמְּדִים"
     },
     "fp": {
      "plain": "מלמדות",
-     "pointed": "מְלַמְדוֹת"
+     "pointed": "מְלַמְּדוֹת"
     }
    },
    "past": {
     "1sg": {
      "plain": "למדתי",
-     "pointed": "לִמַדְתִּי"
+     "pointed": "לִמַּדְתִּי"
     },
     "2ms": {
      "plain": "למדת",
-     "pointed": "לִמַדְתָּ"
+     "pointed": "לִמַּדְתָּ"
     },
     "2fs": {
      "plain": "למדת",
-     "pointed": "לִמַדְתְּ"
+     "pointed": "לִמַּדְתְּ"
     },
     "3ms": {
      "plain": "למד",
-     "pointed": "לִמֵד"
+     "pointed": "לִמֵּד"
     },
     "3fs": {
      "plain": "למדה",
-     "pointed": "לִמְדָה"
+     "pointed": "לִמְּדָה"
     },
     "1pl": {
      "plain": "למדנו",
-     "pointed": "לִמַדְנוּ"
+     "pointed": "לִמַּדְנוּ"
     },
     "2mp": {
      "plain": "למדתם",
-     "pointed": "לִמַדְתֶּם"
+     "pointed": "לִמַּדְתֶּם"
     },
     "2fp": {
      "plain": "למדתן",
-     "pointed": "לִמַדְתֶּן"
+     "pointed": "לִמַּדְתֶּן"
     },
     "3pl": {
      "plain": "למדו",
-     "pointed": "לִמְדוּ"
+     "pointed": "לִמְּדוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אלמד",
-     "pointed": "אֲלַמֵד"
+     "pointed": "אֲלַמֵּד"
     },
     "2ms": {
      "plain": "תלמד",
-     "pointed": "תְּלַמֵד"
+     "pointed": "תְּלַמֵּד"
     },
     "2fs": {
      "plain": "תלמדי",
-     "pointed": "תְּלַמְדִי"
+     "pointed": "תְּלַמְּדִי"
     },
     "3ms": {
      "plain": "ילמד",
-     "pointed": "יְלַמֵד"
+     "pointed": "יְלַמֵּד"
     },
     "3fs": {
      "plain": "תלמד",
-     "pointed": "תְּלַמֵד"
+     "pointed": "תְּלַמֵּד"
     },
     "1pl": {
      "plain": "נלמד",
-     "pointed": "נְלַמֵד"
+     "pointed": "נְלַמֵּד"
     },
     "2mp": {
      "plain": "תלמדו",
-     "pointed": "תְּלַמְדוּ"
+     "pointed": "תְּלַמְּדוּ"
     },
     "2fp": {
      "plain": "תלמדנה",
-     "pointed": "תְּלַמֵדְנָה"
+     "pointed": "תְּלַמֵּדְנָה"
     },
     "3pl": {
      "plain": "ילמדו",
-     "pointed": "יְלַמְדוּ"
+     "pointed": "יְלַמְּדוּ"
     }
    },
    "past_3ms": {
     "plain": "למד",
-    "pointed": "לִמֵד"
+    "pointed": "לִמֵּד"
    },
    "future_3ms": {
     "plain": "ילמד",
-    "pointed": "יְלַמֵד"
+    "pointed": "יְלַמֵּד"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -7782,7 +7782,7 @@
     },
     "2mp": {
      "plain": "תבכו",
-     "pointed": "תִבְכּוּ"
+     "pointed": "תִּבְכּוּ"
     },
     "2fp": {
      "plain": "תבכהנה",
@@ -8113,11 +8113,11 @@
     },
     "2mp": {
      "plain": "גדלתם",
-     "pointed": "גְדַלְתֶּם"
+     "pointed": "גְּדַלְתֶּם"
     },
     "2fp": {
      "plain": "גדלתן",
-     "pointed": "גְדַלְתֶּן"
+     "pointed": "גְּדַלְתֶּן"
     },
     "3pl": {
      "plain": "גדלו",
@@ -8851,11 +8851,11 @@
     },
     "2mp": {
      "plain": "גמרתם",
-     "pointed": "גְמַרְתֶּם"
+     "pointed": "גְּמַרְתֶּם"
     },
     "2fp": {
      "plain": "גמרתן",
-     "pointed": "גְמַרְתֶּן"
+     "pointed": "גְּמַרְתֶּן"
     },
     "3pl": {
      "plain": "גמרו",
@@ -9051,108 +9051,108 @@
     "fr": "missing"
    },
    "infinitive": "להמשיך",
-   "infinitive_pointed": "לְהַמְשִׁיך",
+   "infinitive_pointed": "לְהַמְשִׁיךְ",
    "present": {
     "ms": {
      "plain": "ממשיך",
-     "pointed": "מַמְשִׁיך"
+     "pointed": "מַמְשִׁיךְ"
     },
     "fs": {
-     "plain": "ממשיךה",
-     "pointed": "מַמְשִׁיךָה"
+     "plain": "ממשיכה",
+     "pointed": "מַמְשִׁיכָה"
     },
     "mp": {
-     "plain": "ממשיךים",
-     "pointed": "מַמְשִׁיךִים"
+     "plain": "ממשיכים",
+     "pointed": "מַמְשִׁיכִים"
     },
     "fp": {
-     "plain": "ממשיךות",
-     "pointed": "מַמְשִׁיךוֹת"
+     "plain": "ממשיכות",
+     "pointed": "מַמְשִׁיכוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "המשךתי",
-     "pointed": "הִמְשַׁךתִּי"
+     "plain": "המשכתי",
+     "pointed": "הִמְשַׁכתִּי"
     },
     "2ms": {
-     "plain": "המשךת",
-     "pointed": "הִמְשַׁךְתָּ"
+     "plain": "המשכת",
+     "pointed": "הִמְשַׁכְתָּ"
     },
     "2fs": {
-     "plain": "המשךת",
-     "pointed": "הִמְשַׁךְתְּ"
+     "plain": "המשכת",
+     "pointed": "הִמְשַׁכְתְּ"
     },
     "3ms": {
      "plain": "המשיך",
-     "pointed": "הִמְשִׁיך"
+     "pointed": "הִמְשִׁיךְ"
     },
     "3fs": {
-     "plain": "המשיךה",
-     "pointed": "הִמְשִׁיךָה"
+     "plain": "המשיכה",
+     "pointed": "הִמְשִׁיכָה"
     },
     "1pl": {
-     "plain": "המשךנו",
-     "pointed": "הִמְשַׁךְנוּ"
+     "plain": "המשכנו",
+     "pointed": "הִמְשַׁכְנוּ"
     },
     "2mp": {
-     "plain": "המשךתם",
-     "pointed": "הִמְשַׁךְתֶּם"
+     "plain": "המשכתם",
+     "pointed": "הִמְשַׁכְתֶּם"
     },
     "2fp": {
-     "plain": "המשךתן",
-     "pointed": "הִמְשַׁךְתֶּן"
+     "plain": "המשכתן",
+     "pointed": "הִמְשַׁכְתֶּן"
     },
     "3pl": {
-     "plain": "המשיךו",
-     "pointed": "הִמְשִׁיךוּ"
+     "plain": "המשיכו",
+     "pointed": "הִמְשִׁיכוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אמשיך",
-     "pointed": "אַמְשִׁיך"
+     "pointed": "אַמְשִׁיךְ"
     },
     "2ms": {
      "plain": "תמשיך",
-     "pointed": "תַּמְשִׁיך"
+     "pointed": "תַּמְשִׁיךְ"
     },
     "2fs": {
-     "plain": "תמשיךי",
-     "pointed": "תַּמְשִׁיךִי"
+     "plain": "תמשיכי",
+     "pointed": "תַּמְשִׁיכִי"
     },
     "3ms": {
      "plain": "ימשיך",
-     "pointed": "יַמְשִׁיך"
+     "pointed": "יַמְשִׁיךְ"
     },
     "3fs": {
      "plain": "תמשיך",
-     "pointed": "תַּמְשִׁיך"
+     "pointed": "תַּמְשִׁיךְ"
     },
     "1pl": {
      "plain": "נמשיך",
-     "pointed": "נַמְשִׁיך"
+     "pointed": "נַמְשִׁיךְ"
     },
     "2mp": {
-     "plain": "תמשיךו",
-     "pointed": "תַּמְשִׁיךוּ"
+     "plain": "תמשיכו",
+     "pointed": "תַּמְשִׁיכוּ"
     },
     "2fp": {
-     "plain": "תמשךנה",
-     "pointed": "תַּמְשֵׁךְנָה"
+     "plain": "תמשכנה",
+     "pointed": "תַּמְשֵׁכְנָה"
     },
     "3pl": {
-     "plain": "ימשיךו",
-     "pointed": "יַמְשִׁיךוּ"
+     "plain": "ימשיכו",
+     "pointed": "יַמְשִׁיכוּ"
     }
    },
    "past_3ms": {
     "plain": "המשיך",
-    "pointed": "הִמְשִׁיך"
+    "pointed": "הִמְשִׁיךְ"
    },
    "future_3ms": {
     "plain": "ימשיך",
-    "pointed": "יַמְשִׁיך"
+    "pointed": "יַמְשִׁיךְ"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -9649,252 +9649,6 @@
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
   {
-   "id": "hishtamesh",
-   "root": "שמש",
-   "binyan": "hitpael",
-   "pattern": "strong",
-   "level": "basic",
-   "gloss": {
-    "ru": "пользоваться",
-    "en": "to use"
-   },
-   "l10n_status": {
-    "ru": "approved",
-    "en": "approved",
-    "uk": "missing",
-    "es": "missing",
-    "fr": "missing"
-   },
-   "infinitive": "להשתמש",
-   "infinitive_pointed": "לְהִשְׁתַּמַשֵׁ",
-   "present": {
-    "ms": {
-     "plain": "משתמש",
-     "pointed": "מִשְׁתַּמַשֵׁ"
-    },
-    "fs": {
-     "plain": "משתמשת",
-     "pointed": "מִשְׁתַּמַשֶׁת"
-    },
-    "mp": {
-     "plain": "משתמשים",
-     "pointed": "מִשְׁתַּמַשִׁים"
-    },
-    "fp": {
-     "plain": "משתמשות",
-     "pointed": "מִשְׁתַּמַשׁוֹת"
-    }
-   },
-   "past": {
-    "1sg": {
-     "plain": "השתמשתי",
-     "pointed": "הִשְׁתַּמַשַׁתִּי"
-    },
-    "2ms": {
-     "plain": "השתמשת",
-     "pointed": "הִשְׁתַּמַשַׁתָּ"
-    },
-    "2fs": {
-     "plain": "השתמשת",
-     "pointed": "הִשְׁתַּמַשַׁתְּ"
-    },
-    "3ms": {
-     "plain": "השתמש",
-     "pointed": "הִשְׁתַּמַשֵׁ"
-    },
-    "3fs": {
-     "plain": "השתמשה",
-     "pointed": "הִשְׁתַּמַשָׁה"
-    },
-    "1pl": {
-     "plain": "השתמשנו",
-     "pointed": "הִשְׁתַּמַשַׁנוּ"
-    },
-    "2mp": {
-     "plain": "השתמשתם",
-     "pointed": "הִשְׁתַּמַשַׁתֶּם"
-    },
-    "2fp": {
-     "plain": "השתמשתן",
-     "pointed": "הִשְׁתַּמַשַׁתֶּן"
-    },
-    "3pl": {
-     "plain": "השתמשו",
-     "pointed": "הִשְׁתַּמַשׁוּ"
-    }
-   },
-   "future": {
-    "1sg": {
-     "plain": "אשתמש",
-     "pointed": "אֶשְׁתַּמַשֵׁ"
-    },
-    "2ms": {
-     "plain": "תשתמש",
-     "pointed": "תִּשְׁתַּמַשֵׁ"
-    },
-    "2fs": {
-     "plain": "תשתמשי",
-     "pointed": "תִּשְׁתַּמַשִׁי"
-    },
-    "3ms": {
-     "plain": "ישתמש",
-     "pointed": "יִשְׁתַּמַשֵׁ"
-    },
-    "3fs": {
-     "plain": "תשתמש",
-     "pointed": "תִּשְׁתַּמַשֵׁ"
-    },
-    "1pl": {
-     "plain": "נשתמש",
-     "pointed": "נִשְׁתַּמַשֵׁ"
-    },
-    "2mp": {
-     "plain": "תשתמשו",
-     "pointed": "תִּשְׁתַּמַשׁוּ"
-    },
-    "2fp": {
-     "plain": "תשתמשנה",
-     "pointed": "תִּשְׁתַּמַשֵׁנָה"
-    },
-    "3pl": {
-     "plain": "ישתמשו",
-     "pointed": "יִשְׁתַּמַשׁוּ"
-    }
-   },
-   "past_3ms": {
-    "plain": "השתמש",
-    "pointed": "הִשְׁתַּמַשֵׁ"
-   },
-   "future_3ms": {
-    "plain": "ישתמש",
-    "pointed": "יִשְׁתַּמַשֵׁ"
-   },
-   "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
-  },
-  {
-   "id": "histakel",
-   "root": "סכל",
-   "binyan": "hitpael",
-   "pattern": "strong",
-   "level": "elementary",
-   "gloss": {
-    "ru": "смотреть",
-    "en": "to look"
-   },
-   "l10n_status": {
-    "ru": "approved",
-    "en": "approved",
-    "uk": "missing",
-    "es": "missing",
-    "fr": "missing"
-   },
-   "infinitive": "להסתכל",
-   "infinitive_pointed": "לְהִסְתַּכַּלֵ",
-   "present": {
-    "ms": {
-     "plain": "מסתכל",
-     "pointed": "מִסְתַּכַּלֵ"
-    },
-    "fs": {
-     "plain": "מסתכלת",
-     "pointed": "מִסְתַּכַּלֶת"
-    },
-    "mp": {
-     "plain": "מסתכלים",
-     "pointed": "מִסְתַּכַּלִים"
-    },
-    "fp": {
-     "plain": "מסתכלות",
-     "pointed": "מִסְתַּכַּלוֹת"
-    }
-   },
-   "past": {
-    "1sg": {
-     "plain": "הסתכלתי",
-     "pointed": "הִסְתַּכַּלַתִּי"
-    },
-    "2ms": {
-     "plain": "הסתכלת",
-     "pointed": "הִסְתַּכַּלַתָּ"
-    },
-    "2fs": {
-     "plain": "הסתכלת",
-     "pointed": "הִסְתַּכַּלַתְּ"
-    },
-    "3ms": {
-     "plain": "הסתכל",
-     "pointed": "הִסְתַּכַּלֵ"
-    },
-    "3fs": {
-     "plain": "הסתכלה",
-     "pointed": "הִסְתַּכַּלָה"
-    },
-    "1pl": {
-     "plain": "הסתכלנו",
-     "pointed": "הִסְתַּכַּלַנוּ"
-    },
-    "2mp": {
-     "plain": "הסתכלתם",
-     "pointed": "הִסְתַּכַּלַתֶּם"
-    },
-    "2fp": {
-     "plain": "הסתכלתן",
-     "pointed": "הִסְתַּכַּלַתֶּן"
-    },
-    "3pl": {
-     "plain": "הסתכלו",
-     "pointed": "הִסְתַּכַּלוּ"
-    }
-   },
-   "future": {
-    "1sg": {
-     "plain": "אסתכל",
-     "pointed": "אֶסְתַּכַּלֵ"
-    },
-    "2ms": {
-     "plain": "תסתכל",
-     "pointed": "תִּסְתַּכַּלֵ"
-    },
-    "2fs": {
-     "plain": "תסתכלי",
-     "pointed": "תִּסְתַּכַּלִי"
-    },
-    "3ms": {
-     "plain": "יסתכל",
-     "pointed": "יִסְתַּכַּלֵ"
-    },
-    "3fs": {
-     "plain": "תסתכל",
-     "pointed": "תִּסְתַּכַּלֵ"
-    },
-    "1pl": {
-     "plain": "נסתכל",
-     "pointed": "נִסְתַּכַּלֵ"
-    },
-    "2mp": {
-     "plain": "תסתכלו",
-     "pointed": "תִּסְתַּכַּלוּ"
-    },
-    "2fp": {
-     "plain": "תסתכלנה",
-     "pointed": "תִּסְתַּכַּלֵנָה"
-    },
-    "3pl": {
-     "plain": "יסתכלו",
-     "pointed": "יִסְתַּכַּלוּ"
-    }
-   },
-   "past_3ms": {
-    "plain": "הסתכל",
-    "pointed": "הִסְתַּכַּלֵ"
-   },
-   "future_3ms": {
-    "plain": "יסתכל",
-    "pointed": "יִסְתַּכַּלֵ"
-   },
-   "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
-  },
-  {
    "id": "hitkasher",
    "root": "קשר",
    "binyan": "hitpael",
@@ -9912,108 +9666,108 @@
     "fr": "missing"
    },
    "infinitive": "להתקשר",
-   "infinitive_pointed": "לְהִתְקַשֵׁר",
+   "infinitive_pointed": "לְהִתְקַשֵּׁר",
    "present": {
     "ms": {
      "plain": "מתקשר",
-     "pointed": "מִתְקַשֵׁר"
+     "pointed": "מִתְקַשֵּׁר"
     },
     "fs": {
      "plain": "מתקשרת",
-     "pointed": "מִתְקַשֶׁרֶת"
+     "pointed": "מִתְקַשֶּׁרֶת"
     },
     "mp": {
      "plain": "מתקשרים",
-     "pointed": "מִתְקַשְׁרִים"
+     "pointed": "מִתְקַשְּׁרִים"
     },
     "fp": {
      "plain": "מתקשרות",
-     "pointed": "מִתְקַשְׁרוֹת"
+     "pointed": "מִתְקַשְּׁרוֹת"
     }
    },
    "past": {
     "1sg": {
      "plain": "התקשרתי",
-     "pointed": "הִתְקַשַׁרתִּי"
+     "pointed": "הִתְקַשַּׁרתִּי"
     },
     "2ms": {
      "plain": "התקשרת",
-     "pointed": "הִתְקַשַׁרתָּ"
+     "pointed": "הִתְקַשַּׁרתָּ"
     },
     "2fs": {
      "plain": "התקשרת",
-     "pointed": "הִתְקַשַׁרתְּ"
+     "pointed": "הִתְקַשַּׁרתְּ"
     },
     "3ms": {
      "plain": "התקשר",
-     "pointed": "הִתְקַשֵׁר"
+     "pointed": "הִתְקַשֵּׁר"
     },
     "3fs": {
      "plain": "התקשרה",
-     "pointed": "הִתְקַשְׁרָה"
+     "pointed": "הִתְקַשְּׁרָה"
     },
     "1pl": {
      "plain": "התקשרנו",
-     "pointed": "הִתְקַשַׁרנוּ"
+     "pointed": "הִתְקַשַּׁרנוּ"
     },
     "2mp": {
      "plain": "התקשרתם",
-     "pointed": "הִתְקַשַׁרתֶּם"
+     "pointed": "הִתְקַשַּׁרתֶּם"
     },
     "2fp": {
      "plain": "התקשרתן",
-     "pointed": "הִתְקַשַׁרתֶּן"
+     "pointed": "הִתְקַשַּׁרתֶּן"
     },
     "3pl": {
      "plain": "התקשרו",
-     "pointed": "הִתְקַשְׁרוּ"
+     "pointed": "הִתְקַשְּׁרוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אתקשר",
-     "pointed": "אֶתְקַשֵׁר"
+     "pointed": "אֶתְקַשֵּׁר"
     },
     "2ms": {
      "plain": "תתקשר",
-     "pointed": "תִּתְקַשֵׁר"
+     "pointed": "תִּתְקַשֵּׁר"
     },
     "2fs": {
      "plain": "תתקשרי",
-     "pointed": "תִּתְקַשְׁרִי"
+     "pointed": "תִּתְקַשְּׁרִי"
     },
     "3ms": {
      "plain": "יתקשר",
-     "pointed": "יִתְקַשֵׁר"
+     "pointed": "יִתְקַשֵּׁר"
     },
     "3fs": {
      "plain": "תתקשר",
-     "pointed": "תִּתְקַשֵׁר"
+     "pointed": "תִּתְקַשֵּׁר"
     },
     "1pl": {
      "plain": "נתקשר",
-     "pointed": "נִתְקַשֵׁר"
+     "pointed": "נִתְקַשֵּׁר"
     },
     "2mp": {
      "plain": "תתקשרו",
-     "pointed": "תִּתְקַשְׁרוּ"
+     "pointed": "תִּתְקַשְּׁרוּ"
     },
     "2fp": {
      "plain": "תתקשרנה",
-     "pointed": "תִּתְקַשֵׁרנָה"
+     "pointed": "תִּתְקַשֵּׁרנָה"
     },
     "3pl": {
      "plain": "יתקשרו",
-     "pointed": "יִתְקַשְׁרוּ"
+     "pointed": "יִתְקַשְּׁרוּ"
     }
    },
    "past_3ms": {
     "plain": "התקשר",
-    "pointed": "הִתְקַשֵׁר"
+    "pointed": "הִתְקַשֵּׁר"
    },
    "future_3ms": {
     "plain": "יתקשר",
-    "pointed": "יִתְקַשֵׁר"
+    "pointed": "יִתְקַשֵּׁר"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -10035,108 +9789,108 @@
     "fr": "missing"
    },
    "infinitive": "להתנצל",
-   "infinitive_pointed": "לְהִתְנַצֵל",
+   "infinitive_pointed": "לְהִתְנַצֵּל",
    "present": {
     "ms": {
      "plain": "מתנצל",
-     "pointed": "מִתְנַצֵל"
+     "pointed": "מִתְנַצֵּל"
     },
     "fs": {
      "plain": "מתנצלת",
-     "pointed": "מִתְנַצֶלֶת"
+     "pointed": "מִתְנַצֶּלֶת"
     },
     "mp": {
      "plain": "מתנצלים",
-     "pointed": "מִתְנַצְלִים"
+     "pointed": "מִתְנַצְּלִים"
     },
     "fp": {
      "plain": "מתנצלות",
-     "pointed": "מִתְנַצְלוֹת"
+     "pointed": "מִתְנַצְּלוֹת"
     }
    },
    "past": {
     "1sg": {
      "plain": "התנצלתי",
-     "pointed": "הִתְנַצַלתִּי"
+     "pointed": "הִתְנַצַּלתִּי"
     },
     "2ms": {
      "plain": "התנצלת",
-     "pointed": "הִתְנַצַלתָּ"
+     "pointed": "הִתְנַצַּלתָּ"
     },
     "2fs": {
      "plain": "התנצלת",
-     "pointed": "הִתְנַצַלתְּ"
+     "pointed": "הִתְנַצַּלתְּ"
     },
     "3ms": {
      "plain": "התנצל",
-     "pointed": "הִתְנַצֵל"
+     "pointed": "הִתְנַצֵּל"
     },
     "3fs": {
      "plain": "התנצלה",
-     "pointed": "הִתְנַצְלָה"
+     "pointed": "הִתְנַצְּלָה"
     },
     "1pl": {
      "plain": "התנצלנו",
-     "pointed": "הִתְנַצַלנוּ"
+     "pointed": "הִתְנַצַּלנוּ"
     },
     "2mp": {
      "plain": "התנצלתם",
-     "pointed": "הִתְנַצַלתֶּם"
+     "pointed": "הִתְנַצַּלתֶּם"
     },
     "2fp": {
      "plain": "התנצלתן",
-     "pointed": "הִתְנַצַלתֶּן"
+     "pointed": "הִתְנַצַּלתֶּן"
     },
     "3pl": {
      "plain": "התנצלו",
-     "pointed": "הִתְנַצְלוּ"
+     "pointed": "הִתְנַצְּלוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אתנצל",
-     "pointed": "אֶתְנַצֵל"
+     "pointed": "אֶתְנַצֵּל"
     },
     "2ms": {
      "plain": "תתנצל",
-     "pointed": "תִּתְנַצֵל"
+     "pointed": "תִּתְנַצֵּל"
     },
     "2fs": {
      "plain": "תתנצלי",
-     "pointed": "תִּתְנַצְלִי"
+     "pointed": "תִּתְנַצְּלִי"
     },
     "3ms": {
      "plain": "יתנצל",
-     "pointed": "יִתְנַצֵל"
+     "pointed": "יִתְנַצֵּל"
     },
     "3fs": {
      "plain": "תתנצל",
-     "pointed": "תִּתְנַצֵל"
+     "pointed": "תִּתְנַצֵּל"
     },
     "1pl": {
      "plain": "נתנצל",
-     "pointed": "נִתְנַצֵל"
+     "pointed": "נִתְנַצֵּל"
     },
     "2mp": {
      "plain": "תתנצלו",
-     "pointed": "תִּתְנַצְלוּ"
+     "pointed": "תִּתְנַצְּלוּ"
     },
     "2fp": {
      "plain": "תתנצלנה",
-     "pointed": "תִּתְנַצֵלנָה"
+     "pointed": "תִּתְנַצֵּלנָה"
     },
     "3pl": {
      "plain": "יתנצלו",
-     "pointed": "יִתְנַצְלוּ"
+     "pointed": "יִתְנַצְּלוּ"
     }
    },
    "past_3ms": {
     "plain": "התנצל",
-    "pointed": "הִתְנַצֵל"
+    "pointed": "הִתְנַצֵּל"
    },
    "future_3ms": {
     "plain": "יתנצל",
-    "pointed": "יִתְנַצֵל"
+    "pointed": "יִתְנַצֵּל"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -10165,54 +9919,54 @@
      "pointed": "מִתְחַתֵּן"
     },
     "fs": {
-     "plain": "מתחתןת",
-     "pointed": "מִתְחַתֶּןֶת"
+     "plain": "מתחתנת",
+     "pointed": "מִתְחַתֶּנֶת"
     },
     "mp": {
-     "plain": "מתחתןים",
-     "pointed": "מִתְחַתְּןִים"
+     "plain": "מתחתנים",
+     "pointed": "מִתְחַתְּנִים"
     },
     "fp": {
-     "plain": "מתחתןות",
-     "pointed": "מִתְחַתְּןוֹת"
+     "plain": "מתחתנות",
+     "pointed": "מִתְחַתְּנוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "התחתןתי",
-     "pointed": "הִתְחַתַּןתִּי"
+     "plain": "התחתנתי",
+     "pointed": "הִתְחַתַּנתִּי"
     },
     "2ms": {
-     "plain": "התחתןת",
-     "pointed": "הִתְחַתַּןתָּ"
+     "plain": "התחתנת",
+     "pointed": "הִתְחַתַּנתָּ"
     },
     "2fs": {
-     "plain": "התחתןת",
-     "pointed": "הִתְחַתַּןתְּ"
+     "plain": "התחתנת",
+     "pointed": "הִתְחַתַּנתְּ"
     },
     "3ms": {
      "plain": "התחתן",
      "pointed": "הִתְחַתֵּן"
     },
     "3fs": {
-     "plain": "התחתןה",
-     "pointed": "הִתְחַתְּןָה"
+     "plain": "התחתנה",
+     "pointed": "הִתְחַתְּנָה"
     },
     "1pl": {
-     "plain": "התחתןנו",
-     "pointed": "הִתְחַתַּןנוּ"
+     "plain": "התחתננו",
+     "pointed": "הִתְחַתַּננוּ"
     },
     "2mp": {
-     "plain": "התחתןתם",
-     "pointed": "הִתְחַתַּןתֶּם"
+     "plain": "התחתנתם",
+     "pointed": "הִתְחַתַּנתֶּם"
     },
     "2fp": {
-     "plain": "התחתןתן",
-     "pointed": "הִתְחַתַּןתֶּן"
+     "plain": "התחתנתן",
+     "pointed": "הִתְחַתַּנתֶּן"
     },
     "3pl": {
-     "plain": "התחתןו",
-     "pointed": "הִתְחַתְּןוּ"
+     "plain": "התחתנו",
+     "pointed": "הִתְחַתְּנוּ"
     }
    },
    "future": {
@@ -10225,8 +9979,8 @@
      "pointed": "תִּתְחַתֵּן"
     },
     "2fs": {
-     "plain": "תתחתןי",
-     "pointed": "תִּתְחַתְּןִי"
+     "plain": "תתחתני",
+     "pointed": "תִּתְחַתְּנִי"
     },
     "3ms": {
      "plain": "יתחתן",
@@ -10241,16 +9995,16 @@
      "pointed": "נִתְחַתֵּן"
     },
     "2mp": {
-     "plain": "תתחתןו",
-     "pointed": "תִּתְחַתְּןוּ"
+     "plain": "תתחתנו",
+     "pointed": "תִּתְחַתְּנוּ"
     },
     "2fp": {
-     "plain": "תתחתןנה",
-     "pointed": "תִּתְחַתֵּןנָה"
+     "plain": "תתחתננה",
+     "pointed": "תִּתְחַתֵּננָה"
     },
     "3pl": {
-     "plain": "יתחתןו",
-     "pointed": "יִתְחַתְּןוּ"
+     "plain": "יתחתנו",
+     "pointed": "יִתְחַתְּנוּ"
     }
    },
    "past_3ms": {
@@ -10411,54 +10165,54 @@
      "pointed": "מִתְקַדֵּם"
     },
     "fs": {
-     "plain": "מתקדםת",
-     "pointed": "מִתְקַדֶּםֶת"
+     "plain": "מתקדמת",
+     "pointed": "מִתְקַדֶּמֶת"
     },
     "mp": {
-     "plain": "מתקדםים",
-     "pointed": "מִתְקַדְּםִים"
+     "plain": "מתקדמים",
+     "pointed": "מִתְקַדְּמִים"
     },
     "fp": {
-     "plain": "מתקדםות",
-     "pointed": "מִתְקַדְּםוֹת"
+     "plain": "מתקדמות",
+     "pointed": "מִתְקַדְּמוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "התקדםתי",
-     "pointed": "הִתְקַדַּםתִּי"
+     "plain": "התקדמתי",
+     "pointed": "הִתְקַדַּמתִּי"
     },
     "2ms": {
-     "plain": "התקדםת",
-     "pointed": "הִתְקַדַּםתָּ"
+     "plain": "התקדמת",
+     "pointed": "הִתְקַדַּמתָּ"
     },
     "2fs": {
-     "plain": "התקדםת",
-     "pointed": "הִתְקַדַּםתְּ"
+     "plain": "התקדמת",
+     "pointed": "הִתְקַדַּמתְּ"
     },
     "3ms": {
      "plain": "התקדם",
      "pointed": "הִתְקַדֵּם"
     },
     "3fs": {
-     "plain": "התקדםה",
-     "pointed": "הִתְקַדְּםָה"
+     "plain": "התקדמה",
+     "pointed": "הִתְקַדְּמָה"
     },
     "1pl": {
-     "plain": "התקדםנו",
-     "pointed": "הִתְקַדַּםנוּ"
+     "plain": "התקדמנו",
+     "pointed": "הִתְקַדַּמנוּ"
     },
     "2mp": {
-     "plain": "התקדםתם",
-     "pointed": "הִתְקַדַּםתֶּם"
+     "plain": "התקדמתם",
+     "pointed": "הִתְקַדַּמתֶּם"
     },
     "2fp": {
-     "plain": "התקדםתן",
-     "pointed": "הִתְקַדַּםתֶּן"
+     "plain": "התקדמתן",
+     "pointed": "הִתְקַדַּמתֶּן"
     },
     "3pl": {
-     "plain": "התקדםו",
-     "pointed": "הִתְקַדְּםוּ"
+     "plain": "התקדמו",
+     "pointed": "הִתְקַדְּמוּ"
     }
    },
    "future": {
@@ -10471,8 +10225,8 @@
      "pointed": "תִּתְקַדֵּם"
     },
     "2fs": {
-     "plain": "תתקדםי",
-     "pointed": "תִּתְקַדְּםִי"
+     "plain": "תתקדמי",
+     "pointed": "תִּתְקַדְּמִי"
     },
     "3ms": {
      "plain": "יתקדם",
@@ -10487,16 +10241,16 @@
      "pointed": "נִתְקַדֵּם"
     },
     "2mp": {
-     "plain": "תתקדםו",
-     "pointed": "תִּתְקַדְּםוּ"
+     "plain": "תתקדמו",
+     "pointed": "תִּתְקַדְּמוּ"
     },
     "2fp": {
-     "plain": "תתקדםנה",
-     "pointed": "תִּתְקַדֵּםנָה"
+     "plain": "תתקדמנה",
+     "pointed": "תִּתְקַדֵּמנָה"
     },
     "3pl": {
-     "plain": "יתקדםו",
-     "pointed": "יִתְקַדְּםוּ"
+     "plain": "יתקדמו",
+     "pointed": "יִתְקַדְּמוּ"
     }
    },
    "past_3ms": {
@@ -10657,54 +10411,54 @@
      "pointed": "מִתְרַחֵץ"
     },
     "fs": {
-     "plain": "מתרחץת",
-     "pointed": "מִתְרַחֶץֶת"
+     "plain": "מתרחצת",
+     "pointed": "מִתְרַחֶצֶת"
     },
     "mp": {
-     "plain": "מתרחץים",
-     "pointed": "מִתְרַחְץִים"
+     "plain": "מתרחצים",
+     "pointed": "מִתְרַחְצִים"
     },
     "fp": {
-     "plain": "מתרחץות",
-     "pointed": "מִתְרַחְץוֹת"
+     "plain": "מתרחצות",
+     "pointed": "מִתְרַחְצוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "התרחץתי",
-     "pointed": "הִתְרַחַץתִּי"
+     "plain": "התרחצתי",
+     "pointed": "הִתְרַחַצתִּי"
     },
     "2ms": {
-     "plain": "התרחץת",
-     "pointed": "הִתְרַחַץתָּ"
+     "plain": "התרחצת",
+     "pointed": "הִתְרַחַצתָּ"
     },
     "2fs": {
-     "plain": "התרחץת",
-     "pointed": "הִתְרַחַץתְּ"
+     "plain": "התרחצת",
+     "pointed": "הִתְרַחַצתְּ"
     },
     "3ms": {
      "plain": "התרחץ",
      "pointed": "הִתְרַחֵץ"
     },
     "3fs": {
-     "plain": "התרחץה",
-     "pointed": "הִתְרַחְץָה"
+     "plain": "התרחצה",
+     "pointed": "הִתְרַחְצָה"
     },
     "1pl": {
-     "plain": "התרחץנו",
-     "pointed": "הִתְרַחַץנוּ"
+     "plain": "התרחצנו",
+     "pointed": "הִתְרַחַצנוּ"
     },
     "2mp": {
-     "plain": "התרחץתם",
-     "pointed": "הִתְרַחַץתֶּם"
+     "plain": "התרחצתם",
+     "pointed": "הִתְרַחַצתֶּם"
     },
     "2fp": {
-     "plain": "התרחץתן",
-     "pointed": "הִתְרַחַץתֶּן"
+     "plain": "התרחצתן",
+     "pointed": "הִתְרַחַצתֶּן"
     },
     "3pl": {
-     "plain": "התרחץו",
-     "pointed": "הִתְרַחְץוּ"
+     "plain": "התרחצו",
+     "pointed": "הִתְרַחְצוּ"
     }
    },
    "future": {
@@ -10717,8 +10471,8 @@
      "pointed": "תִּתְרַחֵץ"
     },
     "2fs": {
-     "plain": "תתרחץי",
-     "pointed": "תִּתְרַחְץִי"
+     "plain": "תתרחצי",
+     "pointed": "תִּתְרַחְצִי"
     },
     "3ms": {
      "plain": "יתרחץ",
@@ -10733,16 +10487,16 @@
      "pointed": "נִתְרַחֵץ"
     },
     "2mp": {
-     "plain": "תתרחץו",
-     "pointed": "תִּתְרַחְץוּ"
+     "plain": "תתרחצו",
+     "pointed": "תִּתְרַחְצוּ"
     },
     "2fp": {
-     "plain": "תתרחץנה",
-     "pointed": "תִּתְרַחֵץנָה"
+     "plain": "תתרחצנה",
+     "pointed": "תִּתְרַחֵצנָה"
     },
     "3pl": {
-     "plain": "יתרחץו",
-     "pointed": "יִתְרַחְץוּ"
+     "plain": "יתרחצו",
+     "pointed": "יִתְרַחְצוּ"
     }
    },
    "past_3ms": {
@@ -10773,108 +10527,108 @@
     "fr": "missing"
    },
    "infinitive": "לבשל",
-   "infinitive_pointed": "לְבַשֵׁל",
+   "infinitive_pointed": "לְבַשֵּׁל",
    "present": {
     "ms": {
      "plain": "מבשל",
-     "pointed": "מְבַשֵׁל"
+     "pointed": "מְבַשֵּׁל"
     },
     "fs": {
      "plain": "מבשלת",
-     "pointed": "מְבַשֶׁלֶת"
+     "pointed": "מְבַשֶּׁלֶת"
     },
     "mp": {
      "plain": "מבשלים",
-     "pointed": "מְבַשְׁלִים"
+     "pointed": "מְבַשְּׁלִים"
     },
     "fp": {
      "plain": "מבשלות",
-     "pointed": "מְבַשְׁלוֹת"
+     "pointed": "מְבַשְּׁלוֹת"
     }
    },
    "past": {
     "1sg": {
      "plain": "בשלתי",
-     "pointed": "בִּשַׁלְתִּי"
+     "pointed": "בִּשַּׁלְתִּי"
     },
     "2ms": {
      "plain": "בשלת",
-     "pointed": "בִּשַׁלְתָּ"
+     "pointed": "בִּשַּׁלְתָּ"
     },
     "2fs": {
      "plain": "בשלת",
-     "pointed": "בִּשַׁלְתְּ"
+     "pointed": "בִּשַּׁלְתְּ"
     },
     "3ms": {
      "plain": "בשל",
-     "pointed": "בִּשֵׁל"
+     "pointed": "בִּשֵּׁל"
     },
     "3fs": {
      "plain": "בשלה",
-     "pointed": "בִּשְׁלָה"
+     "pointed": "בִּשְּׁלָה"
     },
     "1pl": {
      "plain": "בשלנו",
-     "pointed": "בִּשַׁלְנוּ"
+     "pointed": "בִּשַּׁלְנוּ"
     },
     "2mp": {
      "plain": "בשלתם",
-     "pointed": "בִּשַׁלְתֶּם"
+     "pointed": "בִּשַּׁלְתֶּם"
     },
     "2fp": {
      "plain": "בשלתן",
-     "pointed": "בִּשַׁלְתֶּן"
+     "pointed": "בִּשַּׁלְתֶּן"
     },
     "3pl": {
      "plain": "בשלו",
-     "pointed": "בִּשְׁלוּ"
+     "pointed": "בִּשְּׁלוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אבשל",
-     "pointed": "אֲבַשֵׁל"
+     "pointed": "אֲבַשֵּׁל"
     },
     "2ms": {
      "plain": "תבשל",
-     "pointed": "תְּבַשֵׁל"
+     "pointed": "תְּבַשֵּׁל"
     },
     "2fs": {
      "plain": "תבשלי",
-     "pointed": "תְּבַשְׁלִי"
+     "pointed": "תְּבַשְּׁלִי"
     },
     "3ms": {
      "plain": "יבשל",
-     "pointed": "יְבַשֵׁל"
+     "pointed": "יְבַשֵּׁל"
     },
     "3fs": {
      "plain": "תבשל",
-     "pointed": "תְּבַשֵׁל"
+     "pointed": "תְּבַשֵּׁל"
     },
     "1pl": {
      "plain": "נבשל",
-     "pointed": "נְבַשֵׁל"
+     "pointed": "נְבַשֵּׁל"
     },
     "2mp": {
      "plain": "תבשלו",
-     "pointed": "תְּבַשְׁלוּ"
+     "pointed": "תְּבַשְּׁלוּ"
     },
     "2fp": {
      "plain": "תבשלנה",
-     "pointed": "תְּבַשֵׁלְנָה"
+     "pointed": "תְּבַשֵּׁלְנָה"
     },
     "3pl": {
      "plain": "יבשלו",
-     "pointed": "יְבַשְׁלוּ"
+     "pointed": "יְבַשְּׁלוּ"
     }
    },
    "past_3ms": {
     "plain": "בשל",
-    "pointed": "בִּשֵׁל"
+    "pointed": "בִּשֵּׁל"
    },
    "future_3ms": {
     "plain": "יבשל",
-    "pointed": "יְבַשֵׁל"
+    "pointed": "יְבַשֵּׁל"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -10896,108 +10650,108 @@
     "fr": "missing"
    },
    "infinitive": "לתקן",
-   "infinitive_pointed": "לְתַקֵן",
+   "infinitive_pointed": "לְתַקֵּן",
    "present": {
     "ms": {
      "plain": "מתקן",
-     "pointed": "מְתַקֵן"
+     "pointed": "מְתַקֵּן"
     },
     "fs": {
-     "plain": "מתקןת",
-     "pointed": "מְתַקֶןֶת"
+     "plain": "מתקנת",
+     "pointed": "מְתַקֶּנֶת"
     },
     "mp": {
-     "plain": "מתקןים",
-     "pointed": "מְתַקְןִים"
+     "plain": "מתקנים",
+     "pointed": "מְתַקְּנִים"
     },
     "fp": {
-     "plain": "מתקןות",
-     "pointed": "מְתַקְןוֹת"
+     "plain": "מתקנות",
+     "pointed": "מְתַקְּנוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "תקןתי",
-     "pointed": "תִּקַןְתִּי"
+     "plain": "תקנתי",
+     "pointed": "תִּקַּנְתִּי"
     },
     "2ms": {
-     "plain": "תקןת",
-     "pointed": "תִּקַןְתָּ"
+     "plain": "תקנת",
+     "pointed": "תִּקַּנְתָּ"
     },
     "2fs": {
-     "plain": "תקןת",
-     "pointed": "תִּקַןְתְּ"
+     "plain": "תקנת",
+     "pointed": "תִּקַּנְתְּ"
     },
     "3ms": {
      "plain": "תקן",
-     "pointed": "תִּקֵן"
+     "pointed": "תִּקֵּן"
     },
     "3fs": {
-     "plain": "תקןה",
-     "pointed": "תִּקְןָה"
+     "plain": "תקנה",
+     "pointed": "תִּקְּנָה"
     },
     "1pl": {
-     "plain": "תקןנו",
-     "pointed": "תִּקַןְנוּ"
+     "plain": "תקננו",
+     "pointed": "תִּקַּנְנוּ"
     },
     "2mp": {
-     "plain": "תקןתם",
-     "pointed": "תִּקַןְתֶּם"
+     "plain": "תקנתם",
+     "pointed": "תִּקַּנְתֶּם"
     },
     "2fp": {
-     "plain": "תקןתן",
-     "pointed": "תִּקַןְתֶּן"
+     "plain": "תקנתן",
+     "pointed": "תִּקַּנְתֶּן"
     },
     "3pl": {
-     "plain": "תקןו",
-     "pointed": "תִּקְןוּ"
+     "plain": "תקנו",
+     "pointed": "תִּקְּנוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אתקן",
-     "pointed": "אֲתַקֵן"
+     "pointed": "אֲתַקֵּן"
     },
     "2ms": {
      "plain": "תתקן",
-     "pointed": "תְּתַקֵן"
+     "pointed": "תְּתַקֵּן"
     },
     "2fs": {
-     "plain": "תתקןי",
-     "pointed": "תְּתַקְןִי"
+     "plain": "תתקני",
+     "pointed": "תְּתַקְּנִי"
     },
     "3ms": {
      "plain": "יתקן",
-     "pointed": "יְתַקֵן"
+     "pointed": "יְתַקֵּן"
     },
     "3fs": {
      "plain": "תתקן",
-     "pointed": "תְּתַקֵן"
+     "pointed": "תְּתַקֵּן"
     },
     "1pl": {
      "plain": "נתקן",
-     "pointed": "נְתַקֵן"
+     "pointed": "נְתַקֵּן"
     },
     "2mp": {
-     "plain": "תתקןו",
-     "pointed": "תְּתַקְןוּ"
+     "plain": "תתקנו",
+     "pointed": "תְּתַקְּנוּ"
     },
     "2fp": {
-     "plain": "תתקןנה",
-     "pointed": "תְּתַקֵןְנָה"
+     "plain": "תתקננה",
+     "pointed": "תְּתַקֵּנְנָה"
     },
     "3pl": {
-     "plain": "יתקןו",
-     "pointed": "יְתַקְןוּ"
+     "plain": "יתקנו",
+     "pointed": "יְתַקְּנוּ"
     }
    },
    "past_3ms": {
     "plain": "תקן",
-    "pointed": "תִּקֵן"
+    "pointed": "תִּקֵּן"
    },
    "future_3ms": {
     "plain": "יתקן",
-    "pointed": "יְתַקֵן"
+    "pointed": "יְתַקֵּן"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -11142,231 +10896,108 @@
     "fr": "missing"
    },
    "infinitive": "לצלם",
-   "infinitive_pointed": "לְצַלֵם",
+   "infinitive_pointed": "לְצַלֵּם",
    "present": {
     "ms": {
      "plain": "מצלם",
-     "pointed": "מְצַלֵם"
+     "pointed": "מְצַלֵּם"
     },
     "fs": {
-     "plain": "מצלםת",
-     "pointed": "מְצַלֶםֶת"
+     "plain": "מצלמת",
+     "pointed": "מְצַלֶּמֶת"
     },
     "mp": {
-     "plain": "מצלםים",
-     "pointed": "מְצַלְםִים"
+     "plain": "מצלמים",
+     "pointed": "מְצַלְּמִים"
     },
     "fp": {
-     "plain": "מצלםות",
-     "pointed": "מְצַלְםוֹת"
+     "plain": "מצלמות",
+     "pointed": "מְצַלְּמוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "צלםתי",
-     "pointed": "צִלַםְתִּי"
+     "plain": "צלמתי",
+     "pointed": "צִלַּמְתִּי"
     },
     "2ms": {
-     "plain": "צלםת",
-     "pointed": "צִלַםְתָּ"
+     "plain": "צלמת",
+     "pointed": "צִלַּמְתָּ"
     },
     "2fs": {
-     "plain": "צלםת",
-     "pointed": "צִלַםְתְּ"
+     "plain": "צלמת",
+     "pointed": "צִלַּמְתְּ"
     },
     "3ms": {
      "plain": "צלם",
-     "pointed": "צִלֵם"
+     "pointed": "צִלֵּם"
     },
     "3fs": {
-     "plain": "צלםה",
-     "pointed": "צִלְםָה"
+     "plain": "צלמה",
+     "pointed": "צִלְּמָה"
     },
     "1pl": {
-     "plain": "צלםנו",
-     "pointed": "צִלַםְנוּ"
+     "plain": "צלמנו",
+     "pointed": "צִלַּמְנוּ"
     },
     "2mp": {
-     "plain": "צלםתם",
-     "pointed": "צִלַםְתֶּם"
+     "plain": "צלמתם",
+     "pointed": "צִלַּמְתֶּם"
     },
     "2fp": {
-     "plain": "צלםתן",
-     "pointed": "צִלַםְתֶּן"
+     "plain": "צלמתן",
+     "pointed": "צִלַּמְתֶּן"
     },
     "3pl": {
-     "plain": "צלםו",
-     "pointed": "צִלְםוּ"
+     "plain": "צלמו",
+     "pointed": "צִלְּמוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אצלם",
-     "pointed": "אֲצַלֵם"
+     "pointed": "אֲצַלֵּם"
     },
     "2ms": {
      "plain": "תצלם",
-     "pointed": "תְּצַלֵם"
+     "pointed": "תְּצַלֵּם"
     },
     "2fs": {
-     "plain": "תצלםי",
-     "pointed": "תְּצַלְםִי"
+     "plain": "תצלמי",
+     "pointed": "תְּצַלְּמִי"
     },
     "3ms": {
      "plain": "יצלם",
-     "pointed": "יְצַלֵם"
+     "pointed": "יְצַלֵּם"
     },
     "3fs": {
      "plain": "תצלם",
-     "pointed": "תְּצַלֵם"
+     "pointed": "תְּצַלֵּם"
     },
     "1pl": {
      "plain": "נצלם",
-     "pointed": "נְצַלֵם"
+     "pointed": "נְצַלֵּם"
     },
     "2mp": {
-     "plain": "תצלםו",
-     "pointed": "תְּצַלְםוּ"
+     "plain": "תצלמו",
+     "pointed": "תְּצַלְּמוּ"
     },
     "2fp": {
-     "plain": "תצלםנה",
-     "pointed": "תְּצַלֵםְנָה"
+     "plain": "תצלמנה",
+     "pointed": "תְּצַלֵּמְנָה"
     },
     "3pl": {
-     "plain": "יצלםו",
-     "pointed": "יְצַלְםוּ"
+     "plain": "יצלמו",
+     "pointed": "יְצַלְּמוּ"
     }
    },
    "past_3ms": {
     "plain": "צלם",
-    "pointed": "צִלֵם"
+    "pointed": "צִלֵּם"
    },
    "future_3ms": {
     "plain": "יצלם",
-    "pointed": "יְצַלֵם"
-   },
-   "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
-  },
-  {
-   "id": "tziyer",
-   "root": "צייר",
-   "binyan": "piel",
-   "pattern": "strong",
-   "level": "elementary",
-   "gloss": {
-    "ru": "рисовать",
-    "en": "to draw"
-   },
-   "l10n_status": {
-    "ru": "approved",
-    "en": "approved",
-    "uk": "missing",
-    "es": "missing",
-    "fr": "missing"
-   },
-   "infinitive": "לציי",
-   "infinitive_pointed": "לְצַיֵי",
-   "present": {
-    "ms": {
-     "plain": "מציי",
-     "pointed": "מְצַיֵי"
-    },
-    "fs": {
-     "plain": "מציית",
-     "pointed": "מְצַיֶיֶת"
-    },
-    "mp": {
-     "plain": "מצייים",
-     "pointed": "מְצַיְיִים"
-    },
-    "fp": {
-     "plain": "מצייות",
-     "pointed": "מְצַיְיוֹת"
-    }
-   },
-   "past": {
-    "1sg": {
-     "plain": "צייתי",
-     "pointed": "צִיַיְתִּי"
-    },
-    "2ms": {
-     "plain": "ציית",
-     "pointed": "צִיַיְתָּ"
-    },
-    "2fs": {
-     "plain": "ציית",
-     "pointed": "צִיַיְתְּ"
-    },
-    "3ms": {
-     "plain": "ציי",
-     "pointed": "צִיֵי"
-    },
-    "3fs": {
-     "plain": "צייה",
-     "pointed": "צִיְיָה"
-    },
-    "1pl": {
-     "plain": "ציינו",
-     "pointed": "צִיַיְנוּ"
-    },
-    "2mp": {
-     "plain": "צייתם",
-     "pointed": "צִיַיְתֶּם"
-    },
-    "2fp": {
-     "plain": "צייתן",
-     "pointed": "צִיַיְתֶּן"
-    },
-    "3pl": {
-     "plain": "צייו",
-     "pointed": "צִיְיוּ"
-    }
-   },
-   "future": {
-    "1sg": {
-     "plain": "אציי",
-     "pointed": "אֲצַיֵי"
-    },
-    "2ms": {
-     "plain": "תציי",
-     "pointed": "תְּצַיֵי"
-    },
-    "2fs": {
-     "plain": "תצייי",
-     "pointed": "תְּצַיְיִי"
-    },
-    "3ms": {
-     "plain": "יציי",
-     "pointed": "יְצַיֵי"
-    },
-    "3fs": {
-     "plain": "תציי",
-     "pointed": "תְּצַיֵי"
-    },
-    "1pl": {
-     "plain": "נציי",
-     "pointed": "נְצַיֵי"
-    },
-    "2mp": {
-     "plain": "תצייו",
-     "pointed": "תְּצַיְיוּ"
-    },
-    "2fp": {
-     "plain": "תציינה",
-     "pointed": "תְּצַיֵיְנָה"
-    },
-    "3pl": {
-     "plain": "יצייו",
-     "pointed": "יְצַיְיוּ"
-    }
-   },
-   "past_3ms": {
-    "plain": "ציי",
-    "pointed": "צִיֵי"
-   },
-   "future_3ms": {
-    "plain": "יציי",
-    "pointed": "יְצַיֵי"
+    "pointed": "יְצַלֵּם"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -11388,108 +11019,108 @@
     "fr": "missing"
    },
    "infinitive": "לבקר",
-   "infinitive_pointed": "לְבַקֵר",
+   "infinitive_pointed": "לְבַקֵּר",
    "present": {
     "ms": {
      "plain": "מבקר",
-     "pointed": "מְבַקֵר"
+     "pointed": "מְבַקֵּר"
     },
     "fs": {
      "plain": "מבקרת",
-     "pointed": "מְבַקֶרֶת"
+     "pointed": "מְבַקֶּרֶת"
     },
     "mp": {
      "plain": "מבקרים",
-     "pointed": "מְבַקְרִים"
+     "pointed": "מְבַקְּרִים"
     },
     "fp": {
      "plain": "מבקרות",
-     "pointed": "מְבַקְרוֹת"
+     "pointed": "מְבַקְּרוֹת"
     }
    },
    "past": {
     "1sg": {
      "plain": "בקרתי",
-     "pointed": "בִּקַרְתִּי"
+     "pointed": "בִּקַּרְתִּי"
     },
     "2ms": {
      "plain": "בקרת",
-     "pointed": "בִּקַרְתָּ"
+     "pointed": "בִּקַּרְתָּ"
     },
     "2fs": {
      "plain": "בקרת",
-     "pointed": "בִּקַרְתְּ"
+     "pointed": "בִּקַּרְתְּ"
     },
     "3ms": {
      "plain": "בקר",
-     "pointed": "בִּקֵר"
+     "pointed": "בִּקֵּר"
     },
     "3fs": {
      "plain": "בקרה",
-     "pointed": "בִּקְרָה"
+     "pointed": "בִּקְּרָה"
     },
     "1pl": {
      "plain": "בקרנו",
-     "pointed": "בִּקַרְנוּ"
+     "pointed": "בִּקַּרְנוּ"
     },
     "2mp": {
      "plain": "בקרתם",
-     "pointed": "בִּקַרְתֶּם"
+     "pointed": "בִּקַּרְתֶּם"
     },
     "2fp": {
      "plain": "בקרתן",
-     "pointed": "בִּקַרְתֶּן"
+     "pointed": "בִּקַּרְתֶּן"
     },
     "3pl": {
      "plain": "בקרו",
-     "pointed": "בִּקְרוּ"
+     "pointed": "בִּקְּרוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אבקר",
-     "pointed": "אֲבַקֵר"
+     "pointed": "אֲבַקֵּר"
     },
     "2ms": {
      "plain": "תבקר",
-     "pointed": "תְּבַקֵר"
+     "pointed": "תְּבַקֵּר"
     },
     "2fs": {
      "plain": "תבקרי",
-     "pointed": "תְּבַקְרִי"
+     "pointed": "תְּבַקְּרִי"
     },
     "3ms": {
      "plain": "יבקר",
-     "pointed": "יְבַקֵר"
+     "pointed": "יְבַקֵּר"
     },
     "3fs": {
      "plain": "תבקר",
-     "pointed": "תְּבַקֵר"
+     "pointed": "תְּבַקֵּר"
     },
     "1pl": {
      "plain": "נבקר",
-     "pointed": "נְבַקֵר"
+     "pointed": "נְבַקֵּר"
     },
     "2mp": {
      "plain": "תבקרו",
-     "pointed": "תְּבַקְרוּ"
+     "pointed": "תְּבַקְּרוּ"
     },
     "2fp": {
      "plain": "תבקרנה",
-     "pointed": "תְּבַקֵרְנָה"
+     "pointed": "תְּבַקֵּרְנָה"
     },
     "3pl": {
      "plain": "יבקרו",
-     "pointed": "יְבַקְרוּ"
+     "pointed": "יְבַקְּרוּ"
     }
    },
    "past_3ms": {
     "plain": "בקר",
-    "pointed": "בִּקֵר"
+    "pointed": "בִּקֵּר"
    },
    "future_3ms": {
     "plain": "יבקר",
-    "pointed": "יְבַקֵר"
+    "pointed": "יְבַקֵּר"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -11511,108 +11142,108 @@
     "fr": "missing"
    },
    "infinitive": "לבטל",
-   "infinitive_pointed": "לְבַטֵל",
+   "infinitive_pointed": "לְבַטֵּל",
    "present": {
     "ms": {
      "plain": "מבטל",
-     "pointed": "מְבַטֵל"
+     "pointed": "מְבַטֵּל"
     },
     "fs": {
      "plain": "מבטלת",
-     "pointed": "מְבַטֶלֶת"
+     "pointed": "מְבַטֶּלֶת"
     },
     "mp": {
      "plain": "מבטלים",
-     "pointed": "מְבַטְלִים"
+     "pointed": "מְבַטְּלִים"
     },
     "fp": {
      "plain": "מבטלות",
-     "pointed": "מְבַטְלוֹת"
+     "pointed": "מְבַטְּלוֹת"
     }
    },
    "past": {
     "1sg": {
      "plain": "בטלתי",
-     "pointed": "בִּטַלְתִּי"
+     "pointed": "בִּטַּלְתִּי"
     },
     "2ms": {
      "plain": "בטלת",
-     "pointed": "בִּטַלְתָּ"
+     "pointed": "בִּטַּלְתָּ"
     },
     "2fs": {
      "plain": "בטלת",
-     "pointed": "בִּטַלְתְּ"
+     "pointed": "בִּטַּלְתְּ"
     },
     "3ms": {
      "plain": "בטל",
-     "pointed": "בִּטֵל"
+     "pointed": "בִּטֵּל"
     },
     "3fs": {
      "plain": "בטלה",
-     "pointed": "בִּטְלָה"
+     "pointed": "בִּטְּלָה"
     },
     "1pl": {
      "plain": "בטלנו",
-     "pointed": "בִּטַלְנוּ"
+     "pointed": "בִּטַּלְנוּ"
     },
     "2mp": {
      "plain": "בטלתם",
-     "pointed": "בִּטַלְתֶּם"
+     "pointed": "בִּטַּלְתֶּם"
     },
     "2fp": {
      "plain": "בטלתן",
-     "pointed": "בִּטַלְתֶּן"
+     "pointed": "בִּטַּלְתֶּן"
     },
     "3pl": {
      "plain": "בטלו",
-     "pointed": "בִּטְלוּ"
+     "pointed": "בִּטְּלוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אבטל",
-     "pointed": "אֲבַטֵל"
+     "pointed": "אֲבַטֵּל"
     },
     "2ms": {
      "plain": "תבטל",
-     "pointed": "תְּבַטֵל"
+     "pointed": "תְּבַטֵּל"
     },
     "2fs": {
      "plain": "תבטלי",
-     "pointed": "תְּבַטְלִי"
+     "pointed": "תְּבַטְּלִי"
     },
     "3ms": {
      "plain": "יבטל",
-     "pointed": "יְבַטֵל"
+     "pointed": "יְבַטֵּל"
     },
     "3fs": {
      "plain": "תבטל",
-     "pointed": "תְּבַטֵל"
+     "pointed": "תְּבַטֵּל"
     },
     "1pl": {
      "plain": "נבטל",
-     "pointed": "נְבַטֵל"
+     "pointed": "נְבַטֵּל"
     },
     "2mp": {
      "plain": "תבטלו",
-     "pointed": "תְּבַטְלוּ"
+     "pointed": "תְּבַטְּלוּ"
     },
     "2fp": {
      "plain": "תבטלנה",
-     "pointed": "תְּבַטֵלְנָה"
+     "pointed": "תְּבַטֵּלְנָה"
     },
     "3pl": {
      "plain": "יבטלו",
-     "pointed": "יְבַטְלוּ"
+     "pointed": "יְבַטְּלוּ"
     }
    },
    "past_3ms": {
     "plain": "בטל",
-    "pointed": "בִּטֵל"
+    "pointed": "בִּטֵּל"
    },
    "future_3ms": {
     "plain": "יבטל",
-    "pointed": "יְבַטֵל"
+    "pointed": "יְבַטֵּל"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -11634,231 +11265,108 @@
     "fr": "missing"
    },
    "infinitive": "לשקר",
-   "infinitive_pointed": "לְשַׁקֵר",
+   "infinitive_pointed": "לְשַׁקֵּר",
    "present": {
     "ms": {
      "plain": "משקר",
-     "pointed": "מְשַׁקֵר"
+     "pointed": "מְשַׁקֵּר"
     },
     "fs": {
      "plain": "משקרת",
-     "pointed": "מְשַׁקֶרֶת"
+     "pointed": "מְשַׁקֶּרֶת"
     },
     "mp": {
      "plain": "משקרים",
-     "pointed": "מְשַׁקְרִים"
+     "pointed": "מְשַׁקְּרִים"
     },
     "fp": {
      "plain": "משקרות",
-     "pointed": "מְשַׁקְרוֹת"
+     "pointed": "מְשַׁקְּרוֹת"
     }
    },
    "past": {
     "1sg": {
      "plain": "שקרתי",
-     "pointed": "שִׁקַרְתִּי"
+     "pointed": "שִׁקַּרְתִּי"
     },
     "2ms": {
      "plain": "שקרת",
-     "pointed": "שִׁקַרְתָּ"
+     "pointed": "שִׁקַּרְתָּ"
     },
     "2fs": {
      "plain": "שקרת",
-     "pointed": "שִׁקַרְתְּ"
+     "pointed": "שִׁקַּרְתְּ"
     },
     "3ms": {
      "plain": "שקר",
-     "pointed": "שִׁקֵר"
+     "pointed": "שִׁקֵּר"
     },
     "3fs": {
      "plain": "שקרה",
-     "pointed": "שִׁקְרָה"
+     "pointed": "שִׁקְּרָה"
     },
     "1pl": {
      "plain": "שקרנו",
-     "pointed": "שִׁקַרְנוּ"
+     "pointed": "שִׁקַּרְנוּ"
     },
     "2mp": {
      "plain": "שקרתם",
-     "pointed": "שִׁקַרְתֶּם"
+     "pointed": "שִׁקַּרְתֶּם"
     },
     "2fp": {
      "plain": "שקרתן",
-     "pointed": "שִׁקַרְתֶּן"
+     "pointed": "שִׁקַּרְתֶּן"
     },
     "3pl": {
      "plain": "שקרו",
-     "pointed": "שִׁקְרוּ"
+     "pointed": "שִׁקְּרוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אשקר",
-     "pointed": "אֲשַׁקֵר"
+     "pointed": "אֲשַׁקֵּר"
     },
     "2ms": {
      "plain": "תשקר",
-     "pointed": "תְּשַׁקֵר"
+     "pointed": "תְּשַׁקֵּר"
     },
     "2fs": {
      "plain": "תשקרי",
-     "pointed": "תְּשַׁקְרִי"
+     "pointed": "תְּשַׁקְּרִי"
     },
     "3ms": {
      "plain": "ישקר",
-     "pointed": "יְשַׁקֵר"
+     "pointed": "יְשַׁקֵּר"
     },
     "3fs": {
      "plain": "תשקר",
-     "pointed": "תְּשַׁקֵר"
+     "pointed": "תְּשַׁקֵּר"
     },
     "1pl": {
      "plain": "נשקר",
-     "pointed": "נְשַׁקֵר"
+     "pointed": "נְשַׁקֵּר"
     },
     "2mp": {
      "plain": "תשקרו",
-     "pointed": "תְּשַׁקְרוּ"
+     "pointed": "תְּשַׁקְּרוּ"
     },
     "2fp": {
      "plain": "תשקרנה",
-     "pointed": "תְּשַׁקֵרְנָה"
+     "pointed": "תְּשַׁקֵּרְנָה"
     },
     "3pl": {
      "plain": "ישקרו",
-     "pointed": "יְשַׁקְרוּ"
+     "pointed": "יְשַׁקְּרוּ"
     }
    },
    "past_3ms": {
     "plain": "שקר",
-    "pointed": "שִׁקֵר"
+    "pointed": "שִׁקֵּר"
    },
    "future_3ms": {
     "plain": "ישקר",
-    "pointed": "יְשַׁקֵר"
-   },
-   "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
-  },
-  {
-   "id": "sirev",
-   "root": "סרב",
-   "binyan": "piel",
-   "pattern": "strong",
-   "level": "intermediate",
-   "gloss": {
-    "ru": "отказывать",
-    "en": "to refuse"
-   },
-   "l10n_status": {
-    "ru": "approved",
-    "en": "approved",
-    "uk": "missing",
-    "es": "missing",
-    "fr": "missing"
-   },
-   "infinitive": "לסרב",
-   "infinitive_pointed": "לְסַרֵב",
-   "present": {
-    "ms": {
-     "plain": "מסרב",
-     "pointed": "מְסַרֵב"
-    },
-    "fs": {
-     "plain": "מסרבת",
-     "pointed": "מְסַרֶבֶת"
-    },
-    "mp": {
-     "plain": "מסרבים",
-     "pointed": "מְסַרְבִים"
-    },
-    "fp": {
-     "plain": "מסרבות",
-     "pointed": "מְסַרְבוֹת"
-    }
-   },
-   "past": {
-    "1sg": {
-     "plain": "סרבתי",
-     "pointed": "סִרַבְתִּי"
-    },
-    "2ms": {
-     "plain": "סרבת",
-     "pointed": "סִרַבְתָּ"
-    },
-    "2fs": {
-     "plain": "סרבת",
-     "pointed": "סִרַבְתְּ"
-    },
-    "3ms": {
-     "plain": "סרב",
-     "pointed": "סִרֵב"
-    },
-    "3fs": {
-     "plain": "סרבה",
-     "pointed": "סִרְבָה"
-    },
-    "1pl": {
-     "plain": "סרבנו",
-     "pointed": "סִרַבְנוּ"
-    },
-    "2mp": {
-     "plain": "סרבתם",
-     "pointed": "סִרַבְתֶּם"
-    },
-    "2fp": {
-     "plain": "סרבתן",
-     "pointed": "סִרַבְתֶּן"
-    },
-    "3pl": {
-     "plain": "סרבו",
-     "pointed": "סִרְבוּ"
-    }
-   },
-   "future": {
-    "1sg": {
-     "plain": "אסרב",
-     "pointed": "אֲסַרֵב"
-    },
-    "2ms": {
-     "plain": "תסרב",
-     "pointed": "תְּסַרֵב"
-    },
-    "2fs": {
-     "plain": "תסרבי",
-     "pointed": "תְּסַרְבִי"
-    },
-    "3ms": {
-     "plain": "יסרב",
-     "pointed": "יְסַרֵב"
-    },
-    "3fs": {
-     "plain": "תסרב",
-     "pointed": "תְּסַרֵב"
-    },
-    "1pl": {
-     "plain": "נסרב",
-     "pointed": "נְסַרֵב"
-    },
-    "2mp": {
-     "plain": "תסרבו",
-     "pointed": "תְּסַרְבוּ"
-    },
-    "2fp": {
-     "plain": "תסרבנה",
-     "pointed": "תְּסַרֵבְנָה"
-    },
-    "3pl": {
-     "plain": "יסרבו",
-     "pointed": "יְסַרְבוּ"
-    }
-   },
-   "past_3ms": {
-    "plain": "סרב",
-    "pointed": "סִרֵב"
-   },
-   "future_3ms": {
-    "plain": "יסרב",
-    "pointed": "יְסַרֵב"
+    "pointed": "יְשַׁקֵּר"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -12232,129 +11740,6 @@
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
   {
-   "id": "birekh",
-   "root": "ברך",
-   "binyan": "piel",
-   "pattern": "strong",
-   "level": "basic",
-   "gloss": {
-    "ru": "благословлять / поздравлять",
-    "en": "to bless / to congratulate"
-   },
-   "l10n_status": {
-    "ru": "approved",
-    "en": "approved",
-    "uk": "missing",
-    "es": "missing",
-    "fr": "missing"
-   },
-   "infinitive": "לברך",
-   "infinitive_pointed": "לְבַרֵך",
-   "present": {
-    "ms": {
-     "plain": "מברך",
-     "pointed": "מְבַרֵך"
-    },
-    "fs": {
-     "plain": "מברךת",
-     "pointed": "מְבַרֶךֶת"
-    },
-    "mp": {
-     "plain": "מברךים",
-     "pointed": "מְבַרְךִים"
-    },
-    "fp": {
-     "plain": "מברךות",
-     "pointed": "מְבַרְךוֹת"
-    }
-   },
-   "past": {
-    "1sg": {
-     "plain": "ברךתי",
-     "pointed": "בִּרַךְתִּי"
-    },
-    "2ms": {
-     "plain": "ברךת",
-     "pointed": "בִּרַךְתָּ"
-    },
-    "2fs": {
-     "plain": "ברךת",
-     "pointed": "בִּרַךְתְּ"
-    },
-    "3ms": {
-     "plain": "ברך",
-     "pointed": "בִּרֵך"
-    },
-    "3fs": {
-     "plain": "ברךה",
-     "pointed": "בִּרְךָה"
-    },
-    "1pl": {
-     "plain": "ברךנו",
-     "pointed": "בִּרַךְנוּ"
-    },
-    "2mp": {
-     "plain": "ברךתם",
-     "pointed": "בִּרַךְתֶּם"
-    },
-    "2fp": {
-     "plain": "ברךתן",
-     "pointed": "בִּרַךְתֶּן"
-    },
-    "3pl": {
-     "plain": "ברךו",
-     "pointed": "בִּרְךוּ"
-    }
-   },
-   "future": {
-    "1sg": {
-     "plain": "אברך",
-     "pointed": "אֲבַרֵך"
-    },
-    "2ms": {
-     "plain": "תברך",
-     "pointed": "תְּבַרֵך"
-    },
-    "2fs": {
-     "plain": "תברךי",
-     "pointed": "תְּבַרְךִי"
-    },
-    "3ms": {
-     "plain": "יברך",
-     "pointed": "יְבַרֵך"
-    },
-    "3fs": {
-     "plain": "תברך",
-     "pointed": "תְּבַרֵך"
-    },
-    "1pl": {
-     "plain": "נברך",
-     "pointed": "נְבַרֵך"
-    },
-    "2mp": {
-     "plain": "תברךו",
-     "pointed": "תְּבַרְךוּ"
-    },
-    "2fp": {
-     "plain": "תברךנה",
-     "pointed": "תְּבַרֵךְנָה"
-    },
-    "3pl": {
-     "plain": "יברךו",
-     "pointed": "יְבַרְךוּ"
-    }
-   },
-   "past_3ms": {
-    "plain": "ברך",
-    "pointed": "בִּרֵך"
-   },
-   "future_3ms": {
-    "plain": "יברך",
-    "pointed": "יְבַרֵך"
-   },
-   "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
-  },
-  {
    "id": "nigen",
    "root": "נגן",
    "binyan": "piel",
@@ -12379,54 +11764,54 @@
      "pointed": "מְנַגֵּן"
     },
     "fs": {
-     "plain": "מנגןת",
-     "pointed": "מְנַגֶּןֶת"
+     "plain": "מנגנת",
+     "pointed": "מְנַגֶּנֶת"
     },
     "mp": {
-     "plain": "מנגןים",
-     "pointed": "מְנַגְּןִים"
+     "plain": "מנגנים",
+     "pointed": "מְנַגְּנִים"
     },
     "fp": {
-     "plain": "מנגןות",
-     "pointed": "מְנַגְּןוֹת"
+     "plain": "מנגנות",
+     "pointed": "מְנַגְּנוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "נגןתי",
-     "pointed": "נִגַּןְתִּי"
+     "plain": "נגנתי",
+     "pointed": "נִגַּנְתִּי"
     },
     "2ms": {
-     "plain": "נגןת",
-     "pointed": "נִגַּןְתָּ"
+     "plain": "נגנת",
+     "pointed": "נִגַּנְתָּ"
     },
     "2fs": {
-     "plain": "נגןת",
-     "pointed": "נִגַּןְתְּ"
+     "plain": "נגנת",
+     "pointed": "נִגַּנְתְּ"
     },
     "3ms": {
      "plain": "נגן",
      "pointed": "נִגֵּן"
     },
     "3fs": {
-     "plain": "נגןה",
-     "pointed": "נִגְּןָה"
+     "plain": "נגנה",
+     "pointed": "נִגְּנָה"
     },
     "1pl": {
-     "plain": "נגןנו",
-     "pointed": "נִגַּןְנוּ"
+     "plain": "נגננו",
+     "pointed": "נִגַּנְנוּ"
     },
     "2mp": {
-     "plain": "נגןתם",
-     "pointed": "נִגַּןְתֶּם"
+     "plain": "נגנתם",
+     "pointed": "נִגַּנְתֶּם"
     },
     "2fp": {
-     "plain": "נגןתן",
-     "pointed": "נִגַּןְתֶּן"
+     "plain": "נגנתן",
+     "pointed": "נִגַּנְתֶּן"
     },
     "3pl": {
-     "plain": "נגןו",
-     "pointed": "נִגְּןוּ"
+     "plain": "נגנו",
+     "pointed": "נִגְּנוּ"
     }
    },
    "future": {
@@ -12439,8 +11824,8 @@
      "pointed": "תְּנַגֵּן"
     },
     "2fs": {
-     "plain": "תנגןי",
-     "pointed": "תְּנַגְּןִי"
+     "plain": "תנגני",
+     "pointed": "תְּנַגְּנִי"
     },
     "3ms": {
      "plain": "ינגן",
@@ -12455,16 +11840,16 @@
      "pointed": "נְנַגֵּן"
     },
     "2mp": {
-     "plain": "תנגןו",
-     "pointed": "תְּנַגְּןוּ"
+     "plain": "תנגנו",
+     "pointed": "תְּנַגְּנוּ"
     },
     "2fp": {
-     "plain": "תנגןנה",
-     "pointed": "תְּנַגֵּןְנָה"
+     "plain": "תנגננה",
+     "pointed": "תְּנַגֵּנְנָה"
     },
     "3pl": {
-     "plain": "ינגןו",
-     "pointed": "יְנַגְּןוּ"
+     "plain": "ינגנו",
+     "pointed": "יְנַגְּנוּ"
     }
    },
    "past_3ms": {
@@ -12702,7 +12087,7 @@
     },
     "2mp": {
      "plain": "תבנו",
-     "pointed": "תִבְנוּ"
+     "pointed": "תִּבְנוּ"
     },
     "2fp": {
      "plain": "תבנהנה",
@@ -12910,11 +12295,11 @@
     },
     "2mp": {
      "plain": "תפסתם",
-     "pointed": "תְפַסְתֶּם"
+     "pointed": "תְּפַסְתֶּם"
     },
     "2fp": {
      "plain": "תפסתן",
-     "pointed": "תְפַסְתֶּן"
+     "pointed": "תְּפַסְתֶּן"
     },
     "3pl": {
      "plain": "תפסו",
@@ -12994,54 +12379,54 @@
      "pointed": "קוֹפֵץ"
     },
     "fs": {
-     "plain": "קופץת",
-     "pointed": "קוֹפֶץֶת"
+     "plain": "קופצת",
+     "pointed": "קוֹפֶצֶת"
     },
     "mp": {
-     "plain": "קופץים",
-     "pointed": "קוֹפְץִים"
+     "plain": "קופצים",
+     "pointed": "קוֹפְצִים"
     },
     "fp": {
-     "plain": "קופץות",
-     "pointed": "קוֹפְץוֹת"
+     "plain": "קופצות",
+     "pointed": "קוֹפְצוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "קפץתי",
-     "pointed": "קָפַץְתִּי"
+     "plain": "קפצתי",
+     "pointed": "קָפַצְתִּי"
     },
     "2ms": {
-     "plain": "קפץת",
-     "pointed": "קָפַץְתָּ"
+     "plain": "קפצת",
+     "pointed": "קָפַצְתָּ"
     },
     "2fs": {
-     "plain": "קפץת",
-     "pointed": "קָפַץְתְּ"
+     "plain": "קפצת",
+     "pointed": "קָפַצְתְּ"
     },
     "3ms": {
      "plain": "קפץ",
      "pointed": "קָפַץ"
     },
     "3fs": {
-     "plain": "קפץה",
-     "pointed": "קָפְץָה"
+     "plain": "קפצה",
+     "pointed": "קָפְצָה"
     },
     "1pl": {
-     "plain": "קפץנו",
-     "pointed": "קָפַץְנוּ"
+     "plain": "קפצנו",
+     "pointed": "קָפַצְנוּ"
     },
     "2mp": {
-     "plain": "קפץתם",
-     "pointed": "קְפַץְתֶּם"
+     "plain": "קפצתם",
+     "pointed": "קְפַצְתֶּם"
     },
     "2fp": {
-     "plain": "קפץתן",
-     "pointed": "קְפַץְתֶּן"
+     "plain": "קפצתן",
+     "pointed": "קְפַצְתֶּן"
     },
     "3pl": {
-     "plain": "קפץו",
-     "pointed": "קָפְץוּ"
+     "plain": "קפצו",
+     "pointed": "קָפְצוּ"
     }
    },
    "future": {
@@ -13054,8 +12439,8 @@
      "pointed": "תִּקְפֹּץ"
     },
     "2fs": {
-     "plain": "תקפץי",
-     "pointed": "תִּקְפְץִי"
+     "plain": "תקפצי",
+     "pointed": "תִּקְפְצִי"
     },
     "3ms": {
      "plain": "יקפץ",
@@ -13070,16 +12455,16 @@
      "pointed": "נִקְפֹּץ"
     },
     "2mp": {
-     "plain": "תקפץו",
-     "pointed": "תִּקְפְץוּ"
+     "plain": "תקפצו",
+     "pointed": "תִּקְפְצוּ"
     },
     "2fp": {
-     "plain": "תקפץנה",
-     "pointed": "תִּקְפֹּץְנָה"
+     "plain": "תקפצנה",
+     "pointed": "תִּקְפֹּצְנָה"
     },
     "3pl": {
-     "plain": "יקפץו",
-     "pointed": "יִקְפְץוּ"
+     "plain": "יקפצו",
+     "pointed": "יִקְפְצוּ"
     }
    },
    "past_3ms": {
@@ -13110,108 +12495,108 @@
     "fr": "missing"
    },
    "infinitive": "למשך",
-   "infinitive_pointed": "לִמְשֹׁך",
+   "infinitive_pointed": "לִמְשֹׁךְ",
    "present": {
     "ms": {
      "plain": "מושך",
-     "pointed": "מוֹשֵׁך"
+     "pointed": "מוֹשֵׁךְ"
     },
     "fs": {
-     "plain": "מושךת",
-     "pointed": "מוֹשֶׁךֶת"
+     "plain": "מושכת",
+     "pointed": "מוֹשֶׁכֶת"
     },
     "mp": {
-     "plain": "מושךים",
-     "pointed": "מוֹשְׁךִים"
+     "plain": "מושכים",
+     "pointed": "מוֹשְׁכִים"
     },
     "fp": {
-     "plain": "מושךות",
-     "pointed": "מוֹשְׁךוֹת"
+     "plain": "מושכות",
+     "pointed": "מוֹשְׁכוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "משךתי",
-     "pointed": "מָשַׁךְתִּי"
+     "plain": "משכתי",
+     "pointed": "מָשַׁכְתִּי"
     },
     "2ms": {
-     "plain": "משךת",
-     "pointed": "מָשַׁךְתָּ"
+     "plain": "משכת",
+     "pointed": "מָשַׁכְתָּ"
     },
     "2fs": {
-     "plain": "משךת",
-     "pointed": "מָשַׁךְתְּ"
+     "plain": "משכת",
+     "pointed": "מָשַׁכְתְּ"
     },
     "3ms": {
      "plain": "משך",
-     "pointed": "מָשַׁך"
+     "pointed": "מָשַׁךְ"
     },
     "3fs": {
-     "plain": "משךה",
-     "pointed": "מָשְׁךָה"
+     "plain": "משכה",
+     "pointed": "מָשְׁכָה"
     },
     "1pl": {
-     "plain": "משךנו",
-     "pointed": "מָשַׁךְנוּ"
+     "plain": "משכנו",
+     "pointed": "מָשַׁכְנוּ"
     },
     "2mp": {
-     "plain": "משךתם",
-     "pointed": "מְשַׁךְתֶּם"
+     "plain": "משכתם",
+     "pointed": "מְשַׁכְתֶּם"
     },
     "2fp": {
-     "plain": "משךתן",
-     "pointed": "מְשַׁךְתֶּן"
+     "plain": "משכתן",
+     "pointed": "מְשַׁכְתֶּן"
     },
     "3pl": {
-     "plain": "משךו",
-     "pointed": "מָשְׁךוּ"
+     "plain": "משכו",
+     "pointed": "מָשְׁכוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אמשך",
-     "pointed": "אֶמְשֹׁך"
+     "pointed": "אֶמְשֹׁךְ"
     },
     "2ms": {
      "plain": "תמשך",
-     "pointed": "תִּמְשֹׁך"
+     "pointed": "תִּמְשֹׁךְ"
     },
     "2fs": {
-     "plain": "תמשךי",
-     "pointed": "תִּמְשְׁךִי"
+     "plain": "תמשכי",
+     "pointed": "תִּמְשְׁכִי"
     },
     "3ms": {
      "plain": "ימשך",
-     "pointed": "יִמְשֹׁך"
+     "pointed": "יִמְשֹׁךְ"
     },
     "3fs": {
      "plain": "תמשך",
-     "pointed": "תִּמְשֹׁך"
+     "pointed": "תִּמְשֹׁךְ"
     },
     "1pl": {
      "plain": "נמשך",
-     "pointed": "נִמְשֹׁך"
+     "pointed": "נִמְשֹׁךְ"
     },
     "2mp": {
-     "plain": "תמשךו",
-     "pointed": "תִּמְשְׁךוּ"
+     "plain": "תמשכו",
+     "pointed": "תִּמְשְׁכוּ"
     },
     "2fp": {
-     "plain": "תמשךנה",
-     "pointed": "תִּמְשֹׁךְנָה"
+     "plain": "תמשכנה",
+     "pointed": "תִּמְשֹׁכְנָה"
     },
     "3pl": {
-     "plain": "ימשךו",
-     "pointed": "יִמְשְׁךוּ"
+     "plain": "ימשכו",
+     "pointed": "יִמְשְׁכוּ"
     }
    },
    "past_3ms": {
     "plain": "משך",
-    "pointed": "מָשַׁך"
+    "pointed": "מָשַׁךְ"
    },
    "future_3ms": {
     "plain": "ימשך",
-    "pointed": "יִמְשֹׁך"
+    "pointed": "יִמְשֹׁךְ"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -13279,11 +12664,11 @@
     },
     "2mp": {
      "plain": "גנבתם",
-     "pointed": "גְנַבְתֶּם"
+     "pointed": "גְּנַבְתֶּם"
     },
     "2fp": {
      "plain": "גנבתן",
-     "pointed": "גְנַבְתֶּן"
+     "pointed": "גְּנַבְתֶּן"
     },
     "3pl": {
      "plain": "גנבו",
@@ -13402,11 +12787,11 @@
     },
     "2mp": {
      "plain": "בדקתם",
-     "pointed": "בְדַקְתֶּם"
+     "pointed": "בְּדַקְתֶּם"
     },
     "2fp": {
      "plain": "בדקתן",
-     "pointed": "בְדַקְתֶּן"
+     "pointed": "בְּדַקְתֶּן"
     },
     "3pl": {
      "plain": "בדקו",
@@ -13486,54 +12871,54 @@
      "pointed": "רוֹשֵׁם"
     },
     "fs": {
-     "plain": "רושםת",
-     "pointed": "רוֹשֶׁםֶת"
+     "plain": "רושמת",
+     "pointed": "רוֹשֶׁמֶת"
     },
     "mp": {
-     "plain": "רושםים",
-     "pointed": "רוֹשְׁםִים"
+     "plain": "רושמים",
+     "pointed": "רוֹשְׁמִים"
     },
     "fp": {
-     "plain": "רושםות",
-     "pointed": "רוֹשְׁםוֹת"
+     "plain": "רושמות",
+     "pointed": "רוֹשְׁמוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "רשםתי",
-     "pointed": "רָשַׁםְתִּי"
+     "plain": "רשמתי",
+     "pointed": "רָשַׁמְתִּי"
     },
     "2ms": {
-     "plain": "רשםת",
-     "pointed": "רָשַׁםְתָּ"
+     "plain": "רשמת",
+     "pointed": "רָשַׁמְתָּ"
     },
     "2fs": {
-     "plain": "רשםת",
-     "pointed": "רָשַׁםְתְּ"
+     "plain": "רשמת",
+     "pointed": "רָשַׁמְתְּ"
     },
     "3ms": {
      "plain": "רשם",
      "pointed": "רָשַׁם"
     },
     "3fs": {
-     "plain": "רשםה",
-     "pointed": "רָשְׁםָה"
+     "plain": "רשמה",
+     "pointed": "רָשְׁמָה"
     },
     "1pl": {
-     "plain": "רשםנו",
-     "pointed": "רָשַׁםְנוּ"
+     "plain": "רשמנו",
+     "pointed": "רָשַׁמְנוּ"
     },
     "2mp": {
-     "plain": "רשםתם",
-     "pointed": "רְשַׁםְתֶּם"
+     "plain": "רשמתם",
+     "pointed": "רְשַׁמְתֶּם"
     },
     "2fp": {
-     "plain": "רשםתן",
-     "pointed": "רְשַׁםְתֶּן"
+     "plain": "רשמתן",
+     "pointed": "רְשַׁמְתֶּן"
     },
     "3pl": {
-     "plain": "רשםו",
-     "pointed": "רָשְׁםוּ"
+     "plain": "רשמו",
+     "pointed": "רָשְׁמוּ"
     }
    },
    "future": {
@@ -13546,8 +12931,8 @@
      "pointed": "תִּרְשֹׁם"
     },
     "2fs": {
-     "plain": "תרשםי",
-     "pointed": "תִּרְשְׁםִי"
+     "plain": "תרשמי",
+     "pointed": "תִּרְשְׁמִי"
     },
     "3ms": {
      "plain": "ירשם",
@@ -13562,16 +12947,16 @@
      "pointed": "נִרְשֹׁם"
     },
     "2mp": {
-     "plain": "תרשםו",
-     "pointed": "תִּרְשְׁםוּ"
+     "plain": "תרשמו",
+     "pointed": "תִּרְשְׁמוּ"
     },
     "2fp": {
-     "plain": "תרשםנה",
-     "pointed": "תִּרְשֹׁםְנָה"
+     "plain": "תרשמנה",
+     "pointed": "תִּרְשֹׁמְנָה"
     },
     "3pl": {
-     "plain": "ירשםו",
-     "pointed": "יִרְשְׁםוּ"
+     "plain": "ירשמו",
+     "pointed": "יִרְשְׁמוּ"
     }
    },
    "past_3ms": {
@@ -13602,108 +12987,108 @@
     "fr": "missing"
    },
    "infinitive": "לתמך",
-   "infinitive_pointed": "לִתְמֹך",
+   "infinitive_pointed": "לִתְמֹךְ",
    "present": {
     "ms": {
      "plain": "תומך",
-     "pointed": "תּוֹמֵך"
+     "pointed": "תּוֹמֵךְ"
     },
     "fs": {
-     "plain": "תומךת",
-     "pointed": "תּוֹמֶךֶת"
+     "plain": "תומכת",
+     "pointed": "תּוֹמֶכֶת"
     },
     "mp": {
-     "plain": "תומךים",
-     "pointed": "תּוֹמְךִים"
+     "plain": "תומכים",
+     "pointed": "תּוֹמְכִים"
     },
     "fp": {
-     "plain": "תומךות",
-     "pointed": "תּוֹמְךוֹת"
+     "plain": "תומכות",
+     "pointed": "תּוֹמְכוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "תמךתי",
-     "pointed": "תָּמַךְתִּי"
+     "plain": "תמכתי",
+     "pointed": "תָּמַכְתִּי"
     },
     "2ms": {
-     "plain": "תמךת",
-     "pointed": "תָּמַךְתָּ"
+     "plain": "תמכת",
+     "pointed": "תָּמַכְתָּ"
     },
     "2fs": {
-     "plain": "תמךת",
-     "pointed": "תָּמַךְתְּ"
+     "plain": "תמכת",
+     "pointed": "תָּמַכְתְּ"
     },
     "3ms": {
      "plain": "תמך",
-     "pointed": "תָּמַך"
+     "pointed": "תָּמַךְ"
     },
     "3fs": {
-     "plain": "תמךה",
-     "pointed": "תָּמְךָה"
+     "plain": "תמכה",
+     "pointed": "תָּמְכָה"
     },
     "1pl": {
-     "plain": "תמךנו",
-     "pointed": "תָּמַךְנוּ"
+     "plain": "תמכנו",
+     "pointed": "תָּמַכְנוּ"
     },
     "2mp": {
-     "plain": "תמךתם",
-     "pointed": "תְמַךְתֶּם"
+     "plain": "תמכתם",
+     "pointed": "תְּמַכְתֶּם"
     },
     "2fp": {
-     "plain": "תמךתן",
-     "pointed": "תְמַךְתֶּן"
+     "plain": "תמכתן",
+     "pointed": "תְּמַכְתֶּן"
     },
     "3pl": {
-     "plain": "תמךו",
-     "pointed": "תָּמְךוּ"
+     "plain": "תמכו",
+     "pointed": "תָּמְכוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אתמך",
-     "pointed": "אֶתְמֹך"
+     "pointed": "אֶתְמֹךְ"
     },
     "2ms": {
      "plain": "תתמך",
-     "pointed": "תִּתְמֹך"
+     "pointed": "תִּתְמֹךְ"
     },
     "2fs": {
-     "plain": "תתמךי",
-     "pointed": "תִּתְמְךִי"
+     "plain": "תתמכי",
+     "pointed": "תִּתְמְכִי"
     },
     "3ms": {
      "plain": "יתמך",
-     "pointed": "יִתְמֹך"
+     "pointed": "יִתְמֹךְ"
     },
     "3fs": {
      "plain": "תתמך",
-     "pointed": "תִּתְמֹך"
+     "pointed": "תִּתְמֹךְ"
     },
     "1pl": {
      "plain": "נתמך",
-     "pointed": "נִתְמֹך"
+     "pointed": "נִתְמֹךְ"
     },
     "2mp": {
-     "plain": "תתמךו",
-     "pointed": "תִּתְמְךוּ"
+     "plain": "תתמכו",
+     "pointed": "תִּתְמְכוּ"
     },
     "2fp": {
-     "plain": "תתמךנה",
-     "pointed": "תִּתְמֹךְנָה"
+     "plain": "תתמכנה",
+     "pointed": "תִּתְמֹכְנָה"
     },
     "3pl": {
-     "plain": "יתמךו",
-     "pointed": "יִתְמְךוּ"
+     "plain": "יתמכו",
+     "pointed": "יִתְמְכוּ"
     }
    },
    "past_3ms": {
     "plain": "תמך",
-    "pointed": "תָּמַך"
+    "pointed": "תָּמַךְ"
    },
    "future_3ms": {
     "plain": "יתמך",
-    "pointed": "יִתְמֹך"
+    "pointed": "יִתְמֹךְ"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -13725,108 +13110,108 @@
     "fr": "missing"
    },
    "infinitive": "לסמך",
-   "infinitive_pointed": "לִסְמֹך",
+   "infinitive_pointed": "לִסְמֹךְ",
    "present": {
     "ms": {
      "plain": "סומך",
-     "pointed": "סוֹמֵך"
+     "pointed": "סוֹמֵךְ"
     },
     "fs": {
-     "plain": "סומךת",
-     "pointed": "סוֹמֶךֶת"
+     "plain": "סומכת",
+     "pointed": "סוֹמֶכֶת"
     },
     "mp": {
-     "plain": "סומךים",
-     "pointed": "סוֹמְךִים"
+     "plain": "סומכים",
+     "pointed": "סוֹמְכִים"
     },
     "fp": {
-     "plain": "סומךות",
-     "pointed": "סוֹמְךוֹת"
+     "plain": "סומכות",
+     "pointed": "סוֹמְכוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "סמךתי",
-     "pointed": "סָמַךְתִּי"
+     "plain": "סמכתי",
+     "pointed": "סָמַכְתִּי"
     },
     "2ms": {
-     "plain": "סמךת",
-     "pointed": "סָמַךְתָּ"
+     "plain": "סמכת",
+     "pointed": "סָמַכְתָּ"
     },
     "2fs": {
-     "plain": "סמךת",
-     "pointed": "סָמַךְתְּ"
+     "plain": "סמכת",
+     "pointed": "סָמַכְתְּ"
     },
     "3ms": {
      "plain": "סמך",
-     "pointed": "סָמַך"
+     "pointed": "סָמַךְ"
     },
     "3fs": {
-     "plain": "סמךה",
-     "pointed": "סָמְךָה"
+     "plain": "סמכה",
+     "pointed": "סָמְכָה"
     },
     "1pl": {
-     "plain": "סמךנו",
-     "pointed": "סָמַךְנוּ"
+     "plain": "סמכנו",
+     "pointed": "סָמַכְנוּ"
     },
     "2mp": {
-     "plain": "סמךתם",
-     "pointed": "סְמַךְתֶּם"
+     "plain": "סמכתם",
+     "pointed": "סְמַכְתֶּם"
     },
     "2fp": {
-     "plain": "סמךתן",
-     "pointed": "סְמַךְתֶּן"
+     "plain": "סמכתן",
+     "pointed": "סְמַכְתֶּן"
     },
     "3pl": {
-     "plain": "סמךו",
-     "pointed": "סָמְךוּ"
+     "plain": "סמכו",
+     "pointed": "סָמְכוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אסמך",
-     "pointed": "אֶסְמֹך"
+     "pointed": "אֶסְמֹךְ"
     },
     "2ms": {
      "plain": "תסמך",
-     "pointed": "תִּסְמֹך"
+     "pointed": "תִּסְמֹךְ"
     },
     "2fs": {
-     "plain": "תסמךי",
-     "pointed": "תִּסְמְךִי"
+     "plain": "תסמכי",
+     "pointed": "תִּסְמְכִי"
     },
     "3ms": {
      "plain": "יסמך",
-     "pointed": "יִסְמֹך"
+     "pointed": "יִסְמֹךְ"
     },
     "3fs": {
      "plain": "תסמך",
-     "pointed": "תִּסְמֹך"
+     "pointed": "תִּסְמֹךְ"
     },
     "1pl": {
      "plain": "נסמך",
-     "pointed": "נִסְמֹך"
+     "pointed": "נִסְמֹךְ"
     },
     "2mp": {
-     "plain": "תסמךו",
-     "pointed": "תִּסְמְךוּ"
+     "plain": "תסמכו",
+     "pointed": "תִּסְמְכוּ"
     },
     "2fp": {
-     "plain": "תסמךנה",
-     "pointed": "תִּסְמֹךְנָה"
+     "plain": "תסמכנה",
+     "pointed": "תִּסְמֹכְנָה"
     },
     "3pl": {
-     "plain": "יסמךו",
-     "pointed": "יִסְמְךוּ"
+     "plain": "יסמכו",
+     "pointed": "יִסְמְכוּ"
     }
    },
    "past_3ms": {
     "plain": "סמך",
-    "pointed": "סָמַך"
+    "pointed": "סָמַךְ"
    },
    "future_3ms": {
     "plain": "יסמך",
-    "pointed": "יִסְמֹך"
+    "pointed": "יִסְמֹךְ"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -14632,11 +14017,11 @@
     },
     "2mp": {
      "plain": "פגשתם",
-     "pointed": "פְגַשְׁתֶּם"
+     "pointed": "פְּגַשְׁתֶּם"
     },
     "2fp": {
      "plain": "פגשתן",
-     "pointed": "פְגַשְׁתֶּן"
+     "pointed": "פְּגַשְׁתֶּן"
     },
     "3pl": {
      "plain": "פגשו",
@@ -14755,11 +14140,11 @@
     },
     "2mp": {
      "plain": "בחרתם",
-     "pointed": "בְחַרְתֶּם"
+     "pointed": "בְּחַרְתֶּם"
     },
     "2fp": {
      "plain": "בחרתן",
-     "pointed": "בְחַרְתֶּן"
+     "pointed": "בְּחַרְתֶּן"
     },
     "3pl": {
      "plain": "בחרו",
@@ -14878,11 +14263,11 @@
     },
     "2mp": {
      "plain": "ברחתם",
-     "pointed": "בְרַחְתֶּם"
+     "pointed": "בְּרַחְתֶּם"
     },
     "2fp": {
      "plain": "ברחתן",
-     "pointed": "בְרַחְתֶּן"
+     "pointed": "בְּרַחְתֶּן"
     },
     "3pl": {
      "plain": "ברחו",
@@ -15408,7 +14793,7 @@
     },
     "2mp": {
      "plain": "תעלו",
-     "pointed": "תַעֲלוּ"
+     "pointed": "תַּעֲלוּ"
     },
     "2fp": {
      "plain": "תעלהנה",
@@ -15577,54 +14962,54 @@
      "pointed": "לוֹחֵץ"
     },
     "fs": {
-     "plain": "לוחץת",
-     "pointed": "לוֹחֶץֶת"
+     "plain": "לוחצת",
+     "pointed": "לוֹחֶצֶת"
     },
     "mp": {
-     "plain": "לוחץים",
-     "pointed": "לוֹחְץִים"
+     "plain": "לוחצים",
+     "pointed": "לוֹחְצִים"
     },
     "fp": {
-     "plain": "לוחץות",
-     "pointed": "לוֹחְץוֹת"
+     "plain": "לוחצות",
+     "pointed": "לוֹחְצוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "לחץתי",
-     "pointed": "לָחַץְתִּי"
+     "plain": "לחצתי",
+     "pointed": "לָחַצְתִּי"
     },
     "2ms": {
-     "plain": "לחץת",
-     "pointed": "לָחַץְתָּ"
+     "plain": "לחצת",
+     "pointed": "לָחַצְתָּ"
     },
     "2fs": {
-     "plain": "לחץת",
-     "pointed": "לָחַץְתְּ"
+     "plain": "לחצת",
+     "pointed": "לָחַצְתְּ"
     },
     "3ms": {
      "plain": "לחץ",
      "pointed": "לָחַץ"
     },
     "3fs": {
-     "plain": "לחץה",
-     "pointed": "לָחְץָה"
+     "plain": "לחצה",
+     "pointed": "לָחְצָה"
     },
     "1pl": {
-     "plain": "לחץנו",
-     "pointed": "לָחַץְנוּ"
+     "plain": "לחצנו",
+     "pointed": "לָחַצְנוּ"
     },
     "2mp": {
-     "plain": "לחץתם",
-     "pointed": "לְחַץְתֶּם"
+     "plain": "לחצתם",
+     "pointed": "לְחַצְתֶּם"
     },
     "2fp": {
-     "plain": "לחץתן",
-     "pointed": "לְחַץְתֶּן"
+     "plain": "לחצתן",
+     "pointed": "לְחַצְתֶּן"
     },
     "3pl": {
-     "plain": "לחץו",
-     "pointed": "לָחְץוּ"
+     "plain": "לחצו",
+     "pointed": "לָחְצוּ"
     }
    },
    "future": {
@@ -15637,8 +15022,8 @@
      "pointed": "תִּלְחֹץ"
     },
     "2fs": {
-     "plain": "תלחץי",
-     "pointed": "תִּלְחְץִי"
+     "plain": "תלחצי",
+     "pointed": "תִּלְחְצִי"
     },
     "3ms": {
      "plain": "ילחץ",
@@ -15653,16 +15038,16 @@
      "pointed": "נִלְחֹץ"
     },
     "2mp": {
-     "plain": "תלחץו",
-     "pointed": "תִּלְחְץוּ"
+     "plain": "תלחצו",
+     "pointed": "תִּלְחְצוּ"
     },
     "2fp": {
-     "plain": "תלחץנה",
-     "pointed": "תִּלְחֹץְנָה"
+     "plain": "תלחצנה",
+     "pointed": "תִּלְחֹצְנָה"
     },
     "3pl": {
-     "plain": "ילחץו",
-     "pointed": "יִלְחְץוּ"
+     "plain": "ילחצו",
+     "pointed": "יִלְחְצוּ"
     }
    },
    "past_3ms": {
@@ -15700,54 +15085,54 @@
      "pointed": "דּוֹחֵף"
     },
     "fs": {
-     "plain": "דוחףת",
-     "pointed": "דּוֹחֶףֶת"
+     "plain": "דוחפת",
+     "pointed": "דּוֹחֶפֶת"
     },
     "mp": {
-     "plain": "דוחףים",
-     "pointed": "דּוֹחְףִים"
+     "plain": "דוחפים",
+     "pointed": "דּוֹחְפִים"
     },
     "fp": {
-     "plain": "דוחףות",
-     "pointed": "דּוֹחְףוֹת"
+     "plain": "דוחפות",
+     "pointed": "דּוֹחְפוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "דחףתי",
-     "pointed": "דָּחַףְתִּי"
+     "plain": "דחפתי",
+     "pointed": "דָּחַפְתִּי"
     },
     "2ms": {
-     "plain": "דחףת",
-     "pointed": "דָּחַףְתָּ"
+     "plain": "דחפת",
+     "pointed": "דָּחַפְתָּ"
     },
     "2fs": {
-     "plain": "דחףת",
-     "pointed": "דָּחַףְתְּ"
+     "plain": "דחפת",
+     "pointed": "דָּחַפְתְּ"
     },
     "3ms": {
      "plain": "דחף",
      "pointed": "דָּחַף"
     },
     "3fs": {
-     "plain": "דחףה",
-     "pointed": "דָּחְףָה"
+     "plain": "דחפה",
+     "pointed": "דָּחְפָה"
     },
     "1pl": {
-     "plain": "דחףנו",
-     "pointed": "דָּחַףְנוּ"
+     "plain": "דחפנו",
+     "pointed": "דָּחַפְנוּ"
     },
     "2mp": {
-     "plain": "דחףתם",
-     "pointed": "דְחַףְתֶּם"
+     "plain": "דחפתם",
+     "pointed": "דְּחַפְתֶּם"
     },
     "2fp": {
-     "plain": "דחףתן",
-     "pointed": "דְחַףְתֶּן"
+     "plain": "דחפתן",
+     "pointed": "דְּחַפְתֶּן"
     },
     "3pl": {
-     "plain": "דחףו",
-     "pointed": "דָּחְףוּ"
+     "plain": "דחפו",
+     "pointed": "דָּחְפוּ"
     }
    },
    "future": {
@@ -15760,8 +15145,8 @@
      "pointed": "תִּדְחֹף"
     },
     "2fs": {
-     "plain": "תדחףי",
-     "pointed": "תִּדְחְףִי"
+     "plain": "תדחפי",
+     "pointed": "תִּדְחְפִי"
     },
     "3ms": {
      "plain": "ידחף",
@@ -15776,16 +15161,16 @@
      "pointed": "נִדְחֹף"
     },
     "2mp": {
-     "plain": "תדחףו",
-     "pointed": "תִּדְחְףוּ"
+     "plain": "תדחפו",
+     "pointed": "תִּדְחְפוּ"
     },
     "2fp": {
-     "plain": "תדחףנה",
-     "pointed": "תִּדְחֹףְנָה"
+     "plain": "תדחפנה",
+     "pointed": "תִּדְחֹפְנָה"
     },
     "3pl": {
-     "plain": "ידחףו",
-     "pointed": "יִדְחְףוּ"
+     "plain": "ידחפו",
+     "pointed": "יִדְחְפוּ"
     }
    },
    "past_3ms": {
@@ -16069,54 +15454,54 @@
      "pointed": "מְנַחֵם"
     },
     "fs": {
-     "plain": "מנחםת",
-     "pointed": "מְנַחֶםֶת"
+     "plain": "מנחמת",
+     "pointed": "מְנַחֶמֶת"
     },
     "mp": {
-     "plain": "מנחםים",
-     "pointed": "מְנַחְםִים"
+     "plain": "מנחמים",
+     "pointed": "מְנַחְמִים"
     },
     "fp": {
-     "plain": "מנחםות",
-     "pointed": "מְנַחְםוֹת"
+     "plain": "מנחמות",
+     "pointed": "מְנַחְמוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "נחםתי",
-     "pointed": "נִחַםְתִּי"
+     "plain": "נחמתי",
+     "pointed": "נִחַמְתִּי"
     },
     "2ms": {
-     "plain": "נחםת",
-     "pointed": "נִחַםְתָּ"
+     "plain": "נחמת",
+     "pointed": "נִחַמְתָּ"
     },
     "2fs": {
-     "plain": "נחםת",
-     "pointed": "נִחַםְתְּ"
+     "plain": "נחמת",
+     "pointed": "נִחַמְתְּ"
     },
     "3ms": {
      "plain": "נחם",
      "pointed": "נִחֵם"
     },
     "3fs": {
-     "plain": "נחםה",
-     "pointed": "נִחְםָה"
+     "plain": "נחמה",
+     "pointed": "נִחְמָה"
     },
     "1pl": {
-     "plain": "נחםנו",
-     "pointed": "נִחַםְנוּ"
+     "plain": "נחמנו",
+     "pointed": "נִחַמְנוּ"
     },
     "2mp": {
-     "plain": "נחםתם",
-     "pointed": "נִחַםְתֶּם"
+     "plain": "נחמתם",
+     "pointed": "נִחַמְתֶּם"
     },
     "2fp": {
-     "plain": "נחםתן",
-     "pointed": "נִחַםְתֶּן"
+     "plain": "נחמתן",
+     "pointed": "נִחַמְתֶּן"
     },
     "3pl": {
-     "plain": "נחםו",
-     "pointed": "נִחְםוּ"
+     "plain": "נחמו",
+     "pointed": "נִחְמוּ"
     }
    },
    "future": {
@@ -16129,8 +15514,8 @@
      "pointed": "תְּנַחֵם"
     },
     "2fs": {
-     "plain": "תנחםי",
-     "pointed": "תְּנַחְםִי"
+     "plain": "תנחמי",
+     "pointed": "תְּנַחְמִי"
     },
     "3ms": {
      "plain": "ינחם",
@@ -16145,16 +15530,16 @@
      "pointed": "נְנַחֵם"
     },
     "2mp": {
-     "plain": "תנחםו",
-     "pointed": "תְּנַחְםוּ"
+     "plain": "תנחמו",
+     "pointed": "תְּנַחְמוּ"
     },
     "2fp": {
-     "plain": "תנחםנה",
-     "pointed": "תְּנַחֵםְנָה"
+     "plain": "תנחמנה",
+     "pointed": "תְּנַחֵמְנָה"
     },
     "3pl": {
-     "plain": "ינחםו",
-     "pointed": "יְנַחְםוּ"
+     "plain": "ינחמו",
+     "pointed": "יְנַחְמוּ"
     }
    },
    "past_3ms": {
@@ -16192,54 +15577,54 @@
      "pointed": "מַסְכִּים"
     },
     "fs": {
-     "plain": "מסכיםה",
-     "pointed": "מַסְכִּיםָה"
+     "plain": "מסכימה",
+     "pointed": "מַסְכִּימָה"
     },
     "mp": {
-     "plain": "מסכיםים",
-     "pointed": "מַסְכִּיםִים"
+     "plain": "מסכימים",
+     "pointed": "מַסְכִּימִים"
     },
     "fp": {
-     "plain": "מסכיםות",
-     "pointed": "מַסְכִּיםוֹת"
+     "plain": "מסכימות",
+     "pointed": "מַסְכִּימוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "הסכםתי",
-     "pointed": "הִסְכַּםתִּי"
+     "plain": "הסכמתי",
+     "pointed": "הִסְכַּמתִּי"
     },
     "2ms": {
-     "plain": "הסכםת",
-     "pointed": "הִסְכַּםְתָּ"
+     "plain": "הסכמת",
+     "pointed": "הִסְכַּמְתָּ"
     },
     "2fs": {
-     "plain": "הסכםת",
-     "pointed": "הִסְכַּםְתְּ"
+     "plain": "הסכמת",
+     "pointed": "הִסְכַּמְתְּ"
     },
     "3ms": {
      "plain": "הסכים",
      "pointed": "הִסְכִּים"
     },
     "3fs": {
-     "plain": "הסכיםה",
-     "pointed": "הִסְכִּיםָה"
+     "plain": "הסכימה",
+     "pointed": "הִסְכִּימָה"
     },
     "1pl": {
-     "plain": "הסכםנו",
-     "pointed": "הִסְכַּםְנוּ"
+     "plain": "הסכמנו",
+     "pointed": "הִסְכַּמְנוּ"
     },
     "2mp": {
-     "plain": "הסכםתם",
-     "pointed": "הִסְכַּםְתֶּם"
+     "plain": "הסכמתם",
+     "pointed": "הִסְכַּמְתֶּם"
     },
     "2fp": {
-     "plain": "הסכםתן",
-     "pointed": "הִסְכַּםְתֶּן"
+     "plain": "הסכמתן",
+     "pointed": "הִסְכַּמְתֶּן"
     },
     "3pl": {
-     "plain": "הסכיםו",
-     "pointed": "הִסְכִּיםוּ"
+     "plain": "הסכימו",
+     "pointed": "הִסְכִּימוּ"
     }
    },
    "future": {
@@ -16252,8 +15637,8 @@
      "pointed": "תַּסְכִּים"
     },
     "2fs": {
-     "plain": "תסכיםי",
-     "pointed": "תַּסְכִּיםִי"
+     "plain": "תסכימי",
+     "pointed": "תַּסְכִּימִי"
     },
     "3ms": {
      "plain": "יסכים",
@@ -16268,16 +15653,16 @@
      "pointed": "נַסְכִּים"
     },
     "2mp": {
-     "plain": "תסכיםו",
-     "pointed": "תַּסְכִּיםוּ"
+     "plain": "תסכימו",
+     "pointed": "תַּסְכִּימוּ"
     },
     "2fp": {
-     "plain": "תסכםנה",
-     "pointed": "תַּסְכֵּםְנָה"
+     "plain": "תסכמנה",
+     "pointed": "תַּסְכֵּמְנָה"
     },
     "3pl": {
-     "plain": "יסכיםו",
-     "pointed": "יַסְכִּיםוּ"
+     "plain": "יסכימו",
+     "pointed": "יַסְכִּימוּ"
     }
    },
    "past_3ms": {
@@ -16807,54 +16192,54 @@
      "pointed": "מַזְמִין"
     },
     "fs": {
-     "plain": "מזמיןה",
-     "pointed": "מַזְמִיןָה"
+     "plain": "מזמינה",
+     "pointed": "מַזְמִינָה"
     },
     "mp": {
-     "plain": "מזמיןים",
-     "pointed": "מַזְמִיןִים"
+     "plain": "מזמינים",
+     "pointed": "מַזְמִינִים"
     },
     "fp": {
-     "plain": "מזמיןות",
-     "pointed": "מַזְמִיןוֹת"
+     "plain": "מזמינות",
+     "pointed": "מַזְמִינוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "הזמןתי",
-     "pointed": "הִזְמַןתִּי"
+     "plain": "הזמנתי",
+     "pointed": "הִזְמַנתִּי"
     },
     "2ms": {
-     "plain": "הזמןת",
-     "pointed": "הִזְמַןְתָּ"
+     "plain": "הזמנת",
+     "pointed": "הִזְמַנְתָּ"
     },
     "2fs": {
-     "plain": "הזמןת",
-     "pointed": "הִזְמַןְתְּ"
+     "plain": "הזמנת",
+     "pointed": "הִזְמַנְתְּ"
     },
     "3ms": {
      "plain": "הזמין",
      "pointed": "הִזְמִין"
     },
     "3fs": {
-     "plain": "הזמיןה",
-     "pointed": "הִזְמִיןָה"
+     "plain": "הזמינה",
+     "pointed": "הִזְמִינָה"
     },
     "1pl": {
-     "plain": "הזמןנו",
-     "pointed": "הִזְמַןְנוּ"
+     "plain": "הזמננו",
+     "pointed": "הִזְמַנְנוּ"
     },
     "2mp": {
-     "plain": "הזמןתם",
-     "pointed": "הִזְמַןְתֶּם"
+     "plain": "הזמנתם",
+     "pointed": "הִזְמַנְתֶּם"
     },
     "2fp": {
-     "plain": "הזמןתן",
-     "pointed": "הִזְמַןְתֶּן"
+     "plain": "הזמנתן",
+     "pointed": "הִזְמַנְתֶּן"
     },
     "3pl": {
-     "plain": "הזמיןו",
-     "pointed": "הִזְמִיןוּ"
+     "plain": "הזמינו",
+     "pointed": "הִזְמִינוּ"
     }
    },
    "future": {
@@ -16867,8 +16252,8 @@
      "pointed": "תַּזְמִין"
     },
     "2fs": {
-     "plain": "תזמיןי",
-     "pointed": "תַּזְמִיןִי"
+     "plain": "תזמיני",
+     "pointed": "תַּזְמִינִי"
     },
     "3ms": {
      "plain": "יזמין",
@@ -16883,16 +16268,16 @@
      "pointed": "נַזְמִין"
     },
     "2mp": {
-     "plain": "תזמיןו",
-     "pointed": "תַּזְמִיןוּ"
+     "plain": "תזמינו",
+     "pointed": "תַּזְמִינוּ"
     },
     "2fp": {
-     "plain": "תזמןנה",
-     "pointed": "תַּזְמֵןְנָה"
+     "plain": "תזמננה",
+     "pointed": "תַּזְמֵנְנָה"
     },
     "3pl": {
-     "plain": "יזמיןו",
-     "pointed": "יַזְמִיןוּ"
+     "plain": "יזמינו",
+     "pointed": "יַזְמִינוּ"
     }
    },
    "past_3ms": {
@@ -18895,19 +18280,19 @@
    "present": {
     "ms": {
      "plain": "מדבר",
-     "pointed": "מְדֻּבָּר"
+     "pointed": "מְדֻבָּר"
     },
     "fs": {
      "plain": "מדברת",
-     "pointed": "מְדֻּבֶּרֶת"
+     "pointed": "מְדֻבֶּרֶת"
     },
     "mp": {
      "plain": "מדברים",
-     "pointed": "מְדֻּבָּרִים"
+     "pointed": "מְדֻבָּרִים"
     },
     "fp": {
      "plain": "מדברות",
-     "pointed": "מְדֻּבָּרוֹת"
+     "pointed": "מְדֻבָּרוֹת"
     }
    },
    "past": {
@@ -19018,104 +18403,104 @@
    "present": {
     "ms": {
      "plain": "מבשל",
-     "pointed": "מְבֻּשָׁל"
+     "pointed": "מְבֻשָּׁל"
     },
     "fs": {
      "plain": "מבשלת",
-     "pointed": "מְבֻּשֶׁלֶת"
+     "pointed": "מְבֻשֶּׁלֶת"
     },
     "mp": {
      "plain": "מבשלים",
-     "pointed": "מְבֻּשָׁלִים"
+     "pointed": "מְבֻשָּׁלִים"
     },
     "fp": {
      "plain": "מבשלות",
-     "pointed": "מְבֻּשָׁלוֹת"
+     "pointed": "מְבֻשָּׁלוֹת"
     }
    },
    "past": {
     "1sg": {
      "plain": "בשלתי",
-     "pointed": "בֻּשַׁלְתִּי"
+     "pointed": "בֻּשַּׁלְתִּי"
     },
     "2ms": {
      "plain": "בשלת",
-     "pointed": "בֻּשַׁלְתָּ"
+     "pointed": "בֻּשַּׁלְתָּ"
     },
     "2fs": {
      "plain": "בשלת",
-     "pointed": "בֻּשַׁלְתְּ"
+     "pointed": "בֻּשַּׁלְתְּ"
     },
     "3ms": {
      "plain": "בשל",
-     "pointed": "בֻּשַׁל"
+     "pointed": "בֻּשַּׁל"
     },
     "3fs": {
      "plain": "בשלה",
-     "pointed": "בֻּשְׁלָה"
+     "pointed": "בֻּשְּׁלָה"
     },
     "1pl": {
      "plain": "בשלנו",
-     "pointed": "בֻּשַׁלְנוּ"
+     "pointed": "בֻּשַּׁלְנוּ"
     },
     "2mp": {
      "plain": "בשלתם",
-     "pointed": "בֻּשַׁלְתֶּם"
+     "pointed": "בֻּשַּׁלְתֶּם"
     },
     "2fp": {
      "plain": "בשלתן",
-     "pointed": "בֻּשַׁלְתֶּן"
+     "pointed": "בֻּשַּׁלְתֶּן"
     },
     "3pl": {
      "plain": "בשלו",
-     "pointed": "בֻּשְׁלוּ"
+     "pointed": "בֻּשְּׁלוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אבשל",
-     "pointed": "אֲבֻּשַׁל"
+     "pointed": "אֲבֻּשַּׁל"
     },
     "2ms": {
      "plain": "תבשל",
-     "pointed": "תְּבֻּשַׁל"
+     "pointed": "תְּבֻּשַּׁל"
     },
     "2fs": {
      "plain": "תבשלי",
-     "pointed": "תְּבֻּשְׁלִי"
+     "pointed": "תְּבֻּשְּׁלִי"
     },
     "3ms": {
      "plain": "יבשל",
-     "pointed": "יְבֻּשַׁל"
+     "pointed": "יְבֻּשַּׁל"
     },
     "3fs": {
      "plain": "תבשל",
-     "pointed": "תְּבֻּשַׁל"
+     "pointed": "תְּבֻּשַּׁל"
     },
     "1pl": {
      "plain": "נבשל",
-     "pointed": "נְבֻּשַׁל"
+     "pointed": "נְבֻּשַּׁל"
     },
     "2mp": {
      "plain": "תבשלו",
-     "pointed": "תְּבֻּשְׁלוּ"
+     "pointed": "תְּבֻּשְּׁלוּ"
     },
     "2fp": {
      "plain": "תבשלנה",
-     "pointed": "תְּבֻּשַׁלְנָה"
+     "pointed": "תְּבֻּשַּׁלְנָה"
     },
     "3pl": {
      "plain": "יבשלו",
-     "pointed": "יְבֻּשְׁלוּ"
+     "pointed": "יְבֻּשְּׁלוּ"
     }
    },
    "past_3ms": {
     "plain": "בשל",
-    "pointed": "בֻּשַׁל"
+    "pointed": "בֻּשַּׁל"
    },
    "future_3ms": {
     "plain": "יבשל",
-    "pointed": "יְבֻּשַׁל"
+    "pointed": "יְבֻּשַּׁל"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -19141,104 +18526,104 @@
    "present": {
     "ms": {
      "plain": "משלם",
-     "pointed": "מְשֻׁלָם"
+     "pointed": "מְשֻׁלָּם"
     },
     "fs": {
-     "plain": "משלםת",
-     "pointed": "מְשֻׁלֶםֶת"
+     "plain": "משלמת",
+     "pointed": "מְשֻׁלֶּמֶת"
     },
     "mp": {
-     "plain": "משלםים",
-     "pointed": "מְשֻׁלָםִים"
+     "plain": "משלמים",
+     "pointed": "מְשֻׁלָּמִים"
     },
     "fp": {
-     "plain": "משלםות",
-     "pointed": "מְשֻׁלָםוֹת"
+     "plain": "משלמות",
+     "pointed": "מְשֻׁלָּמוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "שלםתי",
-     "pointed": "שֻׁלַםְתִּי"
+     "plain": "שלמתי",
+     "pointed": "שֻׁלַּמְתִּי"
     },
     "2ms": {
-     "plain": "שלםת",
-     "pointed": "שֻׁלַםְתָּ"
+     "plain": "שלמת",
+     "pointed": "שֻׁלַּמְתָּ"
     },
     "2fs": {
-     "plain": "שלםת",
-     "pointed": "שֻׁלַםְתְּ"
+     "plain": "שלמת",
+     "pointed": "שֻׁלַּמְתְּ"
     },
     "3ms": {
      "plain": "שלם",
-     "pointed": "שֻׁלַם"
+     "pointed": "שֻׁלַּם"
     },
     "3fs": {
-     "plain": "שלםה",
-     "pointed": "שֻׁלְםָה"
+     "plain": "שלמה",
+     "pointed": "שֻׁלְּמָה"
     },
     "1pl": {
-     "plain": "שלםנו",
-     "pointed": "שֻׁלַםְנוּ"
+     "plain": "שלמנו",
+     "pointed": "שֻׁלַּמְנוּ"
     },
     "2mp": {
-     "plain": "שלםתם",
-     "pointed": "שֻׁלַםְתֶּם"
+     "plain": "שלמתם",
+     "pointed": "שֻׁלַּמְתֶּם"
     },
     "2fp": {
-     "plain": "שלםתן",
-     "pointed": "שֻׁלַםְתֶּן"
+     "plain": "שלמתן",
+     "pointed": "שֻׁלַּמְתֶּן"
     },
     "3pl": {
-     "plain": "שלםו",
-     "pointed": "שֻׁלְםוּ"
+     "plain": "שלמו",
+     "pointed": "שֻׁלְּמוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אשלם",
-     "pointed": "אֲשֻׁלַם"
+     "pointed": "אֲשֻׁלַּם"
     },
     "2ms": {
      "plain": "תשלם",
-     "pointed": "תְּשֻׁלַם"
+     "pointed": "תְּשֻׁלַּם"
     },
     "2fs": {
-     "plain": "תשלםי",
-     "pointed": "תְּשֻׁלְםִי"
+     "plain": "תשלמי",
+     "pointed": "תְּשֻׁלְּמִי"
     },
     "3ms": {
      "plain": "ישלם",
-     "pointed": "יְשֻׁלַם"
+     "pointed": "יְשֻׁלַּם"
     },
     "3fs": {
      "plain": "תשלם",
-     "pointed": "תְּשֻׁלַם"
+     "pointed": "תְּשֻׁלַּם"
     },
     "1pl": {
      "plain": "נשלם",
-     "pointed": "נְשֻׁלַם"
+     "pointed": "נְשֻׁלַּם"
     },
     "2mp": {
-     "plain": "תשלםו",
-     "pointed": "תְּשֻׁלְםוּ"
+     "plain": "תשלמו",
+     "pointed": "תְּשֻׁלְּמוּ"
     },
     "2fp": {
-     "plain": "תשלםנה",
-     "pointed": "תְּשֻׁלַםְנָה"
+     "plain": "תשלמנה",
+     "pointed": "תְּשֻׁלַּמְנָה"
     },
     "3pl": {
-     "plain": "ישלםו",
-     "pointed": "יְשֻׁלְםוּ"
+     "plain": "ישלמו",
+     "pointed": "יְשֻׁלְּמוּ"
     }
    },
    "past_3ms": {
     "plain": "שלם",
-    "pointed": "שֻׁלַם"
+    "pointed": "שֻׁלַּם"
    },
    "future_3ms": {
     "plain": "ישלם",
-    "pointed": "יְשֻׁלַם"
+    "pointed": "יְשֻׁלַּם"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -19264,19 +18649,19 @@
    "present": {
     "ms": {
      "plain": "מכתב",
-     "pointed": "מְכֻּתָּב"
+     "pointed": "מְכֻתָּב"
     },
     "fs": {
      "plain": "מכתבת",
-     "pointed": "מְכֻּתֶּבֶת"
+     "pointed": "מְכֻתֶּבֶת"
     },
     "mp": {
      "plain": "מכתבים",
-     "pointed": "מְכֻּתָּבִים"
+     "pointed": "מְכֻתָּבִים"
     },
     "fp": {
      "plain": "מכתבות",
-     "pointed": "מְכֻּתָּבוֹת"
+     "pointed": "מְכֻתָּבוֹת"
     }
    },
    "past": {
@@ -19387,104 +18772,104 @@
    "present": {
     "ms": {
      "plain": "מתקן",
-     "pointed": "מְתֻּקָן"
+     "pointed": "מְתֻקָּן"
     },
     "fs": {
-     "plain": "מתקןת",
-     "pointed": "מְתֻּקֶןֶת"
+     "plain": "מתקנת",
+     "pointed": "מְתֻקֶּנֶת"
     },
     "mp": {
-     "plain": "מתקןים",
-     "pointed": "מְתֻּקָןִים"
+     "plain": "מתקנים",
+     "pointed": "מְתֻקָּנִים"
     },
     "fp": {
-     "plain": "מתקןות",
-     "pointed": "מְתֻּקָןוֹת"
+     "plain": "מתקנות",
+     "pointed": "מְתֻקָּנוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "תקןתי",
-     "pointed": "תֻּקַןְתִּי"
+     "plain": "תקנתי",
+     "pointed": "תֻּקַּנְתִּי"
     },
     "2ms": {
-     "plain": "תקןת",
-     "pointed": "תֻּקַןְתָּ"
+     "plain": "תקנת",
+     "pointed": "תֻּקַּנְתָּ"
     },
     "2fs": {
-     "plain": "תקןת",
-     "pointed": "תֻּקַןְתְּ"
+     "plain": "תקנת",
+     "pointed": "תֻּקַּנְתְּ"
     },
     "3ms": {
      "plain": "תקן",
-     "pointed": "תֻּקַן"
+     "pointed": "תֻּקַּן"
     },
     "3fs": {
-     "plain": "תקןה",
-     "pointed": "תֻּקְןָה"
+     "plain": "תקנה",
+     "pointed": "תֻּקְּנָה"
     },
     "1pl": {
-     "plain": "תקןנו",
-     "pointed": "תֻּקַןְנוּ"
+     "plain": "תקננו",
+     "pointed": "תֻּקַּנְנוּ"
     },
     "2mp": {
-     "plain": "תקןתם",
-     "pointed": "תֻּקַןְתֶּם"
+     "plain": "תקנתם",
+     "pointed": "תֻּקַּנְתֶּם"
     },
     "2fp": {
-     "plain": "תקןתן",
-     "pointed": "תֻּקַןְתֶּן"
+     "plain": "תקנתן",
+     "pointed": "תֻּקַּנְתֶּן"
     },
     "3pl": {
-     "plain": "תקןו",
-     "pointed": "תֻּקְןוּ"
+     "plain": "תקנו",
+     "pointed": "תֻּקְּנוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אתקן",
-     "pointed": "אֲתֻּקַן"
+     "pointed": "אֲתֻּקַּן"
     },
     "2ms": {
      "plain": "תתקן",
-     "pointed": "תְּתֻּקַן"
+     "pointed": "תְּתֻּקַּן"
     },
     "2fs": {
-     "plain": "תתקןי",
-     "pointed": "תְּתֻּקְןִי"
+     "plain": "תתקני",
+     "pointed": "תְּתֻּקְּנִי"
     },
     "3ms": {
      "plain": "יתקן",
-     "pointed": "יְתֻּקַן"
+     "pointed": "יְתֻּקַּן"
     },
     "3fs": {
      "plain": "תתקן",
-     "pointed": "תְּתֻּקַן"
+     "pointed": "תְּתֻּקַּן"
     },
     "1pl": {
      "plain": "נתקן",
-     "pointed": "נְתֻּקַן"
+     "pointed": "נְתֻּקַּן"
     },
     "2mp": {
-     "plain": "תתקןו",
-     "pointed": "תְּתֻּקְןוּ"
+     "plain": "תתקנו",
+     "pointed": "תְּתֻּקְּנוּ"
     },
     "2fp": {
-     "plain": "תתקןנה",
-     "pointed": "תְּתֻּקַןְנָה"
+     "plain": "תתקננה",
+     "pointed": "תְּתֻּקַּנְנָה"
     },
     "3pl": {
-     "plain": "יתקןו",
-     "pointed": "יְתֻּקְןוּ"
+     "plain": "יתקנו",
+     "pointed": "יְתֻּקְּנוּ"
     }
    },
    "past_3ms": {
     "plain": "תקן",
-    "pointed": "תֻּקַן"
+    "pointed": "תֻּקַּן"
    },
    "future_3ms": {
     "plain": "יתקן",
-    "pointed": "יְתֻּקַן"
+    "pointed": "יְתֻּקַּן"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -19633,104 +19018,104 @@
    "present": {
     "ms": {
      "plain": "מצלם",
-     "pointed": "מְצֻלָם"
+     "pointed": "מְצֻלָּם"
     },
     "fs": {
-     "plain": "מצלםת",
-     "pointed": "מְצֻלֶםֶת"
+     "plain": "מצלמת",
+     "pointed": "מְצֻלֶּמֶת"
     },
     "mp": {
-     "plain": "מצלםים",
-     "pointed": "מְצֻלָםִים"
+     "plain": "מצלמים",
+     "pointed": "מְצֻלָּמִים"
     },
     "fp": {
-     "plain": "מצלםות",
-     "pointed": "מְצֻלָםוֹת"
+     "plain": "מצלמות",
+     "pointed": "מְצֻלָּמוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "צלםתי",
-     "pointed": "צֻלַםְתִּי"
+     "plain": "צלמתי",
+     "pointed": "צֻלַּמְתִּי"
     },
     "2ms": {
-     "plain": "צלםת",
-     "pointed": "צֻלַםְתָּ"
+     "plain": "צלמת",
+     "pointed": "צֻלַּמְתָּ"
     },
     "2fs": {
-     "plain": "צלםת",
-     "pointed": "צֻלַםְתְּ"
+     "plain": "צלמת",
+     "pointed": "צֻלַּמְתְּ"
     },
     "3ms": {
      "plain": "צלם",
-     "pointed": "צֻלַם"
+     "pointed": "צֻלַּם"
     },
     "3fs": {
-     "plain": "צלםה",
-     "pointed": "צֻלְםָה"
+     "plain": "צלמה",
+     "pointed": "צֻלְּמָה"
     },
     "1pl": {
-     "plain": "צלםנו",
-     "pointed": "צֻלַםְנוּ"
+     "plain": "צלמנו",
+     "pointed": "צֻלַּמְנוּ"
     },
     "2mp": {
-     "plain": "צלםתם",
-     "pointed": "צֻלַםְתֶּם"
+     "plain": "צלמתם",
+     "pointed": "צֻלַּמְתֶּם"
     },
     "2fp": {
-     "plain": "צלםתן",
-     "pointed": "צֻלַםְתֶּן"
+     "plain": "צלמתן",
+     "pointed": "צֻלַּמְתֶּן"
     },
     "3pl": {
-     "plain": "צלםו",
-     "pointed": "צֻלְםוּ"
+     "plain": "צלמו",
+     "pointed": "צֻלְּמוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אצלם",
-     "pointed": "אֲצֻלַם"
+     "pointed": "אֲצֻלַּם"
     },
     "2ms": {
      "plain": "תצלם",
-     "pointed": "תְּצֻלַם"
+     "pointed": "תְּצֻלַּם"
     },
     "2fs": {
-     "plain": "תצלםי",
-     "pointed": "תְּצֻלְםִי"
+     "plain": "תצלמי",
+     "pointed": "תְּצֻלְּמִי"
     },
     "3ms": {
      "plain": "יצלם",
-     "pointed": "יְצֻלַם"
+     "pointed": "יְצֻלַּם"
     },
     "3fs": {
      "plain": "תצלם",
-     "pointed": "תְּצֻלַם"
+     "pointed": "תְּצֻלַּם"
     },
     "1pl": {
      "plain": "נצלם",
-     "pointed": "נְצֻלַם"
+     "pointed": "נְצֻלַּם"
     },
     "2mp": {
-     "plain": "תצלםו",
-     "pointed": "תְּצֻלְםוּ"
+     "plain": "תצלמו",
+     "pointed": "תְּצֻלְּמוּ"
     },
     "2fp": {
-     "plain": "תצלםנה",
-     "pointed": "תְּצֻלַםְנָה"
+     "plain": "תצלמנה",
+     "pointed": "תְּצֻלַּמְנָה"
     },
     "3pl": {
-     "plain": "יצלםו",
-     "pointed": "יְצֻלְםוּ"
+     "plain": "יצלמו",
+     "pointed": "יְצֻלְּמוּ"
     }
    },
    "past_3ms": {
     "plain": "צלם",
-    "pointed": "צֻלַם"
+    "pointed": "צֻלַּם"
    },
    "future_3ms": {
     "plain": "יצלם",
-    "pointed": "יְצֻלַם"
+    "pointed": "יְצֻלַּם"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -19756,104 +19141,104 @@
    "present": {
     "ms": {
      "plain": "מבקש",
-     "pointed": "מְבֻּקָשׁ"
+     "pointed": "מְבֻקָּשׁ"
     },
     "fs": {
      "plain": "מבקשת",
-     "pointed": "מְבֻּקֶשֶׁת"
+     "pointed": "מְבֻקֶּשֶׁת"
     },
     "mp": {
      "plain": "מבקשים",
-     "pointed": "מְבֻּקָשִׁים"
+     "pointed": "מְבֻקָּשִׁים"
     },
     "fp": {
      "plain": "מבקשות",
-     "pointed": "מְבֻּקָשׁוֹת"
+     "pointed": "מְבֻקָּשׁוֹת"
     }
    },
    "past": {
     "1sg": {
      "plain": "בקשתי",
-     "pointed": "בֻּקַשְׁתִּי"
+     "pointed": "בֻּקַּשְׁתִּי"
     },
     "2ms": {
      "plain": "בקשת",
-     "pointed": "בֻּקַשְׁתָּ"
+     "pointed": "בֻּקַּשְׁתָּ"
     },
     "2fs": {
      "plain": "בקשת",
-     "pointed": "בֻּקַשְׁתְּ"
+     "pointed": "בֻּקַּשְׁתְּ"
     },
     "3ms": {
      "plain": "בקש",
-     "pointed": "בֻּקַשׁ"
+     "pointed": "בֻּקַּשׁ"
     },
     "3fs": {
      "plain": "בקשה",
-     "pointed": "בֻּקְשָׁה"
+     "pointed": "בֻּקְּשָׁה"
     },
     "1pl": {
      "plain": "בקשנו",
-     "pointed": "בֻּקַשְׁנוּ"
+     "pointed": "בֻּקַּשְׁנוּ"
     },
     "2mp": {
      "plain": "בקשתם",
-     "pointed": "בֻּקַשְׁתֶּם"
+     "pointed": "בֻּקַּשְׁתֶּם"
     },
     "2fp": {
      "plain": "בקשתן",
-     "pointed": "בֻּקַשְׁתֶּן"
+     "pointed": "בֻּקַּשְׁתֶּן"
     },
     "3pl": {
      "plain": "בקשו",
-     "pointed": "בֻּקְשׁוּ"
+     "pointed": "בֻּקְּשׁוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אבקש",
-     "pointed": "אֲבֻּקַשׁ"
+     "pointed": "אֲבֻּקַּשׁ"
     },
     "2ms": {
      "plain": "תבקש",
-     "pointed": "תְּבֻּקַשׁ"
+     "pointed": "תְּבֻּקַּשׁ"
     },
     "2fs": {
      "plain": "תבקשי",
-     "pointed": "תְּבֻּקְשִׁי"
+     "pointed": "תְּבֻּקְּשִׁי"
     },
     "3ms": {
      "plain": "יבקש",
-     "pointed": "יְבֻּקַשׁ"
+     "pointed": "יְבֻּקַּשׁ"
     },
     "3fs": {
      "plain": "תבקש",
-     "pointed": "תְּבֻּקַשׁ"
+     "pointed": "תְּבֻּקַּשׁ"
     },
     "1pl": {
      "plain": "נבקש",
-     "pointed": "נְבֻּקַשׁ"
+     "pointed": "נְבֻּקַּשׁ"
     },
     "2mp": {
      "plain": "תבקשו",
-     "pointed": "תְּבֻּקְשׁוּ"
+     "pointed": "תְּבֻּקְּשׁוּ"
     },
     "2fp": {
      "plain": "תבקשנה",
-     "pointed": "תְּבֻּקַשְׁנָה"
+     "pointed": "תְּבֻּקַּשְׁנָה"
     },
     "3pl": {
      "plain": "יבקשו",
-     "pointed": "יְבֻּקְשׁוּ"
+     "pointed": "יְבֻּקְּשׁוּ"
     }
    },
    "past_3ms": {
     "plain": "בקש",
-    "pointed": "בֻּקַשׁ"
+    "pointed": "בֻּקַּשׁ"
    },
    "future_3ms": {
     "plain": "יבקש",
-    "pointed": "יְבֻּקַשׁ"
+    "pointed": "יְבֻּקַּשׁ"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -20104,129 +19489,6 @@
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
   {
-   "id": "hukhan",
-   "root": "כון",
-   "binyan": "hufal",
-   "pattern": "strong",
-   "level": "advanced",
-   "gloss": {
-    "ru": "быть приготовленным",
-    "en": "to be prepared"
-   },
-   "l10n_status": {
-    "ru": "approved",
-    "en": "approved",
-    "uk": "missing",
-    "es": "missing",
-    "fr": "missing"
-   },
-   "infinitive": "",
-   "infinitive_pointed": "",
-   "present": {
-    "ms": {
-     "plain": "מכון",
-     "pointed": "מֻכְוָן"
-    },
-    "fs": {
-     "plain": "מכוןת",
-     "pointed": "מֻכְוֶןֶת"
-    },
-    "mp": {
-     "plain": "מכוןים",
-     "pointed": "מֻכְוָןִים"
-    },
-    "fp": {
-     "plain": "מכוןות",
-     "pointed": "מֻכְוָןוֹת"
-    }
-   },
-   "past": {
-    "1sg": {
-     "plain": "הכוןתי",
-     "pointed": "הֻכְוַןְתִּי"
-    },
-    "2ms": {
-     "plain": "הכוןת",
-     "pointed": "הֻכְוַןְתָּ"
-    },
-    "2fs": {
-     "plain": "הכוןת",
-     "pointed": "הֻכְוַןְתְּ"
-    },
-    "3ms": {
-     "plain": "הכון",
-     "pointed": "הֻכְוַן"
-    },
-    "3fs": {
-     "plain": "הכוןה",
-     "pointed": "הֻכְוְןָה"
-    },
-    "1pl": {
-     "plain": "הכוןנו",
-     "pointed": "הֻכְוַןְנוּ"
-    },
-    "2mp": {
-     "plain": "הכוןתם",
-     "pointed": "הֻכְוַןְתֶּם"
-    },
-    "2fp": {
-     "plain": "הכוןתן",
-     "pointed": "הֻכְוַןְתֶּן"
-    },
-    "3pl": {
-     "plain": "הכוןו",
-     "pointed": "הֻכְוְןוּ"
-    }
-   },
-   "future": {
-    "1sg": {
-     "plain": "אכון",
-     "pointed": "אֻכְוַן"
-    },
-    "2ms": {
-     "plain": "תכון",
-     "pointed": "תֻּכְוַן"
-    },
-    "2fs": {
-     "plain": "תכוןי",
-     "pointed": "תֻּכְוְןִי"
-    },
-    "3ms": {
-     "plain": "יכון",
-     "pointed": "יֻכְוַן"
-    },
-    "3fs": {
-     "plain": "תכון",
-     "pointed": "תֻּכְוַן"
-    },
-    "1pl": {
-     "plain": "נכון",
-     "pointed": "נֻכְוַן"
-    },
-    "2mp": {
-     "plain": "תכוןו",
-     "pointed": "תֻּכְוְןוּ"
-    },
-    "2fp": {
-     "plain": "תכוןנה",
-     "pointed": "תֻּכְוַןְנָה"
-    },
-    "3pl": {
-     "plain": "יכוןו",
-     "pointed": "יֻכְוְןוּ"
-    }
-   },
-   "past_3ms": {
-    "plain": "הכון",
-    "pointed": "הֻכְוַן"
-   },
-   "future_3ms": {
-    "plain": "יכון",
-    "pointed": "יֻכְוַן"
-   },
-   "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
-  },
-  {
    "id": "hudlak",
    "root": "דלק",
    "binyan": "hufal",
@@ -20473,129 +19735,6 @@
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
   {
-   "id": "hutzag",
-   "root": "יצג",
-   "binyan": "hufal",
-   "pattern": "strong",
-   "level": "advanced",
-   "gloss": {
-    "ru": "быть представленным",
-    "en": "to be presented"
-   },
-   "l10n_status": {
-    "ru": "approved",
-    "en": "approved",
-    "uk": "missing",
-    "es": "missing",
-    "fr": "missing"
-   },
-   "infinitive": "",
-   "infinitive_pointed": "",
-   "present": {
-    "ms": {
-     "plain": "מיצג",
-     "pointed": "מֻיְצָג"
-    },
-    "fs": {
-     "plain": "מיצגת",
-     "pointed": "מֻיְצֶגֶת"
-    },
-    "mp": {
-     "plain": "מיצגים",
-     "pointed": "מֻיְצָגִים"
-    },
-    "fp": {
-     "plain": "מיצגות",
-     "pointed": "מֻיְצָגוֹת"
-    }
-   },
-   "past": {
-    "1sg": {
-     "plain": "היצגתי",
-     "pointed": "הֻיְצַגְתִּי"
-    },
-    "2ms": {
-     "plain": "היצגת",
-     "pointed": "הֻיְצַגְתָּ"
-    },
-    "2fs": {
-     "plain": "היצגת",
-     "pointed": "הֻיְצַגְתְּ"
-    },
-    "3ms": {
-     "plain": "היצג",
-     "pointed": "הֻיְצַג"
-    },
-    "3fs": {
-     "plain": "היצגה",
-     "pointed": "הֻיְצְגָה"
-    },
-    "1pl": {
-     "plain": "היצגנו",
-     "pointed": "הֻיְצַגְנוּ"
-    },
-    "2mp": {
-     "plain": "היצגתם",
-     "pointed": "הֻיְצַגְתֶּם"
-    },
-    "2fp": {
-     "plain": "היצגתן",
-     "pointed": "הֻיְצַגְתֶּן"
-    },
-    "3pl": {
-     "plain": "היצגו",
-     "pointed": "הֻיְצְגוּ"
-    }
-   },
-   "future": {
-    "1sg": {
-     "plain": "איצג",
-     "pointed": "אֻיְצַג"
-    },
-    "2ms": {
-     "plain": "תיצג",
-     "pointed": "תֻּיְצַג"
-    },
-    "2fs": {
-     "plain": "תיצגי",
-     "pointed": "תֻּיְצְגִי"
-    },
-    "3ms": {
-     "plain": "ייצג",
-     "pointed": "יֻיְצַג"
-    },
-    "3fs": {
-     "plain": "תיצג",
-     "pointed": "תֻּיְצַג"
-    },
-    "1pl": {
-     "plain": "ניצג",
-     "pointed": "נֻיְצַג"
-    },
-    "2mp": {
-     "plain": "תיצגו",
-     "pointed": "תֻּיְצְגוּ"
-    },
-    "2fp": {
-     "plain": "תיצגנה",
-     "pointed": "תֻּיְצַגְנָה"
-    },
-    "3pl": {
-     "plain": "ייצגו",
-     "pointed": "יֻיְצְגוּ"
-    }
-   },
-   "past_3ms": {
-    "plain": "היצג",
-    "pointed": "הֻיְצַג"
-   },
-   "future_3ms": {
-    "plain": "ייצג",
-    "pointed": "יֻיְצַג"
-   },
-   "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
-  },
-  {
    "id": "hitpalel",
    "root": "פלל",
    "binyan": "hitpael",
@@ -20613,108 +19752,108 @@
     "fr": "missing"
    },
    "infinitive": "להתפלל",
-   "infinitive_pointed": "לְהִתְפַּלֵל",
+   "infinitive_pointed": "לְהִתְפַּלֵּל",
    "present": {
     "ms": {
      "plain": "מתפלל",
-     "pointed": "מִתְפַּלֵל"
+     "pointed": "מִתְפַּלֵּל"
     },
     "fs": {
      "plain": "מתפללת",
-     "pointed": "מִתְפַּלֶלֶת"
+     "pointed": "מִתְפַּלֶּלֶת"
     },
     "mp": {
      "plain": "מתפללים",
-     "pointed": "מִתְפַּלְלִים"
+     "pointed": "מִתְפַּלְּלִים"
     },
     "fp": {
      "plain": "מתפללות",
-     "pointed": "מִתְפַּלְלוֹת"
+     "pointed": "מִתְפַּלְּלוֹת"
     }
    },
    "past": {
     "1sg": {
      "plain": "התפללתי",
-     "pointed": "הִתְפַּלַלתִּי"
+     "pointed": "הִתְפַּלַּלתִּי"
     },
     "2ms": {
      "plain": "התפללת",
-     "pointed": "הִתְפַּלַלתָּ"
+     "pointed": "הִתְפַּלַּלתָּ"
     },
     "2fs": {
      "plain": "התפללת",
-     "pointed": "הִתְפַּלַלתְּ"
+     "pointed": "הִתְפַּלַּלתְּ"
     },
     "3ms": {
      "plain": "התפלל",
-     "pointed": "הִתְפַּלֵל"
+     "pointed": "הִתְפַּלֵּל"
     },
     "3fs": {
      "plain": "התפללה",
-     "pointed": "הִתְפַּלְלָה"
+     "pointed": "הִתְפַּלְּלָה"
     },
     "1pl": {
      "plain": "התפללנו",
-     "pointed": "הִתְפַּלַלנוּ"
+     "pointed": "הִתְפַּלַּלנוּ"
     },
     "2mp": {
      "plain": "התפללתם",
-     "pointed": "הִתְפַּלַלתֶּם"
+     "pointed": "הִתְפַּלַּלתֶּם"
     },
     "2fp": {
      "plain": "התפללתן",
-     "pointed": "הִתְפַּלַלתֶּן"
+     "pointed": "הִתְפַּלַּלתֶּן"
     },
     "3pl": {
      "plain": "התפללו",
-     "pointed": "הִתְפַּלְלוּ"
+     "pointed": "הִתְפַּלְּלוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אתפלל",
-     "pointed": "אֶתְפַּלֵל"
+     "pointed": "אֶתְפַּלֵּל"
     },
     "2ms": {
      "plain": "תתפלל",
-     "pointed": "תִּתְפַּלֵל"
+     "pointed": "תִּתְפַּלֵּל"
     },
     "2fs": {
      "plain": "תתפללי",
-     "pointed": "תִּתְפַּלְלִי"
+     "pointed": "תִּתְפַּלְּלִי"
     },
     "3ms": {
      "plain": "יתפלל",
-     "pointed": "יִתְפַּלֵל"
+     "pointed": "יִתְפַּלֵּל"
     },
     "3fs": {
      "plain": "תתפלל",
-     "pointed": "תִּתְפַּלֵל"
+     "pointed": "תִּתְפַּלֵּל"
     },
     "1pl": {
      "plain": "נתפלל",
-     "pointed": "נִתְפַּלֵל"
+     "pointed": "נִתְפַּלֵּל"
     },
     "2mp": {
      "plain": "תתפללו",
-     "pointed": "תִּתְפַּלְלוּ"
+     "pointed": "תִּתְפַּלְּלוּ"
     },
     "2fp": {
      "plain": "תתפללנה",
-     "pointed": "תִּתְפַּלֵלנָה"
+     "pointed": "תִּתְפַּלֵּלנָה"
     },
     "3pl": {
      "plain": "יתפללו",
-     "pointed": "יִתְפַּלְלוּ"
+     "pointed": "יִתְפַּלְּלוּ"
     }
    },
    "past_3ms": {
     "plain": "התפלל",
-    "pointed": "הִתְפַּלֵל"
+    "pointed": "הִתְפַּלֵּל"
    },
    "future_3ms": {
     "plain": "יתפלל",
-    "pointed": "יִתְפַּלֵל"
+    "pointed": "יִתְפַּלֵּל"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -20859,108 +19998,108 @@
     "fr": "missing"
    },
    "infinitive": "להתבטל",
-   "infinitive_pointed": "לְהִתְבַּטֵל",
+   "infinitive_pointed": "לְהִתְבַּטֵּל",
    "present": {
     "ms": {
      "plain": "מתבטל",
-     "pointed": "מִתְבַּטֵל"
+     "pointed": "מִתְבַּטֵּל"
     },
     "fs": {
      "plain": "מתבטלת",
-     "pointed": "מִתְבַּטֶלֶת"
+     "pointed": "מִתְבַּטֶּלֶת"
     },
     "mp": {
      "plain": "מתבטלים",
-     "pointed": "מִתְבַּטְלִים"
+     "pointed": "מִתְבַּטְּלִים"
     },
     "fp": {
      "plain": "מתבטלות",
-     "pointed": "מִתְבַּטְלוֹת"
+     "pointed": "מִתְבַּטְּלוֹת"
     }
    },
    "past": {
     "1sg": {
      "plain": "התבטלתי",
-     "pointed": "הִתְבַּטַלתִּי"
+     "pointed": "הִתְבַּטַּלתִּי"
     },
     "2ms": {
      "plain": "התבטלת",
-     "pointed": "הִתְבַּטַלתָּ"
+     "pointed": "הִתְבַּטַּלתָּ"
     },
     "2fs": {
      "plain": "התבטלת",
-     "pointed": "הִתְבַּטַלתְּ"
+     "pointed": "הִתְבַּטַּלתְּ"
     },
     "3ms": {
      "plain": "התבטל",
-     "pointed": "הִתְבַּטֵל"
+     "pointed": "הִתְבַּטֵּל"
     },
     "3fs": {
      "plain": "התבטלה",
-     "pointed": "הִתְבַּטְלָה"
+     "pointed": "הִתְבַּטְּלָה"
     },
     "1pl": {
      "plain": "התבטלנו",
-     "pointed": "הִתְבַּטַלנוּ"
+     "pointed": "הִתְבַּטַּלנוּ"
     },
     "2mp": {
      "plain": "התבטלתם",
-     "pointed": "הִתְבַּטַלתֶּם"
+     "pointed": "הִתְבַּטַּלתֶּם"
     },
     "2fp": {
      "plain": "התבטלתן",
-     "pointed": "הִתְבַּטַלתֶּן"
+     "pointed": "הִתְבַּטַּלתֶּן"
     },
     "3pl": {
      "plain": "התבטלו",
-     "pointed": "הִתְבַּטְלוּ"
+     "pointed": "הִתְבַּטְּלוּ"
     }
    },
    "future": {
     "1sg": {
      "plain": "אתבטל",
-     "pointed": "אֶתְבַּטֵל"
+     "pointed": "אֶתְבַּטֵּל"
     },
     "2ms": {
      "plain": "תתבטל",
-     "pointed": "תִּתְבַּטֵל"
+     "pointed": "תִּתְבַּטֵּל"
     },
     "2fs": {
      "plain": "תתבטלי",
-     "pointed": "תִּתְבַּטְלִי"
+     "pointed": "תִּתְבַּטְּלִי"
     },
     "3ms": {
      "plain": "יתבטל",
-     "pointed": "יִתְבַּטֵל"
+     "pointed": "יִתְבַּטֵּל"
     },
     "3fs": {
      "plain": "תתבטל",
-     "pointed": "תִּתְבַּטֵל"
+     "pointed": "תִּתְבַּטֵּל"
     },
     "1pl": {
      "plain": "נתבטל",
-     "pointed": "נִתְבַּטֵל"
+     "pointed": "נִתְבַּטֵּל"
     },
     "2mp": {
      "plain": "תתבטלו",
-     "pointed": "תִּתְבַּטְלוּ"
+     "pointed": "תִּתְבַּטְּלוּ"
     },
     "2fp": {
      "plain": "תתבטלנה",
-     "pointed": "תִּתְבַּטֵלנָה"
+     "pointed": "תִּתְבַּטֵּלנָה"
     },
     "3pl": {
      "plain": "יתבטלו",
-     "pointed": "יִתְבַּטְלוּ"
+     "pointed": "יִתְבַּטְּלוּ"
     }
    },
    "past_3ms": {
     "plain": "התבטל",
-    "pointed": "הִתְבַּטֵל"
+    "pointed": "הִתְבַּטֵּל"
    },
    "future_3ms": {
     "plain": "יתבטל",
-    "pointed": "יִתְבַּטֵל"
+    "pointed": "יִתְבַּטֵּל"
    },
    "source": "legacy/ivrit-s-nulya verbs-catalog+engine"
   },
@@ -21235,54 +20374,54 @@
      "pointed": "מַשְׁלִים"
     },
     "fs": {
-     "plain": "משליםה",
-     "pointed": "מַשְׁלִיםָה"
+     "plain": "משלימה",
+     "pointed": "מַשְׁלִימָה"
     },
     "mp": {
-     "plain": "משליםים",
-     "pointed": "מַשְׁלִיםִים"
+     "plain": "משלימים",
+     "pointed": "מַשְׁלִימִים"
     },
     "fp": {
-     "plain": "משליםות",
-     "pointed": "מַשְׁלִיםוֹת"
+     "plain": "משלימות",
+     "pointed": "מַשְׁלִימוֹת"
     }
    },
    "past": {
     "1sg": {
-     "plain": "השלםתי",
-     "pointed": "הִשְׁלַםתִּי"
+     "plain": "השלמתי",
+     "pointed": "הִשְׁלַמתִּי"
     },
     "2ms": {
-     "plain": "השלםת",
-     "pointed": "הִשְׁלַםְתָּ"
+     "plain": "השלמת",
+     "pointed": "הִשְׁלַמְתָּ"
     },
     "2fs": {
-     "plain": "השלםת",
-     "pointed": "הִשְׁלַםְתְּ"
+     "plain": "השלמת",
+     "pointed": "הִשְׁלַמְתְּ"
     },
     "3ms": {
      "plain": "השלים",
      "pointed": "הִשְׁלִים"
     },
     "3fs": {
-     "plain": "השליםה",
-     "pointed": "הִשְׁלִיםָה"
+     "plain": "השלימה",
+     "pointed": "הִשְׁלִימָה"
     },
     "1pl": {
-     "plain": "השלםנו",
-     "pointed": "הִשְׁלַםְנוּ"
+     "plain": "השלמנו",
+     "pointed": "הִשְׁלַמְנוּ"
     },
     "2mp": {
-     "plain": "השלםתם",
-     "pointed": "הִשְׁלַםְתֶּם"
+     "plain": "השלמתם",
+     "pointed": "הִשְׁלַמְתֶּם"
     },
     "2fp": {
-     "plain": "השלםתן",
-     "pointed": "הִשְׁלַםְתֶּן"
+     "plain": "השלמתן",
+     "pointed": "הִשְׁלַמְתֶּן"
     },
     "3pl": {
-     "plain": "השליםו",
-     "pointed": "הִשְׁלִיםוּ"
+     "plain": "השלימו",
+     "pointed": "הִשְׁלִימוּ"
     }
    },
    "future": {
@@ -21295,8 +20434,8 @@
      "pointed": "תַּשְׁלִים"
     },
     "2fs": {
-     "plain": "תשליםי",
-     "pointed": "תַּשְׁלִיםִי"
+     "plain": "תשלימי",
+     "pointed": "תַּשְׁלִימִי"
     },
     "3ms": {
      "plain": "ישלים",
@@ -21311,16 +20450,16 @@
      "pointed": "נַשְׁלִים"
     },
     "2mp": {
-     "plain": "תשליםו",
-     "pointed": "תַּשְׁלִיםוּ"
+     "plain": "תשלימו",
+     "pointed": "תַּשְׁלִימוּ"
     },
     "2fp": {
-     "plain": "תשלםנה",
-     "pointed": "תַּשְׁלֵםְנָה"
+     "plain": "תשלמנה",
+     "pointed": "תַּשְׁלֵמְנָה"
     },
     "3pl": {
-     "plain": "ישליםו",
-     "pointed": "יַשְׁלִיםוּ"
+     "plain": "ישלימו",
+     "pointed": "יַשְׁלִימוּ"
     }
    },
    "past_3ms": {
@@ -21335,7 +20474,8 @@
   }
  ],
  "meta": {
-  "count": 174,
-  "source": "Forms from legacy/ivrit-s-nulya verb catalog (tested conjugation engine, legacy SKIP_IDS excluded). uk/es/fr glosses missing: fall back to en."
+  "count": 167,
+  "source": "Forms from legacy/ivrit-s-nulya verb catalog (tested conjugation engine, legacy SKIP_IDS excluded). uk/es/fr glosses missing: fall back to en.",
+  "pointing": "Niqqud repaired by scripts/fix_verbs_pointing.py: dagesh forte in the middle radical of pi'el/pu'al/hitpa'el, dagesh lene word-initially, no dagesh after pu'al מְ. Removed garbled paradigms: birekh, hishtamesh, histakel, hukhan, hutzag, sirev, tziyer."
  }
 }
